@@ -98,28 +98,33 @@
 /* Menu Item Positions */
 .menu-item--1 {
     left: 249px;
-    width: 154px;
+    width: 134px;
 }
 
 .menu-item--2 {
-    left: 441px;
-    width: 221px;
+    left: 390px;
+    width: 210px;
 }
 
 .menu-item--3 {
-    left: 700px;
-    width: 130px;
+    left: 610px;
+    width: 150px;
     height: 35.9px;
 }
 
 .menu-item--4 {
-    left: 868px;
-    width: 160px;
+    left: 768px;
+    width: 110px;
 }
 
 .menu-item--5 {
-    left: 1028px;
-    width: 100px;
+    left: 886px;
+    width: 140px;
+}
+
+.menu-item--6 {
+    left: 1034px;
+    width: 120px;
 }
 
 /* State Layer (Figma: .state-layer) */

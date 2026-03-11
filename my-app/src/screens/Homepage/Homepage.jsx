@@ -118,7 +118,7 @@ const Homepage = () => {
       <div className="news-section">
         <img className="section-divider section-divider--news" alt="" />
         <b className="section-title section-title--news">TIN TỨC</b>
-        <Link to="/activity" className="btn-view-more" style={{ textDecoration: 'none', color: 'inherit' }}>
+        <Link to="/news" className="btn-view-more" style={{ textDecoration: 'none', color: 'inherit' }}>
           <b className="btn-view-more__text">Xem thêm</b>
         </Link>
         {newsCards.map((card, index) => (
@@ -144,7 +144,7 @@ const Homepage = () => {
       {/* Achievement Section */}
       <div className="achievement-section">
         <div className="btn-view-more-wrapper">
-          <Link to="/activity" className="btn-view-more" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Link to="/achievement" className="btn-view-more" style={{ textDecoration: 'none', color: 'inherit' }}>
             <b className="btn-view-more__text">Xem thêm</b>
           </Link>
         </div>

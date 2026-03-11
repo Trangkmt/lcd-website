@@ -11,8 +11,10 @@ const Header = () => {
     const menuItems = [
         { id: 1, label: "Giới thiệu", path: "/about" },
         { id: 2, label: "Cơ cấu tổ chức", path: "/organization" },
-        { id: 3, label: "Liên hệ", path: "/contact" },
-        { id: 4, label: "Hoạt động", path: "/activity" }
+        { id: 3, label: "Hoạt động", path: "/activity" },
+        { id: 4, label: "Tin tức", path: "/news" },
+        { id: 5, label: "Thành tích", path: "/achievement" },
+        { id: 6, label: "Liên hệ", path: "/contact" },
     ];
 
     const handleMenuItemClick = useCallback((item) => {
