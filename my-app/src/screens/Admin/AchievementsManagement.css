@@ -1,0 +1,146 @@
+/* Achievements Management */
+.achievements-management {
+    padding: 40px;
+    font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.achievements-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.achievement-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    gap: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.achievement-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.achievement-badge {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+}
+
+.achievement-content {
+    flex: 1;
+}
+
+.achievement-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0 0 8px 0;
+}
+
+.achievement-student {
+    font-size: 15px;
+    color: #667eea;
+    font-weight: 500;
+    margin: 0 0 8px 0;
+}
+
+.achievement-description {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.6;
+    margin: 0 0 12px 0;
+}
+
+.achievement-meta {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.achievement-category {
+    padding: 4px 12px;
+    background: #e3f2fd;
+    color: #1a73e8;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.achievement-year,
+.achievement-date {
+    font-size: 13px;
+    color: #999;
+}
+
+.achievement-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-self: center;
+}
+
+.achievement-actions .btn-action {
+    width: 100px;
+}
+
+.achievement-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.upload-box {
+    border: 2px dashed #e0e0e0;
+    border-radius: 8px;
+    padding: 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.upload-box:hover {
+    border-color: #667eea;
+    background: #f8f9ff;
+}
+
+.upload-icon {
+    font-size: 48px;
+    display: block;
+    margin-bottom: 12px;
+}
+
+.upload-box p {
+    color: #666;
+    font-size: 14px;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .achievements-management {
+        padding: 20px;
+    }
+
+    .achievement-card {
+        flex-direction: column;
+    }
+
+    .achievement-actions {
+        flex-direction: row;
+    }
+
+    .achievement-actions .btn-action {
+        flex: 1;
+    }
+}

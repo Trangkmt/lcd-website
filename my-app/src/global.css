@@ -1,0 +1,518 @@
+/* ===========================================
+   GLOBAL CSS - Design System Variables
+   LCD - Liên Chi Đoàn Khoa CNTT
+   =========================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900&display=swap');
+
+/* ===========================================
+   CSS RESET
+   =========================================== */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    line-height: normal;
+    font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+ul,
+ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    margin: 0;
+}
+
+/* ===========================================
+   ROOT VARIABLES
+   =========================================== */
+
+:root {
+    /* =======================================
+       COLOR PALETTE - Primary
+       ======================================= */
+
+    /* Brand Colors */
+    --color-primary: #2C6BCC;
+    /* LCD Blue - Main brand color */
+    --color-primary-light: #4A8AE8;
+    /* Lighter blue */
+    --color-primary-dark: #1A4A8A;
+    /* Darker blue */
+
+    /* Secondary Colors */
+    --color-secondary: #FFD600;
+    /* Yellow - Accent color */
+    --color-secondary-light: #FFE44D;
+    --color-secondary-dark: #CCB000;
+
+    /* =======================================
+       COLOR PALETTE - Neutrals
+       ======================================= */
+
+    --color-white: #FFFFFF;
+    --color-black: #000000;
+
+    /* Grays */
+    --color-gray-50: #FAFAFA;
+    --color-gray-100: #F5F5F5;
+    --color-gray-200: #EEEEEE;
+    --color-gray-300: #E0E0E0;
+    --color-gray-400: #BDBDBD;
+    --color-gray-500: #9E9E9E;
+    --color-gray-600: #757575;
+    --color-gray-700: #616161;
+    --color-gray-800: #424242;
+    --color-gray-900: #212121;
+
+    /* =======================================
+       COLOR PALETTE - Semantic
+       ======================================= */
+
+    --color-success: #4CAF50;
+    --color-success-light: #81C784;
+    --color-success-dark: #388E3C;
+
+    --color-warning: #FF9800;
+    --color-warning-light: #FFB74D;
+    --color-warning-dark: #F57C00;
+
+    --color-error: #F44336;
+    --color-error-light: #E57373;
+    --color-error-dark: #D32F2F;
+
+    --color-info: #2196F3;
+    --color-info-light: #64B5F6;
+    --color-info-dark: #1976D2;
+
+    /* =======================================
+       FIGMA DESIGN TOKENS
+       ======================================= */
+
+    /* Figma Colors */
+    --color-darkslateblue: #183563;
+    --color-darkslategray: #49454F;
+    --color-gainsboro: #D9D9D9;
+    --color-gray: rgba(0, 0, 0, 0.46);
+    --color-royalblue: #2C6BCC;
+    --color-whitesmoke: #F5F5F5;
+    --color-darkgray: #9CA3AF;
+
+    /* Color Primitives */
+    --color-primitives-brand-100: rgba(245, 245, 245, 1);
+    --color-primitives-brand-300: rgba(217, 217, 217, 1);
+    --color-primitives-brand-800: rgba(44, 44, 44, 1);
+    --color-primitives-brand-900: rgba(30, 30, 30, 1);
+    --color-primitives-gray-900: rgba(30, 30, 30, 1);
+    --color-primitives-white-1000: rgba(255, 255, 255, 1);
+
+    /* LCD Brand Color */
+    --LCD-color: rgba(44, 107, 204, 1);
+
+    /* Fuschia Palette */
+    --fuschia-100: rgba(239, 93, 168, 1);
+    --fuschia-80: rgba(241, 120, 182, 1);
+    --fuschia-60: rgba(252, 221, 236, 1);
+
+    /* Iris Palette */
+    --iris-100: rgba(93, 95, 239, 1);
+    --iris-80: rgba(120, 121, 241, 1);
+    --iris-60: rgba(165, 166, 246, 1);
+
+    /* =======================================
+       TYPOGRAPHY
+       ======================================= */
+
+    /* Font Families - Unified System */
+    --font-primary: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --font-secondary: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --font-body: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+
+    /* Figma Font Families - Updated to Inter */
+    --font-work-sans: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-open-sans: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-inter: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+    /* Font Sizes */
+    --fs-10: 10px;
+    --fs-12: 12px;
+    --fs-14: 14px;
+    --fs-16: 16px;
+    --fs-18: 18px;
+    --fs-20: 20px;
+    --fs-24: 24px;
+    --fs-28: 28px;
+    --fs-32: 32px;
+    --fs-36: 36px;
+    --fs-40: 40px;
+    --fs-48: 48px;
+    --fs-56: 56px;
+    --fs-64: 64px;
+
+    /* Font Weights */
+    --fw-light: 300;
+    --fw-regular: 400;
+    --fw-medium: 500;
+    --fw-semibold: 600;
+    --fw-bold: 700;
+    --fw-extrabold: 800;
+
+    /* Line Heights */
+    --lh-tight: 1.2;
+    --lh-normal: 1.5;
+    --lh-relaxed: 1.75;
+
+    /* Letter Spacings */
+    --ls-tight: -0.02em;
+    --ls-normal: 0;
+    --ls-wide: 0.02em;
+    --ls--0_02: -0.02em;
+    --ls-0_5: 0.5px;
+
+    /* =======================================
+       SPACING
+       ======================================= */
+
+    --space-0: 0;
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 20px;
+    --space-6: 24px;
+    --space-7: 28px;
+    --space-8: 32px;
+    --space-9: 36px;
+    --space-10: 40px;
+    --space-12: 48px;
+    --space-16: 64px;
+    --space-20: 80px;
+    --space-24: 96px;
+
+    /* Figma Spacing */
+    --padding-0: 0px;
+    --padding-4: 4px;
+    --padding-8: 8px;
+    --padding-12: 12px;
+    --padding-16: 16px;
+    --padding-20: 20px;
+    --padding-24: 24px;
+
+    --gap-4: 4px;
+    --gap-8: 8px;
+    --gap-12: 12px;
+    --gap-16: 16px;
+    --gap-20: 20px;
+    --gap-24: 24px;
+
+    /* =======================================
+       SIZES
+       ======================================= */
+
+    /* Width */
+    --width-24: 24px;
+    --width-1440: 1440px;
+    --width-container: 1440px;
+    --width-content: 1200px;
+
+    /* Height */
+    --height-24: 24px;
+    --height-28: 28px;
+    --height-40: 40px;
+    --height-48: 48px;
+    --height-57: 57px;
+    --height-60: 60px;
+
+    /* Border Radius */
+    --radius-none: 0;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-2xl: 24px;
+    --radius-full: 9999px;
+
+    --size-radius-200: 8px;
+    --size-space-200: 8px;
+    --size-space-300: 12px;
+    --size-space-400: 16px;
+
+    /* =======================================
+       SHADOWS
+       ======================================= */
+
+    --shadow-none: none;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+    --text-shadow-1: 1px 0 0 var(--color-white), 0 1px 0 var(--color-white), -1px 0 0 var(--color-white), 0 -1px 0 var(--color-white);
+
+    /* =======================================
+       BORDERS
+       ======================================= */
+
+    --border-width-1: 1px;
+    --border-width-2: 2px;
+    --border-1: 1px solid var(--color-white);
+    --border-gray: 1px solid var(--color-gray-300);
+    --border-primary: 1px solid var(--color-primary);
+
+    /* =======================================
+       TRANSITIONS
+       ======================================= */
+
+    --transition-fast: 150ms ease;
+    --transition-normal: 200ms ease;
+    --transition-slow: 300ms ease;
+
+    /* =======================================
+       Z-INDEX
+       ======================================= */
+
+    --z-dropdown: 100;
+    --z-sticky: 200;
+    --z-fixed: 300;
+    --z-modal-backdrop: 400;
+    --z-modal: 500;
+    --z-popover: 600;
+    --z-tooltip: 700;
+
+    /* =======================================
+       BREAKPOINTS (for reference)
+       ======================================= */
+
+    /* 
+    --bp-xs: 480px;
+    --bp-sm: 640px;
+    --bp-md: 768px;
+    --bp-lg: 1024px;
+    --bp-xl: 1200px;
+    --bp-2xl: 1440px;
+    */
+}
+
+/* ===========================================
+   TYPOGRAPHY PRESETS
+   =========================================== */
+
+/* Hero Section Title */
+.text-hero {
+    font-family: var(--font-work-sans);
+    font-size: var(--fs-36);
+    font-weight: var(--fw-extrabold);
+    letter-spacing: -0.72px;
+    line-height: var(--lh-tight);
+}
+
+/* Header 1 */
+.text-h1 {
+    font-family: var(--font-work-sans);
+    font-size: var(--fs-24);
+    font-weight: var(--fw-bold);
+    letter-spacing: -0.48px;
+}
+
+/* Header 2 */
+.text-h2 {
+    font-family: var(--font-work-sans);
+    font-size: var(--fs-20);
+    font-weight: var(--fw-bold);
+    letter-spacing: -0.4px;
+}
+
+/* Body Text */
+.text-body {
+    font-family: var(--font-work-sans);
+    font-size: var(--fs-16);
+    font-weight: var(--fw-regular);
+    letter-spacing: -0.32px;
+}
+
+/* Body Strong */
+.text-body-strong {
+    font-family: var(--font-inter);
+    font-size: var(--fs-16);
+    font-weight: var(--fw-semibold);
+    line-height: 140%;
+}
+
+/* Button Text */
+.text-button {
+    font-family: var(--font-open-sans);
+    font-size: var(--fs-16);
+    font-weight: var(--fw-regular);
+}
+
+/* Button Small */
+.text-button-sm {
+    font-family: var(--font-open-sans);
+    font-size: var(--fs-12);
+    font-weight: var(--fw-regular);
+}
+
+/* ===========================================
+   LCD COLOR MODES
+   =========================================== */
+
+[data-LCD-mode="mode-1"] {
+    --LCD-color: rgba(44, 107, 204, 1);
+    /* Blue */
+}
+
+[data-LCD-mode="mode-2"] {
+    --LCD-color: rgba(255, 255, 255, 1);
+    /* White */
+}
+
+[data-LCD-mode="mode-3"] {
+    --LCD-color: rgba(234, 196, 0, 1);
+    /* Yellow */
+}
+
+/* ===========================================
+   SDS COLOR MODES (Light/Dark Theme)
+   =========================================== */
+
+[data-color-mode="SDS-light"] {
+    --color-background-brand-default: var(--color-primitives-brand-800);
+    --color-background-brand-hover: var(--color-primitives-brand-900);
+    --color-border-brand-default: var(--color-primitives-brand-800);
+    --color-text-brand-on-brand: var(--color-primitives-brand-100);
+    --color-text-default-default: var(--color-primitives-gray-900);
+}
+
+[data-color-mode="SDS-dark"] {
+    --color-background-brand-default: var(--color-primitives-brand-100);
+    --color-background-brand-hover: var(--color-primitives-brand-300);
+    --color-border-brand-default: var(--color-primitives-brand-100);
+    --color-text-brand-on-brand: var(--color-primitives-brand-900);
+    --color-text-default-default: var(--color-primitives-white-1000);
+}
+
+/* ===========================================
+   UTILITY CLASSES
+   =========================================== */
+
+/* Colors */
+.bg-primary {
+    background-color: var(--color-primary);
+}
+
+.bg-secondary {
+    background-color: var(--color-secondary);
+}
+
+.bg-white {
+    background-color: var(--color-white);
+}
+
+.bg-gray-100 {
+    background-color: var(--color-gray-100);
+}
+
+.text-primary {
+    color: var(--color-primary);
+}
+
+.text-secondary {
+    color: var(--color-secondary);
+}
+
+.text-white {
+    color: var(--color-white);
+}
+
+.text-dark {
+    color: var(--color-darkslateblue);
+}
+
+.text-gray {
+    color: var(--color-gray-600);
+}
+
+/* Layout */
+.container {
+    width: 100%;
+    max-width: var(--width-container);
+    margin: 0 auto;
+    padding: 0 var(--space-4);
+}
+
+/* Flex Utilities */
+.flex {
+    display: flex;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.gap-2 {
+    gap: var(--space-2);
+}
+
+.gap-4 {
+    gap: var(--space-4);
+}
+
+.gap-6 {
+    gap: var(--space-6);
+}
+
+/* Root Container */
+#root {
+    width: 100%;
+    overflow-x: hidden;
+}

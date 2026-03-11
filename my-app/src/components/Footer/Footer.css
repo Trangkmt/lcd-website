@@ -1,0 +1,126 @@
+/* Footer */
+.footer {
+    width: 100%;
+    background: #2C6BCC;
+    color: #ffffff;
+    padding: 60px 160px 40px 160px;
+    box-sizing: border-box;
+    border-top: 5px solid #FFD600;
+}
+
+.footer-content {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.footer-left {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.footer-logo {
+    width: 80px;
+    height: 80px;
+    filter: brightness(0) invert(1);
+}
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.social-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 20px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.social-icon:hover {
+    transform: scale(1.2);
+    color: #FFD600;
+}
+
+.footer-columns {
+    display: flex;
+    gap: 80px;
+}
+
+.footer-column {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.footer-column h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #ffffff;
+}
+
+.footer-column a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.footer-column a:hover {
+    color: #FFD600;
+    transform: translateX(5px);
+}
+
+/* Responsive Design for Footer */
+@media (max-width: 1024px) {
+    .footer {
+        padding: 40px 60px 30px 60px;
+    }
+
+    .footer-columns {
+        gap: 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .footer {
+        padding: 30px 40px 20px 40px;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .footer-columns {
+        flex-direction: column;
+        gap: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer {
+        padding: 20px;
+        margin-top: 40px;
+    }
+
+    .footer-logo {
+        width: 60px;
+        height: 60px;
+    }
+
+    .social-icon {
+        width: 30px;
+        height: 30px;
+        font-size: 16px;
+    }
+}
