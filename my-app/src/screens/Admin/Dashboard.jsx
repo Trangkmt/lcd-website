@@ -1,38 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import './Dashboard.css';
-import { newsAPI, usersAPI, contactAPI } from '../../services/api';
+import { newsAPI, usersAPI, contactAPI, categoriesAPI } from '../../services/api';
 
 export default function Dashboard() {
     const [loading, setLoading] = useState(true);
-    const [statsData, setStatsData] = useState({ totalPosts: 0, pendingPosts: 0, totalMembers: 0, newContacts: 0 });
-    const [recentPosts, setRecentPosts] = useState([]);
+    const [allPosts, setAllPosts] = useState([]);
+    const [allUsers, setAllUsers] = useState([]);
+    const [allContacts, setAllContacts] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [filters, setFilters] = useState({ year: '', status: 'all', category_id: '' });
 
     useEffect(() => {
         async function fetchDashboard() {
             try {
-                const [posts, users, contacts] = await Promise.all([
-                    newsAPI.getAll({ limit: 100, include_unpublished: true }),
+                const [posts, users, contacts, cats] = await Promise.all([
+                    newsAPI.getAll({ limit: 500, include_unpublished: true }),
                     usersAPI.getAll(),
                     contactAPI.getAll({ limit: 100 }),
+                    categoriesAPI.getAll(),
                 ]);
-                const allPosts = Array.isArray(posts) ? posts : [];
-                const allUsers = Array.isArray(users) ? users : [];
-                const allContacts = Array.isArray(contacts) ? contacts : [];
-                setStatsData({
-                    totalPosts: allPosts.length,
-                    pendingPosts: allPosts.filter(p => !p.is_published).length,
-                    totalMembers: allUsers.length,
-                    newContacts: allContacts.filter(c => !c.is_read).length,
-                });
-                setRecentPosts(
-                    allPosts.slice(0, 5).map(p => ({
-                        id: p.id,
-                        title: p.title,
-                        category: p.category_name || '',
-                        status: p.is_published ? 'Đã duyệt' : 'Chờ duyệt',
-                        date: p.created_at ? new Date(p.created_at).toLocaleDateString('vi-VN') : '',
-                    }))
-                );
+                setAllPosts(Array.isArray(posts) ? posts : []);
+                setAllUsers(Array.isArray(users) ? users : []);
+                setAllContacts(Array.isArray(contacts) ? contacts : []);
+                setCategories(Array.isArray(cats) ? cats : []);
             } catch (err) {
                 console.error('Dashboard load error:', err);
             } finally {
@@ -41,6 +31,41 @@ export default function Dashboard() {
         }
         fetchDashboard();
     }, []);
+
+    const filteredPosts = useMemo(() => {
+        let list = [...allPosts];
+        if (filters.year) {
+            list = list.filter(p => p.created_at && new Date(p.created_at).getFullYear() === parseInt(filters.year));
+        }
+        if (filters.status === 'published') list = list.filter(p => p.is_published);
+        else if (filters.status === 'pending') list = list.filter(p => !p.is_published);
+        if (filters.category_id) list = list.filter(p => String(p.category_id) === String(filters.category_id));
+        return list;
+    }, [allPosts, filters]);
+
+    const statsData = useMemo(() => ({
+        totalPosts: filteredPosts.length,
+        pendingPosts: filteredPosts.filter(p => !p.is_published).length,
+        totalMembers: allUsers.length,
+        newContacts: allContacts.filter(c => !c.is_read).length,
+    }), [filteredPosts, allUsers, allContacts]);
+
+    const recentPosts = useMemo(() =>
+        filteredPosts.slice(0, 5).map(p => ({
+            id: p.id,
+            title: p.title,
+            category: p.category_name || '',
+            status: p.is_published ? 'Đã duyệt' : 'Chờ duyệt',
+            date: p.created_at ? new Date(p.created_at).toLocaleDateString('vi-VN') : '',
+        })), [filteredPosts]);
+
+    const availableYears = useMemo(() =>
+        [...new Set(allPosts.filter(p => p.created_at).map(p => new Date(p.created_at).getFullYear()))].sort((a, b) => b - a),
+        [allPosts]);
+
+    const hasActiveFilter = filters.year || filters.status !== 'all' || filters.category_id;
+    const setFilter = (key, value) => setFilters(prev => ({ ...prev, [key]: value }));
+    const resetFilters = () => setFilters({ year: '', status: 'all', category_id: '' });
 
     const statCards = [
         { label: 'Tổng bài viết', value: statsData.totalPosts, icon: '📝', color: '#667eea' },
@@ -56,7 +81,34 @@ export default function Dashboard() {
                 <p className="dashboard-subtitle">Chào mừng quay trở lại! Đây là tổng quan hệ thống của bạn.</p>
             </div>
 
-            {/* Stats Cards */}
+            {/* Filter Bar */}
+            <div className="dashboard-filters">
+                <div className="filter-group">
+                    <label className="filter-label">Năm</label>
+                    <select className="filter-select" value={filters.year} onChange={e => setFilter('year', e.target.value)}>
+                        <option value="">Tất cả các năm</option>
+                        {availableYears.map(y => <option key={y} value={y}>{y}</option>)}
+                    </select>
+                </div>
+                <div className="filter-group">
+                    <label className="filter-label">Trạng thái</label>
+                    <select className="filter-select" value={filters.status} onChange={e => setFilter('status', e.target.value)}>
+                        <option value="all">Tất cả</option>
+                        <option value="published">Đã đăng</option>
+                        <option value="pending">Chờ duyệt</option>
+                    </select>
+                </div>
+                <div className="filter-group">
+                    <label className="filter-label">Danh mục</label>
+                    <select className="filter-select" value={filters.category_id} onChange={e => setFilter('category_id', e.target.value)}>
+                        <option value="">Tất cả danh mục</option>
+                        {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
+                    </select>
+                </div>
+                {hasActiveFilter && (
+                    <button className="filter-reset" onClick={resetFilters}>✕ Xóa bộ lọc</button>
+                )}
+            </div>
             <div className="stats-grid">
                 {statCards.map((stat, index) => (
                     <div key={index} className="stat-card" style={{ borderLeftColor: stat.color }}>

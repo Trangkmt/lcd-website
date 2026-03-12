@@ -4,12 +4,19 @@ const sql = require('mssql');
 // GET /api/categories - Lấy danh sách categories
 exports.getAllCategories = async (req, res) => {
     try {
+        const { page_type } = req.query;
         const pool = await getConnection();
-        const result = await pool.request().query(`
+        const request = pool.request();
+        let whereClause = 'WHERE c.is_active = 1';
+        if (page_type) {
+            request.input('page_type', sql.NVarChar, page_type);
+            whereClause += ' AND c.page_type = @page_type';
+        }
+        const result = await request.query(`
             SELECT c.*, pc.name as parent_name
             FROM categories c
             LEFT JOIN categories pc ON c.parent_id = pc.id
-            WHERE c.is_active = 1
+            ${whereClause}
             ORDER BY c.display_order, c.name
         `);
         res.json(result.recordset);
@@ -45,7 +52,7 @@ exports.getCategoryById = async (req, res) => {
 // POST /api/categories - Tạo category mới
 exports.createCategory = async (req, res) => {
     try {
-        const { name, slug, description, parent_id, display_order } = req.body;
+        const { name, slug, description, parent_id, page_type, display_order } = req.body;
 
         if (!name || !slug) {
             return res.status(400).json({ error: 'Name và slug là bắt buộc' });
@@ -57,11 +64,12 @@ exports.createCategory = async (req, res) => {
             .input('slug', sql.NVarChar, slug)
             .input('description', sql.NVarChar, description || null)
             .input('parent_id', sql.Int, parent_id || null)
+            .input('page_type', sql.NVarChar, page_type || 'news')
             .input('display_order', sql.Int, display_order || 0)
             .query(`
-                INSERT INTO categories (name, slug, description, parent_id, display_order)
+                INSERT INTO categories (name, slug, description, parent_id, page_type, display_order)
                 OUTPUT INSERTED.*
-                VALUES (@name, @slug, @description, @parent_id, @display_order)
+                VALUES (@name, @slug, @description, @parent_id, @page_type, @display_order)
             `);
 
         res.status(201).json(result.recordset[0]);
@@ -74,7 +82,7 @@ exports.createCategory = async (req, res) => {
 // PUT /api/categories/:id - Cập nhật category
 exports.updateCategory = async (req, res) => {
     try {
-        const { name, slug, description, parent_id, display_order, is_active } = req.body;
+        const { name, slug, description, parent_id, page_type, display_order, is_active } = req.body;
         const pool = await getConnection();
 
         const result = await pool.request()
@@ -83,12 +91,14 @@ exports.updateCategory = async (req, res) => {
             .input('slug', sql.NVarChar, slug)
             .input('description', sql.NVarChar, description)
             .input('parent_id', sql.Int, parent_id || null)
+            .input('page_type', sql.NVarChar, page_type || 'news')
             .input('display_order', sql.Int, display_order)
             .input('is_active', sql.Bit, is_active)
             .query(`
                 UPDATE categories 
                 SET name = @name, slug = @slug, description = @description,
-                    parent_id = @parent_id, display_order = @display_order,
+                    parent_id = @parent_id, page_type = @page_type,
+                    display_order = @display_order,
                     is_active = @is_active, updated_at = GETDATE()
                 OUTPUT INSERTED.*
                 WHERE id = @id

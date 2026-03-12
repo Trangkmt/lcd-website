@@ -12,30 +12,68 @@ function slugify(str) {
 
 const EMPTY_FORM = { title: '', slug: '', summary: '', content: '', thumbnail: '', category_id: '', author_id: '', is_featured: false, is_published: false };
 
+const PAGE_TYPE_LABELS = {
+    news: '📰 Tin tức',
+    achievement: '🏆 Thành tích',
+    activity_annual: '📅 Hoạt động thường niên',
+    activity_non_annual: '🎯 Hoạt động không thường niên',
+};
+
 export default function PostsManagement() {
     const [activeTab, setActiveTab] = useState('all');
     const [showModal, setShowModal] = useState(false);
     const [editingPost, setEditingPost] = useState(null);
     const [form, setForm] = useState(EMPTY_FORM);
     const [searchQuery, setSearchQuery] = useState('');
-    const [filterCategory, setFilterCategory] = useState('all');
+    const [apiFilters, setApiFilters] = useState({ category_id: '', year: '', page_type: '', is_featured: '' });
     const [posts, setPosts] = useState([]);
     const [categories, setCategories] = useState([]);
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState('');
+    const [showCatDropdown, setShowCatDropdown] = useState(false);
+    const [hoveredPageType, setHoveredPageType] = useState(null);
+    const catDropdownRef = useRef(null);
 
     useEffect(() => {
-        fetchPosts();
         categoriesAPI.getAll().then(data => setCategories(Array.isArray(data) ? data : [])).catch(() => { });
         usersAPI.getAll().then(data => setUsers(Array.isArray(data) ? data : [])).catch(() => { });
     }, []);
 
-    async function fetchPosts() {
+    useEffect(() => {
+        fetchPosts(apiFilters);
+    }, [apiFilters]);
+
+    const hasActiveFilter = apiFilters.category_id || apiFilters.year || apiFilters.page_type || apiFilters.is_featured !== '';
+    const resetFilters = () => setApiFilters({ category_id: '', year: '', page_type: '', is_featured: '' });
+    const setApiFilter = (key, value) => setApiFilters(prev => ({ ...prev, [key]: value }));
+
+    const availableYears = React.useMemo(() => {
+        const years = [...new Set(posts.filter(p => p.created_at).map(p => new Date(p.created_at).getFullYear()))].sort((a, b) => b - a);
+        return years;
+    }, [posts]);
+
+    useEffect(() => {
+        function handleClickOutside(e) {
+            if (catDropdownRef.current && !catDropdownRef.current.contains(e.target)) {
+                setShowCatDropdown(false);
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    async function fetchPosts(filters = {}) {
         setLoading(true);
+        setError('');
         try {
-            const data = await newsAPI.getAll({ limit: 200, include_unpublished: true });
+            const params = { limit: 500, include_unpublished: true };
+            if (filters.category_id) params.category_id = filters.category_id;
+            if (filters.year) params.year = filters.year;
+            if (filters.page_type) params.page_type = filters.page_type;
+            if (filters.is_featured !== '' && filters.is_featured !== undefined) params.is_featured = filters.is_featured;
+            const data = await newsAPI.getAll(params);
             setPosts(Array.isArray(data) ? data : []);
         } catch (err) {
             setError('Không thể tải danh sách bài viết: ' + err.message);
@@ -77,7 +115,7 @@ export default function PostsManagement() {
                 await newsAPI.create(form);
             }
             setShowModal(false);
-            await fetchPosts();
+            await fetchPosts(apiFilters);
         } catch (err) {
             alert('Lỗi: ' + err.message);
         } finally {
@@ -103,13 +141,21 @@ export default function PostsManagement() {
         });
     }
 
+    const categoriesByPageType = categories.reduce((acc, cat) => {
+        const pt = cat.page_type || 'news';
+        if (!acc[pt]) acc[pt] = [];
+        acc[pt].push(cat);
+        return acc;
+    }, {});
+    const pageTypeOrder = Object.keys(PAGE_TYPE_LABELS).filter(pt => categoriesByPageType[pt]?.length > 0);
+    const selectedCatName = categories.find(c => String(c.id) === String(form.category_id))?.name || '';
+
     const filteredPosts = posts.filter(post => {
-        const matchesSearch = (post.title || '').toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesCat = filterCategory === 'all' || String(post.category_id) === String(filterCategory);
+        const matchesSearch = !searchQuery || (post.title || '').toLowerCase().includes(searchQuery.toLowerCase());
         const matchesStatus = activeTab === 'all'
             || (activeTab === 'pending' && !post.is_published)
             || (activeTab === 'approved' && post.is_published);
-        return matchesSearch && matchesCat && matchesStatus;
+        return matchesSearch && matchesStatus;
     });
 
     return (
@@ -148,11 +194,28 @@ export default function PostsManagement() {
                 <div className="search-box">
                     <span className="search-icon">🔍</span>
                     <input type="text" placeholder="Tìm kiếm bài viết..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="search-input" />
+                    {searchQuery && <span className="search-clear" onClick={() => setSearchQuery('')}>✕</span>}
                 </div>
-                <select className="filter-select" value={filterCategory} onChange={e => setFilterCategory(e.target.value)}>
-                    <option value="all">Tất cả danh mục</option>
+                <select className="filter-select" value={apiFilters.year} onChange={e => setApiFilter('year', e.target.value)}>
+                    <option value="">Tất cả năm</option>
+                    {availableYears.map(y => <option key={y} value={y}>{y}</option>)}
+                </select>
+                <select className="filter-select" value={apiFilters.page_type} onChange={e => setApiFilter('page_type', e.target.value)}>
+                    <option value="">Tất cả loại</option>
+                    {Object.entries(PAGE_TYPE_LABELS).map(([key, label]) => <option key={key} value={key}>{label}</option>)}
+                </select>
+                <select className="filter-select" value={apiFilters.category_id} onChange={e => setApiFilter('category_id', e.target.value)}>
+                    <option value="">Tất cả danh mục</option>
                     {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
                 </select>
+                <select className="filter-select" value={apiFilters.is_featured} onChange={e => setApiFilter('is_featured', e.target.value)}>
+                    <option value="">Tất cả bài viết</option>
+                    <option value="true">⭐ Nổi bật</option>
+                    <option value="false">Bình thường</option>
+                </select>
+                {hasActiveFilter && (
+                    <button className="filter-reset-btn" onClick={resetFilters}>✕ Xóa lọc</button>
+                )}
             </div>
 
             {/* Posts Table */}
@@ -209,7 +272,7 @@ export default function PostsManagement() {
             {/* Create/Edit Modal */}
             {showModal && (
                 <div className="modal-overlay" onClick={() => setShowModal(false)}>
-                    <div className="modal-content" style={{ maxWidth: '700px' }} onClick={e => e.stopPropagation()}>
+                    <div className="modal-content" style={{ maxWidth: '1000px' }} onClick={e => e.stopPropagation()}>
                         <div className="modal-header">
                             <h2 className="modal-title">{editingPost ? 'Chỉnh sửa bài viết' : 'Tạo bài viết mới'}</h2>
                             <button className="modal-close" onClick={() => setShowModal(false)}>×</button>
@@ -218,10 +281,49 @@ export default function PostsManagement() {
                             <form className="create-form" onSubmit={handleSave}>
                                 <div className="form-group">
                                     <label className="form-label">Danh mục *</label>
-                                    <select className="form-control" value={form.category_id} onChange={e => handleFormChange('category_id', e.target.value)}>
-                                        <option value="">Chọn danh mục</option>
-                                        {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
-                                    </select>
+                                    <div className="cat-dropdown-wrapper" ref={catDropdownRef}>
+                                        <button
+                                            type="button"
+                                            className={`cat-dropdown-trigger${showCatDropdown ? ' open' : ''}`}
+                                            onClick={() => { setShowCatDropdown(v => !v); setHoveredPageType(null); }}
+                                        >
+                                            <span className={`cat-dropdown-value${!selectedCatName ? ' placeholder' : ''}`}>
+                                                {selectedCatName || 'Chọn danh mục'}
+                                            </span>
+                                            <span className="cat-dropdown-arrow">{showCatDropdown ? '▲' : '▼'}</span>
+                                        </button>
+                                        {showCatDropdown && (
+                                            <div className="cat-dropdown-menu">
+                                                {pageTypeOrder.length === 0 && (
+                                                    <div style={{ padding: '12px 16px', color: '#888', fontSize: '14px' }}>Chưa có danh mục</div>
+                                                )}
+                                                {pageTypeOrder.map(pt => (
+                                                    <div
+                                                        key={pt}
+                                                        className={`cat-page-type-row${hoveredPageType === pt ? ' active' : ''}`}
+                                                        onMouseEnter={() => setHoveredPageType(pt)}
+                                                    >
+                                                        <span className="cat-page-type-label">{PAGE_TYPE_LABELS[pt]}</span>
+                                                        <span className="cat-page-type-arrow">›</span>
+                                                        {hoveredPageType === pt && (
+                                                            <div className="cat-page-type-submenu">
+                                                                {categoriesByPageType[pt].map(cat => (
+                                                                    <div
+                                                                        key={cat.id}
+                                                                        className={`cat-submenu-item${String(form.category_id) === String(cat.id) ? ' selected' : ''}`}
+                                                                        onClick={() => { handleFormChange('category_id', cat.id); setShowCatDropdown(false); setHoveredPageType(null); }}
+                                                                    >
+                                                                        {cat.name}
+                                                                        {String(form.category_id) === String(cat.id) && <span className="cat-submenu-check"> ✓</span>}
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                                 <div className="form-group">
                                     <label className="form-label">Tác giả</label>

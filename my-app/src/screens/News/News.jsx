@@ -13,8 +13,8 @@ const News = () => {
 
     useEffect(() => {
         Promise.all([
-            newsAPI.getAll({ limit: 100 }),
-            categoriesAPI.getAll(),
+            newsAPI.getAll({ page_type: 'news', limit: 100 }),
+            categoriesAPI.getAll({ page_type: 'news' }),
         ])
             .then(([newsData, catsData]) => {
                 setNews(Array.isArray(newsData) ? newsData : []);

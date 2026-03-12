@@ -1,8 +1,33 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './OrganizationalStructure.css';
+import { organizationsAPI } from '../../services/api';
 
 const OrganizationalStructure = () => {
-    const departments = [
+    const [departments, setDepartments] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        organizationsAPI.getAll()
+            .then(data => {
+                const orgs = Array.isArray(data) ? data : [];
+                // Map API data to the format needed for display
+                const mapped = orgs.map((org, idx) => ({
+                    id: org.id,
+                    name: org.name,
+                    description: org.description || '',
+                    icon: ['🏃', '📱', '🎯', '🤝', '⭐'][idx % 5],
+                    level: ['top', 'second-left', 'second-right', 'third-left', 'third-right'][idx % 5]
+                }));
+                setDepartments(mapped);
+            })
+            .catch(() => {
+                // Fallback to hardcoded data on error
+                setDepartments(hardcodedDepartments);
+            })
+            .finally(() => setLoading(false));
+    }, []);
+
+    const hardcodedDepartments = [
         {
             id: 1,
             name: 'Ban Văn Thể',
@@ -39,6 +64,18 @@ const OrganizationalStructure = () => {
             level: 'third-right'
         }
     ];
+
+    if (loading) {
+        return (
+            <div className="organizational-structure">
+                <div className="org-header">
+                    <h1 className="org-title">Cơ Cấu Tổ Chức</h1>
+                    <p className="org-subtitle">Liên Chi Đoàn Khoa Công Nghệ Thông Tin</p>
+                </div>
+                <div style={{ textAlign: 'center', padding: '40px', color: '#888' }}>Đang tải...</div>
+            </div>
+        );
+    }
 
     return (
         <div className="organizational-structure">

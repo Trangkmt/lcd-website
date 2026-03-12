@@ -34,7 +34,7 @@ export const usersAPI = {
 };
 
 export const categoriesAPI = {
-    getAll: () => apiFetch('/categories'),
+    getAll: (params = {}) => apiFetch(`/categories?${new URLSearchParams(params)}`),
     getById: (id) => apiFetch(`/categories/${id}`),
     create: (data) => apiFetch('/categories', { method: 'POST', body: data }),
     update: (id, data) => apiFetch(`/categories/${id}`, { method: 'PUT', body: data }),

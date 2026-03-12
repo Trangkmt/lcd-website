@@ -50,6 +50,7 @@ CREATE TABLE categories (
     slug NVARCHAR(100) NOT NULL UNIQUE,
     description NVARCHAR(MAX),
     parent_id INT,
+    page_type NVARCHAR(50) DEFAULT 'news',
     display_order INT DEFAULT 0,
     is_active BIT DEFAULT 1,
     created_at DATETIME DEFAULT GETDATE(),
@@ -174,12 +175,16 @@ GO
 
 -- Categories
 SET IDENTITY_INSERT categories ON;
-INSERT INTO categories (id, name, slug, description, display_order, is_active) VALUES
-(1, N'Tin tức chung', N'tin-tuc-chung', N'Các tin tức chung về hoạt động', 1, 1),
-(2, N'Sự kiện', N'su-kien', N'Thông tin về các sự kiện', 2, 1),
-(3, N'Thông báo', N'thong-bao', N'Các thông báo quan trọng', 3, 1),
-(4, N'Văn bản', N'van-ban', N'Danh mục văn bản', 4, 1),
-(5, N'Hoạt động', N'hoat-dong', N'Các hoạt động của tổ chức', 5, 1);
+INSERT INTO categories (id, name, slug, description, page_type, display_order, is_active) VALUES
+(1, N'Tin tức chung', N'tin-tuc-chung', N'Các tin tức chung về hoạt động', N'news', 1, 1),
+(2, N'Thông báo', N'thong-bao', N'Các thông báo quan trọng', N'news', 2, 1),
+(3, N'Giải thưởng', N'giai-thuong', N'Các giải thưởng của đoàn viên', N'achievement', 1, 1),
+(4, N'Chào tân', N'chao-tan', N'Hoạt động chào tân sinh viên', N'activity_annual', 1, 1),
+(5, N'Quân sự', N'quan-su', N'Hoạt động quân sự định kỳ', N'activity_annual', 2, 1),
+(6, N'Prom cuối khoá', N'prom-cuoi-khoa', N'Dạ hội prom cuối khoá', N'activity_annual', 3, 1),
+(7, N'Talkshow', N'talkshow', N'Các buổi talkshow định kỳ', N'activity_annual', 4, 1),
+(8, N'Cuộc thi', N'cuoc-thi', N'Các cuộc thi thường niên', N'activity_annual', 5, 1),
+(9, N'Hoạt động cộng đồng', N'hoat-dong-cong-dong', N'Hoạt động phục vụ cộng đồng', N'activity_non_annual', 1, 1);
 SET IDENTITY_INSERT categories OFF;
 GO
 
@@ -276,10 +281,21 @@ GO
 PRINT 'Database MyAppDB đã được tạo thành công!';
 PRINT 'Tổng số bảng: 7';
 PRINT '- users: 2 records';
-PRINT '- categories: 5 records';
+PRINT '- categories: 9 records (phân theo trang)';
 PRINT '- news: 3 records';
 PRINT '- documents: 3 records';
 PRINT '- activities: 2 records';
 PRINT '- organizations: 2 records';
 PRINT '- contact_info: 2 records';
+GO
+
+-- ==================================================
+-- MIGRATION: Thêm cột page_type vào bảng categories đã tồn tại
+-- Chạy script này nếu database đã có sẵn và cần cập nhật
+-- ==================================================
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID('categories') AND name = 'page_type')
+BEGIN
+    ALTER TABLE categories ADD page_type NVARCHAR(50) NOT NULL DEFAULT 'news';
+    PRINT 'Đã thêm cột page_type vào bảng categories';
+END
 GO

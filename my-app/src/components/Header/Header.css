@@ -188,6 +188,53 @@
 }
 
 /* ===========================================
+   ACTIVITY DROPDOWN
+   =========================================== */
+
+/* Dropdown wrapper needs relative positioning */
+.menu-item--has-dropdown {
+    position: absolute;
+    cursor: pointer;
+}
+
+.activity-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 260px;
+    background-color: #ffffff;
+    border: 1px solid rgba(24, 53, 99, 0.15);
+    border-radius: 6px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.activity-dropdown__item {
+    display: block;
+    padding: 14px 20px;
+    color: var(--color-darkslateblue);
+    font-size: 18px;
+    font-weight: 600;
+    font-family: var(--font-work-sans);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(24, 53, 99, 0.08);
+    transition: background-color 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
+}
+
+.activity-dropdown__item:last-child {
+    border-bottom: none;
+}
+
+.activity-dropdown__item:hover {
+    background-color: rgba(44, 107, 204, 0.08);
+    color: var(--color-royalblue);
+}
+
+/* ===========================================
    SEARCH
    =========================================== */
 

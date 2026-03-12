@@ -7,14 +7,20 @@ import IconRightArrow from '../../images/icon-right-arrow.svg';
 const Header = () => {
     const location = useLocation();
     const [searchValue, setSearchValue] = useState('');
+    const [showActivityDropdown, setShowActivityDropdown] = useState(false);
 
     const menuItems = [
         { id: 1, label: "Giới thiệu", path: "/about" },
         { id: 2, label: "Cơ cấu tổ chức", path: "/organization" },
-        { id: 3, label: "Hoạt động", path: "/activity" },
+        { id: 3, label: "Hoạt động", path: "/activity", hasDropdown: true },
         { id: 4, label: "Tin tức", path: "/news" },
         { id: 5, label: "Thành tích", path: "/achievement" },
         { id: 6, label: "Liên hệ", path: "/contact" },
+    ];
+
+    const activityDropdownItems = [
+        { label: "Hoạt động thường niên", path: "/activity/annual" },
+        { label: "Hoạt động không thường niên", path: "/activity/non-annual" },
     ];
 
     const handleMenuItemClick = useCallback((item) => {
@@ -37,23 +43,59 @@ const Header = () => {
                 </Link>
 
                 {/* Menu Items */}
-                {menuItems.map((item, index) => (
-                    <Link
-                        key={item.id}
-                        to={item.path}
-                        className={`menu-item menu-item--${index + 1} ${location.pathname === item.path ? 'menu-item--active' : ''}`}
-                        onClick={() => handleMenuItemClick(item)}
-                    >
-                        <div className="menu-item__state-layer">
-                            <div className="menu-item__content">
-                                <b className="menu-item__label">{item.label}</b>
+                {menuItems.map((item, index) => {
+                    if (item.hasDropdown) {
+                        const isActive = location.pathname.startsWith(item.path);
+                        return (
+                            <div
+                                key={item.id}
+                                className={`menu-item menu-item--${index + 1} menu-item--has-dropdown ${isActive ? 'menu-item--active' : ''}`}
+                                onMouseEnter={() => setShowActivityDropdown(true)}
+                                onMouseLeave={() => setShowActivityDropdown(false)}
+                            >
+                                <div className="menu-item__state-layer">
+                                    <div className="menu-item__content">
+                                        <b className="menu-item__label">{item.label}</b>
+                                    </div>
+                                    <div className="menu-item__trailing">
+                                        <img className="menu-item__icon" src={IconRightArrow} alt="" />
+                                    </div>
+                                </div>
+                                {showActivityDropdown && (
+                                    <div className="activity-dropdown">
+                                        {activityDropdownItems.map((dropItem, i) => (
+                                            <Link
+                                                key={i}
+                                                to={dropItem.path}
+                                                className="activity-dropdown__item"
+                                                onClick={() => setShowActivityDropdown(false)}
+                                            >
+                                                {dropItem.label}
+                                            </Link>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
-                            <div className="menu-item__trailing">
-                                <img className="menu-item__icon" src={IconRightArrow} alt="" />
+                        );
+                    }
+                    return (
+                        <Link
+                            key={item.id}
+                            to={item.path}
+                            className={`menu-item menu-item--${index + 1} ${location.pathname === item.path ? 'menu-item--active' : ''}`}
+                            onClick={() => handleMenuItemClick(item)}
+                        >
+                            <div className="menu-item__state-layer">
+                                <div className="menu-item__content">
+                                    <b className="menu-item__label">{item.label}</b>
+                                </div>
+                                <div className="menu-item__trailing">
+                                    <img className="menu-item__icon" src={IconRightArrow} alt="" />
+                                </div>
                             </div>
-                        </div>
-                    </Link>
-                ))}
+                        </Link>
+                    );
+                })}
 
                 {/* Search */}
                 <div className="header__search">

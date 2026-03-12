@@ -1,0 +1,160 @@
+/* Annual Activity Page */
+.annual-activity-page {
+    width: 100%;
+    min-height: 100vh;
+    background: #f5f5f5;
+    font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.annual-activity-content {
+    width: 100%;
+    padding: 40px 20px;
+}
+
+.content-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #fff;
+    min-height: 100vh;
+    padding: 48px 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.annual-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: #183563;
+    text-align: center;
+    margin: 0 0 12px 0;
+    letter-spacing: -0.02em;
+}
+
+.annual-subtitle {
+    font-size: 16px;
+    color: #666;
+    text-align: center;
+    margin: 0 0 48px 0;
+}
+
+.annual-loading {
+    text-align: center;
+    color: #888;
+    font-size: 16px;
+    padding: 40px;
+}
+
+/* Events Grid */
+.annual-events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 28px;
+}
+
+/* Event Card */
+.annual-event-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(24, 53, 99, 0.1);
+    text-decoration: none;
+    color: inherit;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+.annual-event-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(24, 53, 99, 0.15);
+}
+
+/* Event Image */
+.annual-event-image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background: #e8ecf4;
+}
+
+.annual-event-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.annual-event-card:hover .annual-event-image img {
+    transform: scale(1.05);
+}
+
+.annual-event-image-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #183563 0%, #2C6BCC 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.annual-event-image-placeholder span {
+    font-size: 64px;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+}
+
+/* Event Info */
+.annual-event-info {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.annual-event-name {
+    font-size: 22px;
+    font-weight: 700;
+    color: #183563;
+    margin: 0 0 8px 0;
+}
+
+.annual-event-desc {
+    font-size: 14px;
+    color: #666;
+    margin: 0 0 16px 0;
+    line-height: 1.5;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.annual-event-link {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2C6BCC;
+    align-self: flex-start;
+}
+
+.annual-event-card:hover .annual-event-link {
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .content-wrapper {
+        padding: 24px 16px;
+    }
+
+    .annual-title {
+        font-size: 24px;
+    }
+
+    .annual-events-grid {
+        grid-template-columns: 1fr;
+    }
+}

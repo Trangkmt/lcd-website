@@ -4,7 +4,7 @@ const sql = require('mssql');
 // GET /api/news - Lấy danh sách tin tức
 exports.getAllNews = async (req, res) => {
     try {
-        const { category_id, category_slug, is_featured, year, limit = 50, offset = 0, include_unpublished } = req.query;
+        const { category_id, category_slug, page_type, is_featured, year, limit = 50, offset = 0, include_unpublished } = req.query;
         const pool = await getConnection();
 
         let query = `
@@ -12,7 +12,7 @@ exports.getAllNews = async (req, res) => {
                 n.id, n.title, n.slug, n.summary, n.content, n.thumbnail,
                 n.view_count, n.is_featured, n.is_published, n.published_at,
                 n.created_at, n.updated_at, n.author_id,
-                c.name as category_name, c.slug as category_slug,
+                c.name as category_name, c.slug as category_slug, c.page_type,
                 u.full_name as author_name
             FROM news n
             LEFT JOIN categories c ON n.category_id = c.id
@@ -34,6 +34,11 @@ exports.getAllNews = async (req, res) => {
         if (category_slug) {
             query += ' AND c.slug = @category_slug';
             request.input('category_slug', sql.NVarChar, category_slug);
+        }
+
+        if (page_type) {
+            query += ' AND c.page_type = @page_type';
+            request.input('page_type', sql.NVarChar, page_type);
         }
 
         if (year) {

@@ -15,14 +15,20 @@
     border-radius: 12px;
     padding: 24px;
     display: flex;
+    align-items: flex-start;
     gap: 24px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
+    position: relative;
+    z-index: 0;
+    width: 600px;
+    height: 286px;
 }
 
 .achievement-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    z-index: 1;
 }
 
 .achievement-badge {
@@ -33,9 +39,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 40px;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+    word-break: break-word;
+    padding: 8px;
     flex-shrink: 0;
     box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+    color: #7a5c00;
 }
 
 .achievement-content {

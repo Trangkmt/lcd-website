@@ -9,7 +9,7 @@ const Achievement = () => {
     const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
-        newsAPI.getAll({ category_slug: 'thanh-tich-noi-bat', limit: 100 })
+        newsAPI.getAll({ page_type: 'achievement', limit: 100 })
             .then(data => setAchievements(Array.isArray(data) ? data : []))
             .catch(() => { })
             .finally(() => setLoading(false));
