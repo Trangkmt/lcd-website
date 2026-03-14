@@ -1,6 +1,6 @@
 .organizational-structure {
     min-height: 100vh;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #2C6BCC;
     padding: 60px 20px 80px;
     font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 }
@@ -27,19 +27,18 @@
     font-weight: 400;
 }
 
-/* Pyramid Container */
-.pyramid-container {
+/* Main container */
+.org-container {
     max-width: 1200px;
     margin: 0 auto;
-    position: relative;
-    padding: 40px 0;
+    padding: 0 0 40px;
 }
 
 /* Leadership Level */
 .leadership-level {
     display: flex;
     justify-content: center;
-    margin-bottom: 60px;
+    margin-bottom: 48px;
     animation: fadeIn 0.8s ease-out 0.2s both;
 }
 
@@ -50,7 +49,7 @@
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: 3px solid #ffd700;
+    border: 3px solid #FFD600;
 }
 
 .leadership-card:hover {
@@ -85,56 +84,19 @@
 .role-title {
     font-size: 16px;
     font-weight: 600;
-    color: #667eea;
+    color: #2C6BCC;
     padding: 8px 20px;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    background: rgba(44, 107, 204, 0.1);
     border-radius: 20px;
-    border: 2px solid #667eea;
+    border: 2px solid #2C6BCC;
 }
 
-/* Pyramid Structure */
-.pyramid-structure {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 40px;
-}
-
-.pyramid-level {
-    display: flex;
-    justify-content: center;
-    gap: 32px;
-    width: 100%;
-    position: relative;
-    z-index: 2;
-}
-
-/* Level 1 - Top (1 card) */
-.level-1 {
+/* Departments Grid — shows ALL orgs regardless of count */
+.departments-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 24px;
     animation: fadeIn 0.8s ease-out 0.4s both;
-}
-
-.level-1 .department-card {
-    width: 280px;
-}
-
-/* Level 2 - Second Row (2 cards) */
-.level-2 {
-    animation: fadeIn 0.8s ease-out 0.6s both;
-}
-
-.level-2 .department-card {
-    width: 280px;
-}
-
-/* Level 3 - Third Row (2 cards) */
-.level-3 {
-    animation: fadeIn 0.8s ease-out 0.8s both;
-}
-
-.level-3 .department-card {
-    width: 280px;
 }
 
 /* Department Cards */
@@ -150,9 +112,9 @@
 }
 
 .department-card:hover {
-    transform: translateY(-10px) scale(1.03);
+    transform: translateY(-8px);
     box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
-    border-color: #667eea;
+    border-color: #FFD600;
 }
 
 .dept-icon {
@@ -174,20 +136,6 @@
     color: #666;
     line-height: 1.6;
     margin: 0;
-}
-
-/* Connecting Lines */
-.connecting-lines {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    height: 100%;
-    max-width: 1000px;
-    pointer-events: none;
-    z-index: 1;
-    opacity: 0.6;
 }
 
 /* Statistics Section */
@@ -216,10 +164,7 @@
 .stat-number {
     font-size: 48px;
     font-weight: 700;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #2C6BCC;
     margin-bottom: 8px;
 }
 
@@ -267,18 +212,6 @@
 }
 
 /* Responsive Design */
-@media (max-width: 1024px) {
-    .pyramid-level {
-        gap: 24px;
-    }
-
-    .level-1 .department-card,
-    .level-2 .department-card,
-    .level-3 .department-card {
-        width: 240px;
-    }
-}
-
 @media (max-width: 768px) {
     .organizational-structure {
         padding: 40px 16px 60px;
@@ -305,25 +238,9 @@
         gap: 12px;
     }
 
-    .pyramid-structure {
-        gap: 24px;
-    }
-
-    .pyramid-level {
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-    }
-
-    .level-1 .department-card,
-    .level-2 .department-card,
-    .level-3 .department-card {
-        width: 100%;
-        max-width: 320px;
-    }
-
-    .connecting-lines {
-        display: none;
+    .departments-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 16px;
     }
 
     .org-stats {
@@ -352,6 +269,11 @@
 
     .leadership-icon {
         font-size: 40px;
+    }
+
+    .departments-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
     }
 
     .dept-icon {

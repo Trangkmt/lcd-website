@@ -5,6 +5,7 @@ require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const DB_HOST = process.env.DB_HOST || process.env.DB_SERVER || 'localhost';
 
 // Middleware
 app.use(cors());
@@ -25,13 +26,12 @@ const documentsRoutes = require('./routes/documents');
 const activitiesRoutes = require('./routes/activities');
 const organizationsRoutes = require('./routes/organizations');
 const contactRoutes = require('./routes/contact');
-const donationsRoutes = require('./routes/donations');
 
 // Health check endpoint
 app.get('/api/health', async (req, res) => {
     try {
         const pool = await getConnection();
-        const result = await pool.request().query('SELECT @@VERSION as version, DB_NAME() as dbname');
+        const result = await pool.request().query('SELECT @@version as version, DATABASE() as dbname');
         res.json({
             status: 'OK',
             database: 'Connected',
@@ -54,7 +54,6 @@ app.use('/api/documents', documentsRoutes);
 app.use('/api/activities', activitiesRoutes);
 app.use('/api/organizations', organizationsRoutes);
 app.use('/api/contact', contactRoutes);
-app.use('/api/donations', donationsRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
@@ -96,7 +95,7 @@ app.listen(PORT, () => {
     console.log('='.repeat(60));
     console.log(`🚀 Server đang chạy tại http://localhost:${PORT}`);
     console.log(`📊 Database: ${process.env.DB_DATABASE || 'MyAppDB'}`);
-    console.log(`🔗 Server: ${process.env.DB_SERVER || 'localhost'}`);
+    console.log(`🔗 Server: ${DB_HOST}`);
     console.log('='.repeat(60));
     console.log('\n📋 API Endpoints:');
     console.log(`  GET  http://localhost:${PORT}/api/health`);

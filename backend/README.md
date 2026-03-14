@@ -1,11 +1,11 @@
 # Backend API Server
 
-Backend server cho My App sử dụng Node.js, Express và SQL Server.
+Backend server cho My App sử dụng Node.js, Express và MySQL.
 
 ## 📋 Yêu cầu
 
 - Node.js 14+ 
-- SQL Server (MSSQLSERVER hoặc SQL Server Express)
+- MySQL 8+
 - npm hoặc yarn
 
 ## 🚀 Cài đặt
@@ -17,50 +17,38 @@ cd backend
 npm install
 ```
 
-### 2. Cấu hình SQL Server
+### 2. Cấu hình MySQL
 
-Đảm bảo SQL Server đang chạy:
+Đảm bảo MySQL đang chạy:
 - Mở **Services** (Win+R → `services.msc`)
-- Kiểm tra **SQL Server (MSSQLSERVER)** đang chạy
+- Kiểm tra service **MySQL** đang chạy
 
-Enable TCP/IP:
-1. Mở **SQL Server Configuration Manager**
-2. **SQL Server Network Configuration** → **Protocols for MSSQLSERVER**
-3. Enable **TCP/IP**
-4. Restart SQL Server service
+### 3. Tạo database MySQL
 
-### 3. Tạo database
-
-Mở **SQL Server Management Studio (SSMS)** và chạy script trong file:
-```
-../database/schema-sqlserver.sql
-```
-
-Hoặc xem file tổng hợp đầy đủ để copy vào SSMS.
+Tạo database `MyAppDB` và import schema MySQL tương ứng của dự án.
 
 ### 4. Cấu hình .env
 
 File `.env` đã có sẵn với cấu hình mặc định:
 
 ```env
-# SQL Server Configuration
-DB_SERVER=localhost
+# MySQL Configuration
+DB_HOST=localhost
+DB_PORT=3306
 DB_DATABASE=MyAppDB
-DB_TRUST_CERTIFICATE=true
-DB_ENCRYPT=true
-DB_PORT=1433
+DB_USER=root
+DB_PASSWORD=your_password
 
 # Backend Server
 PORT=5000
 NODE_ENV=development
 ```
 
-**Lưu ý:** Nếu SQL Server không connect được với `localhost`, thử:
-- `DB_SERVER=.` (dấu chấm)
-- `DB_SERVER=127.0.0.1`
-- `DB_SERVER=localhost\\MSSQLSERVER` (nếu dùng named instance)
+**Lưu ý:** Nếu không connect được với `localhost`, thử:
+- `DB_HOST=127.0.0.1`
+- kiểm tra lại `DB_PORT`, `DB_USER`, `DB_PASSWORD`
 
-### 5. Test kết nối SQL Server
+### 5. Test kết nối MySQL
 
 ```bash
 node test-sqlserver.js
@@ -125,7 +113,7 @@ backend/
 │   └── test-connection-sqlserver.js
 ├── .env               # Environment variables
 ├── server.js          # Main server file
-├── test-sqlserver.js  # Test SQL connection
+├── test-sqlserver.js  # Test MySQL connection
 ├── package.json
 └── README.md
 ```
@@ -159,29 +147,27 @@ curl -X POST http://localhost:5000/api/contact \
 
 ### Lỗi: "Failed to connect to localhost:1433"
 
-**Giải pháp 1:** Kiểm tra SQL Server đang chạy
+**Giải pháp 1:** Kiểm tra MySQL đang chạy
 ```bash
 # Mở Services (Win+R → services.msc)
-# Tìm "SQL Server (MSSQLSERVER)"
+# Tìm service "MySQL"
 # Đảm bảo Status = "Running"
 ```
 
 **Giải pháp 2:** Thử cấu hình khác trong .env
 ```env
-# Thử dấu chấm
-DB_SERVER=.
-
 # Hoặc IP
-DB_SERVER=127.0.0.1
+DB_HOST=127.0.0.1
 
-# Hoặc named instance
-DB_SERVER=localhost\\MSSQLSERVER
+# Kiểm tra port mặc định
+DB_PORT=3306
 ```
 
-**Giải pháp 3:** Enable TCP/IP
-1. SQL Server Configuration Manager
-2. Protocols for MSSQLSERVER → TCP/IP → Enable
-3. Restart SQL Server service
+**Giải pháp 3:** Kiểm tra user/password MySQL
+```env
+DB_USER=root
+DB_PASSWORD=your_password
+```
 
 **Giải pháp 4:** Chạy test script
 ```bash
@@ -206,7 +192,7 @@ PORT=5001
 
 - **Node.js** - Runtime environment
 - **Express.js** - Web framework
-- **mssql** - SQL Server driver
+- **mysql2** - MySQL driver
 - **cors** - CORS middleware
 - **dotenv** - Environment variables
 - **nodemon** - Development auto-reload

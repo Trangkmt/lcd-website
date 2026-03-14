@@ -55,7 +55,7 @@ const NonAnnualActivity = () => {
                         {filtered.map(activity => (
                             <Link
                                 key={activity.id}
-                                to={`/activity/${activity.slug}`}
+                                to={`/activity/non-annual/${activity.id}`}
                                 className="activity-box"
                                 style={{ textDecoration: 'none', color: 'inherit' }}
                             >

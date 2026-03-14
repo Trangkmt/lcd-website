@@ -1,31 +1,28 @@
 # 🚀 HƯỚNG DẪN CÀI ĐẶT VÀ CHẠY BACKEND API
 
-## ✅ BƯỚC 1: Test kết nối SQL Server
+## ✅ BƯỚC 1: Test kết nối MySQL
 
 ```bash
 cd backend
 npm run test:sql
 ```
 
-Script này sẽ tự động thử 4 cấu hình khác nhau và cho biết cấu hình nào thành công.
+Script sẽ thử các host phổ biến (`localhost`, `127.0.0.1`) và cho biết cấu hình nào thành công.
 
 ### Nếu tất cả đều thất bại:
 
-1. **Kiểm tra SQL Server đang chạy:**
+1. **Kiểm tra MySQL đang chạy:**
    - Press `Win+R` → nhập `services.msc`
-   - Tìm **SQL Server (MSSQLSERVER)**
+  - Tìm service **MySQL**
    - Đảm bảo Status = "Running"
 
-2. **Enable TCP/IP:**
-   - Mở **SQL Server Configuration Manager**
-   - **SQL Server Network Configuration** → **Protocols for MSSQLSERVER**
-   - Right-click **TCP/IP** → **Enable**
-   - **Restart SQL Server service**
+2. **Kiểm tra thông tin đăng nhập:**
+  - `DB_USER`, `DB_PASSWORD` trong `.env` phải đúng
+  - User cần có quyền truy cập database
 
 3. **Kiểm tra Port:**
-   - Right-click **TCP/IP** → **Properties**
-   - Tab **IP Addresses** → scroll xuống **IPAll**
-   - **TCP Port** = `1433`
+  - Mặc định MySQL là `3306`
+  - Nếu dùng port khác, cập nhật `DB_PORT`
 
 ---
 
@@ -36,18 +33,15 @@ Sau khi chạy `npm run test:sql`, script sẽ hiển thị cấu hình thành c
 Cập nhật file **backend/.env**:
 
 ```env
-# Ví dụ với localhost:1433
-DB_SERVER=localhost
-DB_PORT=1433
+# Ví dụ với localhost:3306
+DB_HOST=localhost
+DB_PORT=3306
 DB_DATABASE=MyAppDB
-DB_TRUST_CERTIFICATE=true
-DB_ENCRYPT=true
+DB_USER=root
+DB_PASSWORD=your_password
 
-# Hoặc với dấu chấm (nếu localhost không work)
-DB_SERVER=.
-DB_DATABASE=MyAppDB
-DB_TRUST_CERTIFICATE=true
-DB_ENCRYPT=true
+# Hoặc với IP
+DB_HOST=127.0.0.1
 ```
 
 ---
@@ -128,7 +122,7 @@ curl -X POST http://localhost:5000/api/contact ^
 
 ## 🔧 Troubleshooting
 
-### ❌ Lỗi: "Failed to connect to localhost:1433"
+### ❌ Lỗi: "Failed to connect to localhost:3306"
 
 **Giải pháp:**
 1. Chạy `npm run test:sql` để tìm cấu hình đúng
@@ -153,9 +147,9 @@ PORT=5001
 ### ❌ Lỗi: "Database 'MyAppDB' does not exist"
 
 **Giải pháp:**
-1. Mở SSMS
-2. Copy toàn bộ SQL từ file tổng hợp (xem tin nhắn trước)
-3. Execute trong SSMS
+1. Tạo database `MyAppDB` trong MySQL
+2. Import schema MySQL của dự án
+3. Chạy lại `npm run test:sql`
 
 ---
 
@@ -179,7 +173,7 @@ backend/
 │   ├── activities.js
 │   ├── organizations.js
 │   └── contact.js
-├── test-sqlserver.js    # Script test 4 cấu hình
+├── test-sqlserver.js    # Script test kết nối MySQL
 ├── server.js            # Main server
 ├── .env                 # Cấu hình
 └── package.json
@@ -236,7 +230,7 @@ export const createContact = async (data) => {
 Backend API đã sẵn sàng với:
 - ✅ 7 modules (users, categories, news, documents, activities, organizations, contact)
 - ✅ 42 API endpoints
-- ✅ SQL Server connection với multi-config support
+- ✅ MySQL connection
 - ✅ Error handling
 - ✅ Logging
 - ✅ CORS enabled

@@ -462,6 +462,16 @@
     border-color: #ef5350;
 }
 
+.btn-publish {
+    color: #16a34a;
+    border-color: #bbf7d0;
+}
+
+.btn-publish:hover {
+    background: #dcfce7;
+    border-color: #16a34a;
+}
+
 /* Pagination */
 .pagination {
     display: flex;

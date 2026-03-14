@@ -1,5 +1,4 @@
-const { getConnection } = require('../database/connection-sqlserver.js');
-const sql = require('mssql');
+const { getConnection, sql } = require('../database/connection-sqlserver.js');
 
 // GET /api/users - Lấy danh sách users
 exports.getAllUsers = async (req, res) => {

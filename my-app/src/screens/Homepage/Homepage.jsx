@@ -27,7 +27,7 @@ const Homepage = () => {
     // Tin tức mới nhất
     newsAPI.getAll({ limit: 4 })
       .then(data => setNewsCards(Array.isArray(data) ? data : []))
-      .catch(() => {});
+      .catch(() => { });
 
     // Hoạt động nổi bật: lấy featured activity + 4 bài gần nhất
     activitiesAPI.getAll({ is_featured: true, limit: 1 })
@@ -35,16 +35,16 @@ const Homepage = () => {
         const list = Array.isArray(data) ? data : [];
         if (list.length > 0) setFeaturedActivity(list[0]);
       })
-      .catch(() => {});
+      .catch(() => { });
 
     activitiesAPI.getAll({ limit: 4 })
       .then(data => setActivityPosts(Array.isArray(data) ? data : []))
-      .catch(() => {});
+      .catch(() => { });
 
     // Thành tích nổi bật
     newsAPI.getAll({ category_slug: 'thanh-tich-noi-bat', limit: 4 })
       .then(data => setAchievements(Array.isArray(data) ? data : []))
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   return (
@@ -98,7 +98,7 @@ const Homepage = () => {
         {activityPosts.map((activity, index) => (
           <Link
             key={activity.id}
-            to={`/activity/${activity.slug}`}
+            to={`/activity/non-annual/${activity.id}`}
             className={`activity-post activity-post--${index + 1}`}
             style={{ textDecoration: 'none', color: 'inherit' }}
           >
@@ -122,7 +122,12 @@ const Homepage = () => {
           <b className="btn-view-more__text">Xem thêm</b>
         </Link>
         {newsCards.map((card, index) => (
-          <div key={card.id} className={`news-card news-card--${index + 1}`}>
+          <Link
+            key={card.id}
+            to={`/news/${card.id}`}
+            className={`news-card news-card--${index + 1}`}
+            style={{ textDecoration: 'none', color: 'inherit' }}
+          >
             <div className="news-card__background" />
             <b className="news-card__title">{card.title}</b>
             <img
@@ -137,7 +142,7 @@ const Homepage = () => {
               {card.published_at ? new Date(card.published_at).toLocaleDateString('vi-VN') : ''}
             </div>
             <div className="news-card__description">{card.summary || ''}</div>
-          </div>
+          </Link>
         ))}
       </div>
 
@@ -151,7 +156,12 @@ const Homepage = () => {
         <img className="section-divider section-divider--achievement" alt="" />
         <b className="section-title section-title--achievement">THÀNH TÍCH NỔI BẬT</b>
         {achievements.map((card, index) => (
-          <div key={card.id} className={`achievement-card achievement-card--${index + 1}`}>
+          <Link
+            key={card.id}
+            to={`/achievement/${card.id}`}
+            className={`achievement-card achievement-card--${index + 1}`}
+            style={{ textDecoration: 'none', color: 'inherit' }}
+          >
             <div className="achievement-card__background" />
             <b className="achievement-card__title">{card.title}</b>
             <img
@@ -162,7 +172,7 @@ const Homepage = () => {
             <div className="achievement-card__date">
               {card.published_at ? new Date(card.published_at).toLocaleDateString('vi-VN') : ''}
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>

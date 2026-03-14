@@ -1,5 +1,4 @@
-const { getConnection } = require('../database/connection-sqlserver.js');
-const sql = require('mssql');
+const { getConnection, sql } = require('../database/connection-sqlserver.js');
 
 // GET /api/organizations - Lấy danh sách tổ chức
 exports.getAllOrganizations = async (req, res) => {
