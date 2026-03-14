@@ -112,7 +112,7 @@ export default function PostsManagement() {
             if (editingPost) {
                 await newsAPI.update(editingPost.id, form);
             } else {
-                await newsAPI.create(form);
+                await newsAPI.create({ ...form, is_published: false });
             }
             setShowModal(false);
             await fetchPosts(apiFilters);
@@ -120,6 +120,26 @@ export default function PostsManagement() {
             alert('Lỗi: ' + err.message);
         } finally {
             setSaving(false);
+        }
+    }
+
+    async function handlePublish(post) {
+        if (!window.confirm(`Duyệt và xuất bản bài "${post.title}"?`)) return;
+        try {
+            await newsAPI.update(post.id, {
+                title: post.title,
+                slug: post.slug,
+                summary: post.summary ?? null,
+                content: post.content ?? null,
+                thumbnail: post.thumbnail ?? null,
+                category_id: post.category_id ?? null,
+                author_id: post.author_id ?? null,
+                is_featured: !!post.is_featured,
+                is_published: true,
+            });
+            await fetchPosts(apiFilters);
+        } catch (err) {
+            alert('Duyệt thất bại: ' + err.message);
         }
     }
 
@@ -258,6 +278,9 @@ export default function PostsManagement() {
                                     <td className="date-cell">{post.created_at ? new Date(post.created_at).toLocaleDateString('vi-VN') : ''}</td>
                                     <td>
                                         <div className="action-buttons">
+                                            {!post.is_published && (
+                                                <button className="btn-action btn-publish" title="Duyệt & Xuất bản" onClick={() => handlePublish(post)}>✅</button>
+                                            )}
                                             <button className="btn-action btn-edit" title="Chỉnh sửa" onClick={() => openEdit(post)}>✏️</button>
                                             <button className="btn-action btn-delete" title="Xóa" onClick={() => handleDelete(post.id)}>🗑️</button>
                                         </div>
@@ -357,10 +380,12 @@ export default function PostsManagement() {
                                         <input type="checkbox" checked={form.is_featured} onChange={e => handleFormChange('is_featured', e.target.checked)} />
                                         <span>Bài viết nổi bật</span>
                                     </label>
-                                    <label className="checkbox-label" style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-                                        <input type="checkbox" checked={form.is_published} onChange={e => handleFormChange('is_published', e.target.checked)} />
-                                        <span>Xuất bản ngay</span>
-                                    </label>
+                                    {editingPost && (
+                                        <label className="checkbox-label" style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                                            <input type="checkbox" checked={form.is_published} onChange={e => handleFormChange('is_published', e.target.checked)} />
+                                            <span>Xuất bản ngay</span>
+                                        </label>
+                                    )}
                                 </div>
                                 <div className="form-actions">
                                     <button type="button" className="btn-secondary" onClick={() => setShowModal(false)}>Hủy</button>

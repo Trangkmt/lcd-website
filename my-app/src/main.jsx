@@ -3,10 +3,10 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Layout } from './components';
 import { Homepage } from './screens/Homepage';
-import { Activity, AnnualActivity, NonAnnualActivity, EventByYear, EventDetail, PostDetail } from './screens/Activity';
+import { Activity, AnnualActivity, NonAnnualActivity, NonAnnualActivityDetail, EventByYear, EventDetail, PostDetail } from './screens/Activity';
 import OrganizationalStructure from './screens/OrganizationalStructure';
-import { News } from './screens/News';
-import { Achievement } from './screens/Achievement';
+import { News, NewsDetail } from './screens/News';
+import { Achievement, AchievementDetail } from './screens/Achievement';
 import {
   AdminLayout,
   Dashboard,
@@ -29,11 +29,14 @@ const App = () => {
         <Route path="/activity" element={<Layout><Activity /></Layout>} />
         <Route path="/activity/annual" element={<Layout><AnnualActivity /></Layout>} />
         <Route path="/activity/non-annual" element={<Layout><NonAnnualActivity /></Layout>} />
+        <Route path="/activity/non-annual/:id" element={<Layout><NonAnnualActivityDetail /></Layout>} />
         <Route path="/activity/:eventName" element={<Layout><EventByYear /></Layout>} />
         <Route path="/activity/:eventName/:year" element={<Layout><EventDetail /></Layout>} />
         <Route path="/activity/:eventName/:year/post/:postId" element={<Layout><PostDetail /></Layout>} />
         <Route path="/news" element={<Layout><News /></Layout>} />
+        <Route path="/news/:id" element={<Layout><NewsDetail /></Layout>} />
         <Route path="/achievement" element={<Layout><Achievement /></Layout>} />
+        <Route path="/achievement/:id" element={<Layout><AchievementDetail /></Layout>} />
 
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminLayout />}>

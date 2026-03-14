@@ -9,7 +9,6 @@ Hệ thống admin hoàn chỉnh để quản lý tất cả các hoạt động
 - ✅ Quản lý thành tích nổi bật
 - ✅ Quản lý thành viên
 - ✅ Quản lý liên hệ
-- ✅ Quản lý donate (tích hợp API ngân hàng)
 
 ## 📁 Cấu trúc thư mục
 
@@ -29,8 +28,6 @@ src/screens/Admin/
 ├── MembersManagement.css
 ├── ContactsManagement.jsx       # Quản lý liên hệ
 ├── ContactsManagement.css
-├── DonationsManagement.jsx      # Quản lý donate
-├── DonationsManagement.css
 └── index.js                     # Export tất cả components
 ```
 
@@ -43,7 +40,6 @@ src/screens/Admin/
 - `/admin/achievements` - Quản lý thành tích nổi bật
 - `/admin/members` - Quản lý thành viên
 - `/admin/contacts` - Quản lý liên hệ
-- `/admin/donations` - Quản lý donate
 
 ### Public Routes (có Header/Footer)
 - `/` - Trang chủ
@@ -142,27 +138,6 @@ src/screens/Admin/
 - Ngày gửi
 - Trạng thái
 
-### 7. Quản lý donate
-- ✅ Thống kê: Tổng tiền, giao dịch chờ xác nhận
-- ✅ Thông tin tài khoản ngân hàng nhận donate
-- ✅ Nút hiển thị QR Code
-- ✅ Danh sách giao dịch với đầy đủ thông tin
-- ✅ Xác nhận giao dịch thủ công
-- ✅ **Tích hợp API ngân hàng** (sẵn sàng kết nối):
-  - Vietcombank API
-  - MB Bank Open API
-  - Momo Webhook
-  - ZaloPay Webhook
-
-**Thông tin giao dịch:**
-- ID
-- Người donate
-- Số tiền
-- Phương thức (Chuyển khoản/Momo/ZaloPay)
-- Mã giao dịch
-- Trạng thái (Chờ xác nhận/Đã xác nhận)
-- Thời gian
-
 ## 🎨 Design System
 
 ### Colors
@@ -229,11 +204,6 @@ Tất cả trang admin đều responsive:
 2. Click "Trả lời" trên tin nhắn cần trả lời
 3. Nhập nội dung và gửi
 
-### Xác nhận donate:
-1. Vào `/admin/donations`
-2. Tìm giao dịch "Chờ xác nhận"
-3. Click "✓ Xác nhận"
-
 ## 🛠️ Tech Stack
 
 - **React 19.2.4**
@@ -248,12 +218,6 @@ Tất cả trang admin đều responsive:
 - Cần tích hợp với API AI (OpenAI, Gemini, etc.)
 - Form có textarea để nhập yêu cầu cho AI
 - Button "Tạo nội dung bằng AI" để trigger AI generation
-
-### API Ngân hàng (DonationsManagement):
-- UI đã sẵn sàng cho tích hợp API
-- Có section "Cấu hình API" để setup
-- Cần implement webhook handlers cho Momo/ZaloPay
-- Cần API keys cho các ngân hàng
 
 ### Form validation:
 - Hiện tại chưa có validation

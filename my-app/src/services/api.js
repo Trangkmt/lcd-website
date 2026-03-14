@@ -65,13 +65,3 @@ export const organizationsAPI = {
     update: (id, data) => apiFetch(`/organizations/${id}`, { method: 'PUT', body: data }),
     delete: (id) => apiFetch(`/organizations/${id}`, { method: 'DELETE' }),
 };
-
-export const donationsAPI = {
-    getAll: (params = {}) => apiFetch(`/donations?${new URLSearchParams(params)}`),
-    getStats: () => apiFetch('/donations/stats'),
-    getById: (id) => apiFetch(`/donations/${id}`),
-    create: (data) => apiFetch('/donations', { method: 'POST', body: data }),
-    confirm: (id) => apiFetch(`/donations/${id}/confirm`, { method: 'PUT' }),
-    reject: (id) => apiFetch(`/donations/${id}/reject`, { method: 'PUT' }),
-    delete: (id) => apiFetch(`/donations/${id}`, { method: 'DELETE' }),
-};
