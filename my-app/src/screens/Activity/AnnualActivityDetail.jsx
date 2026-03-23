@@ -1,103 +1,68 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import './EventDetail.css';
-import { activitiesAPI, newsAPI } from '../../services/api';
+import './AnnualActivityDetail.css';
+import { categoriesAPI, newsAPI } from '../../services/api';
 
-const EventDetail = () => {
-    const { eventName, year } = useParams();
-    const [activity, setActivity] = useState(null);
+function formatEventNameFromSlug(slug) {
+    return String(slug || '')
+        .split('-')
+        .filter(Boolean)
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+}
+
+const AnnualActivityDetail = () => {
+    const { eventName } = useParams();
+    const [category, setCategory] = useState(null);
     const [posts, setPosts] = useState([]);
-    const [yearGroups, setYearGroups] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
-        activitiesAPI.getBySlug(eventName)
-            .then(data => setActivity(data))
-            .catch(() => {});
+        setLoading(true);
+        categoriesAPI.getBySlug(eventName)
+            .then(data => setCategory(data))
+            .catch(() => { });
 
-        // Fetch all posts in this category to build year navigation
         newsAPI.getAll({ category_slug: eventName, limit: 500 })
-            .then(data => {
-                const all = Array.isArray(data) ? data : [];
-                const yearMap = {};
-                all.forEach(p => {
-                    const y = p.created_at ? new Date(p.created_at).getFullYear() : new Date().getFullYear();
-                    if (!yearMap[y]) yearMap[y] = { year: y, count: 0, thumbnail: null };
-                    yearMap[y].count++;
-                    if (!yearMap[y].thumbnail) yearMap[y].thumbnail = p.thumbnail;
-                });
-                setYearGroups(Object.values(yearMap).sort((a, b) => b.year - a.year));
-            })
-            .catch(() => {});
-
-        // Fetch posts for the selected year
-        newsAPI.getAll({ category_slug: eventName, year, limit: 100 })
             .then(data => setPosts(Array.isArray(data) ? data : []))
-            .catch(() => {})
+            .catch(() => { })
             .finally(() => setLoading(false));
-    }, [eventName, year]);
+    }, [eventName]);
 
     const filtered = posts.filter(p =>
-        p.title?.toLowerCase().includes(searchQuery.toLowerCase())
+        !searchQuery || (p.title || '').toLowerCase().includes(searchQuery.toLowerCase())
     );
 
+    const displayTitle = category?.name || posts?.[0]?.category_name || formatEventNameFromSlug(eventName);
+    const displayDescription = category?.description || '';
+
     return (
-        <div className="event-detail-page">
-            {/* Main Content */}
+        <div className="event-detail-page annual-activity-detail-page">
             <div className="event-detail-content">
                 <div className="content-wrapper">
-                    {/* Event Info Section */}
                     <div className="event-info-section">
                         <div className="event-main-image">
                             <div className="event-image-border">
-                                {activity?.thumbnail
-                                    ? <img src={activity.thumbnail} alt={activity.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                {category?.intro_image
+                                    ? <img src={category.intro_image} alt={displayTitle} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                     : <div className="event-image-placeholder"></div>
                                 }
                             </div>
                         </div>
                         <div className="event-details">
                             <h2 className="event-details-title">
-                                {activity ? `GIỚI THIỆU VỀ ${activity.title.toUpperCase()} ${year}` : 'ĐANG TẢI...'}
+                                {`GIỚI THIỆU VỀ ${displayTitle.toUpperCase()}`}
                             </h2>
                             <p className="event-details-description">
-                                {activity?.description || ''}
+                                {displayDescription || 'Chưa có tóm tắt danh mục.'}
                             </p>
                         </div>
                     </div>
 
-                    {/* Events by Year Section */}
-                    <div className="events-by-year-section">
-                        <div className="section-header">
-                            <h2 className="section-title">HOẠT ĐỘNG THEO NĂM</h2>
-                        </div>
-                        <div className="year-events-grid">
-                            {yearGroups.map(group => (
-                                <Link
-                                    key={group.year}
-                                    to={`/activity/${eventName}/${group.year}`}
-                                    className={`year-event-card${String(group.year) === String(year) ? ' year-event-card--active' : ''}`}
-                                    style={{ textDecoration: 'none', color: 'inherit' }}
-                                >
-                                    <div className="year-event-image">
-                                        {group.thumbnail && (
-                                            <img src={group.thumbnail} alt={String(group.year)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                        )}
-                                    </div>
-                                    <h3 className="year-event-title">
-                                        {activity ? `${activity.title.toUpperCase()} NĂM ${group.year}` : `NĂM ${group.year}`}
-                                    </h3>
-                                    <p className="year-event-description">{group.count} bài đăng</p>
-                                </Link>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Posts Section */}
                     <div className="posts-section">
                         <div className="posts-header">
-                            <h2 className="posts-title">BÀI ĐĂNG NĂM {year}</h2>
+                            <h2 className="posts-title">TẤT CẢ BÀI ĐĂNG</h2>
                             <div className="search-bar-posts">
                                 <div className="search-icon">🔍</div>
                                 <input
@@ -121,7 +86,7 @@ const EventDetail = () => {
                             {filtered.map(post => (
                                 <Link
                                     key={post.id}
-                                    to={`/activity/${eventName}/${year}/post/${post.id}`}
+                                    to={`/activity/${eventName}/post/${post.id}`}
                                     className="post-card"
                                     style={{ textDecoration: 'none', color: 'inherit' }}
                                 >
@@ -150,4 +115,4 @@ const EventDetail = () => {
     );
 };
 
-export default EventDetail;
+export default AnnualActivityDetail;

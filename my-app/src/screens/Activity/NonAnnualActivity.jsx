@@ -1,74 +1,120 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import './Activity.css';
-import { activitiesAPI } from '../../services/api';
+import '../News/News.css';
+import { newsAPI, categoriesAPI } from '../../services/api';
 
 const NonAnnualActivity = () => {
-    const [searchQuery, setSearchQuery] = useState('');
-    const [activities, setActivities] = useState([]);
+    const [posts, setPosts] = useState([]);
+    const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('Tất cả');
+    const [filterOpen, setFilterOpen] = useState(false);
 
     useEffect(() => {
-        activitiesAPI.getAll({ limit: 100 })
-            .then(data => {
-                const all = Array.isArray(data) ? data : [];
-                setActivities(all.filter(a => a.category_name === 'Sự kiện không thường niên'));
+        Promise.all([
+            newsAPI.getAll({ page_type: 'activity_non_annual', limit: 100 }),
+            categoriesAPI.getAll({ page_type: 'activity_non_annual' }),
+        ])
+            .then(([postsData, catsData]) => {
+                setPosts(Array.isArray(postsData) ? postsData : []);
+                setCategories(Array.isArray(catsData) ? catsData : []);
             })
             .catch(() => { })
             .finally(() => setLoading(false));
     }, []);
 
-    const filtered = activities.filter(a =>
-        !searchQuery || (a.title || '').toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const categoryNames = ['Tất cả', ...categories.map(c => c.name).filter(Boolean)];
+
+    const filtered = posts
+        .filter(item => selectedCategory === 'Tất cả' || item.category_name === selectedCategory)
+        .filter(item => !searchQuery || (item.title || '').toLowerCase().includes(searchQuery.toLowerCase()));
 
     return (
-        <div className="activity-page">
-            <div className="activity-content">
-                <div className="content-wrapper">
-                    {/* Search Section */}
-                    <div className="search-section">
-                        <div className="search-bar">
-                            <div className="search-icon">🔍</div>
-                            <input
-                                type="text"
-                                placeholder="Tìm kiếm"
-                                className="search-input"
-                                value={searchQuery}
-                                onChange={e => setSearchQuery(e.target.value)}
-                            />
-                            {searchQuery && (
-                                <div className="search-close" onClick={() => setSearchQuery('')}>✕</div>
-                            )}
-                        </div>
+        <div className="news-page">
+            {/* Banner */}
+            <div className="news-page__banner">
+                <div className="news-page__banner-overlay" />
+                <h1 className="news-page__banner-title">HOẠT ĐỘNG KHÔNG THƯỜNG NIÊN</h1>
+            </div>
+
+            <div className="news-page__content">
+                {/* Controls */}
+                <div className="news-page__controls">
+                    <div className="news-search-bar">
+                        <span className="news-search-icon">🔍</span>
+                        <input
+                            type="text"
+                            placeholder="Tìm kiếm hoạt động..."
+                            className="news-search-input"
+                            value={searchQuery}
+                            onChange={e => setSearchQuery(e.target.value)}
+                        />
+                        {searchQuery && (
+                            <span className="news-search-clear" onClick={() => setSearchQuery('')}>✕</span>
+                        )}
                     </div>
 
-                    <h1 className="activities-title">HOẠT ĐỘNG KHÔNG THƯỜNG NIÊN</h1>
+                    <div className="news-filter-wrapper">
+                        <span className="news-filter-icon">⚙</span>
+                        <button
+                            className="news-filter-btn"
+                            onClick={() => setFilterOpen(!filterOpen)}
+                        >
+                            {selectedCategory === 'Tất cả' ? 'Lọc' : selectedCategory}
+                        </button>
+                        {filterOpen && (
+                            <div className="news-filter-menu">
+                                {categoryNames.map((cat, i) => (
+                                    <div
+                                        key={i}
+                                        className={`news-filter-option${selectedCategory === cat ? ' news-filter-option--active' : ''}`}
+                                        onClick={() => {
+                                            setSelectedCategory(cat);
+                                            setFilterOpen(false);
+                                        }}
+                                    >
+                                        {cat}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </div>
 
-                    <div className="activities-grid">
-                        {loading && (
-                            <p style={{ gridColumn: '1/-1', textAlign: 'center', color: '#888' }}>Đang tải...</p>
-                        )}
-                        {!loading && filtered.length === 0 && (
-                            <p style={{ gridColumn: '1/-1', textAlign: 'center', color: '#888' }}>Không có hoạt động nào</p>
-                        )}
-                        {filtered.map(activity => (
-                            <Link
-                                key={activity.id}
-                                to={`/activity/non-annual/${activity.id}`}
-                                className="activity-box"
-                                style={{ textDecoration: 'none', color: 'inherit' }}
-                            >
-                                <div className="activity-image">
-                                    {activity.thumbnail && (
-                                        <img src={activity.thumbnail} alt={activity.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <h2 className="news-page__title">HOẠT ĐỘNG KHÔNG THƯỜNG NIÊN</h2>
+
+                {loading && <p className="news-page__empty">Đang tải...</p>}
+                {!loading && filtered.length === 0 && (
+                    <p className="news-page__empty">Không có hoạt động nào</p>
+                )}
+
+                {/* Posts Grid */}
+                <div className="news-grid">
+                    {filtered.map(item => (
+                        <Link key={item.id} to={`/activity/non-annual/${item.id}`} className="news-card-item">
+                            <div className="news-card-item__image">
+                                <img
+                                    src={item.thumbnail || `https://picsum.photos/400/250?random=${item.id}`}
+                                    alt={item.title}
+                                />
+                            </div>
+                            <div className="news-card-item__body">
+                                <div className="news-card-item__meta">
+                                    {item.category_name && (
+                                        <span className="news-card-item__category">{item.category_name}</span>
                                     )}
+                                    <span className="news-card-item__date">
+                                        {item.published_at
+                                            ? new Date(item.published_at).toLocaleDateString('vi-VN')
+                                            : ''}
+                                    </span>
                                 </div>
-                                <h3 className="activity-title">{activity.title}</h3>
-                                <p className="activity-description">{activity.description}</p>
-                            </Link>
-                        ))}
-                    </div>
+                                <h3 className="news-card-item__title">{item.title}</h3>
+                                <p className="news-card-item__summary">{item.summary}</p>
+                            </div>
+                        </Link>
+                    ))}
                 </div>
             </div>
         </div>

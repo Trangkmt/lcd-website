@@ -5,6 +5,9 @@ const categoriesController = require('../controllers/categoriesController');
 // GET /api/categories - Lấy danh sách categories
 router.get('/', categoriesController.getAllCategories);
 
+// GET /api/categories/slug/:slug - Lấy category theo slug
+router.get('/slug/:slug', categoriesController.getCategoryBySlug);
+
 // GET /api/categories/:id - Lấy category theo ID
 router.get('/:id', categoriesController.getCategoryById);
 

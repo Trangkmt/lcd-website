@@ -85,6 +85,8 @@ GET http://localhost:5000/api/health
 - `/api/activities` - Quản lý hoạt động
 - `/api/organizations` - Quản lý tổ chức
 - `/api/contact` - Quản lý liên hệ
+- `/api/auth/login` - Đăng nhập
+- `/api/ai/generate-post` - Gen AI nội dung bài viết
 
 Xem chi tiết trong [API-DOCUMENTATION.md](./API-DOCUMENTATION.md)
 

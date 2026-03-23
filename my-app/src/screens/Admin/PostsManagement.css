@@ -701,6 +701,25 @@
     margin: 0;
 }
 
+.ai-generator-box {
+    border: 1px solid #dbe4ff;
+    background: #f8faff;
+    border-radius: 10px;
+    padding: 16px;
+}
+
+.ai-generator-title {
+    margin: 0 0 10px;
+    font-size: 15px;
+    color: #1a4d99;
+}
+
+.ai-error-text {
+    margin: 0;
+    color: #dc2626;
+    font-size: 13px;
+}
+
 .btn-ai {
     margin-top: 12px;
     display: flex;
@@ -747,6 +766,123 @@
     border-top: 1px solid #e0e0e0;
 }
 
+.status-tabs-wrap {
+    margin-top: 14px;
+}
+
+.editor-screen {
+    margin-top: 16px;
+    background: #f8f9fb;
+    border: 1px solid #e6e8ef;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.editor-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.editor-title {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.editor-meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.editor-meta-grid .full-row {
+    grid-column: 1 / -1;
+}
+
+.checkbox-row {
+    flex-direction: row;
+    align-items: center;
+    gap: 24px;
+}
+
+.wp-editor-shell {
+    border: 1px solid #d7dbe7;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.wp-editor-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px;
+    border-bottom: 1px solid #eceff7;
+    background: #f8faff;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+.toolbar-btn {
+    border: 1px solid #d7dbe7;
+    background: #fff;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 13px;
+    color: #2b2b2b;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.toolbar-btn:hover {
+    border-color: #2C6BCC;
+    color: #2C6BCC;
+}
+
+.wp-editor-body {
+    min-height: 520px;
+    max-height: 72vh;
+    overflow-y: auto;
+    padding: 28px 36px;
+    font-size: 16px;
+    line-height: 1.8;
+    color: #1f1f1f;
+    outline: none;
+    background: #fff;
+}
+
+.wp-editor-body:empty::before {
+    content: 'Nhập nội dung bài viết tại đây...';
+    color: #9ca3af;
+}
+
+.wp-editor-body p {
+    margin: 0 0 14px;
+}
+
+.wp-editor-body h2,
+.wp-editor-body h3 {
+    margin: 22px 0 10px;
+    line-height: 1.4;
+}
+
+.wp-editor-body ul,
+.wp-editor-body ol {
+    margin: 0 0 14px 20px;
+}
+
+.wp-editor-body img {
+    max-width: 100%;
+    height: auto;
+    margin: 12px 0;
+    border-radius: 8px;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .posts-management {
@@ -760,6 +896,20 @@
 
     .filters-bar {
         flex-direction: column;
+    }
+
+    .editor-meta-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .editor-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .wp-editor-body {
+        min-height: 380px;
+        padding: 16px;
     }
 
     .mode-selector {

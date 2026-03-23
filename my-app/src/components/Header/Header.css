@@ -83,47 +83,57 @@
    MENU ITEMS
    =========================================== */
 
-/* Menu Item Base (Figma: .building-blocksmenu-list-item) */
-.menu-item {
+.header__nav {
     position: absolute;
     top: 55.71px;
+    left: 249px;
+    display: flex;
+    align-items: center;
+    gap: clamp(8px, 1.1vw, 18px);
+}
+
+/* Menu Item Base (Figma: .building-blocksmenu-list-item) */
+.menu-item {
+    position: relative;
+    top: auto;
     height: 35px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     text-decoration: none;
     cursor: pointer;
+    width: auto;
 }
 
 /* Menu Item Positions */
 .menu-item--1 {
-    left: 249px;
+    left: auto;
     width: 134px;
 }
 
 .menu-item--2 {
-    left: 390px;
+    left: auto;
     width: 210px;
 }
 
 .menu-item--3 {
-    left: 610px;
+    left: auto;
     width: 150px;
     height: 35.9px;
 }
 
 .menu-item--4 {
-    left: 768px;
+    left: auto;
     width: 110px;
 }
 
 .menu-item--5 {
-    left: 886px;
+    left: auto;
     width: 140px;
 }
 
 .menu-item--6 {
-    left: 1034px;
+    left: auto;
     width: 120px;
 }
 
@@ -135,9 +145,18 @@
     align-items: center;
     padding: var(--padding-8) var(--padding-12);
     box-sizing: border-box;
-    gap: var(--gap-12);
+    gap: 6px;
     flex-shrink: 0;
     transition: background-color 0.2s ease;
+}
+
+.header__nav .menu-item--1,
+.header__nav .menu-item--2,
+.header__nav .menu-item--3,
+.header__nav .menu-item--4,
+.header__nav .menu-item--5,
+.header__nav .menu-item--6 {
+    width: auto;
 }
 
 /* Active State Layer (Figma: .state-layer3) */
@@ -161,6 +180,7 @@
 .menu-item__label {
     align-self: stretch;
     position: relative;
+    font-size: 14px;
     letter-spacing: -0.02em;
     color: var(--color-darkslateblue);
     font-weight: 700;
@@ -168,8 +188,8 @@
 
 /* Trailing Element (Figma: .trailing-element) */
 .menu-item__trailing {
-    height: var(--height-24);
-    width: var(--width-24);
+    height: 14px;
+    width: 14px;
     position: relative;
 }
 
@@ -193,7 +213,7 @@
 
 /* Dropdown wrapper needs relative positioning */
 .menu-item--has-dropdown {
-    position: absolute;
+    position: relative;
     cursor: pointer;
 }
 
@@ -369,6 +389,15 @@
         left: auto;
         width: 100px;
         height: 106px;
+    }
+
+    .header__nav {
+        position: relative;
+        top: auto;
+        left: auto;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
     }
 
     .menu-item {

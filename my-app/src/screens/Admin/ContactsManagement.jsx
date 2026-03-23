@@ -7,6 +7,8 @@ export default function ContactsManagement() {
     const [loading, setLoading] = useState(true);
     const [selectedContact, setSelectedContact] = useState(null);
     const [showDetailModal, setShowDetailModal] = useState(false);
+    const [activeTab, setActiveTab] = useState('all');
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => { fetchContacts(); }, []);
 
@@ -48,10 +50,22 @@ export default function ContactsManagement() {
     }
 
     const unread = contacts.filter(c => !c.is_read).length;
+    const filteredContacts = contacts.filter(contact => {
+        const matchesSearch = !searchQuery
+            || (contact.name || '').toLowerCase().includes(searchQuery.toLowerCase())
+            || (contact.email || '').toLowerCase().includes(searchQuery.toLowerCase())
+            || (contact.subject || '').toLowerCase().includes(searchQuery.toLowerCase());
+
+        const matchesTab = activeTab === 'all'
+            || (activeTab === 'unread' && !contact.is_read)
+            || (activeTab === 'replied' && contact.is_replied)
+            || (activeTab === 'pending' && !contact.is_replied);
+
+        return matchesSearch && matchesTab;
+    });
 
     return (
-        <div className="contacts-management">
-            {/* Header */}
+        <div className="posts-management contacts-management">
             <div className="page-header">
                 <div className="header-content">
                     <h1 className="page-title">Quản lý liên hệ {unread > 0 && <span className="badge-new">{unread} mới</span>}</h1>
@@ -59,48 +73,92 @@ export default function ContactsManagement() {
                 </div>
             </div>
 
+            <div className="tabs-container">
+                <div className="tabs">
+                    <button className={`tab ${activeTab === 'all' ? 'active' : ''}`} onClick={() => setActiveTab('all')}>
+                        Tất cả ({contacts.length})
+                    </button>
+                    <button className={`tab ${activeTab === 'unread' ? 'active' : ''}`} onClick={() => setActiveTab('unread')}>
+                        Chưa đọc ({contacts.filter(c => !c.is_read).length})
+                    </button>
+                    <button className={`tab ${activeTab === 'pending' ? 'active' : ''}`} onClick={() => setActiveTab('pending')}>
+                        Chưa trả lời ({contacts.filter(c => !c.is_replied).length})
+                    </button>
+                    <button className={`tab ${activeTab === 'replied' ? 'active' : ''}`} onClick={() => setActiveTab('replied')}>
+                        Đã trả lời ({contacts.filter(c => c.is_replied).length})
+                    </button>
+                </div>
+            </div>
+
+            <div className="filters-bar">
+                <div className="search-box">
+                    <span className="search-icon">🔍</span>
+                    <input
+                        type="text"
+                        placeholder="Tìm kiếm theo tên, email, chủ đề..."
+                        value={searchQuery}
+                        onChange={e => setSearchQuery(e.target.value)}
+                        className="search-input"
+                    />
+                    {searchQuery && <span className="search-clear" onClick={() => setSearchQuery('')}>✕</span>}
+                </div>
+            </div>
+
             {loading ? (
-                <p style={{ textAlign: 'center', padding: '40px', color: '#888' }}>Đang tải...</p>
+                <div className="posts-table-container">
+                    <p style={{ textAlign: 'center', padding: '40px', color: '#888' }}>Đang tải...</p>
+                </div>
             ) : (
-                <div className="contacts-container">
-                    {contacts.length === 0 && <p style={{ color: '#888' }}>Chưa có liên hệ nào</p>}
-                    {contacts.map(contact => (
-                        <div key={contact.id} className={`contact-item ${!contact.is_read ? 'unread' : ''}`}>
-                            <div className="contact-header">
-                                <div className="contact-sender">
-                                    <div className="sender-avatar">{(contact.name || '?').charAt(0).toUpperCase()}</div>
-                                    <div className="sender-info">
-                                        <h3 className="sender-name">{contact.name}</h3>
-                                        <p className="sender-email">{contact.email}{contact.phone ? ` · ${contact.phone}` : ''}</p>
-                                    </div>
-                                </div>
-                                <div className="contact-meta">
-                                    <span className={`contact-status ${contact.is_replied ? 'replied' : contact.is_read ? 'read' : 'new'}`}>
-                                        {contact.is_replied ? '✅ Đã trả lời' : contact.is_read ? '👁️ Đã đọc' : '🆕 Mới'}
-                                    </span>
-                                    <span className="contact-date">{contact.created_at ? new Date(contact.created_at).toLocaleDateString('vi-VN') : ''}</span>
-                                </div>
-                            </div>
-                            <div className="contact-body">
-                                <h4 className="contact-subject">{contact.subject}</h4>
-                                <p className="contact-message">{contact.message}</p>
-                            </div>
-                            <div className="contact-actions">
-                                <button className="btn-action btn-reply" onClick={() => handleView(contact)}>👁️ Xem chi tiết</button>
-                                {!contact.is_replied && (
-                                    <button className="btn-action btn-edit" onClick={() => handleMarkReplied(contact.id)}>✉️ Đánh dấu đã trả lời</button>
-                                )}
-                                <button className="btn-action btn-delete" onClick={() => handleDelete(contact.id)}>🗑️ Xóa</button>
-                            </div>
-                        </div>
-                    ))}
+                <div className="posts-table-container">
+                    <table className="posts-table contacts-table">
+                        <thead>
+                            <tr>
+                                <th>Người gửi</th>
+                                <th>Email</th>
+                                <th>Chủ đề</th>
+                                <th>Trạng thái</th>
+                                <th>Ngày gửi</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {filteredContacts.length === 0 && (
+                                <tr>
+                                    <td colSpan="6" style={{ textAlign: 'center', color: '#888', padding: '24px' }}>
+                                        Chưa có liên hệ nào
+                                    </td>
+                                </tr>
+                            )}
+                            {filteredContacts.map(contact => (
+                                <tr key={contact.id} className={!contact.is_read ? 'contact-row-unread' : ''}>
+                                    <td className="sender-cell">{contact.name || '-'}</td>
+                                    <td className="email-cell">{contact.email || '-'}{contact.phone ? ` · ${contact.phone}` : ''}</td>
+                                    <td className="subject-cell">{contact.subject || '(Không có chủ đề)'}</td>
+                                    <td>
+                                        <span className={`status-badge ${contact.is_replied ? 'approved' : contact.is_read ? 'pending' : 'new'}`}>
+                                            {contact.is_replied ? 'Đã trả lời' : contact.is_read ? 'Đã đọc' : 'Mới'}
+                                        </span>
+                                    </td>
+                                    <td className="date-cell">{contact.created_at ? new Date(contact.created_at).toLocaleDateString('vi-VN') : ''}</td>
+                                    <td>
+                                        <div className="action-buttons">
+                                            <button className="btn-action btn-view" onClick={() => handleView(contact)} title="Xem chi tiết">👁️</button>
+                                            {!contact.is_replied && (
+                                                <button className="btn-action btn-edit" onClick={() => handleMarkReplied(contact.id)} title="Đánh dấu đã trả lời">✉️</button>
+                                            )}
+                                            <button className="btn-action btn-delete" onClick={() => handleDelete(contact.id)} title="Xóa liên hệ">🗑️</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             )}
 
-            {/* Detail Modal */}
             {showDetailModal && selectedContact && (
                 <div className="modal-overlay" onClick={() => setShowDetailModal(false)}>
-                    <div className="modal-content" onClick={e => e.stopPropagation()}>
+                    <div className="modal-content" style={{ maxWidth: '900px' }} onClick={e => e.stopPropagation()}>
                         <div className="modal-header">
                             <h2 className="modal-title">Chi tiết liên hệ</h2>
                             <button className="modal-close" onClick={() => setShowDetailModal(false)}>×</button>

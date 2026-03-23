@@ -36,6 +36,7 @@ export const usersAPI = {
 export const categoriesAPI = {
     getAll: (params = {}) => apiFetch(`/categories?${new URLSearchParams(params)}`),
     getById: (id) => apiFetch(`/categories/${id}`),
+    getBySlug: (slug) => apiFetch(`/categories/slug/${slug}`),
     create: (data) => apiFetch('/categories', { method: 'POST', body: data }),
     update: (id, data) => apiFetch(`/categories/${id}`, { method: 'PUT', body: data }),
     delete: (id) => apiFetch(`/categories/${id}`, { method: 'DELETE' }),
@@ -44,6 +45,7 @@ export const categoriesAPI = {
 export const contactAPI = {
     getAll: (params = {}) => apiFetch(`/contact?${new URLSearchParams(params)}`),
     getById: (id) => apiFetch(`/contact/${id}`),
+    create: (data) => apiFetch('/contact', { method: 'POST', body: data }),
     markAsRead: (id) => apiFetch(`/contact/${id}/read`, { method: 'PUT' }),
     markAsReplied: (id) => apiFetch(`/contact/${id}/reply`, { method: 'PUT' }),
     delete: (id) => apiFetch(`/contact/${id}`, { method: 'DELETE' }),
@@ -64,4 +66,12 @@ export const organizationsAPI = {
     create: (data) => apiFetch('/organizations', { method: 'POST', body: data }),
     update: (id, data) => apiFetch(`/organizations/${id}`, { method: 'PUT', body: data }),
     delete: (id) => apiFetch(`/organizations/${id}`, { method: 'DELETE' }),
+};
+
+export const authAPI = {
+    login: (data) => apiFetch('/auth/login', { method: 'POST', body: data }),
+};
+
+export const aiAPI = {
+    generatePost: (data) => apiFetch('/ai/generate-post', { method: 'POST', body: data }),
 };

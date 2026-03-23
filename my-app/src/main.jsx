@@ -1,23 +1,49 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Layout } from './components';
 import { Homepage } from './screens/Homepage';
-import { Activity, AnnualActivity, NonAnnualActivity, NonAnnualActivityDetail, EventByYear, EventDetail, PostDetail } from './screens/Activity';
+import { Activity, AnnualActivity, AnnualActivityDetail, NonAnnualActivity, NonAnnualActivityDetail, PostDetail } from './screens/Activity';
 import OrganizationalStructure from './screens/OrganizationalStructure';
+import Contact from './screens/Contact';
 import { News, NewsDetail } from './screens/News';
 import { Achievement, AchievementDetail } from './screens/Achievement';
 import {
   AdminLayout,
+  AdminLogin,
   Dashboard,
   PostsManagement,
   CategoriesManagement,
   AchievementsManagement,
   MembersManagement,
-  ContactsManagement
+  ContactsManagement,
+  OtherUtilities
 } from './screens/Admin';
 import './global.css';  /* Global design system variables */
 import './styles.css';
+
+const ADMIN_AUTH_KEY = 'admin_auth_user';
+
+function isAdminAuthenticated() {
+  try {
+    const raw = localStorage.getItem(ADMIN_AUTH_KEY);
+    if (!raw) return false;
+    const user = JSON.parse(raw);
+    return !!user?.id;
+  } catch {
+    return false;
+  }
+}
+
+function RequireAdminAuth({ children }) {
+  const location = useLocation();
+
+  if (!isAdminAuthenticated()) {
+    return <Navigate to="/admin/login" replace state={{ from: location }} />;
+  }
+
+  return children;
+}
 
 const App = () => {
   return (
@@ -30,22 +56,24 @@ const App = () => {
         <Route path="/activity/annual" element={<Layout><AnnualActivity /></Layout>} />
         <Route path="/activity/non-annual" element={<Layout><NonAnnualActivity /></Layout>} />
         <Route path="/activity/non-annual/:id" element={<Layout><NonAnnualActivityDetail /></Layout>} />
-        <Route path="/activity/:eventName" element={<Layout><EventByYear /></Layout>} />
-        <Route path="/activity/:eventName/:year" element={<Layout><EventDetail /></Layout>} />
-        <Route path="/activity/:eventName/:year/post/:postId" element={<Layout><PostDetail /></Layout>} />
+        <Route path="/activity/:eventName" element={<Layout><AnnualActivityDetail /></Layout>} />
+        <Route path="/activity/:eventName/post/:postId" element={<Layout><PostDetail /></Layout>} />
         <Route path="/news" element={<Layout><News /></Layout>} />
         <Route path="/news/:id" element={<Layout><NewsDetail /></Layout>} />
         <Route path="/achievement" element={<Layout><Achievement /></Layout>} />
         <Route path="/achievement/:id" element={<Layout><AchievementDetail /></Layout>} />
+        <Route path="/contact" element={<Layout><Contact /></Layout>} />
 
         {/* Admin Routes */}
-        <Route path="/admin" element={<AdminLayout />}>
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin" element={<RequireAdminAuth><AdminLayout /></RequireAdminAuth>}>
           <Route index element={<Dashboard />} />
           <Route path="posts" element={<PostsManagement />} />
           <Route path="categories" element={<CategoriesManagement />} />
           <Route path="achievements" element={<AchievementsManagement />} />
           <Route path="members" element={<MembersManagement />} />
           <Route path="contacts" element={<ContactsManagement />} />
+          <Route path="utilities" element={<OtherUtilities />} />
         </Route>
       </Routes>
     </BrowserRouter>

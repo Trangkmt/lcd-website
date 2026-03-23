@@ -1,44 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './AnnualActivity.css';
-import { activitiesAPI } from '../../services/api';
-
-const ANNUAL_EVENTS = [
-    { label: 'Chào tân', slug: 'chao-tan' },
-    { label: 'Quân sự', slug: 'quan-su' },
-    { label: 'Prom cuối khoá', slug: 'prom-cuoi-khoa' },
-    { label: 'Talkshow', slug: 'talkshow' },
-    { label: 'Cuộc thi', slug: 'cuoc-thi' },
-];
+import { categoriesAPI, newsAPI } from '../../services/api';
 
 const AnnualActivity = () => {
-    const [activities, setActivities] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [featuredByCategory, setFeaturedByCategory] = useState({});
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        activitiesAPI.getAll({ limit: 100 })
-            .then(data => {
-                const all = Array.isArray(data) ? data : [];
-                const annual = all.filter(a => a.category_name === 'Sự kiện thường niên');
-                setActivities(annual);
+        Promise.all([
+            categoriesAPI.getAll({ page_type: 'activity_annual' }),
+            newsAPI.getAll({ page_type: 'activity_annual', is_featured: true, limit: 500 }),
+        ])
+            .then(([categoryData, featuredPosts]) => {
+                const annualCategories = (Array.isArray(categoryData) ? categoryData : []).filter(
+                    category => String(category.page_type || '').toLowerCase() === 'activity_annual'
+                );
+                setCategories(annualCategories);
+
+                const featuredMap = {};
+                (Array.isArray(featuredPosts) ? featuredPosts : []).forEach(post => {
+                    const categoryId = post?.category_id;
+                    if (!categoryId || featuredMap[categoryId]) return;
+                    featuredMap[categoryId] = post;
+                });
+                setFeaturedByCategory(featuredMap);
             })
-            .catch(() => { })
+            .catch(() => {
+                setCategories([]);
+                setFeaturedByCategory({});
+            })
             .finally(() => setLoading(false));
     }, []);
-
-    // Merge API data into hardcoded events
-    const events = ANNUAL_EVENTS.map(ev => {
-        const found = activities.find(a =>
-            a.slug === ev.slug ||
-            (a.title || '').toLowerCase().includes(ev.label.toLowerCase())
-        );
-        return {
-            ...ev,
-            thumbnail: found?.thumbnail || null,
-            description: found?.description || '',
-            slug: found?.slug || ev.slug,
-        };
-    });
 
     return (
         <div className="annual-activity-page">
@@ -51,32 +45,36 @@ const AnnualActivity = () => {
 
                     {loading ? (
                         <p className="annual-loading">Đang tải...</p>
+                    ) : categories.length === 0 ? (
+                        <p className="annual-loading" style={{ color: '#888' }}>Chưa có hoạt động thường niên nào.</p>
                     ) : (
                         <div className="annual-events-grid">
-                            {events.map((ev, i) => (
-                                <Link
-                                    key={i}
-                                    to={`/activity/${ev.slug}`}
-                                    className="annual-event-card"
-                                >
-                                    <div className="annual-event-image">
-                                        {ev.thumbnail ? (
-                                            <img src={ev.thumbnail} alt={ev.label} />
-                                        ) : (
-                                            <div className="annual-event-image-placeholder">
-                                                <span>{ev.label.charAt(0)}</span>
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div className="annual-event-info">
-                                        <h3 className="annual-event-name">{ev.label}</h3>
-                                        {ev.description && (
-                                            <p className="annual-event-desc">{ev.description}</p>
-                                        )}
-                                        <span className="annual-event-link">Xem chi tiết →</span>
-                                    </div>
-                                </Link>
-                            ))}
+                            {categories.map(cat => {
+                                const featuredPost = featuredByCategory[cat.id];
+                                const displayImage = featuredPost?.thumbnail || cat.intro_image;
+
+                                return (
+                                    <Link
+                                        key={cat.id}
+                                        to={`/activity/${cat.slug}`}
+                                        className="annual-event-card"
+                                    >
+                                        <div className="annual-event-image">
+                                            {displayImage ? (
+                                                <img src={displayImage} alt={cat.name} />
+                                            ) : (
+                                                <div className="annual-event-image-placeholder">
+                                                    <span>{cat.name.charAt(0)}</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="annual-event-info">
+                                            <h3 className="annual-event-name">{cat.name}</h3>
+                                            <span className="annual-event-link">Xem chi tiết →</span>
+                                        </div>
+                                    </Link>
+                                );
+                            })}
                         </div>
                     )}
                 </div>

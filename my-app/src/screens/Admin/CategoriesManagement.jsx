@@ -21,7 +21,7 @@ const PAGE_TYPE_LABELS = {
     activity_non_annual: 'Hoạt động không thường niên',
 };
 
-const EMPTY_FORM = (page_type) => ({ name: '', slug: '', description: '', page_type: page_type || 'news', display_order: 0 });
+const EMPTY_FORM = (page_type) => ({ name: '', slug: '', description: '', intro_image: '', page_type: page_type || 'news', display_order: 0 });
 
 export default function CategoriesManagement() {
     const [activeTab, setActiveTab] = useState('news');
@@ -73,6 +73,7 @@ export default function CategoriesManagement() {
             name: cat.name || '',
             slug: cat.slug || '',
             description: cat.description || '',
+            intro_image: cat.intro_image || '',
             page_type: cat.page_type || activeTab,
             display_order: cat.display_order || 0,
         });
@@ -152,6 +153,11 @@ export default function CategoriesManagement() {
                     )}
                     {currentList.map(category => (
                         <div key={category.id} className="category-card">
+                            {category.intro_image && (
+                                <div className="category-intro-image-wrap">
+                                    <img src={category.intro_image} alt={category.name} className="category-intro-image" />
+                                </div>
+                            )}
                             <div className="category-header">
                                 <h3 className="category-name">{category.name}</h3>
                                 <span className="category-posts">{category.display_order ? `#${category.display_order}` : ''}</span>
@@ -204,6 +210,16 @@ export default function CategoriesManagement() {
                                 <div className="form-group">
                                     <label className="form-label">Mô tả</label>
                                     <textarea className="form-control" rows="4" value={form.description} onChange={e => handleFormChange('description', e.target.value)} placeholder="Nhập mô tả danh mục..."></textarea>
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Ảnh giới thiệu (URL)</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        value={form.intro_image}
+                                        onChange={e => handleFormChange('intro_image', e.target.value)}
+                                        placeholder="https://..."
+                                    />
                                 </div>
                                 <div className="form-actions">
                                     <button type="button" className="btn-secondary" onClick={() => setShowModal(false)}>Hủy</button>

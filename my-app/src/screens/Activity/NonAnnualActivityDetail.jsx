@@ -1,30 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import './NonAnnualActivityDetail.css';
-import { activitiesAPI } from '../../services/api';
+import '../News/NewsDetail.css';
+import { newsAPI } from '../../services/api';
 
 const NonAnnualActivityDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [activity, setActivity] = useState(null);
-    const [related, setRelated] = useState([]);
+    const [post, setPost] = useState(null);
+    const [relatedPosts, setRelatedPosts] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         window.scrollTo(0, 0);
         setLoading(true);
-        activitiesAPI.getById(id)
+        newsAPI.getById(id)
             .then(data => {
-                setActivity(data);
-                return activitiesAPI.getAll({ limit: 20 });
+                setPost(data);
+                return newsAPI.getAll({ page_type: 'activity_non_annual', limit: 4 });
             })
             .then(data => {
                 const all = Array.isArray(data) ? data : [];
-                setRelated(
-                    all
-                        .filter(a => a.category_name === 'Sự kiện không thường niên' && String(a.id) !== String(id))
-                        .slice(0, 3)
-                );
+                setRelatedPosts(all.filter(p => String(p.id) !== String(id)).slice(0, 3));
             })
             .catch(() => { })
             .finally(() => setLoading(false));
@@ -32,121 +28,119 @@ const NonAnnualActivityDetail = () => {
 
     if (loading) {
         return (
-            <div className="na-detail-loading">
-                <div className="na-detail-spinner" />
+            <div className="news-detail-loading">
+                <div className="news-detail-spinner" />
                 <p>Đang tải...</p>
             </div>
         );
     }
 
-    if (!activity) {
+    if (!post) {
         return (
-            <div className="na-detail-notfound">
+            <div className="news-detail-notfound">
                 <h2>Không tìm thấy hoạt động</h2>
-                <button onClick={() => navigate('/activity/non-annual')} className="na-detail-back-btn">
+                <button onClick={() => navigate('/activity/non-annual')} className="news-detail-back-btn">
                     ← Quay lại
                 </button>
             </div>
         );
     }
 
-    const formatDate = (dateStr) => {
-        if (!dateStr) return '';
-        return new Date(dateStr).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
-    };
-
     return (
-        <div className="na-detail-page">
+        <div className="news-detail-page">
             {/* Banner */}
-            <div className="na-detail-banner">
-                <div className="na-detail-banner-overlay" />
-                <h1 className="na-detail-banner-title">HOẠT ĐỘNG KHÔNG THƯỜNG NIÊN</h1>
+            <div className="news-detail-banner">
+                <div className="news-detail-banner-overlay" />
+                <h1 className="news-detail-banner-title">HOẠT ĐỘNG KHÔNG THƯỜNG NIÊN</h1>
             </div>
 
-            <div className="na-detail-outer">
+            <div className="news-detail-outer">
                 {/* Breadcrumb */}
-                <nav className="na-detail-breadcrumb">
+                <nav className="news-detail-breadcrumb">
                     <Link to="/">Trang chủ</Link>
-                    <span>/</span>
+                    <span className="news-detail-sep">/</span>
                     <Link to="/activity">Hoạt động</Link>
-                    <span>/</span>
+                    <span className="news-detail-sep">/</span>
                     <Link to="/activity/non-annual">Không thường niên</Link>
-                    <span>/</span>
-                    <span className="na-detail-crumb-current">{activity.title}</span>
+                    <span className="news-detail-sep">/</span>
+                    <span className="news-detail-current">{post.title}</span>
                 </nav>
 
-                <div className="na-detail-layout">
-                    {/* Main article */}
-                    <article className="na-detail-article">
+                <div className="news-detail-layout">
+                    {/* Main Article */}
+                    <article className="news-detail-article">
                         {/* Meta */}
-                        <div className="na-detail-meta">
-                            {activity.category_name && (
-                                <span className="na-detail-category">{activity.category_name}</span>
+                        <div className="news-detail-meta">
+                            {post.category_name && (
+                                <span className="news-detail-category">{post.category_name}</span>
                             )}
-                            {activity.start_date && (
-                                <span className="na-detail-date">
-                                    {formatDate(activity.start_date)}
-                                    {activity.end_date && activity.end_date !== activity.start_date &&
-                                        ` – ${formatDate(activity.end_date)}`}
-                                </span>
-                            )}
-                            {activity.location && (
-                                <span className="na-detail-location">📍 {activity.location}</span>
+                            <span className="news-detail-date">
+                                {post.published_at || post.created_at
+                                    ? new Date(post.published_at || post.created_at).toLocaleDateString('vi-VN', {
+                                        day: '2-digit', month: '2-digit', year: 'numeric'
+                                    })
+                                    : ''}
+                            </span>
+                            {post.author_name && (
+                                <span className="news-detail-author">✍ {post.author_name}</span>
                             )}
                         </div>
 
-                        <h1 className="na-detail-title">{activity.title}</h1>
+                        {/* Title */}
+                        <h1 className="news-detail-title">{post.title}</h1>
 
-                        {activity.description && (
-                            <p className="na-detail-summary">{activity.description}</p>
+                        {/* Summary */}
+                        {post.summary && (
+                            <p className="news-detail-summary">{post.summary}</p>
                         )}
 
-                        {activity.thumbnail && (
-                            <div className="na-detail-thumbnail">
-                                <img src={activity.thumbnail} alt={activity.title} />
+                        {/* Thumbnail */}
+                        {post.thumbnail && (
+                            <div className="news-detail-thumbnail">
+                                <img src={post.thumbnail} alt={post.title} />
                             </div>
                         )}
 
-                        {activity.content && (
+                        {/* Content */}
+                        {post.content && (
                             <div
-                                className="na-detail-content"
-                                dangerouslySetInnerHTML={{ __html: activity.content }}
+                                className="news-detail-content"
+                                dangerouslySetInnerHTML={{ __html: post.content }}
                             />
                         )}
 
-                        {activity.organizer && (
-                            <div className="na-detail-organizer">
-                                <strong>Ban tổ chức:</strong> {activity.organizer}
-                            </div>
-                        )}
-
-                        <div className="na-detail-footer">
-                            <button onClick={() => navigate('/activity/non-annual')} className="na-detail-back-btn">
-                                ← Quay lại
+                        {/* Back Button */}
+                        <div className="news-detail-footer">
+                            <button onClick={() => navigate('/activity/non-annual')} className="news-detail-back-btn">
+                                ← Quay lại Hoạt động không thường niên
                             </button>
                         </div>
                     </article>
 
-                    {/* Sidebar */}
-                    {related.length > 0 && (
-                        <aside className="na-detail-sidebar">
-                            <h3 className="na-detail-related-title">Hoạt động khác</h3>
-                            <div className="na-detail-related-list">
-                                {related.map(r => (
+                    {/* Sidebar – Related */}
+                    {relatedPosts.length > 0 && (
+                        <aside className="news-detail-sidebar">
+                            <h3 className="news-detail-related-title">Hoạt động liên quan</h3>
+                            <div className="news-detail-related-list">
+                                {relatedPosts.map(related => (
                                     <Link
-                                        key={r.id}
-                                        to={`/activity/non-annual/${r.id}`}
-                                        className="na-detail-related-card"
+                                        key={related.id}
+                                        to={`/activity/non-annual/${related.id}`}
+                                        className="news-detail-related-card"
                                     >
-                                        <div className="na-detail-related-img">
+                                        <div className="news-detail-related-img">
                                             <img
-                                                src={r.thumbnail || `https://picsum.photos/200/130?random=${r.id}`}
-                                                alt={r.title}
+                                                src={related.thumbnail || `https://picsum.photos/200/130?random=${related.id}`}
+                                                alt={related.title}
                                             />
                                         </div>
-                                        <div className="na-detail-related-info">
-                                            <h4>{r.title}</h4>
-                                            <span>{formatDate(r.start_date)}</span>
+                                        <div className="news-detail-related-info">
+                                            <h4>{related.title}</h4>
+                                            <span>
+                                                {related.published_at
+                                                    ? new Date(related.published_at).toLocaleDateString('vi-VN')
+                                                    : ''}
+                                            </span>
                                         </div>
                                     </Link>
                                 ))}

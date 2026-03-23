@@ -4,7 +4,7 @@ import './PostDetail.css';
 import { newsAPI } from '../../services/api';
 
 const PostDetail = () => {
-    const { eventName, year, postId } = useParams();
+    const { eventName, postId } = useParams();
     const navigate = useNavigate();
     const [post, setPost] = useState(null);
     const [relatedPosts, setRelatedPosts] = useState([]);
@@ -21,7 +21,7 @@ const PostDetail = () => {
                 const all = Array.isArray(data) ? data : [];
                 setRelatedPosts(all.filter(p => String(p.id) !== String(postId)).slice(0, 3));
             })
-            .catch(() => {})
+            .catch(() => { })
             .finally(() => setLoading(false));
     }, [postId, eventName]);
 
@@ -45,8 +45,6 @@ const PostDetail = () => {
                         <Link to="/activity">Hoạt động</Link>
                         <span className="separator">/</span>
                         <Link to={`/activity/${eventName}`}>{eventName}</Link>
-                        <span className="separator">/</span>
-                        <Link to={`/activity/${eventName}/${year}`}>{year}</Link>
                         <span className="separator">/</span>
                         <span className="current">Bài đăng</span>
                     </div>
@@ -93,7 +91,7 @@ const PostDetail = () => {
                                 {relatedPosts.map(related => (
                                     <Link
                                         key={related.id}
-                                        to={`/activity/${eventName}/${year}/post/${related.id}`}
+                                        to={`/activity/${eventName}/post/${related.id}`}
                                         className="related-post-card"
                                     >
                                         <div className="related-post-image-wrapper">

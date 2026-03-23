@@ -1,12 +1,20 @@
 import React, { useState } from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import './AdminLayout.css';
+
+const ADMIN_AUTH_KEY = 'admin_auth_user';
 
 export default function AdminLayout() {
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     const location = useLocation();
+    const navigate = useNavigate();
 
     const isActive = (path) => location.pathname.startsWith(path);
+
+    function handleLogout() {
+        localStorage.removeItem(ADMIN_AUTH_KEY);
+        navigate('/admin/login', { replace: true });
+    }
 
     return (
         <div className="admin-layout">
@@ -73,6 +81,14 @@ export default function AdminLayout() {
                         {!sidebarCollapsed && <span className="nav-label">Quản lý liên hệ</span>}
                     </Link>
 
+                    <Link
+                        to="/admin/utilities"
+                        className={`nav-item ${isActive('/admin/utilities') ? 'active' : ''}`}
+                    >
+                        <span className="nav-icon">🛠️</span>
+                        {!sidebarCollapsed && <span className="nav-label">Tiện ích khác</span>}
+                    </Link>
+
                     <div className="nav-divider"></div>
 
                     <Link to="/" className="nav-item">
@@ -80,7 +96,7 @@ export default function AdminLayout() {
                         {!sidebarCollapsed && <span className="nav-label">Về trang chủ</span>}
                     </Link>
 
-                    <button className="nav-item logout-btn">
+                    <button className="nav-item logout-btn" onClick={handleLogout}>
                         <span className="nav-icon">🚪</span>
                         {!sidebarCollapsed && <span className="nav-label">Đăng xuất</span>}
                     </button>

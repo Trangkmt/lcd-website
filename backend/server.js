@@ -26,6 +26,9 @@ const documentsRoutes = require('./routes/documents');
 const activitiesRoutes = require('./routes/activities');
 const organizationsRoutes = require('./routes/organizations');
 const contactRoutes = require('./routes/contact');
+const authRoutes = require('./routes/auth');
+const aiRoutes = require('./routes/ai');
+const migrationsRoutes = require('./routes/migrations');
 
 // Health check endpoint
 app.get('/api/health', async (req, res) => {
@@ -54,6 +57,9 @@ app.use('/api/documents', documentsRoutes);
 app.use('/api/activities', activitiesRoutes);
 app.use('/api/organizations', organizationsRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/ai', aiRoutes);
+app.use('/api/migrations', migrationsRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
@@ -68,7 +74,9 @@ app.get('/', (req, res) => {
             documents: '/api/documents',
             activities: '/api/activities',
             organizations: '/api/organizations',
-            contact: '/api/contact'
+            contact: '/api/contact',
+            auth: '/api/auth',
+            ai: '/api/ai'
         }
     });
 });
@@ -106,6 +114,8 @@ app.listen(PORT, () => {
     console.log(`  GET  http://localhost:${PORT}/api/activities`);
     console.log(`  GET  http://localhost:${PORT}/api/organizations`);
     console.log(`  GET  http://localhost:${PORT}/api/contact`);
+    console.log(`  POST http://localhost:${PORT}/api/auth/login`);
+    console.log(`  POST http://localhost:${PORT}/api/ai/generate-post`);
     console.log('\n');
 });
 
