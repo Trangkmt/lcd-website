@@ -31,36 +31,36 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     full_name VARCHAR(100),
-    role VARCHAR(20) DEFAULT 'user',
-    member_type VARCHAR(20) DEFAULT 'student',
+    role ENUM('admin_full', 'utility_only', 'post_author') NOT NULL DEFAULT 'post_author',
+    member_type ENUM('student', 'teacher') NOT NULL DEFAULT 'student',
     student_code VARCHAR(30),
     class_name VARCHAR(50),
-    department VARCHAR(50),
-    department_position VARCHAR(30),
+    department VARCHAR(120),
+    department_position VARCHAR(255),
     is_active BOOLEAN DEFAULT TRUE,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 INSERT INTO users (
     username,password,email,full_name,role,
     member_type,student_code,class_name,department,department_position,is_active
 ) VALUES
-('admin','123456','admin@myapp.com','Nguyễn Văn Admin','admin','teacher',NULL,NULL,NULL,NULL,TRUE),
-('gvfit1','123456','nguyen.vana@fit.hcmus.edu.vn','TS. Nguyễn Văn A','teacher','teacher',NULL,NULL,NULL,NULL,TRUE),
-('gvfit2','123456','tran.thib@fit.hcmus.edu.vn','ThS. Trần Thị B','teacher','teacher',NULL,NULL,NULL,NULL,TRUE),
-('sv22001','123456','sv22001@student.hcmus.edu.vn','Lê Minh Nhật','student','student','22120001','22CTT1','ttkt','trưởng ban',TRUE),
-('sv22002','123456','sv22002@student.hcmus.edu.vn','Phạm Gia Hân','student','student','22120002','22CTT1','ttkt','phó ban',TRUE),
-('sv22003','123456','sv22003@student.hcmus.edu.vn','Đỗ Tuấn Kiệt','student','student','22120003','22CTT2','ctd & ptd','thành viên',TRUE),
-('sv22004','123456','sv22004@student.hcmus.edu.vn','Nguyễn Bảo Trân','student','student','22120004','22CTT2','ctd & ptd','phó ban',TRUE),
-('sv22005','123456','sv22005@student.hcmus.edu.vn','Trần Khánh Duy','student','student','22120005','22CTT3','tcsk','trưởng ban',TRUE),
-('sv22006','123456','sv22006@student.hcmus.edu.vn','Võ Hải Yến','student','student','22120006','22CTT3','tcsk','thành viên',TRUE),
-('sv22007','123456','sv22007@student.hcmus.edu.vn','Bùi Quang Huy','student','student','22120007','22CTT4','văn thể','trưởng ban',TRUE),
-('sv22008','123456','sv22008@student.hcmus.edu.vn','Phan Ngọc Lan','student','student','22120008','22CTT4','văn thể','thành viên',TRUE),
-('sv22009','123456','sv22009@student.hcmus.edu.vn','Lý Hoàng Anh','student','student','22120009','22CTT5','đối ngoại','trưởng ban',TRUE),
-('sv22010','123456','sv22010@student.hcmus.edu.vn','Đặng Mỹ Linh','student','student','22120010','22CTT5','đối ngoại','phó ban',TRUE),
-('sv22011','123456','sv22011@student.hcmus.edu.vn','Ngô Quốc Bình','student','student','22120011','22CTT6','ttkt','thành viên',TRUE),
-('sv22012','123456','sv22012@student.hcmus.edu.vn','Huỳnh Minh Khang','student','student','22120012','22CTT6','ctd & ptd','thành viên',FALSE);
+('admin','123456','admin@myapp.com','Nguyễn Văn Admin','admin_full','teacher',NULL,NULL,NULL,NULL,TRUE),
+('gvfit1','123456','nguyen.vana@fit.hcmus.edu.vn','TS. Nguyễn Văn A','utility_only','teacher',NULL,NULL,NULL,'giảng viên',TRUE),
+('gvfit2','123456','tran.thib@fit.hcmus.edu.vn','ThS. Trần Thị B','post_author','teacher',NULL,NULL,NULL,'bí thư',TRUE),
+('sv22001','123456','sv22001@student.hcmus.edu.vn','Lê Minh Nhật','post_author','student','22120001','22CTT1','ban truyền thông kỹ thuật','trưởng ban, phó bí thư',TRUE),
+('sv22002','123456','sv22002@student.hcmus.edu.vn','Phạm Gia Hân','post_author','student','22120002','22CTT1','ban truyền thông kỹ thuật','phó ban',TRUE),
+('sv22003','123456','sv22003@student.hcmus.edu.vn','Đỗ Tuấn Kiệt','post_author','student','22120003','22CTT2','ban công tác đoàn và phát triển đảng','thành viên',TRUE),
+('sv22004','123456','sv22004@student.hcmus.edu.vn','Nguyễn Bảo Trân','post_author','student','22120004','22CTT2','ban công tác đoàn và phát triển đảng','phó bí thư, phó ban',TRUE),
+('sv22005','123456','sv22005@student.hcmus.edu.vn','Trần Khánh Duy','post_author','student','22120005','22CTT3','ban tổ chức sự kiện','trưởng ban',TRUE),
+('sv22006','123456','sv22006@student.hcmus.edu.vn','Võ Hải Yến','post_author','student','22120006','22CTT3','ban tổ chức sự kiện','thành viên',TRUE),
+('sv22007','123456','sv22007@student.hcmus.edu.vn','Bùi Quang Huy','post_author','student','22120007','22CTT4','ban văn thể','trưởng ban',TRUE),
+('sv22008','123456','sv22008@student.hcmus.edu.vn','Phan Ngọc Lan','post_author','student','22120008','22CTT4','ban văn thể','thành viên',TRUE),
+('sv22009','123456','sv22009@student.hcmus.edu.vn','Lý Hoàng Anh','post_author','student','22120009','22CTT5','ban đối ngoại','trưởng ban',TRUE),
+('sv22010','123456','sv22010@student.hcmus.edu.vn','Đặng Mỹ Linh','post_author','student','22120010','22CTT5','ban đối ngoại','phó ban',TRUE),
+('sv22011','123456','sv22011@student.hcmus.edu.vn','Ngô Quốc Bình','post_author','student','22120011','22CTT6','ban chấp hành','thành viên, phó bí thư',TRUE),
+('sv22012','123456','sv22012@student.hcmus.edu.vn','Huỳnh Minh Khang','post_author','student','22120012','22CTT6','ban công tác đoàn và phát triển đảng','thành viên',FALSE);
 
 -- ================================================
 -- CATEGORIES
@@ -263,17 +263,12 @@ CREATE TABLE organizations (
     FOREIGN KEY (parent_id) REFERENCES organizations(id)
 );
 
-INSERT INTO organizations (name,name_abbr,description) VALUES
-('Liên Chi đoàn CNTT','LCD-CNTT','Tổ chức đoàn khoa CNTT'),
-('Ban học tập','BHT','Ban học tập'),
-('Ban truyền thông','BTT','Ban truyền thông'),
-('Ban sự kiện','BSE','Ban sự kiện'),
-('Ban đối ngoại','BDN','Ban đối ngoại'),
-('Ban phong trào','BPT','Ban phong trào'),
-('CLB Lập trình','CLB Code','Câu lạc bộ lập trình'),
-('CLB AI','CLB AI','Câu lạc bộ AI'),
-('CLB Game','CLB Game','Câu lạc bộ game'),
-('CLB Data','CLB Data','Câu lạc bộ data');
+INSERT INTO organizations (name,name_abbr,description,display_order) VALUES
+('Ban Văn Thể','BVT','Tổ chức các hoạt động văn hóa, văn nghệ, thể dục thể thao',1),
+('Ban Truyền Thông Kỹ Thuật','TTKT','Quản lý fanpage, website, thiết kế poster, quay dựng video',2),
+('Ban Tổ Chức Sự Kiện','TCSK','Lên kế hoạch và tổ chức các sự kiện của Liên Chi Đoàn',3),
+('Ban Đối Ngoại','ĐN','Kết nối với các tổ chức bên ngoài, tìm kiếm tài trợ',4),
+('Ban Công Tác Đoàn và Phát Triển Đảng','CTD & PTD','Quản lý đoàn viên, phát triển đảng viên, công tác đoàn',5);
 
 -- ================================================
 -- CONTACT INFO

@@ -9,6 +9,19 @@ const {
     getRecordOrNull,
     hasAffectedRows
 } = require('./controllerUtils');
+const { ROLES, normalizeRole } = require('../config/roles');
+const { isAdmin } = require('../middleware/authMiddleware');
+
+function isPostAuthor(user) {
+    return normalizeRole(user?.role) === ROLES.POST_AUTHOR;
+}
+
+async function getPostById(pool, id) {
+    const result = await pool.request()
+        .input('id', sql.Int, id)
+        .query('SELECT id, author_id, is_published FROM news WHERE id = @id LIMIT 1');
+    return getRecordOrNull(result);
+}
 
 // GET /api/news - Lấy danh sách tin tức
 exports.getAllNews = withErrorHandling(async (req, res) => {
@@ -29,8 +42,13 @@ exports.getAllNews = withErrorHandling(async (req, res) => {
             WHERE 1=1
         `;
 
-    if (!include_unpublished || include_unpublished !== 'true') {
+    const currentUser = req.authUser;
+    const includeUnpublished = include_unpublished === 'true';
+
+    if (!includeUnpublished) {
         query += ' AND n.is_published = 1';
+    } else if (isPostAuthor(currentUser)) {
+        query += ' AND (n.is_published = 1 OR n.author_id = @request_user_id)';
     }
 
     const request = pool.request();
@@ -58,6 +76,10 @@ exports.getAllNews = withErrorHandling(async (req, res) => {
     if (is_featured) {
         query += ' AND n.is_featured = @is_featured';
         request.input('is_featured', sql.Bit, is_featured === 'true' ? 1 : 0);
+    }
+
+    if (includeUnpublished && isPostAuthor(currentUser)) {
+        request.input('request_user_id', sql.Int, currentUser.id);
     }
 
     query += ' ORDER BY n.created_at DESC';
@@ -125,11 +147,27 @@ exports.getNewsBySlug = withErrorHandling(async (req, res) => {
 
 // POST /api/news - Tạo tin tức mới
 exports.createNews = withErrorHandling(async (req, res) => {
+    const currentUser = req.authUser;
+    if (!currentUser) {
+        return res.status(401).json({ error: 'Bạn chưa đăng nhập' });
+    }
+
+    const admin = isAdmin(currentUser);
+    const author = isPostAuthor(currentUser);
+    if (!admin && !author) {
+        return res.status(403).json({ error: 'Bạn không có quyền tạo bài viết' });
+    }
+
     const { title, slug, summary, content, thumbnail, category_id, author_id, is_featured, is_published } = req.body;
 
     if (!title || !slug) {
         return sendBadRequest(res, 'Title và slug là bắt buộc');
     }
+
+    const finalAuthorId = admin
+        ? (author_id || currentUser.id || null)
+        : currentUser.id;
+    const finalIsPublished = admin ? !!is_published : false;
 
     const pool = await getConnection();
     const result = await pool.request()
@@ -139,10 +177,10 @@ exports.createNews = withErrorHandling(async (req, res) => {
         .input('content', sql.NVarChar, content || null)
         .input('thumbnail', sql.NVarChar, thumbnail || null)
         .input('category_id', sql.Int, category_id || null)
-        .input('author_id', sql.Int, author_id || null)
+        .input('author_id', sql.Int, finalAuthorId)
         .input('is_featured', sql.Bit, is_featured || 0)
-        .input('is_published', sql.Bit, is_published || 0)
-        .input('published_at', sql.DateTime, is_published ? new Date() : null)
+        .input('is_published', sql.Bit, finalIsPublished || 0)
+        .input('published_at', sql.DateTime, finalIsPublished ? new Date() : null)
         .query(`
                 INSERT INTO news (title, slug, summary, content, thumbnail, category_id, author_id, is_featured, is_published, published_at)
                 OUTPUT INSERTED.*
@@ -154,8 +192,31 @@ exports.createNews = withErrorHandling(async (req, res) => {
 
 // PUT /api/news/:id - Cập nhật tin tức
 exports.updateNews = withErrorHandling(async (req, res) => {
+    const currentUser = req.authUser;
+    if (!currentUser) {
+        return res.status(401).json({ error: 'Bạn chưa đăng nhập' });
+    }
+
+    const admin = isAdmin(currentUser);
+    const author = isPostAuthor(currentUser);
+    if (!admin && !author) {
+        return res.status(403).json({ error: 'Bạn không có quyền cập nhật bài viết' });
+    }
+
     const { title, slug, summary, content, thumbnail, category_id, author_id, is_featured, is_published } = req.body;
     const pool = await getConnection();
+
+    const existingPost = await getPostById(pool, req.params.id);
+    if (!existingPost) {
+        return sendNotFound(res, 'Tin tức không tồn tại');
+    }
+
+    if (!admin && existingPost.author_id !== currentUser.id) {
+        return res.status(403).json({ error: 'Bạn chỉ có thể sửa bài viết của mình' });
+    }
+
+    const nextIsPublished = admin ? !!is_published : !!existingPost.is_published;
+    const nextAuthorId = admin ? (author_id ?? null) : existingPost.author_id;
 
     const request = pool.request()
         .input('id', sql.Int, req.params.id)
@@ -164,9 +225,9 @@ exports.updateNews = withErrorHandling(async (req, res) => {
         .input('summary', sql.NVarChar, summary ?? null)
         .input('content', sql.NVarChar, content ?? null)
         .input('thumbnail', sql.NVarChar, thumbnail ?? null)
-        .input('author_id', sql.Int, author_id ?? null)
+        .input('author_id', sql.Int, nextAuthorId)
         .input('is_featured', sql.Bit, is_featured ? 1 : 0)
-        .input('is_published', sql.Bit, is_published ? 1 : 0);
+        .input('is_published', sql.Bit, nextIsPublished ? 1 : 0);
 
     let categoryUpdate;
     if (category_id !== undefined && category_id !== null && category_id !== '') {
@@ -199,7 +260,29 @@ exports.updateNews = withErrorHandling(async (req, res) => {
 
 // DELETE /api/news/:id - Xóa tin tức
 exports.deleteNews = withErrorHandling(async (req, res) => {
+    const currentUser = req.authUser;
+    if (!currentUser) {
+        return res.status(401).json({ error: 'Bạn chưa đăng nhập' });
+    }
+
+    const admin = isAdmin(currentUser);
+    const author = isPostAuthor(currentUser);
+    if (!admin && !author) {
+        return res.status(403).json({ error: 'Bạn không có quyền xóa bài viết' });
+    }
+
     const pool = await getConnection();
+
+    if (!admin) {
+        const existingPost = await getPostById(pool, req.params.id);
+        if (!existingPost) {
+            return sendNotFound(res, 'Tin tức không tồn tại');
+        }
+        if (existingPost.author_id !== currentUser.id) {
+            return res.status(403).json({ error: 'Bạn chỉ có thể xóa bài viết của mình' });
+        }
+    }
+
     const result = await pool.request()
         .input('id', sql.Int, req.params.id)
         .query('DELETE FROM news WHERE id = @id');

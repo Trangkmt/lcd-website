@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import './News.css';
-import { newsAPI, categoriesAPI } from '../../services/api';
+import '../../News/News.css';
+import { newsAPI, categoriesAPI } from '../../../services/api';
 
 const asTimestamp = (item) => {
     const value = item?.published_at || item?.created_at;
@@ -9,8 +9,8 @@ const asTimestamp = (item) => {
     return Number.isFinite(time) ? time : 0;
 };
 
-const News = () => {
-    const [news, setNews] = useState([]);
+const NonAnnualActivity = () => {
+    const [posts, setPosts] = useState([]);
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
@@ -20,11 +20,11 @@ const News = () => {
 
     useEffect(() => {
         Promise.all([
-            newsAPI.getAll({ page_type: 'news', limit: 100 }),
-            categoriesAPI.getAll({ page_type: 'news' }),
+            newsAPI.getAll({ page_type: 'activity_non_annual', limit: 100 }),
+            categoriesAPI.getAll({ page_type: 'activity_non_annual' }),
         ])
-            .then(([newsData, catsData]) => {
-                setNews(Array.isArray(newsData) ? newsData : []);
+            .then(([postsData, catsData]) => {
+                setPosts(Array.isArray(postsData) ? postsData : []);
                 setCategories(Array.isArray(catsData) ? catsData : []);
             })
             .catch(() => { })
@@ -33,11 +33,11 @@ const News = () => {
 
     const categoryNames = ['Tất cả', ...categories.map(c => c.name).filter(Boolean)];
 
-    const filtered = news
+    const filtered = posts
         .filter(item => selectedCategory === 'Tất cả' || item.category_name === selectedCategory)
         .filter(item => !searchQuery || (item.title || '').toLowerCase().includes(searchQuery.toLowerCase()));
 
-    const heroSlides = [...news]
+    const heroSlides = [...posts]
         .sort((a, b) => asTimestamp(b) - asTimestamp(a))
         .slice(0, 5);
 
@@ -55,12 +55,12 @@ const News = () => {
 
     const activeHero = heroSlides[heroIndex] || {
         id: null,
-        title: 'TIN TUC MOI NHAT',
-        summary: 'Cap nhat nhung tin tuc moi nhat tu Lien Chi doan khoa.',
-        thumbnail: 'https://picsum.photos/1600/620?random=200',
+        title: 'HOAT DONG KHONG THUONG NIEN MOI NHAT',
+        summary: 'Tong hop cac hoat dong khong thuong nien moi nhat cua Lien Chi doan khoa.',
+        thumbnail: 'https://picsum.photos/1600/620?random=210',
         published_at: null,
     };
-    const heroLink = activeHero.id ? `/news/${activeHero.id}` : '/news';
+    const heroLink = activeHero.id ? `/activity/non-annual/${activeHero.id}` : '/activity/non-annual';
 
     return (
         <div className="news-page">
@@ -68,12 +68,12 @@ const News = () => {
                 <Link to={heroLink} className="news-page__hero-link">
                     <img
                         className="news-page__hero-image"
-                        src={activeHero.thumbnail || `https://picsum.photos/1600/620?random=${activeHero.id || 200}`}
+                        src={activeHero.thumbnail || `https://picsum.photos/1600/620?random=${activeHero.id || 210}`}
                         alt={activeHero.title}
                     />
                     <div className="news-page__hero-overlay" />
                     <div className="news-page__hero-content">
-                        <span className="news-page__hero-badge">Tin tức</span>
+                        <span className="news-page__hero-badge">Hoạt động</span>
                         <h1 className="news-page__hero-title">{activeHero.title}</h1>
                         <p className="news-page__hero-summary">{activeHero.summary}</p>
                     </div>
@@ -119,7 +119,7 @@ const News = () => {
                         <span className="news-search-icon">🔍</span>
                         <input
                             type="text"
-                            placeholder="Tìm kiếm tin tức..."
+                            placeholder="Tìm kiếm hoạt động..."
                             className="news-search-input"
                             value={searchQuery}
                             onChange={e => setSearchQuery(e.target.value)}
@@ -156,17 +156,17 @@ const News = () => {
                     </div>
                 </div>
 
-                <h2 className="news-page__title">TIN TỨC &amp; SỰ KIỆN</h2>
+                <h2 className="news-page__title">HOẠT ĐỘNG KHÔNG THƯỜNG NIÊN</h2>
 
                 {loading && <p className="news-page__empty">Đang tải...</p>}
                 {!loading && filtered.length === 0 && (
-                    <p className="news-page__empty">Không có tin tức nào</p>
+                    <p className="news-page__empty">Không có hoạt động nào</p>
                 )}
 
-                {/* News Grid */}
+                {/* Posts Grid */}
                 <div className="news-grid">
                     {filtered.map(item => (
-                        <Link key={item.id} to={`/news/${item.id}`} className="news-card-item">
+                        <Link key={item.id} to={`/activity/non-annual/${item.id}`} className="news-card-item">
                             <div className="news-card-item__image">
                                 <img
                                     src={item.thumbnail || `https://picsum.photos/400/250?random=${item.id}`}
@@ -195,4 +195,4 @@ const News = () => {
     );
 };
 
-export default News;
+export default NonAnnualActivity;

@@ -1,4 +1,6 @@
 const { getConnection, sql } = require('../database/connection-sqlserver.js');
+const { buildAuthToken } = require('../middleware/authMiddleware');
+const { normalizeRole } = require('../config/roles');
 
 // POST /api/auth/login
 exports.login = async (req, res) => {
@@ -32,9 +34,16 @@ exports.login = async (req, res) => {
             return res.status(403).json({ error: 'Tài khoản đã bị ẩn hoặc vô hiệu hóa' });
         }
 
+        const normalizedUser = {
+            ...user,
+            role: normalizeRole(user.role),
+        };
+        const token = buildAuthToken(normalizedUser.id);
+
         res.json({
             message: 'Đăng nhập thành công',
-            user,
+            user: normalizedUser,
+            token,
         });
     } catch (err) {
         console.error('Error:', err);

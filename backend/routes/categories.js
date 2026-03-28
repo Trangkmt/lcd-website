@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const categoriesController = require('../controllers/categoriesController');
+const { requireAuth, requireRoles } = require('../middleware/authMiddleware');
+const { ROLES } = require('../config/roles');
 
 // GET /api/categories - Lấy danh sách categories
 router.get('/', categoriesController.getAllCategories);
@@ -12,12 +14,12 @@ router.get('/slug/:slug', categoriesController.getCategoryBySlug);
 router.get('/:id', categoriesController.getCategoryById);
 
 // POST /api/categories - Tạo category mới
-router.post('/', categoriesController.createCategory);
+router.post('/', requireAuth, requireRoles(ROLES.ADMIN_FULL), categoriesController.createCategory);
 
 // PUT /api/categories/:id - Cập nhật category
-router.put('/:id', categoriesController.updateCategory);
+router.put('/:id', requireAuth, requireRoles(ROLES.ADMIN_FULL), categoriesController.updateCategory);
 
 // DELETE /api/categories/:id - Xóa category
-router.delete('/:id', categoriesController.deleteCategory);
+router.delete('/:id', requireAuth, requireRoles(ROLES.ADMIN_FULL), categoriesController.deleteCategory);
 
 module.exports = router;

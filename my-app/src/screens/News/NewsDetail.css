@@ -1,8 +1,8 @@
-/* NewsDetail Page Styles */
+﻿/* NewsDetail Page Styles */
 .news-detail-page {
     width: 100%;
     min-height: 100vh;
-    background: #f5f5f5;
+    background: var(--color-whitesmoke);
     font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
@@ -11,7 +11,7 @@
     width: 100%;
     height: 220px;
     position: relative;
-    background: linear-gradient(135deg, #173562 0%, #2c6bcc 100%);
+    background: linear-gradient(135deg, var(--color-brand-blue-deep) 0%, var(--color-primary) 100%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -27,9 +27,9 @@
 .news-detail-banner-title {
     position: relative;
     z-index: 1;
-    font-size: 48px;
+    font-size: var(--fs-48);
     font-weight: 800;
-    color: #ffffff;
+    color: var(--color-white);
     letter-spacing: 0.05em;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     margin: 0;
@@ -48,31 +48,31 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 14px;
-    color: #7a8899;
+    font-size: var(--fs-14);
+    color: var(--color-text-cool-muted);
     margin-bottom: 28px;
     flex-wrap: wrap;
 }
 
 .news-detail-breadcrumb a {
-    color: #2c6bcc;
+    color: var(--color-primary);
     text-decoration: none;
     font-weight: 500;
     transition: color 0.2s;
 }
 
 .news-detail-breadcrumb a:hover {
-    color: #173562;
+    color: var(--color-brand-blue-deep);
     text-decoration: underline;
 }
 
 .news-detail-sep {
-    color: #bdc6d0;
-    font-size: 13px;
+    color: var(--color-text-cool-muted);
+    font-size: var(--fs-13);
 }
 
 .news-detail-current {
-    color: #555;
+    color: var(--color-text-secondary);
     max-width: 340px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -95,7 +95,7 @@
 
 /* Article */
 .news-detail-article {
-    background: #ffffff;
+    background: var(--color-white);
     border-radius: 14px;
     padding: 36px 40px;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
@@ -117,9 +117,9 @@
 }
 
 .news-detail-category {
-    background: #e8f0fc;
-    color: #173562;
-    font-size: 12px;
+    background: var(--color-surface-info);
+    color: var(--color-brand-blue-deep);
+    font-size: var(--fs-12);
     font-weight: 700;
     padding: 4px 12px;
     border-radius: 20px;
@@ -128,21 +128,21 @@
 }
 
 .news-detail-date {
-    font-size: 13px;
-    color: #8a96a3;
+    font-size: var(--fs-13);
+    color: var(--color-text-meta);
 }
 
 .news-detail-author {
-    font-size: 13px;
-    color: #5a6472;
+    font-size: var(--fs-13);
+    color: var(--color-text-deep);
     font-style: italic;
 }
 
 /* Title */
 .news-detail-title {
-    font-size: 30px;
+    font-size: var(--fs-30);
     font-weight: 800;
-    color: #1a2a40;
+    color: var(--color-text-deep);
     line-height: 1.35;
     margin: 0 0 16px;
     font-family: 'Work Sans', sans-serif;
@@ -150,16 +150,16 @@
 
 @media (max-width: 600px) {
     .news-detail-title {
-        font-size: 23px;
+        font-size: var(--fs-23);
     }
 }
 
 /* Summary / Lead */
 .news-detail-summary {
-    font-size: 16px;
-    color: #3d4f61;
+    font-size: var(--fs-16);
+    color: var(--color-text-deep);
     line-height: 1.7;
-    border-left: 4px solid #2c6bcc;
+    border-left: 4px solid var(--color-primary);
     padding-left: 16px;
     margin: 0 0 24px;
     font-style: italic;
@@ -183,9 +183,9 @@
 
 /* Rich text content */
 .news-detail-content {
-    font-size: 16px;
+    font-size: var(--fs-16);
     line-height: 1.8;
-    color: #2d3748;
+    color: var(--color-text-deep);
 }
 
 .news-detail-content p {
@@ -196,7 +196,7 @@
 .news-detail-content h3,
 .news-detail-content h4 {
     font-weight: 700;
-    color: #173562;
+    color: var(--color-brand-blue-deep);
     margin: 28px 0 12px;
 }
 
@@ -217,7 +217,7 @@
 }
 
 .news-detail-content a {
-    color: #2c6bcc;
+    color: var(--color-primary);
     text-decoration: underline;
 }
 
@@ -225,17 +225,17 @@
 .news-detail-footer {
     margin-top: 36px;
     padding-top: 24px;
-    border-top: 1px solid #e8edf5;
+    border-top: 1px solid var(--color-surface-soft-blue);
 }
 
 /* Back Button */
 .news-detail-back-btn {
-    background: #173562;
-    color: #ffffff;
+    background: var(--color-brand-blue-deep);
+    color: var(--color-white);
     border: none;
     border-radius: 8px;
     padding: 11px 24px;
-    font-size: 14px;
+    font-size: var(--fs-14);
     font-weight: 600;
     cursor: pointer;
     font-family: inherit;
@@ -243,7 +243,7 @@
 }
 
 .news-detail-back-btn:hover {
-    background: #2c6bcc;
+    background: var(--color-primary);
 }
 
 /* Sidebar */
@@ -253,9 +253,9 @@
 }
 
 .news-detail-related-title {
-    font-size: 17px;
+    font-size: var(--fs-17);
     font-weight: 800;
-    color: #173562;
+    color: var(--color-brand-blue-deep);
     margin: 0 0 16px;
     font-family: 'Work Sans', sans-serif;
     letter-spacing: -0.01em;
@@ -270,7 +270,7 @@
 .news-detail-related-card {
     display: flex;
     gap: 12px;
-    background: #ffffff;
+    background: var(--color-white);
     border-radius: 10px;
     overflow: hidden;
     text-decoration: none;
@@ -289,7 +289,7 @@
     min-width: 96px;
     height: 72px;
     overflow: hidden;
-    background: #e8edf5;
+    background: var(--color-surface-soft-blue);
     flex-shrink: 0;
 }
 
@@ -313,9 +313,9 @@
 }
 
 .news-detail-related-info h4 {
-    font-size: 13px;
+    font-size: var(--fs-13);
     font-weight: 600;
-    color: #1a2a40;
+    color: var(--color-text-deep);
     margin: 0;
     line-height: 1.4;
     display: -webkit-box;
@@ -325,8 +325,8 @@
 }
 
 .news-detail-related-info span {
-    font-size: 12px;
-    color: #9ba8b5;
+    font-size: var(--fs-12);
+    color: var(--color-text-meta);
 }
 
 /* Loading / not-found states */
@@ -338,15 +338,15 @@
     align-items: center;
     justify-content: center;
     gap: 16px;
-    color: #7a8899;
-    font-size: 16px;
+    color: var(--color-text-cool-muted);
+    font-size: var(--fs-16);
 }
 
 .news-detail-spinner {
     width: 40px;
     height: 40px;
-    border: 4px solid #e8edf5;
-    border-top-color: #2c6bcc;
+    border: 4px solid var(--color-surface-soft-blue);
+    border-top-color: var(--color-primary);
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
 }
@@ -356,3 +356,8 @@
         transform: rotate(360deg);
     }
 }
+
+
+
+
+

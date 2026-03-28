@@ -59,7 +59,7 @@ const OrganizationalStructure = () => {
                 <div className="leadership-level">
                     <div className="leadership-card">
                         <div className="leadership-icon">👨‍💼</div>
-                        <h2>Ban Chủ Nhiệm</h2>
+                        <h2>Ban Chấp hành</h2>
                         <div className="leadership-roles">
                             <div className="role"><span className="role-title">Bí thư</span></div>
                             <div className="role"><span className="role-title">Phó Bí thư</span></div>

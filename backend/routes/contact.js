@@ -1,26 +1,28 @@
 const express = require('express');
 const router = express.Router();
 const contactController = require('../controllers/contactController');
+const { requireAuth, requireRoles } = require('../middleware/authMiddleware');
+const { ROLES } = require('../config/roles');
 
 // GET /api/contact - Lấy danh sách liên hệ
-router.get('/', contactController.getAllContacts);
+router.get('/', requireAuth, requireRoles(ROLES.ADMIN_FULL), contactController.getAllContacts);
 
 // GET /api/contact/stats - Thống kê liên hệ
-router.get('/stats', contactController.getContactStats);
+router.get('/stats', requireAuth, requireRoles(ROLES.ADMIN_FULL), contactController.getContactStats);
 
 // GET /api/contact/:id - Lấy liên hệ theo ID
-router.get('/:id', contactController.getContactById);
+router.get('/:id', requireAuth, requireRoles(ROLES.ADMIN_FULL), contactController.getContactById);
 
 // POST /api/contact - Tạo liên hệ mới
 router.post('/', contactController.createContact);
 
 // PUT /api/contact/:id/read - Đánh dấu đã đọc
-router.put('/:id/read', contactController.markAsRead);
+router.put('/:id/read', requireAuth, requireRoles(ROLES.ADMIN_FULL), contactController.markAsRead);
 
 // PUT /api/contact/:id/reply - Đánh dấu đã trả lời
-router.put('/:id/reply', contactController.markAsReplied);
+router.put('/:id/reply', requireAuth, requireRoles(ROLES.ADMIN_FULL), contactController.markAsReplied);
 
 // DELETE /api/contact/:id - Xóa liên hệ
-router.delete('/:id', contactController.deleteContact);
+router.delete('/:id', requireAuth, requireRoles(ROLES.ADMIN_FULL), contactController.deleteContact);
 
 module.exports = router;

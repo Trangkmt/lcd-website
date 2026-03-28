@@ -42,6 +42,12 @@ DB_PASSWORD=your_password
 # Backend Server
 PORT=5000
 NODE_ENV=development
+
+# Cloudinary (upload ảnh online)
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+CLOUDINARY_FOLDER=lcd
 ```
 
 **Lưu ý:** Nếu không connect được với `localhost`, thử:
@@ -87,6 +93,7 @@ GET http://localhost:5000/api/health
 - `/api/contact` - Quản lý liên hệ
 - `/api/auth/login` - Đăng nhập
 - `/api/ai/generate-post` - Gen AI nội dung bài viết
+- `/api/uploads/image` - Upload ảnh lên Cloudinary
 
 Xem chi tiết trong [API-DOCUMENTATION.md](./API-DOCUMENTATION.md)
 

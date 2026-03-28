@@ -7,7 +7,6 @@ import IconRightArrow from '../../images/icon-right-arrow.svg';
 const Header = () => {
     const location = useLocation();
     const [searchValue, setSearchValue] = useState('');
-    const [showActivityDropdown, setShowActivityDropdown] = useState(false);
 
     const menuItems = [
         { id: 2, label: "Cơ cấu tổ chức", path: "/organization" },
@@ -41,6 +40,13 @@ const Header = () => {
                     <img className="header__logo" src={Logo} alt="LCD Logo" />
                 </Link>
 
+                {/* Organization Title Block */}
+                <div className="header__org-title" aria-label="Thông tin đơn vị">
+                    <span className="header__org-line header__org-line--regular">ĐẠI HỌC KINH TẾ QUỐC DÂN</span>
+                    <span className="header__org-line header__org-line--bold">TRƯỜNG CÔNG NGHỆ</span>
+                    <span className="header__org-line header__org-line--medium">LIÊN CHI ĐOÀN KHOA CÔNG NGHỆ THÔNG TIN</span>
+                </div>
+
                 {/* Menu Items */}
                 <nav className="header__nav">
                     {menuItems.map((item, index) => {
@@ -50,8 +56,6 @@ const Header = () => {
                                 <div
                                     key={item.id}
                                     className={`menu-item menu-item--${index + 1} menu-item--has-dropdown ${isActive ? 'menu-item--active' : ''}`}
-                                    onMouseEnter={() => setShowActivityDropdown(true)}
-                                    onMouseLeave={() => setShowActivityDropdown(false)}
                                 >
                                     <div className="menu-item__state-layer">
                                         <div className="menu-item__content">
@@ -61,20 +65,17 @@ const Header = () => {
                                             <img className="menu-item__icon" src={IconRightArrow} alt="" />
                                         </div>
                                     </div>
-                                    {showActivityDropdown && (
-                                        <div className="activity-dropdown">
-                                            {activityDropdownItems.map((dropItem, i) => (
-                                                <Link
-                                                    key={i}
-                                                    to={dropItem.path}
-                                                    className="activity-dropdown__item"
-                                                    onClick={() => setShowActivityDropdown(false)}
-                                                >
-                                                    {dropItem.label}
-                                                </Link>
-                                            ))}
-                                        </div>
-                                    )}
+                                    <div className="activity-dropdown">
+                                        {activityDropdownItems.map((dropItem, i) => (
+                                            <Link
+                                                key={i}
+                                                to={dropItem.path}
+                                                className="activity-dropdown__item"
+                                            >
+                                                {dropItem.label}
+                                            </Link>
+                                        ))}
+                                    </div>
                                 </div>
                             );
                         }

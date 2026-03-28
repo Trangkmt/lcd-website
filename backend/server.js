@@ -9,8 +9,8 @@ const DB_HOST = process.env.DB_HOST || process.env.DB_SERVER || 'localhost';
 
 // Middleware
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Logging middleware
 app.use((req, res, next) => {
@@ -29,6 +29,7 @@ const contactRoutes = require('./routes/contact');
 const authRoutes = require('./routes/auth');
 const aiRoutes = require('./routes/ai');
 const migrationsRoutes = require('./routes/migrations');
+const uploadsRoutes = require('./routes/uploads');
 
 // Health check endpoint
 app.get('/api/health', async (req, res) => {
@@ -60,6 +61,7 @@ app.use('/api/contact', contactRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/migrations', migrationsRoutes);
+app.use('/api/uploads', uploadsRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
@@ -76,7 +78,8 @@ app.get('/', (req, res) => {
             organizations: '/api/organizations',
             contact: '/api/contact',
             auth: '/api/auth',
-            ai: '/api/ai'
+            ai: '/api/ai',
+            uploads: '/api/uploads'
         }
     });
 });
@@ -116,6 +119,7 @@ app.listen(PORT, () => {
     console.log(`  GET  http://localhost:${PORT}/api/contact`);
     console.log(`  POST http://localhost:${PORT}/api/auth/login`);
     console.log(`  POST http://localhost:${PORT}/api/ai/generate-post`);
+    console.log(`  POST http://localhost:${PORT}/api/uploads/image`);
     console.log('\n');
 });
 

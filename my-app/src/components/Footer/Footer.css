@@ -1,8 +1,8 @@
-/* Footer */
+﻿/* Footer */
 .footer {
     width: 100%;
-    background: #2C6BCC;
-    color: #ffffff;
+    background: var(--color-primary);
+    color: var(--color-white);
     padding: 60px 160px 40px 160px;
     box-sizing: border-box;
 }
@@ -23,7 +23,6 @@
 .footer-logo {
     width: 80px;
     height: 80px;
-    filter: brightness(0) invert(1);
 }
 
 .social-icons {
@@ -37,8 +36,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #ffffff;
-    font-size: 20px;
+    color: var(--color-white);
+    font-size: var(--fs-20);
     text-decoration: none;
     transition: all 0.3s ease;
     cursor: pointer;
@@ -46,7 +45,7 @@
 
 .social-icon:hover {
     transform: scale(1.2);
-    color: #FFD600;
+    color: var(--color-secondary);
 }
 
 .footer-columns {
@@ -58,24 +57,32 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
+    max-width: 320px;
 }
 
 .footer-column h3 {
-    font-size: 16px;
+    font-size: var(--fs-16);
     font-weight: 700;
     margin-bottom: 8px;
-    color: #ffffff;
+    color: var(--color-white);
 }
 
 .footer-column a {
-    color: #ffffff;
+    color: var(--color-white);
     text-decoration: none;
-    font-size: 14px;
+    font-size: var(--fs-14);
     transition: all 0.3s ease;
 }
 
+.footer-column p {
+    margin: 0;
+    color: var(--color-surface-info);
+    font-size: var(--fs-14);
+    line-height: 1.6;
+}
+
 .footer-column a:hover {
-    color: #FFD600;
+    color: var(--color-secondary);
     transform: translateX(5px);
 }
 
@@ -108,7 +115,7 @@
 
 @media (max-width: 480px) {
     .footer {
-        padding: 20px;
+        padding: var(--space-5);
         margin-top: 40px;
     }
 
@@ -120,6 +127,11 @@
     .social-icon {
         width: 30px;
         height: 30px;
-        font-size: 16px;
+        font-size: var(--fs-16);
     }
 }
+
+
+
+
+

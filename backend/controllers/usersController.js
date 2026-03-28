@@ -1,4 +1,17 @@
 const { getConnection, sql } = require('../database/connection-sqlserver.js');
+const { ROLES, normalizeRole } = require('../config/roles');
+
+function mapUserRole(user) {
+    if (!user) return user;
+    return {
+        ...user,
+        role: normalizeRole(user.role),
+    };
+}
+
+function sanitizeIncomingRole(role) {
+    return normalizeRole(role || ROLES.POST_AUTHOR);
+}
 
 // GET /api/users - Lấy danh sách users
 exports.getAllUsers = async (req, res) => {
@@ -11,7 +24,7 @@ exports.getAllUsers = async (req, res) => {
             FROM users
             ORDER BY created_at DESC
         `);
-        res.json(result.recordset);
+        res.json((result.recordset || []).map(mapUserRole));
     } catch (err) {
         console.error('Error:', err);
         res.status(500).json({ error: err.message });
@@ -35,7 +48,7 @@ exports.getUserById = async (req, res) => {
         if (result.recordset.length === 0) {
             return res.status(404).json({ error: 'User không tồn tại' });
         }
-        res.json(result.recordset[0]);
+        res.json(mapUserRole(result.recordset[0]));
     } catch (err) {
         console.error('Error:', err);
         res.status(500).json({ error: err.message });
@@ -68,7 +81,7 @@ exports.createUser = async (req, res) => {
             .input('password', sql.NVarChar, password) // Lưu ý: Nên hash password trước khi lưu
             .input('email', sql.NVarChar, email)
             .input('full_name', sql.NVarChar, full_name || null)
-            .input('role', sql.NVarChar, role || 'user')
+            .input('role', sql.NVarChar, sanitizeIncomingRole(role))
             .input('member_type', sql.NVarChar, member_type || 'student')
             .input('student_code', sql.NVarChar, student_code || null)
             .input('class_name', sql.NVarChar, class_name || null)
@@ -86,7 +99,7 @@ exports.createUser = async (req, res) => {
                 )
             `);
 
-        res.status(201).json(result.recordset[0]);
+        res.status(201).json(mapUserRole(result.recordset[0]));
     } catch (err) {
         console.error('Error:', err);
         res.status(500).json({ error: err.message });
@@ -113,7 +126,7 @@ exports.updateUser = async (req, res) => {
             .input('id', sql.Int, req.params.id)
             .input('email', sql.NVarChar, email)
             .input('full_name', sql.NVarChar, full_name)
-            .input('role', sql.NVarChar, role)
+            .input('role', sql.NVarChar, sanitizeIncomingRole(role))
             .input('is_active', sql.Bit, is_active)
             .input('member_type', sql.NVarChar, member_type)
             .input('student_code', sql.NVarChar, student_code || null)
@@ -137,7 +150,7 @@ exports.updateUser = async (req, res) => {
         if (result.recordset.length === 0) {
             return res.status(404).json({ error: 'User không tồn tại' });
         }
-        res.json(result.recordset[0]);
+        res.json(mapUserRole(result.recordset[0]));
     } catch (err) {
         console.error('Error:', err);
         res.status(500).json({ error: err.message });

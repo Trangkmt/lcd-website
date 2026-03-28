@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Homepage.css';
-import { newsAPI, activitiesAPI } from '../../services/api';
+import { newsAPI } from '../../services/api';
 
 const getSlideRoute = (item) => {
   if (item.page_type === 'activity_annual' && item.category_slug) {
@@ -29,6 +29,20 @@ const mapHeroSlide = (item) => ({
   link: getSlideRoute(item)
 });
 
+const asArray = (data) => (Array.isArray(data) ? data : []);
+
+const normalizeBool = (value) => value === true || value === 1 || value === '1';
+
+const isAchievementPost = (item) => item?.page_type === 'achievement';
+
+const isFeaturedPost = (item) => normalizeBool(item?.is_featured);
+
+const asTimestamp = (item) => {
+  const value = item?.published_at || item?.created_at;
+  const time = value ? new Date(value).getTime() : 0;
+  return Number.isFinite(time) ? time : 0;
+};
+
 const Homepage = () => {
   const navigate = useNavigate();
   const [newsCards, setNewsCards] = useState([]);
@@ -41,33 +55,23 @@ const Homepage = () => {
   const [activityImageIndex, setActivityImageIndex] = useState(0);
 
   useEffect(() => {
-    Promise.all([
-      newsAPI.getAll({ page_type: 'news', is_featured: true, limit: 4 }),
-      newsAPI.getAll({ page_type: 'activity_annual', is_featured: true, limit: 4 }),
-      newsAPI.getAll({ page_type: 'activity_non_annual', is_featured: true, limit: 4 }),
-      newsAPI.getAll({ page_type: 'news', limit: 4 }),
-      newsAPI.getAll({ page_type: 'activity_annual', limit: 4 }),
-      newsAPI.getAll({ page_type: 'activity_non_annual', limit: 4 }),
-    ])
-      .then(([
-        featuredNews,
-        featuredAnnual,
-        featuredNonAnnual,
-        latestNews,
-        latestAnnual,
-        latestNonAnnual,
-      ]) => {
-        const featured = [
-          ...(Array.isArray(featuredNews) ? featuredNews : []),
-          ...(Array.isArray(featuredAnnual) ? featuredAnnual : []),
-          ...(Array.isArray(featuredNonAnnual) ? featuredNonAnnual : []),
-        ];
+    const activityTypes = ['activity_annual', 'activity_non_annual'];
+    const allSectionTypes = ['news', 'achievement', ...activityTypes];
 
-        const latest = [
-          ...(Array.isArray(latestNews) ? latestNews : []),
-          ...(Array.isArray(latestAnnual) ? latestAnnual : []),
-          ...(Array.isArray(latestNonAnnual) ? latestNonAnnual : []),
-        ];
+    Promise.all([
+      ...allSectionTypes.map((pageType) =>
+        newsAPI.getAll({ page_type: pageType, is_featured: true, limit: 4 })
+      ),
+      ...allSectionTypes.map((pageType) =>
+        newsAPI.getAll({ page_type: pageType, limit: 4 })
+      ),
+    ])
+      .then((responses) => {
+        const featuredResponses = responses.slice(0, allSectionTypes.length);
+        const latestResponses = responses.slice(allSectionTypes.length);
+
+        const featured = featuredResponses.flatMap(asArray);
+        const latest = latestResponses.flatMap(asArray);
 
         const seen = new Set();
         const merged = [...featured, ...latest].filter((item) => {
@@ -77,32 +81,44 @@ const Homepage = () => {
           return true;
         });
 
-        setHeroSlides(merged.slice(0, 6).map(mapHeroSlide));
+        const sorted = merged.sort((a, b) => asTimestamp(b) - asTimestamp(a));
+        setHeroSlides(sorted.slice(0, 6).map(mapHeroSlide));
       })
       .catch(() => {
         setHeroSlides([]);
       });
 
-    // Tin tức mới nhất
-    newsAPI.getAll({ limit: 4 })
-      .then(data => setNewsCards(Array.isArray(data) ? data : []))
-      .catch(() => { });
-
-    // Hoạt động nổi bật: lấy featured annual activity posts từ news + 4 bài thường niên gần nhất
-    newsAPI.getAll({ page_type: 'activity_annual', is_featured: true, limit: 1 })
+    // Tin tức nổi bật
+    newsAPI.getAll({ page_type: 'news', is_featured: true, limit: 4 })
       .then(data => {
-        const list = Array.isArray(data) ? data : [];
-        if (list.length > 0) setFeaturedActivity(list[0]);
+        const featuredNews = asArray(data).filter(isFeaturedPost).slice(0, 4);
+        setNewsCards(featuredNews);
       })
       .catch(() => { });
 
-    newsAPI.getAll({ page_type: 'activity_annual', limit: 4 })
-      .then(data => setActivityPosts(Array.isArray(data) ? data : []))
+    // Hoạt động nổi bật: gom featured từ thường niên + không thường niên
+    Promise.all([
+      newsAPI.getAll({ page_type: 'activity_annual', is_featured: true, limit: 4 }),
+      newsAPI.getAll({ page_type: 'activity_non_annual', is_featured: true, limit: 4 }),
+    ])
+      .then(([annual, nonAnnual]) => {
+        const merged = [...asArray(annual), ...asArray(nonAnnual)]
+          .filter(isFeaturedPost)
+          .sort((a, b) => asTimestamp(b) - asTimestamp(a));
+        setActivityPosts(merged.slice(0, 4));
+        setFeaturedActivity(merged[0] || null);
+      })
       .catch(() => { });
 
-    // Thành tích nổi bật
-    newsAPI.getAll({ category_slug: 'thanh-tich-noi-bat', limit: 4 })
-      .then(data => setAchievements(Array.isArray(data) ? data : []))
+    // Thành tích nổi bật từ trang Admin (page_type=achievement, is_featured=true)
+    newsAPI.getAll({ page_type: 'achievement', is_featured: true, limit: 4 })
+      .then(data => {
+        const filteredAchievements = asArray(data)
+          .filter(isAchievementPost)
+          .filter(isFeaturedPost)
+          .slice(0, 4);
+        setAchievements(filteredAchievements);
+      })
       .catch(() => { });
   }, []);
 
@@ -215,7 +231,7 @@ const Homepage = () => {
         {activityPosts.map((activity, index) => (
           <Link
             key={activity.id}
-            to={`/activity/non-annual/${activity.id}`}
+            to={getSlideRoute(activity)}
             className={`activity-post activity-post--${index + 1}${hoveredActivityIndex === index ? ' activity-post--hovered' : ''}`}
             style={{ textDecoration: 'none', color: 'inherit' }}
             onMouseEnter={() => setHoveredActivityIndex(index)}
@@ -236,7 +252,7 @@ const Homepage = () => {
       {/* News Section */}
       <div className="news-section">
         <img className="section-divider section-divider--news" alt="" />
-        <b className="section-title section-title--news">TIN TỨC</b>
+        <b className="section-title section-title--news">TIN TỨC NỔI BẬT</b>
         <Link to="/news" className="btn-view-more" style={{ textDecoration: 'none', color: 'inherit' }}>
           <b className="btn-view-more__text">Xem thêm</b>
         </Link>
