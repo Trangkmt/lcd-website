@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './ContactsManagement.css';
-import { contactAPI } from '../../services/api';
+import { contactAPI } from '../../../services/api';
 
 export default function ContactsManagement() {
     const [contacts, setContacts] = useState([]);

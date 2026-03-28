@@ -1,8 +1,8 @@
-@import url('./PostsManagement.css');
+﻿@import url('../PostsManagement/PostsManagement.css');
 
 .achievement-summary-cell {
     max-width: 320px;
-    color: #666;
+    color: var(--color-text-muted);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

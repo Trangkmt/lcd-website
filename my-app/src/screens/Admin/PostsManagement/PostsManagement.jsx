@@ -1,14 +1,15 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react';
 import './PostsManagement.css';
-import { newsAPI, categoriesAPI, usersAPI, aiAPI } from '../../services/api';
-
-function slugify(str) {
-    return str.toLowerCase()
-        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-        .replace(/đ/g, 'd').replace(/Đ/g, 'd')
-        .replace(/[^a-z0-9\s-]/g, '')
-        .trim().replace(/\s+/g, '-');
-}
+import { newsAPI, categoriesAPI, usersAPI, aiAPI, uploadsAPI } from '../../../services/api';
+import { canMutatePost, canPublishPost, getStoredAdminUser, isAdminFull } from '../../../utils/adminPermissions';
+import {
+    buildCreatePostForm,
+    buildEditPostForm,
+    buildPostSavePayload,
+    deletePostWithGuard,
+    ensureCanMutatePost,
+    slugifyPostTitle,
+} from '../postManagementHelpers';
 
 const EMPTY_FORM = { title: '', slug: '', summary: '', content: '', thumbnail: '', category_id: '', author_id: '', is_featured: false, is_published: false };
 
@@ -26,6 +27,8 @@ function getPageTypeLabel(pageType) {
 }
 
 export default function PostsManagement() {
+    const currentUser = useMemo(() => getStoredAdminUser(), []);
+    const canPublish = canPublishPost(currentUser);
     const [statusTab, setStatusTab] = useState('all');
     const [viewTab, setViewTab] = useState('list');
     const [editingPost, setEditingPost] = useState(null);
@@ -42,15 +45,19 @@ export default function PostsManagement() {
     const [aiTopic, setAiTopic] = useState('');
     const [aiGenerating, setAiGenerating] = useState(false);
     const [aiError, setAiError] = useState('');
+    const [thumbnailUploading, setThumbnailUploading] = useState(false);
     const [showCatDropdown, setShowCatDropdown] = useState(false);
     const [hoveredPageType, setHoveredPageType] = useState(null);
     const catDropdownRef = useRef(null);
     const editorRef = useRef(null);
     const imageInputRef = useRef(null);
+    const thumbnailInputRef = useRef(null);
 
     useEffect(() => {
         categoriesAPI.getAll().then(data => setCategories(Array.isArray(data) ? data : [])).catch(() => { });
-        usersAPI.getAll().then(data => setUsers(Array.isArray(data) ? data : [])).catch(() => { });
+        if (isAdminFull(currentUser)) {
+            usersAPI.getAll().then(data => setUsers(Array.isArray(data) ? data : [])).catch(() => { });
+        }
     }, []);
 
     useEffect(() => {
@@ -96,7 +103,7 @@ export default function PostsManagement() {
 
     function openCreate() {
         setEditingPost(null);
-        setForm(EMPTY_FORM);
+        setForm(buildCreatePostForm(EMPTY_FORM, { authorId: currentUser?.id || '' }));
         setAiKeywords('');
         setAiTopic('');
         setAiError('');
@@ -104,18 +111,12 @@ export default function PostsManagement() {
     }
 
     function openEdit(post) {
+        if (!ensureCanMutatePost(currentUser, post, 'Bạn chỉ có thể chỉnh sửa bài viết của mình.')) {
+            return;
+        }
+
         setEditingPost(post);
-        setForm({
-            title: post.title || '',
-            slug: post.slug || '',
-            summary: post.summary || '',
-            content: post.content || '',
-            thumbnail: post.thumbnail || '',
-            category_id: post.category_id || '',
-            author_id: post.author_id || '',
-            is_featured: !!post.is_featured,
-            is_published: !!post.is_published,
-        });
+        setForm(buildEditPostForm(EMPTY_FORM, post));
         setAiKeywords('');
         setAiTopic(post.title || '');
         setAiError('');
@@ -148,16 +149,25 @@ export default function PostsManagement() {
                 page_type: category?.page_type || apiFilters.page_type || 'news',
             });
 
+            const generatedTitle = (generated.title || '').trim();
+            const generatedSummary = (generated.summary || '').trim();
+            const generatedContent = (generated.content || '').trim();
+
             setForm(prev => {
-                const title = generated.title || prev.title;
+                const title = generatedTitle || prev.title;
                 return {
                     ...prev,
                     title,
-                    slug: slugify(title),
-                    summary: generated.summary || prev.summary,
-                    content: generated.content || prev.content,
+                    slug: slugifyPostTitle(title),
+                    summary: generatedSummary || prev.summary,
+                    content: generatedContent || prev.content,
                 };
             });
+
+            // Reflect generated content immediately in the contenteditable editor.
+            if (generatedContent && editorRef.current) {
+                editorRef.current.innerText = generatedContent;
+            }
         } catch (err) {
             setAiError(err.message || 'Không thể gen nội dung AI');
         } finally {
@@ -173,10 +183,15 @@ export default function PostsManagement() {
         if (!form.title || !form.slug) { alert('Tiêu đề và slug là bắt buộc'); return; }
         setSaving(true);
         try {
+            const payload = buildPostSavePayload({ form, currentUser, editingPost });
+
             if (editingPost) {
-                await newsAPI.update(editingPost.id, form);
+                if (!ensureCanMutatePost(currentUser, editingPost, 'Bạn chỉ có thể chỉnh sửa bài viết của mình.')) {
+                    return;
+                }
+                await newsAPI.update(editingPost.id, payload);
             } else {
-                await newsAPI.create({ ...form, is_published: false });
+                await newsAPI.create({ ...payload, is_published: false });
             }
             closeEditor();
             await fetchPosts(apiFilters);
@@ -188,6 +203,10 @@ export default function PostsManagement() {
     }
 
     async function handlePublish(post) {
+        if (!canPublish) {
+            alert('Bạn không có quyền duyệt bài viết.');
+            return;
+        }
         if (!window.confirm(`Duyệt và xuất bản bài "${post.title}"?`)) return;
         try {
             await newsAPI.update(post.id, {
@@ -208,10 +227,17 @@ export default function PostsManagement() {
     }
 
     async function handleDelete(id) {
-        if (!window.confirm('Bạn có chắc muốn xóa bài viết này?')) return;
         try {
-            await newsAPI.delete(id);
-            setPosts(prev => prev.filter(p => p.id !== id));
+            await deletePostWithGuard({
+                id,
+                list: posts,
+                currentUser,
+                deniedMessage: 'Bạn chỉ có thể xóa bài viết của mình.',
+                confirmMessage: 'Bạn có chắc muốn xóa bài viết này?',
+                onSuccess: (deletedId) => {
+                    setPosts(prev => prev.filter(p => p.id !== deletedId));
+                },
+            });
         } catch (err) {
             alert('Xóa thất bại: ' + err.message);
         }
@@ -220,7 +246,7 @@ export default function PostsManagement() {
     function handleFormChange(field, value) {
         setForm(prev => {
             const next = { ...prev, [field]: value };
-            if (field === 'title' && !editingPost) next.slug = slugify(value);
+            if (field === 'title' && !editingPost) next.slug = slugifyPostTitle(value);
             return next;
         });
     }
@@ -278,6 +304,40 @@ export default function PostsManagement() {
         if (!images.length) return;
         event.preventDefault();
         insertImageFiles(images);
+    }
+
+    function pickThumbnailImage() {
+        thumbnailInputRef.current?.click();
+    }
+
+    function readFileAsDataUrl(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = () => reject(new Error('Không đọc được file ảnh'));
+            reader.readAsDataURL(file);
+        });
+    }
+
+    async function handleThumbnailUpload(event) {
+        const file = event.target.files?.[0];
+        event.target.value = '';
+        if (!file) return;
+        if (!file.type.startsWith('image/')) {
+            alert('Vui lòng chọn file ảnh hợp lệ.');
+            return;
+        }
+
+        setThumbnailUploading(true);
+        try {
+            const fileData = await readFileAsDataUrl(file);
+            const result = await uploadsAPI.uploadImage(fileData);
+            handleFormChange('thumbnail', result?.secure_url || '');
+        } catch (err) {
+            alert('Upload ảnh thất bại: ' + err.message);
+        } finally {
+            setThumbnailUploading(false);
+        }
     }
 
     useEffect(() => {
@@ -428,11 +488,15 @@ export default function PostsManagement() {
                                             <td className="date-cell">{post.created_at ? new Date(post.created_at).toLocaleDateString('vi-VN') : ''}</td>
                                             <td>
                                                 <div className="action-buttons">
-                                                    {!post.is_published && (
+                                                    {!post.is_published && canPublish && (
                                                         <button className="btn-action btn-publish" title="Duyệt & Xuất bản" onClick={() => handlePublish(post)}>✅</button>
                                                     )}
-                                                    <button className="btn-action btn-edit" title="Chỉnh sửa" onClick={() => openEdit(post)}>✏️</button>
-                                                    <button className="btn-action btn-delete" title="Xóa" onClick={() => handleDelete(post.id)}>🗑️</button>
+                                                    {canMutatePost(currentUser, post) && (
+                                                        <button className="btn-action btn-edit" title="Chỉnh sửa" onClick={() => openEdit(post)}>✏️</button>
+                                                    )}
+                                                    {canMutatePost(currentUser, post) && (
+                                                        <button className="btn-action btn-delete" title="Xóa" onClick={() => handleDelete(post.id)}>🗑️</button>
+                                                    )}
                                                 </div>
                                             </td>
                                         </tr>
@@ -498,13 +562,20 @@ export default function PostsManagement() {
                                 </div>
                             </div>
 
-                            <div className="form-group">
-                                <label className="form-label">Tác giả</label>
-                                <select className="form-control" value={form.author_id} onChange={e => handleFormChange('author_id', e.target.value)}>
-                                    <option value="">-- Chọn tác giả --</option>
-                                    {users.map(u => <option key={u.id} value={u.id}>{u.full_name || u.username}</option>)}
-                                </select>
-                            </div>
+                            {isAdminFull(currentUser) ? (
+                                <div className="form-group">
+                                    <label className="form-label">Tác giả</label>
+                                    <select className="form-control" value={form.author_id} onChange={e => handleFormChange('author_id', e.target.value)}>
+                                        <option value="">-- Chọn tác giả --</option>
+                                        {users.map(u => <option key={u.id} value={u.id}>{u.full_name || u.username}</option>)}
+                                    </select>
+                                </div>
+                            ) : (
+                                <div className="form-group">
+                                    <label className="form-label">Tác giả</label>
+                                    <input type="text" className="form-control" value={currentUser?.full_name || currentUser?.username || ''} disabled />
+                                </div>
+                            )}
 
                             <div className="form-group full-row">
                                 <label className="form-label">Tiêu đề *</label>
@@ -524,6 +595,18 @@ export default function PostsManagement() {
                             <div className="form-group full-row">
                                 <label className="form-label">URL ảnh bìa</label>
                                 <input type="text" className="form-control" value={form.thumbnail} onChange={e => handleFormChange('thumbnail', e.target.value)} placeholder="https://..." />
+                                <div style={{ marginTop: '8px' }}>
+                                    <button type="button" className="btn-secondary" onClick={pickThumbnailImage} disabled={thumbnailUploading}>
+                                        {thumbnailUploading ? 'Đang upload ảnh...' : 'Upload ảnh bìa lên Cloud'}
+                                    </button>
+                                    <input
+                                        ref={thumbnailInputRef}
+                                        type="file"
+                                        accept="image/*"
+                                        style={{ display: 'none' }}
+                                        onChange={handleThumbnailUpload}
+                                    />
+                                </div>
                             </div>
 
                             <div className="form-group full-row checkbox-row">
@@ -531,7 +614,7 @@ export default function PostsManagement() {
                                     <input type="checkbox" checked={form.is_featured} onChange={e => handleFormChange('is_featured', e.target.checked)} />
                                     <span>Bài viết nổi bật</span>
                                 </label>
-                                {editingPost && (
+                                {editingPost && canPublish && (
                                     <label className="checkbox-label" style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
                                         <input type="checkbox" checked={form.is_published} onChange={e => handleFormChange('is_published', e.target.checked)} />
                                         <span>Xuất bản ngay</span>

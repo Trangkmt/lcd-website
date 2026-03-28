@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { authAPI } from '../../services/api';
+import { authAPI } from '../../../services/api';
+import { ADMIN_AUTH_KEY, ADMIN_TOKEN_KEY } from '../../../utils/adminPermissions';
 import './AdminLogin.css';
-
-const ADMIN_AUTH_KEY = 'admin_auth_user';
 
 function isLoggedIn() {
     try {
@@ -47,6 +46,9 @@ export default function AdminLogin() {
 
             const response = await authAPI.login(payload);
             localStorage.setItem(ADMIN_AUTH_KEY, JSON.stringify(response.user));
+            if (response.token) {
+                localStorage.setItem(ADMIN_TOKEN_KEY, response.token);
+            }
 
             const redirectPath = location.state?.from?.pathname || '/admin';
             navigate(redirectPath, { replace: true });

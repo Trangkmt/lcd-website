@@ -19,27 +19,19 @@ import {
   ContactsManagement,
   OtherUtilities
 } from './screens/Admin';
+import { canAccessAdminPath, getDefaultAdminPath, getStoredAdminUser } from './utils/adminPermissions';
 import './global.css';  /* Global design system variables */
-import './styles.css';
-
-const ADMIN_AUTH_KEY = 'admin_auth_user';
-
-function isAdminAuthenticated() {
-  try {
-    const raw = localStorage.getItem(ADMIN_AUTH_KEY);
-    if (!raw) return false;
-    const user = JSON.parse(raw);
-    return !!user?.id;
-  } catch {
-    return false;
-  }
-}
 
 function RequireAdminAuth({ children }) {
   const location = useLocation();
+  const user = getStoredAdminUser();
 
-  if (!isAdminAuthenticated()) {
+  if (!user?.id) {
     return <Navigate to="/admin/login" replace state={{ from: location }} />;
+  }
+
+  if (!canAccessAdminPath(user, location.pathname)) {
+    return <Navigate to={getDefaultAdminPath(user)} replace />;
   }
 
   return children;

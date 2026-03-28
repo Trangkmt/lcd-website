@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import './Dashboard.css';
-import { newsAPI, usersAPI, contactAPI, categoriesAPI } from '../../services/api';
+import { newsAPI, usersAPI, contactAPI, categoriesAPI } from '../../../services/api';
 
 export default function Dashboard() {
     const [loading, setLoading] = useState(true);

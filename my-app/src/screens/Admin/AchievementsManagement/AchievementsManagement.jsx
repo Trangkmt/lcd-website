@@ -1,29 +1,21 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import './AchievementsManagement.css';
-import { newsAPI, categoriesAPI } from '../../services/api';
-
-function slugify(str) {
-    const map = {
-        à: 'a', á: 'a', ả: 'a', ã: 'a', ạ: 'a',
-        ă: 'a', ắ: 'a', ặ: 'a', ằ: 'a', ẳ: 'a', ẵ: 'a',
-        â: 'a', ấ: 'a', ậ: 'a', ầ: 'a', ẩ: 'a', ẫ: 'a',
-        è: 'e', é: 'e', ẻ: 'e', ẽ: 'e', ẹ: 'e',
-        ê: 'e', ế: 'e', ệ: 'e', ề: 'e', ể: 'e', ễ: 'e',
-        ì: 'i', í: 'i', ỉ: 'i', ĩ: 'i', ị: 'i',
-        ò: 'o', ó: 'o', ỏ: 'o', õ: 'o', ọ: 'o',
-        ô: 'o', ố: 'o', ộ: 'o', ồ: 'o', ổ: 'o', ỗ: 'o',
-        ơ: 'o', ớ: 'o', ợ: 'o', ờ: 'o', ở: 'o', ỡ: 'o',
-        ù: 'u', ú: 'u', ủ: 'u', ũ: 'u', ụ: 'u',
-        ư: 'u', ứ: 'u', ự: 'u', ừ: 'u', ử: 'u', ữ: 'u',
-        ỳ: 'y', ý: 'y', ỷ: 'y', ỹ: 'y', ỵ: 'y',
-        đ: 'd'
-    };
-    return str.toLowerCase().split('').map(c => map[c] || c).join('').replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-');
-}
+import { newsAPI, categoriesAPI, uploadsAPI } from '../../../services/api';
+import { canMutatePost, canPublishPost, getStoredAdminUser } from '../../../utils/adminPermissions';
+import {
+    buildCreatePostForm,
+    buildEditPostForm,
+    buildPostSavePayload,
+    deletePostWithGuard,
+    ensureCanMutatePost,
+    slugifyPostTitle,
+} from '../postManagementHelpers';
 
 const EMPTY_FORM = { title: '', slug: '', summary: '', content: '', thumbnail: '', category_id: '', is_featured: true, is_published: true };
 
 export default function AchievementsManagement() {
+    const currentUser = getStoredAdminUser();
+    const canPublish = canPublishPost(currentUser);
     const [achievements, setAchievements] = useState([]);
     const [categories, setCategories] = useState([]);
     const [activeTab, setActiveTab] = useState('all');
@@ -33,6 +25,8 @@ export default function AchievementsManagement() {
     const [selectedAchievement, setSelectedAchievement] = useState(null);
     const [form, setForm] = useState(EMPTY_FORM);
     const [saving, setSaving] = useState(false);
+    const [thumbnailUploading, setThumbnailUploading] = useState(false);
+    const thumbnailInputRef = useRef(null);
 
     useEffect(() => { fetchAchievements(); }, []);
 
@@ -51,20 +45,30 @@ export default function AchievementsManagement() {
     function handleFormChange(field, value) {
         setForm(prev => {
             const updated = { ...prev, [field]: value };
-            if (field === 'title') updated.slug = slugify(value);
+            if (field === 'title') updated.slug = slugifyPostTitle(value);
             return updated;
         });
     }
 
     function openCreate() {
         setSelectedAchievement(null);
-        setForm({ ...EMPTY_FORM, category_id: categories[0]?.id || '' });
+        setForm(buildCreatePostForm(EMPTY_FORM, {
+            categoryId: categories[0]?.id || '',
+            authorId: currentUser?.id || '',
+        }));
         setShowModal(true);
     }
 
     function openEdit(item) {
+        if (!ensureCanMutatePost(currentUser, item, 'Bạn chỉ có thể chỉnh sửa thành tích do mình tạo.')) {
+            return;
+        }
+
         setSelectedAchievement(item);
-        setForm({ title: item.title || '', slug: item.slug || '', summary: item.summary || '', content: item.content || '', thumbnail: item.thumbnail || '', category_id: item.category_id || categories[0]?.id || '', is_featured: !!item.is_featured, is_published: !!item.is_published });
+        setForm(buildEditPostForm(EMPTY_FORM, item, {
+            fallbackCategoryId: categories[0]?.id || '',
+            fallbackAuthorId: currentUser?.id || '',
+        }));
         setShowModal(true);
     }
 
@@ -73,8 +77,17 @@ export default function AchievementsManagement() {
         if (!form.title) { alert('Tiêu đề là bắt buộc'); return; }
         setSaving(true);
         try {
-            const payload = { ...form, category_id: form.category_id || categories[0]?.id || null };
+            const payload = buildPostSavePayload({
+                form,
+                currentUser,
+                editingPost: selectedAchievement,
+                defaultCategoryId: categories[0]?.id || '',
+            });
+
             if (selectedAchievement) {
+                if (!ensureCanMutatePost(currentUser, selectedAchievement, 'Bạn chỉ có thể chỉnh sửa thành tích do mình tạo.')) {
+                    return;
+                }
                 const updated = await newsAPI.update(selectedAchievement.id, payload);
                 setAchievements(prev => prev.map(a => a.id === selectedAchievement.id ? { ...a, ...updated } : a));
             } else {
@@ -82,16 +95,57 @@ export default function AchievementsManagement() {
                 setAchievements(prev => [created, ...prev]);
             }
             setShowModal(false);
-        } catch (err) { alert('Lá»—i: ' + err.message); }
+        } catch (err) { alert('Lỗi: ' + err.message); }
         finally { setSaving(false); }
     }
 
     async function handleDelete(id) {
-        if (!window.confirm('Bạn có chắc muốn xóa thành tích này?')) return;
         try {
-            await newsAPI.delete(id);
-            setAchievements(prev => prev.filter(a => a.id !== id));
+            await deletePostWithGuard({
+                id,
+                list: achievements,
+                currentUser,
+                deniedMessage: 'Bạn chỉ có thể xóa thành tích do mình tạo.',
+                confirmMessage: 'Bạn có chắc muốn xóa thành tích này?',
+                onSuccess: (deletedId) => {
+                    setAchievements(prev => prev.filter(a => a.id !== deletedId));
+                },
+            });
         } catch (err) { alert('Xoá thất bại: ' + err.message); }
+    }
+
+    function pickThumbnailImage() {
+        thumbnailInputRef.current?.click();
+    }
+
+    function readFileAsDataUrl(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = () => reject(new Error('Không đọc được file ảnh'));
+            reader.readAsDataURL(file);
+        });
+    }
+
+    async function handleThumbnailUpload(event) {
+        const file = event.target.files?.[0];
+        event.target.value = '';
+        if (!file) return;
+        if (!file.type.startsWith('image/')) {
+            alert('Vui lòng chọn file ảnh hợp lệ.');
+            return;
+        }
+
+        setThumbnailUploading(true);
+        try {
+            const fileData = await readFileAsDataUrl(file);
+            const result = await uploadsAPI.uploadImage(fileData);
+            handleFormChange('thumbnail', result?.secure_url || '');
+        } catch (err) {
+            alert('Upload ảnh thất bại: ' + err.message);
+        } finally {
+            setThumbnailUploading(false);
+        }
     }
 
     const filteredAchievements = achievements.filter(item => {
@@ -186,8 +240,12 @@ export default function AchievementsManagement() {
                                     <td className="date-cell">{achievement.created_at ? new Date(achievement.created_at).toLocaleDateString('vi-VN') : ''}</td>
                                     <td>
                                         <div className="action-buttons">
-                                            <button className="btn-action btn-edit" title="Chỉnh sửa" onClick={() => openEdit(achievement)}>✏️</button>
-                                            <button className="btn-action btn-delete" title="Xóa" onClick={() => handleDelete(achievement.id)}>🗑️</button>
+                                            {canMutatePost(currentUser, achievement) && (
+                                                <button className="btn-action btn-edit" title="Chỉnh sửa" onClick={() => openEdit(achievement)}>✏️</button>
+                                            )}
+                                            {canMutatePost(currentUser, achievement) && (
+                                                <button className="btn-action btn-delete" title="Xóa" onClick={() => handleDelete(achievement.id)}>🗑️</button>
+                                            )}
                                         </div>
                                     </td>
                                 </tr>
@@ -232,16 +290,30 @@ export default function AchievementsManagement() {
                                 <div className="form-group">
                                     <label className="form-label">URL ảnh thumbnail</label>
                                     <input type="text" className="form-control" value={form.thumbnail} onChange={e => handleFormChange('thumbnail', e.target.value)} placeholder="https://..." />
+                                    <div style={{ marginTop: '8px' }}>
+                                        <button type="button" className="btn-secondary" onClick={pickThumbnailImage} disabled={thumbnailUploading}>
+                                            {thumbnailUploading ? 'Đang upload ảnh...' : 'Upload ảnh lên Cloud'}
+                                        </button>
+                                        <input
+                                            ref={thumbnailInputRef}
+                                            type="file"
+                                            accept="image/*"
+                                            style={{ display: 'none' }}
+                                            onChange={handleThumbnailUpload}
+                                        />
+                                    </div>
                                 </div>
                                 <div className="form-group" style={{ display: 'flex', gap: '16px' }}>
                                     <label className="checkbox-label">
                                         <input type="checkbox" checked={form.is_featured} onChange={e => handleFormChange('is_featured', e.target.checked)} />
                                         <span>Nội bật</span>
                                     </label>
-                                    <label className="checkbox-label">
-                                        <input type="checkbox" checked={form.is_published} onChange={e => handleFormChange('is_published', e.target.checked)} />
-                                        <span>Đã đăng</span>
-                                    </label>
+                                    {canPublish && (
+                                        <label className="checkbox-label">
+                                            <input type="checkbox" checked={form.is_published} onChange={e => handleFormChange('is_published', e.target.checked)} />
+                                            <span>Đã đăng</span>
+                                        </label>
+                                    )}
                                 </div>
                                 <div className="form-actions">
                                     <button type="button" className="btn-secondary" onClick={() => setShowModal(false)}>Hủy</button>

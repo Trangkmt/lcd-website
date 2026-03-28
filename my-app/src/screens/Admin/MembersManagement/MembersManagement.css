@@ -1,6 +1,6 @@
-/* Members Management */
+﻿/* Members Management */
 .members-management {
-    padding: 40px;
+    padding: var(--space-10);
     font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 }
 
@@ -19,33 +19,33 @@
 }
 
 .tab-btn {
-    border: 1px solid #d8def7;
-    background: #fff;
-    color: #4f5fca;
+    border: 1px solid var(--color-border-soft);
+    background: var(--color-white);
+    color: var(--color-brand-indigo);
     border-radius: 8px;
     padding: 10px 14px;
-    font-size: 14px;
+    font-size: var(--fs-14);
     font-weight: 600;
     cursor: pointer;
 }
 
 .tab-btn.active {
-    background: #eef2ff;
-    border-color: #667eea;
+    background: var(--color-surface-accent);
+    border-color: var(--color-brand-indigo);
 }
 
 .toggle-hidden {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    color: #555;
-    font-size: 14px;
+    color: var(--color-text-secondary);
+    font-size: var(--fs-14);
 }
 
 .loading-text {
     text-align: center;
-    padding: 40px;
-    color: #888;
+    padding: var(--space-10);
+    color: var(--color-text-soft);
 }
 
 .table-wrapper {
@@ -64,24 +64,24 @@
 .members-table th,
 .members-table td {
     padding: 14px 12px;
-    border-bottom: 1px solid #edf0f7;
+    border-bottom: 1px solid var(--color-surface-soft-blue);
     text-align: left;
-    font-size: 14px;
+    font-size: var(--fs-14);
 }
 
 .members-table th {
-    background: #f8f9ff;
-    color: #3e4ca7;
+    background: var(--color-surface-panel);
+    color: var(--color-brand-indigo-dark);
     font-weight: 700;
 }
 
 .members-table tbody tr:hover {
-    background: #fafbff;
+    background: var(--color-surface-panel);
 }
 
 .empty-cell {
     text-align: center !important;
-    color: #777;
+    color: var(--color-text-caption);
     padding: 24px 12px !important;
 }
 
@@ -98,24 +98,24 @@
     border: none;
     border-radius: 8px;
     padding: 7px 11px;
-    font-size: 13px;
+    font-size: var(--fs-13);
     font-weight: 600;
     cursor: pointer;
 }
 
 .btn-edit {
-    background: #eef2ff;
-    color: #4054b2;
+    background: var(--color-surface-accent);
+    color: var(--color-brand-indigo);
 }
 
 .btn-hide {
-    background: #fff1f1;
-    color: #d93025;
+    background: var(--color-state-danger-soft);
+    color: var(--color-state-danger);
 }
 
 .btn-show {
-    background: #edf9f0;
-    color: #1e8e3e;
+    background: var(--color-state-success-soft);
+    color: var(--color-state-success);
 }
 
 .member-form {
@@ -124,9 +124,32 @@
     gap: 20px;
 }
 
+.position-checkboxes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 12px;
+    padding: 10px 12px;
+    border: 1px solid var(--color-border-soft);
+    border-radius: 8px;
+    background: var(--color-white);
+}
+
+.position-checkbox-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: var(--fs-14);
+    color: var(--color-text-primary);
+    cursor: pointer;
+}
+
+.position-checkbox-item input {
+    margin: 0;
+}
+
 @media (max-width: 768px) {
     .members-management {
-        padding: 20px;
+        padding: var(--space-5);
     }
 
     .members-toolbar {

@@ -1,14 +1,144 @@
 import React, { useState, useEffect } from 'react';
 import './MembersManagement.css';
-import { usersAPI } from '../../services/api';
+import { usersAPI } from '../../../services/api';
+import { normalizeRole, ROLE_GROUPS } from '../../../utils/adminPermissions';
 
 const TABS = {
     STUDENT: 'student',
     TEACHER: 'teacher',
 };
 
-const DEPARTMENTS = ['ttkt', 'ctd & ptd', 'tcsk', 'văn thể', 'đối ngoại'];
-const POSITIONS = ['trưởng ban', 'phó ban', 'thành viên'];
+const DEPARTMENT_OPTIONS = [
+    { value: 'ban chấp hành', label: 'Ban chấp hành (BCH)' },
+    { value: 'ban văn thể', label: 'Ban văn thể' },
+    { value: 'ban tổ chức sự kiện', label: 'Ban tổ chức sự kiện (TCSK)' },
+    { value: 'ban truyền thông kỹ thuật', label: 'Ban truyền thông kỹ thuật (TTKT)' },
+    { value: 'ban công tác đoàn và phát triển đảng', label: 'Ban công tác đoàn và phát triển đảng (CTD & PTD)' },
+    { value: 'ban đối ngoại', label: 'Ban đối ngoại (ĐN)' },
+];
+
+const DEPARTMENT_ALIASES = {
+    bch: 'ban chấp hành',
+    'ban chấp hành': 'ban chấp hành',
+    'van the': 'ban văn thể',
+    'văn thể': 'ban văn thể',
+    'ban văn thể': 'ban văn thể',
+    tcsk: 'ban tổ chức sự kiện',
+    'to chuc su kien': 'ban tổ chức sự kiện',
+    'tổ chức sự kiện': 'ban tổ chức sự kiện',
+    'ban tổ chức sự kiện': 'ban tổ chức sự kiện',
+    ttkt: 'ban truyền thông kỹ thuật',
+    'truyen thong ky thuat': 'ban truyền thông kỹ thuật',
+    'truyền thông kỹ thuật': 'ban truyền thông kỹ thuật',
+    'ban truyền thông kỹ thuật': 'ban truyền thông kỹ thuật',
+    'ctd & ptd': 'ban công tác đoàn và phát triển đảng',
+    'ctd&ptd': 'ban công tác đoàn và phát triển đảng',
+    ctd: 'ban công tác đoàn và phát triển đảng',
+    ptd: 'ban công tác đoàn và phát triển đảng',
+    'cong tac doan va phat trien dang': 'ban công tác đoàn và phát triển đảng',
+    'công tác đoàn và phát triển đảng': 'ban công tác đoàn và phát triển đảng',
+    'ban công tác đoàn và phát triển đảng': 'ban công tác đoàn và phát triển đảng',
+    'đn': 'ban đối ngoại',
+    dn: 'ban đối ngoại',
+    'doi ngoai': 'ban đối ngoại',
+    'đối ngoại': 'ban đối ngoại',
+    'ban đối ngoại': 'ban đối ngoại',
+};
+
+const DEPARTMENT_LABEL_BY_VALUE = DEPARTMENT_OPTIONS.reduce((acc, option) => {
+    acc[option.value] = option.label;
+    return acc;
+}, {});
+
+function normalizeDepartment(value) {
+    const raw = String(value || '').trim().toLowerCase();
+    if (!raw) return DEPARTMENT_OPTIONS[0].value;
+    return DEPARTMENT_ALIASES[raw] || raw;
+}
+
+function getDepartmentLabel(value) {
+    const normalized = normalizeDepartment(value);
+    return DEPARTMENT_LABEL_BY_VALUE[normalized] || normalized;
+}
+
+const STUDENT_POSITIONS = ['trưởng ban', 'phó bí thư', 'phó ban', 'thành viên'];
+const TEACHER_POSITIONS = ['bí thư', 'giảng viên'];
+const STUDENT_DEFAULT_POSITIONS = [STUDENT_POSITIONS[STUDENT_POSITIONS.length - 1]];
+const TEACHER_DEFAULT_POSITION = TEACHER_POSITIONS[TEACHER_POSITIONS.length - 1];
+
+function getPositionOptions(memberType) {
+    return memberType === TABS.TEACHER ? TEACHER_POSITIONS : STUDENT_POSITIONS;
+}
+
+function toPositionArray(value) {
+    if (Array.isArray(value)) return value;
+    if (value === null || value === undefined) return [];
+    return String(value)
+        .split(/[,;|]/)
+        .map((item) => item.trim())
+        .filter(Boolean);
+}
+
+const POSITION_ALIASES = {
+    'pho bi thu': 'phó bí thư',
+    'phó bí thư': 'phó bí thư',
+    'bi thu': 'bí thư',
+    'bí thư': 'bí thư',
+    'giao vien': 'giảng viên',
+    'giảng viên': 'giảng viên',
+};
+
+function normalizeDepartmentPosition(value, memberType) {
+    const options = getPositionOptions(memberType);
+    const raw = String(value || '').trim().toLowerCase();
+
+    if (!raw) {
+        return options[options.length - 1];
+    }
+
+    const mapped = POSITION_ALIASES[raw] || raw;
+    const matched = options.find((option) => option.toLowerCase() === mapped);
+    return matched || options[options.length - 1];
+}
+
+function normalizeStudentDepartmentPositions(value) {
+    const requested = toPositionArray(value)
+        .map((item) => {
+            const raw = String(item || '').trim().toLowerCase();
+            const mapped = POSITION_ALIASES[raw] || raw;
+            return STUDENT_POSITIONS.find((option) => option.toLowerCase() === mapped) || null;
+        })
+        .filter(Boolean);
+
+    const unique = [...new Set(requested)];
+    return unique.length > 0 ? unique : STUDENT_DEFAULT_POSITIONS;
+}
+
+function serializeDepartmentPositions(value, memberType) {
+    if (memberType === TABS.TEACHER) {
+        return normalizeDepartmentPosition(value, memberType);
+    }
+    return normalizeStudentDepartmentPositions(value).join(', ');
+}
+
+function getDisplayDepartmentPosition(value, memberType) {
+    if (memberType === TABS.TEACHER) {
+        return normalizeDepartmentPosition(value, memberType);
+    }
+    return normalizeStudentDepartmentPositions(value).join(', ');
+}
+
+function toggleStudentPosition(currentValue, position) {
+    const current = normalizeStudentDepartmentPositions(currentValue);
+    const exists = current.includes(position);
+
+    if (exists) {
+        const next = current.filter((item) => item !== position);
+        return next.length > 0 ? next : STUDENT_DEFAULT_POSITIONS;
+    }
+
+    return [...current, position];
+}
 
 const EMPTY_FORM = {
     username: '',
@@ -18,13 +148,14 @@ const EMPTY_FORM = {
     member_type: TABS.STUDENT,
     student_code: '',
     class_name: '',
-    department: DEPARTMENTS[0],
-    department_position: POSITIONS[2],
+    department: DEPARTMENT_OPTIONS[0].value,
+    department_position: STUDENT_DEFAULT_POSITIONS,
+    role: ROLE_GROUPS.POST_AUTHOR,
     is_active: true,
 };
 
 function inferMemberType(member) {
-    if (member.member_type === TABS.TEACHER || member.role === 'teacher') return TABS.TEACHER;
+    if (member.member_type === TABS.TEACHER) return TABS.TEACHER;
     return TABS.STUDENT;
 }
 
@@ -33,6 +164,12 @@ function generateUsername(email) {
     const randomSuffix = Math.floor(1000 + Math.random() * 9000);
     return `${localPart}-${randomSuffix}`;
 }
+
+const ROLE_OPTIONS = [
+    { value: ROLE_GROUPS.ADMIN_FULL, label: 'Admin - Toàn quyền' },
+    { value: ROLE_GROUPS.UTILITY_ONLY, label: 'Nhóm tiện ích' },
+    { value: ROLE_GROUPS.POST_AUTHOR, label: 'Nhóm đăng bài' },
+];
 
 export default function MembersManagement() {
     const [members, setMembers] = useState([]);
@@ -62,7 +199,11 @@ export default function MembersManagement() {
 
     function openCreate() {
         setSelectedMember(null);
-        setForm({ ...EMPTY_FORM, member_type: activeTab });
+        setForm({
+            ...EMPTY_FORM,
+            member_type: activeTab,
+            department_position: activeTab === TABS.TEACHER ? TEACHER_DEFAULT_POSITION : STUDENT_DEFAULT_POSITIONS,
+        });
         setShowModal(true);
     }
 
@@ -77,16 +218,14 @@ export default function MembersManagement() {
             member_type: memberType,
             student_code: member.student_code || '',
             class_name: member.class_name || '',
-            department: member.department || DEPARTMENTS[0],
-            department_position: member.department_position || POSITIONS[2],
+            department: normalizeDepartment(member.department),
+            department_position: memberType === TABS.TEACHER
+                ? normalizeDepartmentPosition(member.department_position, memberType)
+                : normalizeStudentDepartmentPositions(member.department_position),
+            role: normalizeRole(member.role),
             is_active: member.is_active !== undefined ? !!member.is_active : true,
         });
         setShowModal(true);
-    }
-
-    function buildRoleByForm(nextForm) {
-        if (nextForm.member_type === TABS.TEACHER) return 'teacher';
-        return 'student';
     }
 
     async function handleSave(e) {
@@ -96,13 +235,13 @@ export default function MembersManagement() {
             const payload = {
                 email: form.email,
                 full_name: form.full_name,
-                role: buildRoleByForm(form),
+                role: normalizeRole(form.role),
                 is_active: form.is_active,
                 member_type: form.member_type,
                 student_code: form.member_type === TABS.STUDENT ? form.student_code : null,
                 class_name: form.member_type === TABS.STUDENT ? form.class_name : null,
-                department: form.member_type === TABS.STUDENT ? form.department : null,
-                department_position: form.member_type === TABS.STUDENT ? form.department_position : null,
+                department: form.member_type === TABS.STUDENT ? normalizeDepartment(form.department) : null,
+                department_position: serializeDepartmentPositions(form.department_position, form.member_type),
             };
 
             if (!payload.full_name || !payload.email) {
@@ -150,13 +289,13 @@ export default function MembersManagement() {
             const payload = {
                 email: member.email,
                 full_name: member.full_name,
-                role: member.role || buildRoleByForm(member),
+                role: normalizeRole(member.role),
                 is_active: nextActive,
                 member_type: inferMemberType(member),
                 student_code: member.student_code || null,
                 class_name: member.class_name || null,
-                department: member.department || null,
-                department_position: member.department_position || null,
+                department: member.department ? normalizeDepartment(member.department) : null,
+                department_position: serializeDepartmentPositions(member.department_position, inferMemberType(member)),
             };
             const updated = await usersAPI.update(member.id, payload);
             setMembers(prev => prev.map(m => m.id === member.id ? { ...m, ...updated } : m));
@@ -233,6 +372,7 @@ export default function MembersManagement() {
                                 <tr>
                                     <th>Họ và tên</th>
                                     <th>Gmail</th>
+                                    <th>Chức vụ</th>
                                     <th>Hành động</th>
                                 </tr>
                             )}
@@ -240,7 +380,7 @@ export default function MembersManagement() {
                         <tbody>
                             {visibleMembers.length === 0 && (
                                 <tr>
-                                    <td colSpan={isStudentTab ? 7 : 3} className="empty-cell">
+                                    <td colSpan={isStudentTab ? 7 : 4} className="empty-cell">
                                         Chưa có thành viên phù hợp
                                     </td>
                                 </tr>
@@ -253,8 +393,8 @@ export default function MembersManagement() {
                                         <td>{member.student_code || '-'}</td>
                                         <td>{member.class_name || '-'}</td>
                                         <td>{member.email || '-'}</td>
-                                        <td>{member.department || '-'}</td>
-                                        <td>{member.department_position || '-'}</td>
+                                        <td>{member.department ? getDepartmentLabel(member.department) : '-'}</td>
+                                        <td>{getDisplayDepartmentPosition(member.department_position, TABS.STUDENT)}</td>
                                         <td>
                                             <div className="row-actions">
                                                 <button className="btn-action btn-edit" onClick={() => openEdit(member)}>Sửa</button>
@@ -271,6 +411,7 @@ export default function MembersManagement() {
                                     <tr key={member.id} className={!member.is_active ? 'row-hidden' : ''}>
                                         <td>{member.full_name || '-'}</td>
                                         <td>{member.email || '-'}</td>
+                                        <td>{getDisplayDepartmentPosition(member.department_position, TABS.TEACHER)}</td>
                                         <td>
                                             <div className="row-actions">
                                                 <button className="btn-action btn-edit" onClick={() => openEdit(member)}>Sửa</button>
@@ -304,10 +445,30 @@ export default function MembersManagement() {
                                     <select
                                         className="form-control"
                                         value={form.member_type}
-                                        onChange={e => setForm(p => ({ ...p, member_type: e.target.value }))}
+                                        onChange={e => setForm((p) => {
+                                            const nextType = e.target.value;
+                                            return {
+                                                ...p,
+                                                member_type: nextType,
+                                                department_position: nextType === TABS.TEACHER ? TEACHER_DEFAULT_POSITION : STUDENT_DEFAULT_POSITIONS,
+                                            };
+                                        })}
                                     >
                                         <option value={TABS.STUDENT}>Sinh viên</option>
                                         <option value={TABS.TEACHER}>Thầy cô</option>
+                                    </select>
+                                </div>
+
+                                <div className="form-group">
+                                    <label className="form-label">Nhóm phân quyền *</label>
+                                    <select
+                                        className="form-control"
+                                        value={form.role}
+                                        onChange={e => setForm(p => ({ ...p, role: e.target.value }))}
+                                    >
+                                        {ROLE_OPTIONS.map((option) => (
+                                            <option key={option.value} value={option.value}>{option.label}</option>
+                                        ))}
                                     </select>
                                 </div>
 
@@ -345,20 +506,48 @@ export default function MembersManagement() {
                                         <div className="form-group">
                                             <label className="form-label">Ban *</label>
                                             <select className="form-control" value={form.department} onChange={e => setForm(p => ({ ...p, department: e.target.value }))}>
-                                                {DEPARTMENTS.map((department) => (
-                                                    <option key={department} value={department}>{department}</option>
+                                                {DEPARTMENT_OPTIONS.map((department) => (
+                                                    <option key={department.value} value={department.value}>{department.label}</option>
                                                 ))}
                                             </select>
                                         </div>
                                         <div className="form-group">
-                                            <label className="form-label">Chức vụ *</label>
-                                            <select className="form-control" value={form.department_position} onChange={e => setForm(p => ({ ...p, department_position: e.target.value }))}>
-                                                {POSITIONS.map((position) => (
-                                                    <option key={position} value={position}>{position}</option>
-                                                ))}
-                                            </select>
+                                            <label className="form-label">Chức vụ * (chọn 1 hoặc nhiều)</label>
+                                            <div className="position-checkboxes" role="group" aria-label="Chọn chức vụ sinh viên">
+                                                {STUDENT_POSITIONS.map((position) => {
+                                                    const checkedPositions = Array.isArray(form.department_position)
+                                                        ? form.department_position
+                                                        : normalizeStudentDepartmentPositions(form.department_position);
+                                                    const checked = checkedPositions.includes(position);
+
+                                                    return (
+                                                        <label key={position} className="position-checkbox-item">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={checked}
+                                                                onChange={() => setForm((p) => ({
+                                                                    ...p,
+                                                                    department_position: toggleStudentPosition(p.department_position, position),
+                                                                }))}
+                                                            />
+                                                            <span>{position}</span>
+                                                        </label>
+                                                    );
+                                                })}
+                                            </div>
                                         </div>
                                     </>
+                                )}
+
+                                {form.member_type === TABS.TEACHER && (
+                                    <div className="form-group">
+                                        <label className="form-label">Chức vụ *</label>
+                                        <select className="form-control" value={form.department_position} onChange={e => setForm(p => ({ ...p, department_position: e.target.value }))}>
+                                            {TEACHER_POSITIONS.map((position) => (
+                                                <option key={position} value={position}>{position}</option>
+                                            ))}
+                                        </select>
+                                    </div>
                                 )}
 
                                 {selectedMember && (
