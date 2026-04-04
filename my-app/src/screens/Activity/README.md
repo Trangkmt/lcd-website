@@ -8,10 +8,8 @@ Các trang hoạt động đã được tạo dựa trên design Figma.
 src/screens/Activity/
 ├── Activity.jsx          - Trang danh sách hoạt động
 ├── Activity.css
-├── EventByYear.jsx       - Trang danh sách sự kiện theo năm
-├── EventByYear.css
-├── EventDetail.jsx       - Trang chi tiết sự kiện
-├── EventDetail.css
+├── AnnualActivityDetail.jsx - Trang chi tiết hoạt động thường niên
+├── AnnualActivityDetail.css
 └── index.js             - Export tất cả components
 ```
 
@@ -24,41 +22,34 @@ src/screens/Activity/
 - Pagination
 - Menu navigation với highlight active
 
-### 2. EventByYear.jsx (Xem danh sách sự kiện theo năm)
-- Hiển thị thông tin giới thiệu sự kiện
-- Section hoạt động theo năm với navigation arrows
-- Grid layout 3 cột cho các sự kiện
-- Footer với social links
-
-### 3. EventDetail.jsx (Chi tiết sự kiện theo năm)
-- Thông tin chi tiết về sự kiện
-- Danh sách hoạt động theo năm
-- Danh sách bài đăng của sự kiện với thumbnail
+### 2. AnnualActivityDetail.jsx (Chi tiết hoạt động thường niên)
+- Hiển thị thông tin giới thiệu sự kiện thường niên
+- Hiển thị toàn bộ bài đăng của sự kiện (không lọc theo năm)
 - Thanh tìm kiếm bài đăng
-- Pagination
-- Footer đầy đủ
+- Điều hướng vào trang chi tiết bài đăng
 
 ## Cách sử dụng
 
 ### Import components
 
 ```jsx
-import { Activity, EventByYear, EventDetail } from './screens/Activity';
+import { Activity, AnnualActivity, AnnualActivityDetail, PostDetail } from './screens/Activity';
 ```
 
 ### Sử dụng trong React Router
 
 ```jsx
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Activity, EventByYear, EventDetail } from './screens/Activity';
+import { Activity, AnnualActivity, AnnualActivityDetail, PostDetail } from './screens/Activity';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/activity" element={<Activity />} />
-        <Route path="/events/:eventName" element={<EventByYear />} />
-        <Route path="/events/:eventName/:year" element={<EventDetail />} />
+        <Route path="/activity/annual" element={<AnnualActivity />} />
+        <Route path="/activity/:eventName" element={<AnnualActivityDetail />} />
+        <Route path="/activity/:eventName/post/:postId" element={<PostDetail />} />
       </Routes>
     </BrowserRouter>
   );
@@ -115,5 +106,6 @@ npm run dev
 
 Sau đó truy cập:
 - http://localhost:5173/activity - Trang hoạt động
-- http://localhost:5173/events/chao-tan - Danh sách theo năm
-- http://localhost:5173/events/chao-tan/2025 - Chi tiết sự kiện
+- http://localhost:5173/activity/annual - Danh sách hoạt động thường niên
+- http://localhost:5173/activity/chao-tan - Chi tiết hoạt động thường niên
+- http://localhost:5173/activity/chao-tan/post/1 - Chi tiết bài đăng

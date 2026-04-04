@@ -31,23 +31,36 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     full_name VARCHAR(100),
-    role VARCHAR(20) DEFAULT 'user',
+    role ENUM('admin_full', 'utility_only', 'post_author') NOT NULL DEFAULT 'post_author',
+    member_type ENUM('student', 'teacher') NOT NULL DEFAULT 'student',
+    student_code VARCHAR(30),
+    class_name VARCHAR(50),
+    department VARCHAR(120),
+    department_position VARCHAR(255),
     is_active BOOLEAN DEFAULT TRUE,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-INSERT INTO users (username,password,email,full_name,role) VALUES
-('admin','123456','admin@myapp.com','Nguyễn Văn Admin','admin'),
-('editor1','123456','editor1@myapp.com','Trần Minh Quang','editor'),
-('editor2','123456','editor2@myapp.com','Phạm Thu Trang','editor'),
-('user1','123456','user1@myapp.com','Lê Văn Hùng','user'),
-('user2','123456','user2@myapp.com','Đỗ Thị Lan','user'),
-('user3','123456','user3@myapp.com','Nguyễn Thành Nam','user'),
-('user4','123456','user4@myapp.com','Bùi Khánh Linh','user'),
-('user5','123456','user5@myapp.com','Hoàng Minh Đức','user'),
-('user6','123456','user6@myapp.com','Phan Thị Hương','user'),
-('user7','123456','user7@myapp.com','Vũ Quang Huy','user');
+INSERT INTO users (
+    username,password,email,full_name,role,
+    member_type,student_code,class_name,department,department_position,is_active
+) VALUES
+('admin','123456','admin@myapp.com','Nguyễn Văn Admin','admin_full','teacher',NULL,NULL,NULL,NULL,TRUE),
+('gvfit1','123456','nguyen.vana@fit.hcmus.edu.vn','TS. Nguyễn Văn A','utility_only','teacher',NULL,NULL,NULL,'giảng viên',TRUE),
+('gvfit2','123456','tran.thib@fit.hcmus.edu.vn','ThS. Trần Thị B','post_author','teacher',NULL,NULL,NULL,'bí thư',TRUE),
+('sv22001','123456','sv22001@student.hcmus.edu.vn','Lê Minh Nhật','post_author','student','22120001','22CTT1','ban truyền thông kỹ thuật','trưởng ban, phó bí thư',TRUE),
+('sv22002','123456','sv22002@student.hcmus.edu.vn','Phạm Gia Hân','post_author','student','22120002','22CTT1','ban truyền thông kỹ thuật','phó ban',TRUE),
+('sv22003','123456','sv22003@student.hcmus.edu.vn','Đỗ Tuấn Kiệt','post_author','student','22120003','22CTT2','ban công tác đoàn và phát triển đảng','thành viên',TRUE),
+('sv22004','123456','sv22004@student.hcmus.edu.vn','Nguyễn Bảo Trân','post_author','student','22120004','22CTT2','ban công tác đoàn và phát triển đảng','phó bí thư, phó ban',TRUE),
+('sv22005','123456','sv22005@student.hcmus.edu.vn','Trần Khánh Duy','post_author','student','22120005','22CTT3','ban tổ chức sự kiện','trưởng ban',TRUE),
+('sv22006','123456','sv22006@student.hcmus.edu.vn','Võ Hải Yến','post_author','student','22120006','22CTT3','ban tổ chức sự kiện','thành viên',TRUE),
+('sv22007','123456','sv22007@student.hcmus.edu.vn','Bùi Quang Huy','post_author','student','22120007','22CTT4','ban văn thể','trưởng ban',TRUE),
+('sv22008','123456','sv22008@student.hcmus.edu.vn','Phan Ngọc Lan','post_author','student','22120008','22CTT4','ban văn thể','thành viên',TRUE),
+('sv22009','123456','sv22009@student.hcmus.edu.vn','Lý Hoàng Anh','post_author','student','22120009','22CTT5','ban đối ngoại','trưởng ban',TRUE),
+('sv22010','123456','sv22010@student.hcmus.edu.vn','Đặng Mỹ Linh','post_author','student','22120010','22CTT5','ban đối ngoại','phó ban',TRUE),
+('sv22011','123456','sv22011@student.hcmus.edu.vn','Ngô Quốc Bình','post_author','student','22120011','22CTT6','ban chấp hành','thành viên, phó bí thư',TRUE),
+('sv22012','123456','sv22012@student.hcmus.edu.vn','Huỳnh Minh Khang','post_author','student','22120012','22CTT6','ban công tác đoàn và phát triển đảng','thành viên',FALSE);
 
 -- ================================================
 -- CATEGORIES
@@ -57,6 +70,7 @@ CREATE TABLE categories (
     name VARCHAR(100) NOT NULL,
     slug VARCHAR(100) NOT NULL UNIQUE,
     description TEXT,
+    intro_image VARCHAR(500),
     parent_id INT,
     page_type VARCHAR(50) DEFAULT 'news',
     display_order INT DEFAULT 0,
@@ -66,17 +80,23 @@ CREATE TABLE categories (
     FOREIGN KEY (parent_id) REFERENCES categories(id)
 );
 
-INSERT INTO categories (name,slug,page_type,description) VALUES
-('Tin tức','tin-tuc','news','Tin tức của Liên Chi đoàn'),
-('Thông báo','thong-bao','news','Thông báo chính thức'),
-('Sự kiện','su-kien','news','Các sự kiện'),
-('Hoạt động học thuật','hoc-thuat','activity','Hoạt động học thuật'),
-('Hoạt động tình nguyện','tinh-nguyen','activity','Hoạt động cộng đồng'),
-('Hoạt động thể thao','the-thao','activity','Hoạt động thể thao'),
-('Thành tích','thanh-tich','achievement','Thành tích nổi bật'),
-('Tài liệu','tai-lieu','document','Tài liệu'),
-('Chương trình thường niên','thuong-nien','activity','Hoạt động thường niên'),
-('Khác','khac','news','Danh mục khác');
+INSERT INTO categories (name,slug,page_type,description,intro_image,parent_id) VALUES
+('Tin tức','tin-tuc','news','Tin tức của Liên Chi đoàn',NULL,NULL),
+('Thông báo','thong-bao','news','Thông báo chính thức',NULL,NULL),
+('Sự kiện','su-kien','news','Các sự kiện',NULL,NULL),
+('Hoạt động học thuật','hoc-thuat','activity','Hoạt động học thuật',NULL,NULL),
+('Hoạt động tình nguyện','tinh-nguyen','activity','Hoạt động cộng đồng',NULL,NULL),
+('Hoạt động thể thao','the-thao','activity','Hoạt động thể thao',NULL,NULL),
+('Thành tích','thanh-tich','achievement','Thành tích nổi bật',NULL,NULL),
+('Tài liệu','tai-lieu','document','Tài liệu',NULL,NULL),
+('Chương trình thường niên','thuong-nien','activity_annual','Hoạt động thường niên','https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=80',NULL),
+('Khác','khac','news','Danh mục khác',NULL,NULL),
+('Chào tân sinh viên','chao-tan-sinh-vien','activity_annual','Lễ chào tân sinh viên khóa mới',NULL,9),
+('Quân sự','quan-su','activity_annual','Quân sự huấn luyện sinh viên',NULL,9),
+('FIT Cup','fit-cup','activity_annual','Giải bóng đá FIT Cup',NULL,9),
+('Prom','prom','activity_annual','Lễ prom sinh viên',NULL,9),
+('Talkshow','talkshow','activity_annual','Talkshow và giao lưu',NULL,9),
+('Cuộc thi','cuoc-thi','activity_annual','Các cuộc thi và hackathon',NULL,9);
 
 -- ================================================
 -- NEWS
@@ -211,16 +231,16 @@ CREATE TABLE activities (
 );
 
 INSERT INTO activities (title,slug,description,location,start_date,end_date,category_id,created_by) VALUES
-('Chào tân sinh viên','chao-tan','Chào tân sinh viên','Hội trường A','2025-09-01','2025-09-01',9,1),
-('Workshop AI','workshop-ai','Workshop AI','Phòng 301','2025-05-10','2025-05-10',4,2),
-('Giải bóng đá','giai-bong-da','Giải bóng đá','Sân vận động','2025-06-01','2025-06-10',6,2),
-('Tình nguyện mùa hè','tinh-nguyen-he','Hoạt động tình nguyện','Hòa Bình','2025-07-01','2025-07-10',5,3),
-('Talkshow IT','talkshow-it','Talkshow','Phòng hội thảo','2025-05-20','2025-05-20',4,2),
-('Hackathon','hackathon','Cuộc thi hackathon','Lab CNTT','2025-08-01','2025-08-02',4,1),
-('Workshop Cloud','workshop-cloud','Cloud','Lab','2025-06-15','2025-06-15',4,1),
-('Career Day','career-day','Ngày hội việc làm','Hall','2025-04-01','2025-04-01',4,1),
-('Charity','charity','Thiện nguyện','Hà Giang','2025-07-20','2025-07-25',5,3),
-('Sport Day','sport-day','Hội thao','Sân trường','2025-03-01','2025-03-01',6,1);
+('Lễ chào tân sinh viên 2025','chao-tan-2025','Chương trình chào tân sinh viên khóa 25 được tổ chức nhằm giúp các bạn sinh viên mới làm quen với môi trường đại học.','Hội trường chính','2025-09-01','2025-09-02',11,1),
+('Quân sự huấn luyện khóa 25','quan-su-2025','Chương trình quân sự huấn luyện sinh viên khóa mới, giúp các bạn nâng cao tinh thần kỷ luật và thể lực.','Sân trường','2025-09-05','2025-09-10',12,1),
+('FIT Cup 2025','fit-cup-2025','Giải bóng đá FIT Cup thường niên, đây là sân chơi lớn nhất của sinh viên khoa CNTT mỗi năm.','Sân bóng đá UTE','2025-10-01','2025-10-20',13,1),
+('Prom sinh viên 2025','prom-2025','Lễ prom sinh viên khoa CNTT - sự kiện lớn nhất của năm học với sự tham gia của hàng trăm bạn sinh viên.','Sân khấu trước hội trường','2025-12-15','2025-12-15',14,2),
+('Talkshow công nghệ','talkshow-tech','Talkshow về xu hướng công nghệ mới, các chuyên gia chia sẻ kinh nghiệm và cơ hội nghề nghiệp.','Phòng hội thảo','2025-05-20','2025-05-20',15,2),
+('Hackathon 2025','hackathon-2025','Cuộc thi Hackathon thường niên dành cho sinh viên lập trình và công nghệ thông tin.','Lab CNTT','2025-08-01','2025-08-02',16,1),
+('Giải lập trình sinh viên','giai-lap-trinh','Giải lập trình thường niên với các bài toán thách thức về thuật toán và cấu trúc dữ liệu.','Lab CNTT','2025-12-01','2025-12-05',16,3),
+('Workshop lập trình web','workshop-web','Workshop tập trung vào các công nghệ web hiện đại như React, Node.js, và các framework khác.','Phòng lab','2025-06-15','2025-06-15',15,2),
+('FIT Cup futsal','fit-cup-futsal','Giải bóng đá futsal trong khuôn khổ FIT Cup với sự tham gia của nhiều đội bóng từ các lớp.','Sân futsal','2025-11-01','2025-11-15',13,1),
+('Workshop AI & Data Science','workshop-ai-data','Workshop về ứng dụng AI và Data Science trong doanh nghiệp và nghiên cứu khoa học.','Phòng hội thảo','2025-07-10','2025-07-10',15,2);
 
 -- ================================================
 -- ORGANIZATIONS
@@ -243,17 +263,12 @@ CREATE TABLE organizations (
     FOREIGN KEY (parent_id) REFERENCES organizations(id)
 );
 
-INSERT INTO organizations (name,name_abbr,description) VALUES
-('Liên Chi đoàn CNTT','LCD-CNTT','Tổ chức đoàn khoa CNTT'),
-('Ban học tập','BHT','Ban học tập'),
-('Ban truyền thông','BTT','Ban truyền thông'),
-('Ban sự kiện','BSE','Ban sự kiện'),
-('Ban đối ngoại','BDN','Ban đối ngoại'),
-('Ban phong trào','BPT','Ban phong trào'),
-('CLB Lập trình','CLB Code','Câu lạc bộ lập trình'),
-('CLB AI','CLB AI','Câu lạc bộ AI'),
-('CLB Game','CLB Game','Câu lạc bộ game'),
-('CLB Data','CLB Data','Câu lạc bộ data');
+INSERT INTO organizations (name,name_abbr,description,display_order) VALUES
+('Ban Văn Thể','BVT','Tổ chức các hoạt động văn hóa, văn nghệ, thể dục thể thao',1),
+('Ban Truyền Thông Kỹ Thuật','TTKT','Quản lý fanpage, website, thiết kế poster, quay dựng video',2),
+('Ban Tổ Chức Sự Kiện','TCSK','Lên kế hoạch và tổ chức các sự kiện của Liên Chi Đoàn',3),
+('Ban Đối Ngoại','ĐN','Kết nối với các tổ chức bên ngoài, tìm kiếm tài trợ',4),
+('Ban Công Tác Đoàn và Phát Triển Đảng','CTD & PTD','Quản lý đoàn viên, phát triển đảng viên, công tác đoàn',5);
 
 -- ================================================
 -- CONTACT INFO

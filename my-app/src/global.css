@@ -23,6 +23,7 @@ body {
     padding: 0;
     line-height: normal;
     font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--color-whitesmoke);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -135,6 +136,58 @@ p {
     --color-whitesmoke: #F5F5F5;
     --color-darkgray: #9CA3AF;
 
+    /* Extended Project Colors */
+    --color-text-strong: #1A1A1A;
+    --color-text-primary: #333333;
+    --color-text-muted: #666666;
+    --color-text-soft: #888888;
+    --color-text-subtle: #999999;
+    --color-text-placeholder: #AAAAAA;
+    --color-text-deep: #1A2A40;
+    --color-text-cool-muted: #7A8899;
+
+    --color-brand-indigo: #667EEA;
+    --color-brand-indigo-dark: #1A4D99;
+    --color-brand-blue-deep: #173562;
+    --color-brand-action: #1A73E8;
+
+    --color-surface-muted: #F9F9F9;
+    --color-surface-soft-blue: #E8EDF5;
+    --color-border-soft: #DDE3ED;
+
+    /* Consolidated Semantic Colors */
+    --color-text-secondary: #555555;
+    --color-text-heading: #1E1E1E;
+    --color-text-caption: #777777;
+    --color-text-meta: #8A96A3;
+
+    --color-brand-hover: #1F57AD;
+    --color-brand-secondary: #1F4D8F;
+    --color-link: #0066CC;
+    --color-link-hover: #004499;
+    --color-accent-purple: #764BA2;
+
+    --color-border-muted: #D0D7E2;
+    --color-border-subtle: #E5E5E5;
+    --color-surface-panel: #FAFBFF;
+    --color-surface-accent: #EEF2FF;
+    --color-surface-info: #E8F0FC;
+
+    --color-state-danger: #D93025;
+    --color-state-danger-strong: #DC2626;
+    --color-state-danger-soft: #FDEAEA;
+    --color-state-danger-surface: #FEE2E2;
+    --color-state-danger-border: #F2BCBC;
+
+    --color-state-success-strong: #0F6D33;
+    --color-state-success: #16A34A;
+    --color-state-success-soft: #E8F8EF;
+    --color-state-success-border: #B5E3C5;
+
+    --color-state-warning-strong: #92400E;
+    --color-state-warning: #B8860B;
+    --color-state-warning-soft: #FEF3C7;
+
     /* Color Primitives */
     --color-primitives-brand-100: rgba(245, 245, 245, 1);
     --color-primitives-brand-300: rgba(217, 217, 217, 1);
@@ -172,16 +225,25 @@ p {
 
     /* Font Sizes */
     --fs-10: 10px;
+    --fs-11: 11px;
     --fs-12: 12px;
+    --fs-13: 13px;
     --fs-14: 14px;
+    --fs-15: 15px;
     --fs-16: 16px;
+    --fs-17: 17px;
     --fs-18: 18px;
     --fs-20: 20px;
+    --fs-22: 22px;
+    --fs-23: 23px;
     --fs-24: 24px;
     --fs-28: 28px;
+    --fs-30: 30px;
     --fs-32: 32px;
     --fs-36: 36px;
+    --fs-38: 38px;
     --fs-40: 40px;
+    --fs-42: 42px;
     --fs-48: 48px;
     --fs-56: 56px;
     --fs-64: 64px;
@@ -213,7 +275,9 @@ p {
     --space-0: 0;
     --space-1: 4px;
     --space-2: 8px;
+    --space-10px: 10px;
     --space-3: 12px;
+    --space-14px: 14px;
     --space-4: 16px;
     --space-5: 20px;
     --space-6: 24px;
@@ -223,6 +287,7 @@ p {
     --space-10: 40px;
     --space-12: 48px;
     --space-16: 64px;
+    --space-70px: 70px;
     --space-20: 80px;
     --space-24: 96px;
 
@@ -515,4 +580,5 @@ p {
 #root {
     width: 100%;
     overflow-x: hidden;
+    background-color: var(--color-whitesmoke);
 }

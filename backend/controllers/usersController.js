@@ -1,15 +1,30 @@
 const { getConnection, sql } = require('../database/connection-sqlserver.js');
+const { ROLES, normalizeRole } = require('../config/roles');
+
+function mapUserRole(user) {
+    if (!user) return user;
+    return {
+        ...user,
+        role: normalizeRole(user.role),
+    };
+}
+
+function sanitizeIncomingRole(role) {
+    return normalizeRole(role || ROLES.POST_AUTHOR);
+}
 
 // GET /api/users - Lấy danh sách users
 exports.getAllUsers = async (req, res) => {
     try {
         const pool = await getConnection();
         const result = await pool.request().query(`
-            SELECT id, username, email, full_name, role, is_active, created_at, updated_at
+            SELECT id, username, email, full_name, role, is_active,
+                   member_type, student_code, class_name, department, department_position,
+                   created_at, updated_at
             FROM users
             ORDER BY created_at DESC
         `);
-        res.json(result.recordset);
+        res.json((result.recordset || []).map(mapUserRole));
     } catch (err) {
         console.error('Error:', err);
         res.status(500).json({ error: err.message });
@@ -22,12 +37,18 @@ exports.getUserById = async (req, res) => {
         const pool = await getConnection();
         const result = await pool.request()
             .input('id', sql.Int, req.params.id)
-            .query('SELECT id, username, email, full_name, role, is_active, created_at, updated_at FROM users WHERE id = @id');
+            .query(`
+                SELECT id, username, email, full_name, role, is_active,
+                       member_type, student_code, class_name, department, department_position,
+                       created_at, updated_at
+                FROM users
+                WHERE id = @id
+            `);
 
         if (result.recordset.length === 0) {
             return res.status(404).json({ error: 'User không tồn tại' });
         }
-        res.json(result.recordset[0]);
+        res.json(mapUserRole(result.recordset[0]));
     } catch (err) {
         console.error('Error:', err);
         res.status(500).json({ error: err.message });
@@ -37,7 +58,18 @@ exports.getUserById = async (req, res) => {
 // POST /api/users - Tạo user mới
 exports.createUser = async (req, res) => {
     try {
-        const { username, password, email, full_name, role } = req.body;
+        const {
+            username,
+            password,
+            email,
+            full_name,
+            role,
+            member_type,
+            student_code,
+            class_name,
+            department,
+            department_position
+        } = req.body;
 
         if (!username || !password || !email) {
             return res.status(400).json({ error: 'Username, password và email là bắt buộc' });
@@ -49,14 +81,25 @@ exports.createUser = async (req, res) => {
             .input('password', sql.NVarChar, password) // Lưu ý: Nên hash password trước khi lưu
             .input('email', sql.NVarChar, email)
             .input('full_name', sql.NVarChar, full_name || null)
-            .input('role', sql.NVarChar, role || 'user')
+            .input('role', sql.NVarChar, sanitizeIncomingRole(role))
+            .input('member_type', sql.NVarChar, member_type || 'student')
+            .input('student_code', sql.NVarChar, student_code || null)
+            .input('class_name', sql.NVarChar, class_name || null)
+            .input('department', sql.NVarChar, department || null)
+            .input('department_position', sql.NVarChar, department_position || null)
             .query(`
-                INSERT INTO users (username, password, email, full_name, role)
+                INSERT INTO users (
+                    username, password, email, full_name, role,
+                    member_type, student_code, class_name, department, department_position
+                )
                 OUTPUT INSERTED.*
-                VALUES (@username, @password, @email, @full_name, @role)
+                VALUES (
+                    @username, @password, @email, @full_name, @role,
+                    @member_type, @student_code, @class_name, @department, @department_position
+                )
             `);
 
-        res.status(201).json(result.recordset[0]);
+        res.status(201).json(mapUserRole(result.recordset[0]));
     } catch (err) {
         console.error('Error:', err);
         res.status(500).json({ error: err.message });
@@ -66,19 +109,40 @@ exports.createUser = async (req, res) => {
 // PUT /api/users/:id - Cập nhật user
 exports.updateUser = async (req, res) => {
     try {
-        const { email, full_name, role, is_active } = req.body;
+        const {
+            email,
+            full_name,
+            role,
+            is_active,
+            member_type,
+            student_code,
+            class_name,
+            department,
+            department_position
+        } = req.body;
         const pool = await getConnection();
 
         const result = await pool.request()
             .input('id', sql.Int, req.params.id)
             .input('email', sql.NVarChar, email)
             .input('full_name', sql.NVarChar, full_name)
-            .input('role', sql.NVarChar, role)
+            .input('role', sql.NVarChar, sanitizeIncomingRole(role))
             .input('is_active', sql.Bit, is_active)
+            .input('member_type', sql.NVarChar, member_type)
+            .input('student_code', sql.NVarChar, student_code || null)
+            .input('class_name', sql.NVarChar, class_name || null)
+            .input('department', sql.NVarChar, department || null)
+            .input('department_position', sql.NVarChar, department_position || null)
             .query(`
                 UPDATE users 
                 SET email = @email, full_name = @full_name, role = @role, 
-                    is_active = @is_active, updated_at = GETDATE()
+                    is_active = @is_active,
+                    member_type = @member_type,
+                    student_code = @student_code,
+                    class_name = @class_name,
+                    department = @department,
+                    department_position = @department_position,
+                    updated_at = GETDATE()
                 OUTPUT INSERTED.*
                 WHERE id = @id
             `);
@@ -86,7 +150,7 @@ exports.updateUser = async (req, res) => {
         if (result.recordset.length === 0) {
             return res.status(404).json({ error: 'User không tồn tại' });
         }
-        res.json(result.recordset[0]);
+        res.json(mapUserRole(result.recordset[0]));
     } catch (err) {
         console.error('Error:', err);
         res.status(500).json({ error: err.message });

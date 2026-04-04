@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const activitiesController = require('../controllers/activitiesController');
+const { requireAuth, requireRoles } = require('../middleware/authMiddleware');
+const { ROLES } = require('../config/roles');
 
 // GET /api/activities - Lấy danh sách hoạt động
 router.get('/', activitiesController.getAllActivities);
@@ -15,12 +17,12 @@ router.get('/slug/:slug', activitiesController.getActivityBySlug);
 router.get('/:id', activitiesController.getActivityById);
 
 // POST /api/activities - Tạo hoạt động mới
-router.post('/', activitiesController.createActivity);
+router.post('/', requireAuth, requireRoles(ROLES.ADMIN_FULL), activitiesController.createActivity);
 
 // PUT /api/activities/:id - Cập nhật hoạt động
-router.put('/:id', activitiesController.updateActivity);
+router.put('/:id', requireAuth, requireRoles(ROLES.ADMIN_FULL), activitiesController.updateActivity);
 
 // DELETE /api/activities/:id - Xóa hoạt động
-router.delete('/:id', activitiesController.deleteActivity);
+router.delete('/:id', requireAuth, requireRoles(ROLES.ADMIN_FULL), activitiesController.deleteActivity);
 
 module.exports = router;

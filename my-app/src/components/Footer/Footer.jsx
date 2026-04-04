@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './Footer.css';
 import Logo from '../../images/Logo.png';
 
@@ -18,36 +19,20 @@ const Footer = () => {
 
                 <div className="footer-columns">
                     <div className="footer-column">
-                        <h3>Use cases</h3>
-                        <a href="#">UI design</a>
-                        <a href="#">UX design</a>
-                        <a href="#">Wireframing</a>
-                        <a href="#">Diagramming</a>
-                        <a href="#">Brainstorming</a>
-                        <a href="#">Online whiteboard</a>
-                        <a href="#">Team collaboration</a>
+                        <h3>Thông tin chung</h3>
+                        <Link to="/">Trang chủ</Link>
+                        <Link to="/news">Tin tức</Link>
+                        <Link to="/activity/annual">Hoạt động thường niên</Link>
+                        <Link to="/activity/non-annual">Hoạt động không thường niên</Link>
+                        <Link to="/achievement">Thành tích</Link>
+                        <Link to="/contact">Liên hệ</Link>
                     </div>
 
                     <div className="footer-column">
-                        <h3>Explore</h3>
-                        <a href="#">Design</a>
-                        <a href="#">Prototyping</a>
-                        <a href="#">Development features</a>
-                        <a href="#">Design systems</a>
-                        <a href="#">Collaboration features</a>
-                        <a href="#">Design process</a>
-                        <a href="#">FigJam</a>
-                    </div>
-
-                    <div className="footer-column">
-                        <h3>Resources</h3>
-                        <a href="#">Blog</a>
-                        <a href="#">Best practices</a>
-                        <a href="#">Colors</a>
-                        <a href="#">Color wheel</a>
-                        <a href="#">Support</a>
-                        <a href="#">Developers</a>
-                        <a href="#">Resource library</a>
+                        <h3>Địa chỉ liên hệ</h3>
+                        <p>Liên Chi đoàn khoa Công nghệ thông tin</p>
+                        <a href="tel:023456788">023456788</a>
+                        <a href="mailto:lcd@neu.edu.vn">lcd@neu.edu.vn</a>
                     </div>
                 </div>
             </div>

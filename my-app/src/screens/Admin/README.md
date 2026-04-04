@@ -44,9 +44,8 @@ src/screens/Admin/
 ### Public Routes (có Header/Footer)
 - `/` - Trang chủ
 - `/activity` - Trang hoạt động
-- `/activity/:eventName` - Hoạt động theo năm
-- `/activity/:eventName/:year` - Chi tiết hoạt động
-- `/activity/:eventName/:year/post/:postId` - Chi tiết bài viết
+- `/activity/:eventName` - Chi tiết hoạt động thường niên
+- `/activity/:eventName/post/:postId` - Chi tiết bài viết
 
 ## 📋 Chức năng chi tiết
 

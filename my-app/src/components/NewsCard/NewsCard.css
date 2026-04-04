@@ -1,8 +1,8 @@
-.news-card {
+﻿.news-card {
     width: 296px;
     height: 237px;
-    background: #ffffff;
-    border: 1px solid #ffffff;
+    background: var(--color-white);
+    border: 1px solid var(--color-white);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -11,7 +11,7 @@
 }
 
 .news-card:hover {
-    background: #FFF9E6;
+    background: var(--color-secondary-light);
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     transform: translateY(-4px);
 }
@@ -19,8 +19,8 @@
 .news-image {
     width: 271px;
     height: 123px;
-    background: #D9D9D9;
-    border: 1px solid #ffffff;
+    background: var(--color-gainsboro);
+    border: 1px solid var(--color-white);
     margin: 10px auto 0 auto;
     background-size: cover;
     background-position: center;
@@ -38,10 +38,10 @@
 }
 
 .news-category {
-    background: #2C6BCC;
-    color: #F5F5F5;
+    background: var(--color-primary);
+    color: var(--color-whitesmoke);
     padding: 6px 12px;
-    font-size: 12px;
+    font-size: var(--fs-12);
     font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     font-weight: 700;
     border-radius: 8px;
@@ -54,7 +54,7 @@
 }
 
 .news-date {
-    font-size: 10px;
+    font-size: var(--fs-10);
     font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     font-weight: 400;
     color: black;
@@ -63,10 +63,10 @@
 
 .news-text {
     padding: 8px 17px 16px 17px;
-    font-size: 16px;
+    font-size: var(--fs-16);
     font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     font-weight: 700;
-    color: #183563;
+    color: var(--color-darkslateblue);
     letter-spacing: 0.5px;
     line-height: 1.3;
     overflow: hidden;
@@ -74,3 +74,8 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
 }
+
+
+
+
+

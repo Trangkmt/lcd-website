@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const usersController = require('../controllers/usersController');
+const { requireAuth, requireRoles } = require('../middleware/authMiddleware');
+const { ROLES } = require('../config/roles');
+
+router.use(requireAuth, requireRoles(ROLES.ADMIN_FULL));
 
 // GET /api/users - Lấy danh sách users
 router.get('/', usersController.getAllUsers);

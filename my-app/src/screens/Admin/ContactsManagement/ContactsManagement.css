@@ -1,0 +1,82 @@
+﻿@import url('../PostsManagement/PostsManagement.css');
+
+.contact-row-unread {
+    background: var(--color-surface-panel);
+}
+
+.contacts-table .status-badge.new {
+    background: var(--color-surface-accent);
+    color: var(--color-brand-action);
+}
+
+.sender-cell {
+    font-weight: 600;
+    color: var(--color-text-strong);
+}
+
+.email-cell,
+.subject-cell {
+    color: var(--color-text-secondary);
+}
+
+.subject-cell {
+    max-width: 280px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.btn-reply {
+    background: var(--color-primary) !important;
+    color: white !important;
+    border: none !important;
+}
+
+.btn-reply:hover {
+    background: var(--color-brand-indigo-dark) !important;
+}
+
+.reply-original {
+    background: var(--color-surface-muted);
+    padding: var(--space-4);
+    border-radius: 8px;
+    margin-bottom: 24px;
+    border-left: 3px solid var(--color-brand-indigo);
+}
+
+.reply-original h4 {
+    font-size: var(--fs-14);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 0 0 12px 0;
+}
+
+.reply-original p {
+    font-size: var(--fs-13);
+    color: var(--color-text-muted);
+    margin: 4px 0;
+}
+
+.reply-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.badge-new {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 10px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--color-state-danger-surface);
+    color: var(--color-state-danger-strong);
+    font-size: var(--fs-13);
+    font-weight: 700;
+}
+
+@media (max-width: 768px) {
+    .contacts-management {
+        padding: var(--space-5);
+    }
+}
