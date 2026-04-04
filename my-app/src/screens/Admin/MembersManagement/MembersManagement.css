@@ -42,6 +42,28 @@
     font-size: var(--fs-14);
 }
 
+.department-filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.department-filter__label {
+    color: var(--color-text-secondary);
+    font-size: var(--fs-14);
+    font-weight: 600;
+}
+
+.department-filter__select {
+    border: 1px solid var(--color-border-soft);
+    border-radius: 8px;
+    padding: 9px 12px;
+    min-width: 220px;
+    color: var(--color-text-primary);
+    background: var(--color-white);
+    font-size: var(--fs-14);
+}
+
 .loading-text {
     text-align: center;
     padding: var(--space-10);
@@ -89,6 +111,24 @@
     opacity: 0.65;
 }
 
+.member-avatar-cell {
+    width: 72px;
+}
+
+.member-avatar-thumb {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid var(--color-border-soft);
+    display: block;
+}
+
+.member-avatar-empty {
+    color: var(--color-text-caption);
+    font-weight: 600;
+}
+
 .row-actions {
     display: flex;
     gap: 8px;
@@ -124,6 +164,34 @@
     gap: 20px;
 }
 
+.member-image-uploader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-link-danger {
+    border: none;
+    background: none;
+    color: var(--color-state-danger);
+    font-size: var(--fs-13);
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+}
+
+.member-image-preview-wrap {
+    margin-top: 10px;
+}
+
+.member-image-preview {
+    width: 84px;
+    height: 84px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 1px solid var(--color-border-soft);
+}
+
 .position-checkboxes {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -147,6 +215,29 @@
     margin: 0;
 }
 
+.department-checkboxes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 12px;
+    padding: 10px 12px;
+    border: 1px solid var(--color-border-soft);
+    border-radius: 8px;
+    background: var(--color-white);
+}
+
+.department-checkbox-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: var(--fs-14);
+    color: var(--color-text-primary);
+    cursor: pointer;
+}
+
+.department-checkbox-item input {
+    margin: 0;
+}
+
 @media (max-width: 768px) {
     .members-management {
         padding: var(--space-5);
@@ -155,6 +246,15 @@
     .members-toolbar {
         align-items: flex-start;
         flex-direction: column;
+    }
+
+    .department-filter {
+        width: 100%;
+    }
+
+    .department-filter__select {
+        flex: 1;
+        min-width: 0;
     }
 
     .members-table {

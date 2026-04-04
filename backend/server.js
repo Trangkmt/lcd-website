@@ -30,6 +30,7 @@ const authRoutes = require('./routes/auth');
 const aiRoutes = require('./routes/ai');
 const migrationsRoutes = require('./routes/migrations');
 const uploadsRoutes = require('./routes/uploads');
+const postTemplatesRoutes = require('./routes/postTemplates');
 
 // Health check endpoint
 app.get('/api/health', async (req, res) => {
@@ -62,6 +63,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/migrations', migrationsRoutes);
 app.use('/api/uploads', uploadsRoutes);
+app.use('/api/post-templates', postTemplatesRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
@@ -79,7 +81,8 @@ app.get('/', (req, res) => {
             contact: '/api/contact',
             auth: '/api/auth',
             ai: '/api/ai',
-            uploads: '/api/uploads'
+            uploads: '/api/uploads',
+            postTemplates: '/api/post-templates'
         }
     });
 });
@@ -120,6 +123,7 @@ app.listen(PORT, () => {
     console.log(`  POST http://localhost:${PORT}/api/auth/login`);
     console.log(`  POST http://localhost:${PORT}/api/ai/generate-post`);
     console.log(`  POST http://localhost:${PORT}/api/uploads/image`);
+    console.log(`  GET  http://localhost:${PORT}/api/post-templates`);
     console.log('\n');
 });
 

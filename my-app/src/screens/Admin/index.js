@@ -3,7 +3,6 @@ export { default as AdminLogin } from './AdminLogin';
 export { default as Dashboard } from './Dashboard';
 export { default as PostsManagement } from './PostsManagement';
 export { default as CategoriesManagement } from './CategoriesManagement';
-export { default as AchievementsManagement } from './AchievementsManagement';
 export { default as MembersManagement } from './MembersManagement';
 export { default as ContactsManagement } from './ContactsManagement';
 export { default as OtherUtilities } from './OtherUtilities';

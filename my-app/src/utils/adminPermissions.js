@@ -71,7 +71,7 @@ export function canAccessAdminPath(user, pathname) {
     }
 
     if (isPostAuthor(user)) {
-        return pathname.startsWith('/admin/posts') || pathname.startsWith('/admin/achievements');
+        return pathname.startsWith('/admin/posts');
     }
 
     return false;
