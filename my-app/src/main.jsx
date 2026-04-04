@@ -14,7 +14,6 @@ import {
   Dashboard,
   PostsManagement,
   CategoriesManagement,
-  AchievementsManagement,
   MembersManagement,
   ContactsManagement,
   OtherUtilities
@@ -62,7 +61,7 @@ const App = () => {
           <Route index element={<Dashboard />} />
           <Route path="posts" element={<PostsManagement />} />
           <Route path="categories" element={<CategoriesManagement />} />
-          <Route path="achievements" element={<AchievementsManagement />} />
+          <Route path="achievements" element={<Navigate to="/admin/posts?page_type=achievement" replace />} />
           <Route path="members" element={<MembersManagement />} />
           <Route path="contacts" element={<ContactsManagement />} />
           <Route path="utilities" element={<OtherUtilities />} />

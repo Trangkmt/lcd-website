@@ -74,16 +74,6 @@ export default function AdminLayout() {
                         </Link>
                     )}
 
-                    {showPostTabs && (
-                        <Link
-                            to="/admin/achievements"
-                            className={`nav-item ${isActive('/admin/achievements') ? 'active' : ''}`}
-                        >
-                            <span className="nav-icon">🏆</span>
-                            {!sidebarCollapsed && <span className="nav-label">Thành tích nổi bật</span>}
-                        </Link>
-                    )}
-
                     {showAdminTabs && (
                         <Link
                             to="/admin/members"

@@ -22,8 +22,6 @@ src/screens/Admin/
 ├── PostsManagement.css
 ├── CategoriesManagement.jsx     # Quản lý danh mục
 ├── CategoriesManagement.css
-├── AchievementsManagement.jsx   # Quản lý thành tích
-├── AchievementsManagement.css
 ├── MembersManagement.jsx        # Quản lý thành viên
 ├── MembersManagement.css
 ├── ContactsManagement.jsx       # Quản lý liên hệ
@@ -37,7 +35,7 @@ src/screens/Admin/
 - `/admin` - Dashboard tổng quan
 - `/admin/posts` - Quản lý bài viết
 - `/admin/categories` - Quản lý danh mục
-- `/admin/achievements` - Quản lý thành tích nổi bật
+- Quản lý thành tích nổi bật được gộp vào `/admin/posts` (lọc theo loại `achievement`)
 - `/admin/members` - Quản lý thành viên
 - `/admin/contacts` - Quản lý liên hệ
 

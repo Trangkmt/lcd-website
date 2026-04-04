@@ -2,32 +2,67 @@ const API_BASE = '/api';
 const ADMIN_TOKEN_KEY = 'admin_auth_token';
 const ADMIN_AUTH_KEY = 'admin_auth_user';
 
+async function parseResponseBody(res) {
+    if (res.status === 204 || res.status === 205) {
+        return null;
+    }
+
+    const contentType = res.headers.get('content-type') || '';
+
+    if (contentType.includes('application/json')) {
+        return res.json().catch(() => null);
+    }
+
+    return res.text().catch(() => null);
+}
+
 async function handleResponse(res) {
+    const payload = await parseResponseBody(res);
+
     if (!res.ok) {
-        const err = await res.json().catch(() => ({ error: res.statusText }));
+        const message =
+            (payload && typeof payload === 'object' && (payload.error || payload.message)) ||
+            (typeof payload === 'string' && payload) ||
+            res.statusText;
 
         if (res.status === 401) {
             localStorage.removeItem(ADMIN_TOKEN_KEY);
             localStorage.removeItem(ADMIN_AUTH_KEY);
         }
 
-        throw new Error(err.error || res.statusText);
+        throw new Error(message);
     }
-    return res.json();
+
+    return payload;
 }
 
 function apiFetch(url, options = {}) {
-    const { body, ...rest } = options;
+    const { body, headers: customHeaders = {}, ...rest } = options;
     const token = localStorage.getItem(ADMIN_TOKEN_KEY);
-    const headers = { 'Content-Type': 'application/json' };
-    if (token) {
+
+    const headers = {
+        ...customHeaders,
+    };
+
+    if (token && !headers.Authorization) {
         headers.Authorization = `Bearer ${token}`;
     }
 
+    let requestBody;
+
+    if (body instanceof FormData) {
+        requestBody = body;
+    } else if (body !== undefined) {
+        if (!headers['Content-Type']) {
+            headers['Content-Type'] = 'application/json';
+        }
+        requestBody = typeof body === 'string' ? body : JSON.stringify(body);
+    }
+
     return fetch(`${API_BASE}${url}`, {
-        headers,
-        body: body ? JSON.stringify(body) : undefined,
         ...rest,
+        headers,
+        body: requestBody,
     }).then(handleResponse);
 }
 
@@ -90,6 +125,13 @@ export const aiAPI = {
     generatePost: (data) => apiFetch('/ai/generate-post', { method: 'POST', body: data }),
 };
 
+export const postTemplatesAPI = {
+    getAll: (params = {}) => apiFetch(`/post-templates?${new URLSearchParams(params)}`),
+    create: (data) => apiFetch('/post-templates', { method: 'POST', body: data }),
+    update: (id, data) => apiFetch(`/post-templates/${id}`, { method: 'PUT', body: data }),
+    delete: (id) => apiFetch(`/post-templates/${id}`, { method: 'DELETE' }),
+};
+
 export const uploadsAPI = {
-    uploadImage: (fileData) => apiFetch('/uploads/image', { method: 'POST', body: { fileData } }),
+    uploadImage: (fileData, folder) => apiFetch('/uploads/image', { method: 'POST', body: { fileData, folder } }),
 };

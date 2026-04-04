@@ -2,6 +2,18 @@ const { getConnection, sql } = require('../database/connection-sqlserver.js');
 const { buildAuthToken } = require('../middleware/authMiddleware');
 const { normalizeRole } = require('../config/roles');
 
+async function hasUserAvatarColumn(pool) {
+    const result = await pool.request().query(`
+        SELECT COLUMN_NAME
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_SCHEMA = DATABASE()
+          AND TABLE_NAME = 'users'
+          AND COLUMN_NAME = 'avatar_url'
+        LIMIT 1
+    `);
+    return (result.recordset || []).length > 0;
+}
+
 // POST /api/auth/login
 exports.login = async (req, res) => {
     try {
@@ -13,11 +25,13 @@ exports.login = async (req, res) => {
         }
 
         const pool = await getConnection();
+        const hasAvatarColumn = await hasUserAvatarColumn(pool);
+        const avatarSelect = hasAvatarColumn ? 'avatar_url' : 'NULL AS avatar_url';
         const result = await pool.request()
             .input('identity', sql.NVarChar, identity)
             .input('password', sql.NVarChar, password)
             .query(`
-                SELECT id, username, email, full_name, role, is_active,
+                SELECT id, username, email, full_name, ${avatarSelect}, role, is_active,
                        member_type, student_code, class_name, department, department_position
                 FROM users
                 WHERE (username = @identity OR email = @identity)

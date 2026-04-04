@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import './PostsManagement.css';
-import { newsAPI, categoriesAPI, usersAPI, aiAPI, uploadsAPI } from '../../../services/api';
+import { newsAPI, categoriesAPI, usersAPI, aiAPI, uploadsAPI, postTemplatesAPI } from '../../../services/api';
 import { canMutatePost, canPublishPost, getStoredAdminUser, isAdminFull } from '../../../utils/adminPermissions';
 import {
     buildCreatePostForm,
@@ -27,6 +28,11 @@ function getPageTypeLabel(pageType) {
 }
 
 export default function PostsManagement() {
+    const location = useLocation();
+    const initialPageType = useMemo(() => {
+        const value = new URLSearchParams(location.search).get('page_type') || '';
+        return value;
+    }, [location.search]);
     const currentUser = useMemo(() => getStoredAdminUser(), []);
     const canPublish = canPublishPost(currentUser);
     const [statusTab, setStatusTab] = useState('all');
@@ -34,7 +40,7 @@ export default function PostsManagement() {
     const [editingPost, setEditingPost] = useState(null);
     const [form, setForm] = useState(EMPTY_FORM);
     const [searchQuery, setSearchQuery] = useState('');
-    const [apiFilters, setApiFilters] = useState({ category_id: '', year: '', page_type: '', is_featured: '' });
+    const [apiFilters, setApiFilters] = useState({ category_id: '', year: '', page_type: initialPageType, is_featured: '' });
     const [posts, setPosts] = useState([]);
     const [categories, setCategories] = useState([]);
     const [users, setUsers] = useState([]);
@@ -46,8 +52,16 @@ export default function PostsManagement() {
     const [aiGenerating, setAiGenerating] = useState(false);
     const [aiError, setAiError] = useState('');
     const [thumbnailUploading, setThumbnailUploading] = useState(false);
+    const [templates, setTemplates] = useState([]);
+    const [selectedTemplateId, setSelectedTemplateId] = useState('');
+    const [templateLoading, setTemplateLoading] = useState(false);
+    const [templateSaving, setTemplateSaving] = useState(false);
+    const [showTemplateNameModal, setShowTemplateNameModal] = useState(false);
+    const [templateNameDraft, setTemplateNameDraft] = useState('');
+    const [templateDraftPayload, setTemplateDraftPayload] = useState(null);
     const [showCatDropdown, setShowCatDropdown] = useState(false);
     const [hoveredPageType, setHoveredPageType] = useState(null);
+    const autoAppliedTemplateCategoryRef = useRef('');
     const catDropdownRef = useRef(null);
     const editorRef = useRef(null);
     const imageInputRef = useRef(null);
@@ -63,6 +77,15 @@ export default function PostsManagement() {
     useEffect(() => {
         fetchPosts(apiFilters);
     }, [apiFilters]);
+
+    useEffect(() => {
+        setApiFilters((prev) => {
+            if (prev.page_type === initialPageType) {
+                return prev;
+            }
+            return { ...prev, page_type: initialPageType };
+        });
+    }, [initialPageType]);
 
     const hasActiveFilter = apiFilters.category_id || apiFilters.year || apiFilters.page_type || apiFilters.is_featured !== '';
     const resetFilters = () => setApiFilters({ category_id: '', year: '', page_type: '', is_featured: '' });
@@ -108,6 +131,9 @@ export default function PostsManagement() {
         setAiTopic('');
         setAiError('');
         setViewTab('editor');
+        setSelectedTemplateId('');
+        setTemplates([]);
+        autoAppliedTemplateCategoryRef.current = '';
     }
 
     function openEdit(post) {
@@ -121,6 +147,9 @@ export default function PostsManagement() {
         setAiTopic(post.title || '');
         setAiError('');
         setViewTab('editor');
+        setSelectedTemplateId('');
+        setTemplates([]);
+        autoAppliedTemplateCategoryRef.current = '';
     }
 
     function closeEditor() {
@@ -131,6 +160,151 @@ export default function PostsManagement() {
         setAiTopic('');
         setAiError('');
         setShowCatDropdown(false);
+        setSelectedTemplateId('');
+        setTemplates([]);
+        autoAppliedTemplateCategoryRef.current = '';
+    }
+
+    function applyTemplateToForm(template, { force = false } = {}) {
+        if (!template) {
+            return;
+        }
+
+        const hasUserContent = !!(form.title?.trim() || form.summary?.trim() || form.content?.trim());
+        if (hasUserContent && !force) {
+            const confirmed = window.confirm('Áp dụng template sẽ ghi đè tiêu đề, tóm tắt và nội dung hiện tại. Bạn có chắc chắn?');
+            if (!confirmed) {
+                return;
+            }
+        }
+
+        const title = String(template.title_template || '').trim();
+        const summary = template.summary_template || '';
+        const content = template.content_template || '';
+
+        setForm((prev) => ({
+            ...prev,
+            title,
+            slug: slugifyPostTitle(title),
+            summary,
+            content,
+        }));
+
+        if (editorRef.current) {
+            editorRef.current.innerHTML = content || '<p><br/></p>';
+        }
+    }
+
+    async function loadTemplatesForCategory(categoryId, { autoApplyDefault = false } = {}) {
+        if (!categoryId) {
+            setTemplates([]);
+            setSelectedTemplateId('');
+            return;
+        }
+
+        setTemplateLoading(true);
+        try {
+            const data = await postTemplatesAPI.getAll({ category_id: categoryId });
+            const nextTemplates = Array.isArray(data) ? data : [];
+            setTemplates(nextTemplates);
+
+            const defaultTemplate = nextTemplates.find((item) => !!item.is_default && String(item.category_id) === String(categoryId));
+            const pickedTemplate = defaultTemplate || nextTemplates[0] || null;
+            setSelectedTemplateId(pickedTemplate ? String(pickedTemplate.id) : '');
+
+            if (autoApplyDefault && defaultTemplate) {
+                applyTemplateToForm(defaultTemplate, { force: true });
+            }
+        } catch {
+            setTemplates([]);
+            setSelectedTemplateId('');
+        } finally {
+            setTemplateLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        if (viewTab !== 'editor' || editingPost || !form.category_id) {
+            return;
+        }
+
+        const categoryKey = String(form.category_id);
+        const shouldAutoApply = autoAppliedTemplateCategoryRef.current !== categoryKey;
+
+        loadTemplatesForCategory(form.category_id, { autoApplyDefault: shouldAutoApply })
+            .finally(() => {
+                autoAppliedTemplateCategoryRef.current = categoryKey;
+            });
+    }, [viewTab, editingPost, form.category_id]);
+
+    async function handleSaveTemplateFromCurrentForm() {
+        if (!form.category_id) {
+            alert('Vui lòng chọn danh mục trước khi lưu template.');
+            return;
+        }
+
+        const latestContent = editorRef.current ? editorRef.current.innerHTML : (form.content || '');
+        const latestTitle = form.title || '';
+        const latestSummary = form.summary || '';
+
+        setTemplateDraftPayload({
+            category_id: form.category_id,
+            title_template: latestTitle,
+            summary_template: latestSummary,
+            content_template: latestContent,
+        });
+        setTemplateNameDraft(latestTitle || 'Template mới');
+        setShowTemplateNameModal(true);
+    }
+
+    function closeTemplateNameModal() {
+        if (templateSaving) {
+            return;
+        }
+        setShowTemplateNameModal(false);
+        setTemplateNameDraft('');
+        setTemplateDraftPayload(null);
+    }
+
+    async function confirmSaveTemplateFromModal() {
+        if (!templateDraftPayload) {
+            closeTemplateNameModal();
+            return;
+        }
+
+        const templateName = templateNameDraft.trim();
+        if (!templateName || !templateName.trim()) {
+            alert('Vui lòng nhập tên template.');
+            return;
+        }
+
+        setTemplateSaving(true);
+        try {
+            const createdTemplate = await postTemplatesAPI.create({
+                ...templateDraftPayload,
+                name: templateName,
+            });
+
+            await loadTemplatesForCategory(templateDraftPayload.category_id, { autoApplyDefault: false });
+            if (createdTemplate?.id) {
+                setSelectedTemplateId(String(createdTemplate.id));
+                applyTemplateToForm(createdTemplate, { force: true });
+            }
+            closeTemplateNameModal();
+            alert('Đã lưu template thành công.');
+        } catch (err) {
+            alert('Lưu template thất bại: ' + (err.message || 'Lỗi không xác định'));
+        } finally {
+            setTemplateSaving(false);
+        }
+    }
+
+    function handleApplySelectedTemplate() {
+        const template = templates.find((item) => String(item.id) === String(selectedTemplateId));
+        if (!template) {
+            return;
+        }
+        applyTemplateToForm(template);
     }
 
     async function handleGenerateWithAI() {
@@ -562,6 +736,50 @@ export default function PostsManagement() {
                                 </div>
                             </div>
 
+                            {!editingPost && (
+                                <div className="form-group">
+                                    <label className="form-label">Template nội dung</label>
+                                    <select
+                                        className="form-control"
+                                        value={selectedTemplateId}
+                                        onChange={(e) => {
+                                            const nextId = e.target.value;
+                                            setSelectedTemplateId(nextId);
+                                            const nextTemplate = templates.find((item) => String(item.id) === String(nextId));
+                                            if (nextTemplate) {
+                                                applyTemplateToForm(nextTemplate, { force: true });
+                                            }
+                                        }}
+                                        disabled={!form.category_id || templateLoading}
+                                    >
+                                        <option value="">{templateLoading ? 'Đang tải template...' : 'Chọn template đã lưu'}</option>
+                                        {templates.map((template) => (
+                                            <option key={template.id} value={template.id}>
+                                                {template.name}{template.is_default ? ' (mặc định)' : ''}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <div style={{ marginTop: '8px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                                        <button
+                                            type="button"
+                                            className="btn-secondary"
+                                            onClick={handleApplySelectedTemplate}
+                                            disabled={!selectedTemplateId}
+                                        >
+                                            Áp dụng template
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className="btn-secondary"
+                                            onClick={handleSaveTemplateFromCurrentForm}
+                                            disabled={templateSaving}
+                                        >
+                                            {templateSaving ? 'Đang lưu template...' : 'Lưu mẫu hiện tại'}
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
                             {isAdminFull(currentUser) ? (
                                 <div className="form-group">
                                     <label className="form-label">Tác giả</label>
@@ -695,6 +913,38 @@ export default function PostsManagement() {
                             <button type="submit" className="btn-primary" disabled={saving}>{saving ? 'Đang lưu...' : (editingPost ? 'Cập nhật' : 'Tạo bài viết')}</button>
                         </div>
                     </form>
+                </div>
+            )}
+
+            {showTemplateNameModal && (
+                <div className="template-modal-overlay" onClick={closeTemplateNameModal}>
+                    <div className="template-modal" onClick={(e) => e.stopPropagation()}>
+                        <h3 className="template-modal-title">Đặt tên template</h3>
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={templateNameDraft}
+                            onChange={(e) => setTemplateNameDraft(e.target.value)}
+                            placeholder="Nhập tên template..."
+                            autoFocus
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    confirmSaveTemplateFromModal();
+                                }
+                                if (e.key === 'Escape') {
+                                    e.preventDefault();
+                                    closeTemplateNameModal();
+                                }
+                            }}
+                        />
+                        <div className="template-modal-actions">
+                            <button type="button" className="btn-secondary" onClick={closeTemplateNameModal} disabled={templateSaving}>Hủy</button>
+                            <button type="button" className="btn-primary" onClick={confirmSaveTemplateFromModal} disabled={templateSaving}>
+                                {templateSaving ? 'Đang lưu...' : 'Lưu template'}
+                            </button>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

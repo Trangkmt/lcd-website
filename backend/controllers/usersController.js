@@ -13,12 +13,26 @@ function sanitizeIncomingRole(role) {
     return normalizeRole(role || ROLES.POST_AUTHOR);
 }
 
+async function hasUserAvatarColumn(pool) {
+    const result = await pool.request().query(`
+        SELECT COLUMN_NAME
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_SCHEMA = DATABASE()
+          AND TABLE_NAME = 'users'
+          AND COLUMN_NAME = 'avatar_url'
+        LIMIT 1
+    `);
+    return (result.recordset || []).length > 0;
+}
+
 // GET /api/users - Lấy danh sách users
 exports.getAllUsers = async (req, res) => {
     try {
         const pool = await getConnection();
+        const hasAvatarColumn = await hasUserAvatarColumn(pool);
+        const avatarSelect = hasAvatarColumn ? 'avatar_url' : 'NULL AS avatar_url';
         const result = await pool.request().query(`
-            SELECT id, username, email, full_name, role, is_active,
+            SELECT id, username, email, full_name, ${avatarSelect}, role, is_active,
                    member_type, student_code, class_name, department, department_position,
                    created_at, updated_at
             FROM users
@@ -35,10 +49,12 @@ exports.getAllUsers = async (req, res) => {
 exports.getUserById = async (req, res) => {
     try {
         const pool = await getConnection();
+        const hasAvatarColumn = await hasUserAvatarColumn(pool);
+        const avatarSelect = hasAvatarColumn ? 'avatar_url' : 'NULL AS avatar_url';
         const result = await pool.request()
             .input('id', sql.Int, req.params.id)
             .query(`
-                SELECT id, username, email, full_name, role, is_active,
+                SELECT id, username, email, full_name, ${avatarSelect}, role, is_active,
                        member_type, student_code, class_name, department, department_position,
                        created_at, updated_at
                 FROM users
@@ -63,6 +79,7 @@ exports.createUser = async (req, res) => {
             password,
             email,
             full_name,
+            avatar_url,
             role,
             member_type,
             student_code,
@@ -76,7 +93,8 @@ exports.createUser = async (req, res) => {
         }
 
         const pool = await getConnection();
-        const result = await pool.request()
+        const hasAvatarColumn = await hasUserAvatarColumn(pool);
+        const request = pool.request()
             .input('username', sql.NVarChar, username)
             .input('password', sql.NVarChar, password) // Lưu ý: Nên hash password trước khi lưu
             .input('email', sql.NVarChar, email)
@@ -86,16 +104,26 @@ exports.createUser = async (req, res) => {
             .input('student_code', sql.NVarChar, student_code || null)
             .input('class_name', sql.NVarChar, class_name || null)
             .input('department', sql.NVarChar, department || null)
-            .input('department_position', sql.NVarChar, department_position || null)
-            .query(`
+            .input('department_position', sql.NVarChar, department_position || null);
+
+        if (hasAvatarColumn) {
+            request.input('avatar_url', sql.NVarChar, avatar_url || null);
+        }
+
+        const insertColumns = hasAvatarColumn
+            ? 'username, password, email, full_name, avatar_url, role, member_type, student_code, class_name, department, department_position'
+            : 'username, password, email, full_name, role, member_type, student_code, class_name, department, department_position';
+        const insertValues = hasAvatarColumn
+            ? '@username, @password, @email, @full_name, @avatar_url, @role, @member_type, @student_code, @class_name, @department, @department_position'
+            : '@username, @password, @email, @full_name, @role, @member_type, @student_code, @class_name, @department, @department_position';
+
+        const result = await request.query(`
                 INSERT INTO users (
-                    username, password, email, full_name, role,
-                    member_type, student_code, class_name, department, department_position
+                    ${insertColumns}
                 )
                 OUTPUT INSERTED.*
                 VALUES (
-                    @username, @password, @email, @full_name, @role,
-                    @member_type, @student_code, @class_name, @department, @department_position
+                    ${insertValues}
                 )
             `);
 
@@ -112,6 +140,7 @@ exports.updateUser = async (req, res) => {
         const {
             email,
             full_name,
+            avatar_url,
             role,
             is_active,
             member_type,
@@ -121,8 +150,8 @@ exports.updateUser = async (req, res) => {
             department_position
         } = req.body;
         const pool = await getConnection();
-
-        const result = await pool.request()
+        const hasAvatarColumn = await hasUserAvatarColumn(pool);
+        const request = pool.request()
             .input('id', sql.Int, req.params.id)
             .input('email', sql.NVarChar, email)
             .input('full_name', sql.NVarChar, full_name)
@@ -132,10 +161,16 @@ exports.updateUser = async (req, res) => {
             .input('student_code', sql.NVarChar, student_code || null)
             .input('class_name', sql.NVarChar, class_name || null)
             .input('department', sql.NVarChar, department || null)
-            .input('department_position', sql.NVarChar, department_position || null)
-            .query(`
+            .input('department_position', sql.NVarChar, department_position || null);
+
+        if (hasAvatarColumn) {
+            request.input('avatar_url', sql.NVarChar, avatar_url || null);
+        }
+
+        const avatarUpdatePart = hasAvatarColumn ? 'avatar_url = @avatar_url,' : '';
+        const result = await request.query(`
                 UPDATE users 
-                SET email = @email, full_name = @full_name, role = @role, 
+                SET email = @email, full_name = @full_name, ${avatarUpdatePart} role = @role, 
                     is_active = @is_active,
                     member_type = @member_type,
                     student_code = @student_code,

@@ -77,7 +77,7 @@ export default function Dashboard() {
     return (
         <div className="dashboard-page">
             <div className="dashboard-header">
-                <h1 className="dashboard-title">Dashboard</h1>
+                <h1 className="dashboard-title">Tổng quan quản trị</h1>
                 <p className="dashboard-subtitle">Chào mừng quay trở lại! Đây là tổng quan hệ thống của bạn.</p>
             </div>
 
@@ -112,7 +112,7 @@ export default function Dashboard() {
             <div className="stats-grid">
                 {statCards.map((stat, index) => (
                     <div key={index} className="stat-card" style={{ borderLeftColor: stat.color }}>
-                        <div className="stat-icon" style={{ background: stat.color + '20', color: stat.color }}>
+                        <div className="stat-icon" style={{ background: stat.color }}>
                             {stat.icon}
                         </div>
                         <div className="stat-info">
@@ -179,7 +179,7 @@ export default function Dashboard() {
                             { icon: '👥', label: 'Quản lý thành viên', href: '/admin/members' },
                             { icon: '🏷️', label: 'Quản lý danh mục', href: '/admin/categories' },
                             { icon: '✉️', label: 'Quản lý liên hệ', href: '/admin/contacts' },
-                            { icon: '🏆', label: 'Thành tích nổi bật', href: '/admin/achievements' },
+                            { icon: '🏆', label: 'Thành tích nổi bật', href: '/admin/posts?page_type=achievement' },
                         ].map((item, idx) => (
                             <a key={idx} href={item.href} className="activity-item" style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>
                                 <div className="activity-dot"></div>
@@ -204,7 +204,7 @@ export default function Dashboard() {
                         <span className="action-icon">📋</span>
                         <span className="action-label">Duyệt bài viết</span>
                     </button>
-                    <button className="action-btn" onClick={() => window.location.href = '/admin/achievements'}>
+                    <button className="action-btn" onClick={() => window.location.href = '/admin/posts?page_type=achievement'}>
                         <span className="action-icon">🏆</span>
                         <span className="action-label">Thêm thành tích</span>
                     </button>

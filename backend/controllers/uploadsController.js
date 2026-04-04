@@ -2,6 +2,31 @@ const { v2: cloudinary } = require('cloudinary');
 
 let isConfigured = false;
 
+function normalizeUploadFolder(folderInput) {
+    const defaultFolder = process.env.CLOUDINARY_FOLDER || 'lcd';
+
+    if (typeof folderInput !== 'string') {
+        return defaultFolder;
+    }
+
+    const normalized = folderInput
+        .trim()
+        .replace(/\\+/g, '/')
+        .replace(/\/+/g, '/')
+        .replace(/^\/+|\/+$/g, '');
+
+    if (!normalized) {
+        return defaultFolder;
+    }
+
+    // Keep folder names predictable and safe for Cloudinary public IDs.
+    if (!/^[a-zA-Z0-9_\-\/ ]+$/.test(normalized)) {
+        return defaultFolder;
+    }
+
+    return normalized;
+}
+
 function ensureCloudinaryConfig() {
     if (isConfigured) return;
 
@@ -33,7 +58,7 @@ exports.uploadImage = async (req, res) => {
     try {
         ensureCloudinaryConfig();
 
-        const { fileData, filePath } = req.body || {};
+        const { fileData, filePath, folder: requestedFolder } = req.body || {};
         const input = typeof fileData === 'string' && fileData.trim()
             ? fileData.trim()
             : (typeof filePath === 'string' ? filePath.trim() : '');
@@ -49,7 +74,7 @@ exports.uploadImage = async (req, res) => {
             return res.status(400).json({ error: 'fileData phải là data:image/* hoặc filePath phải là URL http/https.' });
         }
 
-        const folder = process.env.CLOUDINARY_FOLDER || 'lcd';
+        const folder = normalizeUploadFolder(requestedFolder);
         const result = await cloudinary.uploader.upload(input, {
             folder,
             resource_type: 'image',

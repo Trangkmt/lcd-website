@@ -5,6 +5,8 @@ const { ROLES, normalizeRole } = require('../config/roles');
 const AUTH_SECRET = process.env.AUTH_SECRET || 'lcd-website-change-me';
 const TOKEN_LIFETIME_MS = 1000 * 60 * 60 * 24 * 7;
 
+let hasAvatarColumnCache = null;
+
 function toBase64Url(input) {
     return Buffer.from(input, 'utf8').toString('base64url');
 }
@@ -64,12 +66,31 @@ function extractBearerToken(req) {
     return authHeader.slice(7).trim();
 }
 
+async function hasUserAvatarColumn(pool) {
+    if (hasAvatarColumnCache !== null) {
+        return hasAvatarColumnCache;
+    }
+
+    const result = await pool.request().query(`
+        SELECT COLUMN_NAME
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_SCHEMA = DATABASE()
+          AND TABLE_NAME = 'users'
+          AND COLUMN_NAME = 'avatar_url'
+        LIMIT 1
+    `);
+    hasAvatarColumnCache = (result.recordset || []).length > 0;
+    return hasAvatarColumnCache;
+}
+
 async function loadActiveUserById(userId) {
     const pool = await getConnection();
+    const hasAvatarColumn = await hasUserAvatarColumn(pool);
+    const avatarSelect = hasAvatarColumn ? 'avatar_url' : 'NULL AS avatar_url';
     const result = await pool.request()
         .input('id', sql.Int, userId)
         .query(`
-            SELECT id, username, email, full_name, role, member_type, is_active
+            SELECT id, username, email, full_name, ${avatarSelect}, role, member_type, is_active
             FROM users
             WHERE id = @id
             LIMIT 1
