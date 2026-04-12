@@ -1,4 +1,4 @@
-﻿.contact-page {
+.contact-page {
     width: 100%;
     min-height: 100vh;
     background: var(--color-whitesmoke);
@@ -11,7 +11,6 @@
     background: var(--color-white);
     border-radius: 12px;
     padding: var(--space-10);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .contact-title {
@@ -67,7 +66,7 @@
     font-size: var(--fs-14);
     color: var(--color-text-strong);
     outline: none;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: border-color 0.2s ease;
     box-sizing: border-box;
     font-family: inherit;
 }
@@ -75,7 +74,6 @@
 .contact-field input:focus,
 .contact-field textarea:focus {
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(44, 107, 204, 0.15);
 }
 
 .contact-field textarea {

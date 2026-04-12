@@ -1,9 +1,9 @@
-﻿.admin-login-page {
+.admin-login-page {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--color-surface-soft-blue);
+    background: var(--color-white);
     padding: var(--space-5);
 }
 
@@ -13,7 +13,7 @@
     background: white;
     border-radius: 14px;
     padding: var(--space-7);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid #E9EDF2;
 }
 
 .admin-login-title {
@@ -24,7 +24,7 @@
 
 .admin-login-subtitle {
     margin: 8px 0 22px;
-    color: var(--color-text-muted);
+    color: #99A3BA;
     font-size: var(--fs-14);
 }
 
@@ -55,7 +55,7 @@
 
 .admin-login-form .btn-primary {
     margin-top: 6px;
-    background: linear-gradient(135deg, var(--color-brand-indigo) 0%, var(--color-accent-purple) 100%);
+    background: #2C6BCC;
     color: white;
     border: none;
     border-radius: 8px;
@@ -63,6 +63,10 @@
     font-size: var(--fs-15);
     font-weight: 600;
     cursor: pointer;
+}
+
+.admin-login-form .btn-primary:hover:not(:disabled) {
+    background: #1A4B8F;
 }
 
 .admin-login-form .btn-primary:disabled {
@@ -75,8 +79,3 @@
     color: var(--color-state-danger);
     font-size: var(--fs-13);
 }
-
-
-
-
-

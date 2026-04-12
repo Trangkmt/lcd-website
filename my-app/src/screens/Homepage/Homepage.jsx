@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Homepage.css';
-import { newsAPI } from '../../services/api';
+import { newsAPI, timelineAPI } from '../../services/api';
 
 const getSlideRoute = (item) => {
   if (item.page_type === 'activity_annual' && item.category_slug) {
@@ -43,6 +43,63 @@ const asTimestamp = (item) => {
   return Number.isFinite(time) ? time : 0;
 };
 
+const asMonthNumber = (value) => {
+  const month = Number.parseInt(value, 10);
+  if (!Number.isFinite(month) || month < 1 || month > 12) {
+    return null;
+  }
+  return month;
+};
+
+const sortTimelineEvents = (events, activeTimelineId = null) => {
+  return [...events].sort((a, b) => {
+    const isActiveA = activeTimelineId !== null && Number(a?.id) === Number(activeTimelineId);
+    const isActiveB = activeTimelineId !== null && Number(b?.id) === Number(activeTimelineId);
+
+    if (isActiveA !== isActiveB) {
+      return isActiveA ? -1 : 1;
+    }
+
+    const monthA = asMonthNumber(a?.month) || 13;
+    const monthB = asMonthNumber(b?.month) || 13;
+
+    if (monthA !== monthB) {
+      return monthA - monthB;
+    }
+
+    const orderA = Number.parseInt(a?.sort_order, 10);
+    const orderB = Number.parseInt(b?.sort_order, 10);
+    const safeOrderA = Number.isFinite(orderA) ? orderA : 0;
+    const safeOrderB = Number.isFinite(orderB) ? orderB : 0;
+
+    if (safeOrderA !== safeOrderB) {
+      return safeOrderA - safeOrderB;
+    }
+
+    return Number(a?.id || 0) - Number(b?.id || 0);
+  });
+};
+
+const pickActiveTimelineEvent = (events, currentMonth) => {
+  if (!events.length) return null;
+
+  const inCurrentMonth = events.find((event) => asMonthNumber(event.month) === currentMonth);
+  if (inCurrentMonth) {
+    return inCurrentMonth;
+  }
+
+  const upcoming = events.find((event) => {
+    const month = asMonthNumber(event.month);
+    return month && month > currentMonth;
+  });
+
+  if (upcoming) {
+    return upcoming;
+  }
+
+  return events[0];
+};
+
 const Homepage = () => {
   const navigate = useNavigate();
   const [newsCards, setNewsCards] = useState([]);
@@ -50,6 +107,8 @@ const Homepage = () => {
   const [featuredActivity, setFeaturedActivity] = useState(null);
   const [achievements, setAchievements] = useState([]);
   const [heroSlides, setHeroSlides] = useState([]);
+  const [timelineEvents, setTimelineEvents] = useState([]);
+  const [activeTimelineId, setActiveTimelineId] = useState(null);
   const [heroIndex, setHeroIndex] = useState(0);
   const [hoveredActivityIndex, setHoveredActivityIndex] = useState(null);
   const [activityImageIndex, setActivityImageIndex] = useState(0);
@@ -120,7 +179,38 @@ const Homepage = () => {
         setAchievements(filteredAchievements);
       })
       .catch(() => { });
+
+    timelineAPI.getPublic({ limit: 100 })
+      .then((data) => {
+        const events = sortTimelineEvents(asArray(data).filter((item) => asMonthNumber(item.month)));
+        setTimelineEvents(events);
+      })
+      .catch(() => {
+        setTimelineEvents([]);
+      });
   }, []);
+
+  useEffect(() => {
+    const updateActiveTimeline = () => {
+      if (!timelineEvents.length) {
+        setActiveTimelineId(null);
+        return;
+      }
+
+      const currentMonth = new Date().getMonth() + 1;
+      const activeEvent = pickActiveTimelineEvent(timelineEvents, currentMonth);
+      setActiveTimelineId(activeEvent?.id || null);
+    };
+
+    updateActiveTimeline();
+    const timer = setInterval(updateActiveTimeline, 60000);
+    return () => clearInterval(timer);
+  }, [timelineEvents]);
+
+  const timelineDisplayEvents = useMemo(
+    () => sortTimelineEvents(timelineEvents, activeTimelineId),
+    [timelineEvents, activeTimelineId]
+  );
 
   useEffect(() => {
     if (heroSlides.length <= 1) return undefined;
@@ -148,6 +238,8 @@ const Homepage = () => {
   const displayedActivity = hoveredActivityIndex !== null
     ? activityPosts[hoveredActivityIndex]
     : activityPosts[activityImageIndex];
+
+  const currentMonth = new Date().getMonth() + 1;
 
   const activeHero = heroSlides[heroIndex] || {
     title: 'TIN NỔI BẬT MỚI NHẤT',
@@ -215,6 +307,54 @@ const Homepage = () => {
             </div>
           </>
         )}
+      </div>
+
+      {/* Timeline Section */}
+      <div className="timeline-section">
+        <b className="section-title section-title--timeline">LỊCH TRÌNH THƯỜNG NIÊN</b>
+        <img className="section-divider section-divider--timeline" alt="" />
+
+        <div className="timeline-track" role="list" aria-label="Timeline sự kiện thường niên">
+          {timelineEvents.length === 0 && (
+            <div className="timeline-empty">Chưa có dữ liệu timeline.</div>
+          )}
+
+          {timelineDisplayEvents.map((event, index) => {
+            const eventMonth = asMonthNumber(event.month);
+            const isActive = Number(event.id) === Number(activeTimelineId);
+            const isLeft = index % 2 === 0;
+            const statusLabel = isActive
+              ? eventMonth === currentMonth
+                ? 'Đang diễn ra'
+                : 'Sắp diễn ra'
+              : '';
+
+            const timelineCard = (
+              <div className="timeline-item__card">
+                <div className="timeline-item__month">Tháng {eventMonth}</div>
+                <h3 className="timeline-item__title">{event.event_name}</h3>
+                <p className="timeline-item__summary">{event.summary || ''}</p>
+                {statusLabel && <span className="timeline-item__status">{statusLabel}</span>}
+              </div>
+            );
+
+            return (
+              <article
+                key={event.id}
+                role="listitem"
+                className={`timeline-item ${isActive ? 'timeline-item--active' : 'timeline-item--muted'}`}
+                aria-label={`Tháng ${eventMonth}: ${event.event_name}`}
+              >
+                {isLeft ? timelineCard : <div className="timeline-item__spacer" aria-hidden="true" />}
+                <div className="timeline-item__axis" aria-hidden="true">
+                  <span className="timeline-item__dot" />
+                  {index < timelineDisplayEvents.length - 1 && <span className="timeline-item__line" />}
+                </div>
+                {!isLeft ? timelineCard : <div className="timeline-item__spacer" aria-hidden="true" />}
+              </article>
+            );
+          })}
+        </div>
       </div>
 
       {/* Activity Section */}

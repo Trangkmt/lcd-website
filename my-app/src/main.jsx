@@ -16,7 +16,8 @@ import {
   CategoriesManagement,
   MembersManagement,
   ContactsManagement,
-  OtherUtilities
+  OtherUtilities,
+  TimelineManagement
 } from './screens/Admin';
 import { canAccessAdminPath, getDefaultAdminPath, getStoredAdminUser } from './utils/adminPermissions';
 import './global.css';  /* Global design system variables */
@@ -64,6 +65,7 @@ const App = () => {
           <Route path="achievements" element={<Navigate to="/admin/posts?page_type=achievement" replace />} />
           <Route path="members" element={<MembersManagement />} />
           <Route path="contacts" element={<ContactsManagement />} />
+          <Route path="timeline" element={<TimelineManagement />} />
           <Route path="utilities" element={<OtherUtilities />} />
         </Route>
       </Routes>

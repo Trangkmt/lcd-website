@@ -1,4 +1,4 @@
-﻿/* Activity Page Styles */
+/* Activity Page Styles */
 .activity-page {
     width: 100%;
     min-height: 100vh;
@@ -14,7 +14,6 @@
     top: 0;
     left: 0;
     z-index: 1000;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .menu-content {
@@ -92,7 +91,6 @@
     min-height: 100vh;
     padding: var(--space-10);
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* Search Section */
@@ -120,7 +118,6 @@
 .search-bar:focus-within {
     background: var(--color-white);
     border-color: var(--color-text-primary);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .search-icon {
@@ -182,7 +179,6 @@
     background: var(--color-brand-indigo-dark);
     border-color: var(--color-brand-indigo-dark);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(44, 107, 204, 0.3);
 }
 
 /* Filter Menu */
@@ -191,8 +187,7 @@
     top: 60px;
     right: 0;
     background: var(--color-white);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    border-radius: 8px;
+border-radius: 8px;
     padding: 8px 0;
     min-width: 250px;
     z-index: 100;
@@ -234,8 +229,7 @@
 .activity-box {
     background: var(--color-white);
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 0;
+padding: 0;
     overflow: hidden;
     transition: all 0.3s ease;
     cursor: pointer;
@@ -244,7 +238,6 @@
 
 .activity-box:hover {
     transform: translateY(-8px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .activity-image {

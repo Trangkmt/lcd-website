@@ -30,7 +30,9 @@ async function handleResponse(res) {
             localStorage.removeItem(ADMIN_AUTH_KEY);
         }
 
-        throw new Error(message);
+        const error = new Error(message);
+        error.status = res.status;
+        throw error;
     }
 
     return payload;
@@ -134,4 +136,27 @@ export const postTemplatesAPI = {
 
 export const uploadsAPI = {
     uploadImage: (fileData, folder) => apiFetch('/uploads/image', { method: 'POST', body: { fileData, folder } }),
+};
+
+export const timelineAPI = {
+    getPublic: (params = {}) => apiFetch(`/timeline?${new URLSearchParams(params)}`),
+    getAdmin: async (params = {}) => {
+        const query = new URLSearchParams(params).toString();
+        const querySuffix = query ? `?${query}` : '';
+
+        try {
+            return await apiFetch(`/timeline/admin/list${querySuffix}`);
+        } catch (error) {
+            // Backward compatibility for backends exposing /timeline/admin instead of /timeline/admin/list.
+            if (error?.status !== 404) {
+                throw error;
+            }
+
+            return apiFetch(`/timeline/admin${querySuffix}`);
+        }
+    },
+    getById: (id) => apiFetch(`/timeline/${id}`),
+    create: (data) => apiFetch('/timeline', { method: 'POST', body: data }),
+    update: (id, data) => apiFetch(`/timeline/${id}`, { method: 'PUT', body: data }),
+    delete: (id) => apiFetch(`/timeline/${id}`, { method: 'DELETE' }),
 };

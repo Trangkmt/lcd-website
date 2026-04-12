@@ -1,4 +1,4 @@
-﻿/* ===== Grouped Category Dropdown ===== */
+/* ===== Grouped Category Dropdown ===== */
 .cat-dropdown-wrapper {
     position: relative;
 }
@@ -16,7 +16,7 @@
     color: var(--color-text-primary);
     cursor: pointer;
     text-align: left;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: border-color 0.2s;
 }
 
 .cat-dropdown-trigger:hover {
@@ -25,7 +25,6 @@
 
 .cat-dropdown-trigger.open {
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(44, 107, 204, 0.15);
 }
 
 .cat-dropdown-value {
@@ -51,8 +50,7 @@
     background: var(--color-white);
     border: 1px solid var(--color-border-muted);
     border-radius: 8px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    z-index: 3000;
+z-index: 3000;
     overflow: visible;
 }
 
@@ -109,8 +107,7 @@
     background: var(--color-white);
     border: 1px solid var(--color-border-muted);
     border-radius: 8px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    z-index: 3001;
+z-index: 3001;
     overflow: hidden;
 }
 
@@ -196,7 +193,6 @@
 .btn-primary:hover {
     transform: translateY(-2px);
     background: var(--color-brand-indigo-dark);
-    box-shadow: 0 4px 12px rgba(44, 107, 204, 0.3);
 }
 
 .btn-secondary {
@@ -224,7 +220,6 @@
     background: white;
     border-radius: 12px 12px 0 0;
     padding: 0 24px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .tabs {
@@ -260,8 +255,7 @@
     gap: 12px;
     padding: 16px 24px;
     background: white;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    flex-wrap: wrap;
+flex-wrap: wrap;
     align-items: center;
 }
 
@@ -337,7 +331,6 @@
     background: var(--color-white);
     border-radius: 12px;
     padding: 16px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 }
 
 .template-modal-title {
@@ -379,8 +372,7 @@
 /* Posts Table */
 .posts-table-container {
     background: white;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    overflow-x: auto;
+overflow-x: auto;
 }
 
 .posts-table {
@@ -515,7 +507,6 @@
     padding: var(--space-6);
     background: white;
     border-radius: 0 0 12px 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .pagination-btn {
@@ -584,7 +575,6 @@
     overflow: visible;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
 .modal-header {
@@ -706,7 +696,6 @@
 .form-control:focus {
     outline: none;
     border-color: var(--color-brand-indigo);
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 .upload-box {
@@ -773,7 +762,6 @@
 .btn-ai:hover {
     transform: translateY(-2px);
     background: var(--color-brand-indigo-dark);
-    box-shadow: 0 4px 12px rgba(44, 107, 204, 0.3);
 }
 
 .checkbox-label {
@@ -891,7 +879,7 @@
 }
 
 .wp-editor-body:empty::before {
-    content: 'Nháº­p ná»™i dung bÃ i viáº¿t táº¡i Ä‘Ã¢y...';
+    content: 'Nhập nội dung bài viết tại đây...';
     color: var(--color-darkgray);
 }
 
