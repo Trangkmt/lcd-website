@@ -68,10 +68,10 @@ export default function Dashboard() {
     const resetFilters = () => setFilters({ year: '', status: 'all', category_id: '' });
 
     const statCards = [
-        { label: 'Tổng bài viết', value: statsData.totalPosts, icon: '📝', color: '#667eea' },
-        { label: 'Bài viết chờ duyệt', value: statsData.pendingPosts, icon: '⏳', color: '#f59e0b' },
-        { label: 'Thành viên', value: statsData.totalMembers, icon: '👥', color: '#10b981' },
-        { label: 'Liên hệ mới', value: statsData.newContacts, icon: '✉️', color: '#ef4444' },
+        { label: 'Tổng bài viết', value: statsData.totalPosts, icon: '📝', color: '#2C6BCC' },
+        { label: 'Bài viết chờ duyệt', value: statsData.pendingPosts, icon: '⏳', color: '#8CB5F2' },
+        { label: 'Thành viên', value: statsData.totalMembers, icon: '👥', color: '#1A4B8F' },
+        { label: 'Liên hệ mới', value: statsData.newContacts, icon: '✉️', color: '#2C6BCC' },
     ];
 
     return (
