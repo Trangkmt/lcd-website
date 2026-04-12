@@ -39,8 +39,7 @@
     background: var(--color-white);
     border: 1px solid var(--color-border-subtle);
     border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(16, 24, 40, 0.06);
-    padding: 20px;
+padding: 20px;
 }
 
 .timeline-management-card__title {
@@ -219,7 +218,6 @@
     border-radius: 999px;
     border: 3px solid #f8fbff;
     background: #2f80ed;
-    box-shadow: 0 0 0 4px rgba(47, 128, 237, 0.18);
 }
 
 .timeline-vertical-item__empty {
@@ -232,13 +230,11 @@
     border: 1px solid #dfe9f8;
     border-radius: 14px;
     padding: 14px;
-    box-shadow: 0 4px 14px rgba(13, 39, 80, 0.08);
 }
 
 .timeline-vertical-card--active {
     border-color: var(--color-primary);
     background: linear-gradient(180deg, #f6faff 0%, #ffffff 100%);
-    box-shadow: 0 10px 24px rgba(44, 107, 204, 0.18);
 }
 
 .timeline-vertical-item>.timeline-vertical-card:first-child {

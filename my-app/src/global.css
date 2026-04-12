@@ -23,7 +23,7 @@ body {
     padding: 0;
     line-height: normal;
     font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-    background-color: var(--color-whitesmoke);
+    background-color: #FFFFFF;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -133,7 +133,7 @@ p {
     --color-gainsboro: #D9D9D9;
     --color-gray: rgba(0, 0, 0, 0.46);
     --color-royalblue: #2C6BCC;
-    --color-whitesmoke: #F5F5F5;
+    --color-whitesmoke: #FFFFFF;
     --color-darkgray: #9CA3AF;
 
     /* Extended Project Colors */
@@ -344,13 +344,13 @@ p {
        ======================================= */
 
     --shadow-none: none;
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    --shadow-sm: none;
+    --shadow-md: none;
+    --shadow-lg: none;
+    --shadow-xl: none;
+    --shadow-2xl: none;
 
-    --text-shadow-1: 1px 0 0 var(--color-white), 0 1px 0 var(--color-white), -1px 0 0 var(--color-white), 0 -1px 0 var(--color-white);
+    --text-shadow-1: none;
 
     /* =======================================
        BORDERS
@@ -580,5 +580,97 @@ p {
 #root {
     width: 100%;
     overflow-x: hidden;
-    background-color: var(--color-whitesmoke);
+    background-color: #FFFFFF;
+}
+
+/* Global no-shadow visual style */
+:where(*, *::before, *::after) {
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+
+/* Make all cards follow page background */
+:where(.card, [class*="card"], [class*="Card"]) {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+/* Keep all card titles at 16px */
+:where(.card, [class*="card"], [class*="Card"]) :where(h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    [class*="title"],
+    [class*="Title"]) {
+    font-size: 16px !important;
+}
+
+/* Hover interactions: zoom in */
+@media (hover: hover) and (pointer: fine) {
+
+    :where(*):not(.card,
+        [class*="card"],
+        [class*="Card"],
+        button,
+        [role="button"],
+        [class*="btn"],
+        [class*="Btn"],
+        [class*="button"],
+        [class*="Button"],
+        input[type="button"],
+        input[type="submit"],
+        input[type="reset"]) {
+        transition: none !important;
+    }
+
+    :where(*):not(.card,
+        [class*="card"],
+        [class*="Card"],
+        button,
+        [role="button"],
+        [class*="btn"],
+        [class*="Btn"],
+        [class*="button"],
+        [class*="Button"],
+        input[type="button"],
+        input[type="submit"],
+        input[type="reset"]):hover {
+        transform: none !important;
+    }
+
+    :where(.card,
+        [class*="card"],
+        [class*="Card"],
+        button,
+        [role="button"],
+        [class*="btn"],
+        [class*="Btn"],
+        [class*="button"],
+        [class*="Button"],
+        input[type="button"],
+        input[type="submit"],
+        input[type="reset"]) {
+        transition-property: transform;
+        transition-duration: 200ms;
+        transition-timing-function: ease;
+        transform-origin: center;
+        will-change: transform;
+    }
+
+    :where(.card,
+        [class*="card"],
+        [class*="Card"],
+        button,
+        [role="button"],
+        [class*="btn"],
+        [class*="Btn"],
+        [class*="button"],
+        [class*="Button"],
+        input[type="button"],
+        input[type="submit"],
+        input[type="reset"]):hover {
+        transform: scale(1.02) !important;
+    }
 }

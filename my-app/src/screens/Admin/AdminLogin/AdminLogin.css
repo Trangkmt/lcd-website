@@ -1,4 +1,4 @@
-﻿.admin-login-page {
+.admin-login-page {
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -14,7 +14,6 @@
     border-radius: 14px;
     padding: var(--space-7);
     border: 1px solid #E9EDF2;
-    box-shadow: 0 2px 8px rgba(16, 24, 40, 0.06);
 }
 
 .admin-login-title {

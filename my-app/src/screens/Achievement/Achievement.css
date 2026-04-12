@@ -1,4 +1,4 @@
-﻿/* Achievement Page Styles */
+/* Achievement Page Styles */
 .achievement-page {
     width: 100%;
     min-height: 100vh;
@@ -31,7 +31,6 @@
     font-weight: 800;
     color: var(--color-white);
     letter-spacing: 0.05em;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     margin: 0;
     font-family: 'Work Sans', sans-serif;
 }
@@ -50,14 +49,12 @@
     border-radius: 18px;
     overflow: hidden;
     margin-bottom: 28px;
-    box-shadow: 0 14px 36px rgba(16, 40, 76, 0.22);
 }
 
 .achievement-page__hero--banner {
     height: 480px;
     border-radius: 0;
     margin-bottom: 0;
-    box-shadow: none;
 }
 
 .achievement-page__hero-link {
@@ -110,7 +107,6 @@
     line-height: 1.2;
     font-weight: 800;
     max-width: 900px;
-    text-shadow: 0 3px 14px rgba(0, 0, 0, 0.38);
 }
 
 .achievement-page__hero-summary {
@@ -197,7 +193,6 @@
     border-radius: 8px;
     padding: 10px 16px;
     border: 1px solid var(--color-border-soft);
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
 }
 
 .achievement-search-icon {
@@ -261,19 +256,17 @@
     background: var(--color-white);
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
     text-decoration: none;
     color: inherit;
     display: flex;
     flex-direction: column;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.2s ease;
     position: relative;
     z-index: 0;
 }
 
 .achievement-card-item:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    transform: scale(1.02);
     z-index: 1;
 }
 
@@ -309,7 +302,7 @@
     padding: 4px 12px;
     border-radius: 20px;
     letter-spacing: 0.02em;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    text-transform: uppercase;
 }
 
 .achievement-card-item__body {
@@ -326,10 +319,10 @@
 }
 
 .achievement-card-item__title {
-    font-size: var(--fs-17);
-    font-weight: 700;
+    font-size: var(--fs-24);
+    font-weight: 800;
     color: var(--color-text-deep);
-    line-height: 1.4;
+    line-height: 1.28;
     margin: 0;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -339,9 +332,10 @@
 }
 
 .achievement-card-item__summary {
-    font-size: var(--fs-14);
+    font-size: var(--fs-13);
+    font-weight: 400;
     color: var(--color-text-deep);
-    line-height: 1.55;
+    line-height: 1.65;
     margin: 0;
     margin-top: auto;
     display: -webkit-box;
@@ -401,8 +395,3 @@
         font-size: var(--fs-24);
     }
 }
-
-
-
-
-
