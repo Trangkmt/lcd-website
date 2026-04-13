@@ -81,6 +81,10 @@ exports.createCategory = withErrorHandling(async (req, res) => {
         return sendBadRequest(res, 'Name và slug là bắt buộc');
     }
 
+    if (String(name).trim().length > 20) {
+        return sendBadRequest(res, 'Tên danh mục không được vượt quá 20 ký tự');
+    }
+
     const pool = await getConnection();
     const result = await pool.request()
         .input('name', sql.NVarChar, name)
@@ -102,6 +106,11 @@ exports.createCategory = withErrorHandling(async (req, res) => {
 // PUT /api/categories/:id - Cập nhật category
 exports.updateCategory = withErrorHandling(async (req, res) => {
     const { name, slug, description, intro_image, parent_id, page_type, display_order, is_active } = req.body;
+
+    if (String(name).trim().length > 20) {
+        return sendBadRequest(res, 'Tên danh mục không được vượt quá 20 ký tự');
+    }
+
     const pool = await getConnection();
 
     const result = await pool.request()

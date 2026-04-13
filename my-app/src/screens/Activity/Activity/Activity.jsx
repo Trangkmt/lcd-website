@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import './Activity.css';
 import { activitiesAPI } from '../../../services/api';
+import ActivityCard from '../../../components/ActivityCard/ActivityCard';
 
 const Activity = () => {
     const [filterOpen, setFilterOpen] = useState(false);
@@ -84,20 +84,11 @@ const Activity = () => {
                             <p style={{ gridColumn: '1/-1', textAlign: 'center', color: '#888' }}>Không có hoạt động nào</p>
                         )}
                         {filtered.map(activity => (
-                            <Link
+                            <ActivityCard
                                 key={activity.id}
+                                activity={activity}
                                 to={`/activity/${activity.slug}`}
-                                className="activity-box"
-                                style={{ textDecoration: 'none', color: 'inherit' }}
-                            >
-                                <div className="activity-image">
-                                    {activity.thumbnail && (
-                                        <img src={activity.thumbnail} alt={activity.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                    )}
-                                </div>
-                                <h3 className="activity-title">{activity.title}</h3>
-                                <p className="activity-description">{activity.description}</p>
-                            </Link>
+                            />
                         ))}
                     </div>
 

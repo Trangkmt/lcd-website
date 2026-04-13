@@ -1,4 +1,4 @@
-/* Activity Page Styles */
+﻿/* Activity Page Styles */
 .activity-page {
     width: 100%;
     min-height: 100vh;
@@ -63,13 +63,13 @@
 
 .menu-label {
     color: var(--color-darkslateblue);
-    font-size: var(--fs-24);
+    font-size: 1.5rem;
     font-weight: 700;
 }
 
 .menu-arrow {
     color: var(--color-darkslategray);
-    font-size: var(--fs-20);
+    font-size: 1.25rem;
 }
 
 .menu-bottom-bar {
@@ -121,7 +121,7 @@
 }
 
 .search-icon {
-    font-size: var(--fs-20);
+    font-size: 1.25rem;
     color: var(--color-text-muted);
 }
 
@@ -131,7 +131,7 @@
     background: transparent;
     outline: none;
     color: var(--color-text-primary);
-    font-size: var(--fs-16);
+    font-size: 1rem;
     font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 }
 
@@ -140,7 +140,7 @@
 }
 
 .search-close {
-    font-size: var(--fs-18);
+    font-size: 1.125rem;
     color: var(--color-text-muted);
     cursor: pointer;
     transition: color 0.3s ease;
@@ -158,7 +158,7 @@
 }
 
 .filter-icon {
-    font-size: var(--fs-20);
+    font-size: 1.25rem;
     color: var(--color-text-heading);
 }
 
@@ -167,7 +167,7 @@
     border: 2px solid var(--color-primary);
     border-radius: 8px;
     padding: 10px 24px;
-    font-size: var(--fs-14);
+    font-size: 0.875rem;
     font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     font-weight: 600;
     color: var(--color-white);
@@ -197,7 +197,7 @@ border-radius: 8px;
 .filter-option {
     padding: 12px 20px;
     color: var(--color-text-primary);
-    font-size: var(--fs-15);
+    font-size: 0.9375rem;
     font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -211,7 +211,7 @@ border-radius: 8px;
 /* Activities Title */
 .activities-title {
     color: var(--color-text-strong);
-    font-size: var(--fs-32);
+    font-size: 2rem;
     font-weight: bold;
     margin-bottom: 40px;
     text-align: center;
@@ -249,7 +249,7 @@ padding: 0;
 
 .activity-title {
     color: var(--color-text-strong);
-    font-size: var(--fs-20);
+    font-size: 1.25rem;
     font-weight: bold;
     text-align: center;
     margin: 20px 20px 10px 20px;
@@ -262,7 +262,7 @@ padding: 0;
 
 .activity-description {
     color: var(--color-text-secondary);
-    font-size: var(--fs-15);
+    font-size: 0.9375rem;
     font-weight: 400;
     text-align: center;
     padding: 0 20px 20px 20px;
@@ -286,7 +286,7 @@ padding: 0;
     border: none;
     background: transparent;
     border-radius: 8px;
-    font-size: var(--fs-16);
+    font-size: 1rem;
     font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -310,7 +310,7 @@ padding: 0;
 }
 
 .arrow-icon {
-    font-size: var(--fs-16);
+    font-size: 1rem;
 }
 
 .pagination-list {
@@ -324,7 +324,7 @@ padding: 0;
     border: none;
     background: transparent;
     border-radius: 8px;
-    font-size: var(--fs-16);
+    font-size: 1rem;
     font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     color: var(--color-text-heading);
     cursor: pointer;
@@ -347,7 +347,7 @@ padding: 0;
 
 .pagination-gap {
     padding: 8px 16px;
-    font-size: var(--fs-16);
+    font-size: 1rem;
     font-weight: 700;
     color: black;
 }
@@ -378,13 +378,15 @@ padding: 0;
     }
 
     .menu-label {
-        font-size: var(--fs-18);
+        font-size: 1.125rem;
     }
 
     .search-section {
         flex-direction: column;
     }
 }
+
+
 
 
 

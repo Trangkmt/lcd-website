@@ -149,6 +149,10 @@ exports.createTimelineEvent = withErrorHandling(async (req, res) => {
         return sendBadRequest(res, 'Tên sự kiện là bắt buộc');
     }
 
+    if (String(event_name).trim().length > 20) {
+        return sendBadRequest(res, 'Tên sự kiện không được vượt quá 20 ký tự');
+    }
+
     const pool = await getConnection();
     const result = await pool.request()
         .input('event_type', sql.NVarChar, ANNUAL_EVENT_TYPE)
@@ -178,6 +182,10 @@ exports.updateTimelineEvent = withErrorHandling(async (req, res) => {
 
     if (!event_name || !String(event_name).trim()) {
         return sendBadRequest(res, 'Tên sự kiện là bắt buộc');
+    }
+
+    if (String(event_name).trim().length > 20) {
+        return sendBadRequest(res, 'Tên sự kiện không được vượt quá 20 ký tự');
     }
 
     const pool = await getConnection();

@@ -1,4 +1,4 @@
-/* ===========================================
+﻿/* ===========================================
    HEADER COMPONENT - BEM Naming Convention
    Figma Design Spec Implementation
    =========================================== */
@@ -14,7 +14,7 @@
     z-index: 3500;
     overflow: visible;
     text-align: left;
-    font-size: var(--fs-20);
+    font-size: 1.25rem;
     color: var(--color-darkslateblue);
     font-family: var(--font-work-sans);
 }
@@ -77,7 +77,7 @@
 .header__org-line {
     color: var(--color-darkslateblue);
     font-family: var(--font-work-sans);
-    font-size: var(--fs-11);
+    font-size: 0.6875rem;
     line-height: 1.1;
 }
 
@@ -226,7 +226,7 @@
     position: relative;
     display: inline-flex;
     align-items: center;
-    font-size: var(--fs-11);
+    font-size: 1rem;
     letter-spacing: 0;
     color: var(--color-white);
     font-weight: 600;
@@ -275,7 +275,7 @@
     background-color: var(--color-white);
     border: 1px solid rgba(24, 53, 99, 0.15);
     border-radius: 6px;
-z-index: 3000;
+    z-index: 3000;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -298,7 +298,7 @@ z-index: 3000;
     display: block;
     padding: 10px 14px;
     color: var(--color-darkslateblue);
-    font-size: var(--fs-13);
+    font-size: 0.8125rem;
     font-weight: 600;
     font-family: var(--font-work-sans);
     text-decoration: none;
@@ -337,7 +337,7 @@ z-index: 3000;
     padding: 6px 12px;
     gap: 8px;
     min-width: 160px;
-    font-size: var(--fs-13);
+    font-size: 0.8125rem;
     color: var(--color-darkgray);
 }
 
@@ -349,7 +349,7 @@ z-index: 3000;
     border: none;
     outline: none;
     background: transparent;
-    font-size: var(--fs-13);
+    font-size: 0.8125rem;
     color: var(--color-darkslateblue);
     font-family: var(--font-work-sans);
 }
@@ -401,7 +401,7 @@ z-index: 3000;
 
 @media (max-width: 1200px) {
     .menu-item__label {
-        font-size: var(--fs-10);
+        font-size: 0.875rem;
     }
 
     .header__org-title {
@@ -409,7 +409,7 @@ z-index: 3000;
     }
 
     .header__org-line {
-        font-size: var(--fs-10);
+        font-size: 0.75rem;
     }
 
     .header__nav {
@@ -426,17 +426,37 @@ z-index: 3000;
 @media (max-width: 1024px) {
     .header {
         height: auto;
-        min-height: 128px;
+        min-height: 136px;
+    }
+
+    .layout-main {
+        padding-top: 136px;
     }
 
     .header__menu {
+        --header-menu-pad-x: var(--space-5);
         position: relative;
         height: auto;
         padding: var(--space-5);
         display: flex;
         flex-wrap: wrap;
         align-items: center;
+        justify-content: space-between;
         gap: 16px;
+    }
+
+    .header__background {
+        width: 100vw;
+        left: 50%;
+        transform: translateX(-50%);
+        height: 96px;
+    }
+
+    .header__logo-link {
+        position: relative;
+        top: auto;
+        left: auto;
+        display: inline-flex;
     }
 
     .header__logo {
@@ -452,6 +472,8 @@ z-index: 3000;
         left: auto;
         top: auto;
         width: auto;
+        min-width: 220px;
+        flex: 1 1 auto;
     }
 
     .header__nav {
@@ -461,6 +483,17 @@ z-index: 3000;
         display: flex;
         flex-wrap: wrap;
         gap: 12px;
+        width: 100vw;
+        margin-left: calc(50% - 50vw);
+        margin-right: 0;
+        justify-content: center;
+        align-items: center;
+        flex: 1 1 100%;
+        height: 38px;
+        min-height: 38px;
+        padding: 0 16px;
+        border-radius: 0;
+        background-color: var(--color-royalblue);
     }
 
     .menu-item {
@@ -468,7 +501,38 @@ z-index: 3000;
         top: auto;
         left: auto;
         width: auto;
-        height: auto;
+        height: 100%;
+        display: flex;
+        align-items: center;
+    }
+
+    .menu-item__state-layer {
+        align-self: auto;
+        height: 100%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        padding: 0 10px;
+    }
+
+    .menu-item__content {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .menu-item__label {
+        align-self: auto;
+        line-height: 1;
+        height: 100%;
+    }
+
+    .menu-item__trailing {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .header__search {
@@ -476,13 +540,15 @@ z-index: 3000;
         top: auto;
         left: auto;
         right: auto;
-        width: 200px;
+        width: min(240px, 100%);
+        margin-left: auto;
     }
 
     .header__bottom-bar {
         position: relative;
         top: auto;
         height: 36px;
+        display: none;
     }
 
     .header__title {
@@ -496,21 +562,43 @@ z-index: 3000;
         align-items: flex-start;
     }
 
+    .layout-main {
+        padding-top: 156px;
+    }
+
     .header__logo {
         width: 56px;
         height: 56px;
     }
 
     .menu-item__label {
-        font-size: var(--fs-12);
+        font-size: 0.875rem;
     }
 
     .header__search {
         width: 100%;
+        margin-left: 0;
+    }
+
+    .header__nav {
+        gap: 8px;
+        height: 40px;
+        min-height: 40px;
+        padding: 0 12px;
+        justify-content: center;
+    }
+
+    .menu-item {
+        height: 100%;
+    }
+
+    .menu-item__state-layer {
+        height: 100%;
+        padding: 0 10px;
     }
 
     .header__title {
-        font-size: var(--fs-18);
+        font-size: 1.125rem;
         text-align: center;
         width: 100%;
     }
@@ -522,6 +610,7 @@ z-index: 3000;
 
 @media (max-width: 480px) {
     .header__menu {
+        --header-menu-pad-x: 16px;
         padding: 12px 16px;
     }
 
@@ -531,7 +620,7 @@ z-index: 3000;
     }
 
     .menu-item__label {
-        font-size: var(--fs-12);
+        font-size: 0.75rem;
     }
 
     .header__bottom-bar {

@@ -1,4 +1,4 @@
-.post-detail-page {
+﻿.post-detail-page {
     width: 100%;
     min-height: 100vh;
     background-color: var(--color-whitesmoke);
@@ -16,7 +16,7 @@
     border: 2px solid var(--color-primary);
     border-radius: 8px;
     cursor: pointer;
-    font-size: var(--fs-16);
+    font-size: 1rem;
     font-weight: bold;
     color: var(--color-white);
     z-index: 100;
@@ -50,7 +50,7 @@
     align-items: center;
     gap: 8px;
     margin-bottom: 30px;
-    font-size: var(--fs-14);
+    font-size: 0.875rem;
     color: var(--color-text-muted);
 }
 
@@ -93,24 +93,29 @@
     background: var(--color-state-danger-strong);
     color: var(--color-white);
     border-radius: 20px;
-    font-size: var(--fs-12);
+    font-size: 0.75rem;
     font-weight: bold;
     text-transform: uppercase;
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    line-height: 1.3;
+    max-width: 120px;
 }
 
 .post-date-text {
     color: var(--color-text-muted);
-    font-size: var(--fs-14);
+    font-size: 0.875rem;
 }
 
 .post-author {
     color: var(--color-text-muted);
-    font-size: var(--fs-14);
+    font-size: 0.875rem;
     font-style: italic;
 }
 
 .post-main-title {
-    font-size: var(--fs-42);
+    font-size: 2.625rem;
     font-weight: 900;
     color: var(--color-text-strong);
     margin: 0 0 20px 0;
@@ -118,7 +123,7 @@
 }
 
 .post-lead {
-    font-size: var(--fs-20);
+    font-size: 1.25rem;
     color: var(--color-text-secondary);
     line-height: 1.6;
     margin: 0;
@@ -144,7 +149,7 @@
 }
 
 .post-content-text {
-    font-size: var(--fs-18);
+    font-size: 1.125rem;
     line-height: 1.8;
     color: var(--color-text-primary);
 }
@@ -154,7 +159,7 @@
 }
 
 .post-content-text h3 {
-    font-size: var(--fs-28);
+    font-size: 1.75rem;
     font-weight: bold;
     color: var(--color-text-strong);
     margin: 30px 0 16px 0;
@@ -179,7 +184,7 @@
 }
 
 .gallery-title {
-    font-size: var(--fs-32);
+    font-size: 2rem;
     font-weight: bold;
     color: var(--color-text-strong);
     text-align: center;
@@ -212,7 +217,7 @@
 
 .gallery-caption {
     padding: var(--space-4);
-    font-size: var(--fs-14);
+    font-size: 0.875rem;
     color: var(--color-text-secondary);
     text-align: center;
     margin: 0;
@@ -224,7 +229,7 @@
 }
 
 .related-title {
-    font-size: var(--fs-32);
+    font-size: 2rem;
     font-weight: bold;
     color: var(--color-text-strong);
     margin-bottom: 30px;
@@ -273,7 +278,7 @@
 }
 
 .related-post-title {
-    font-size: var(--fs-18);
+    font-size: 1.125rem;
     font-weight: bold;
     color: var(--color-text-strong);
     margin: 0 0 10px 0;
@@ -281,7 +286,7 @@
 }
 
 .related-post-date {
-    font-size: var(--fs-14);
+    font-size: 0.875rem;
     color: var(--color-text-muted);
 }
 
@@ -293,7 +298,7 @@
 }
 
 .share-title {
-    font-size: var(--fs-20);
+    font-size: 1.25rem;
     font-weight: bold;
     color: var(--color-text-strong);
     margin-bottom: 20px;
@@ -310,7 +315,7 @@
     padding: 12px 24px;
     border: none;
     border-radius: 6px;
-    font-size: var(--fs-14);
+    font-size: 0.875rem;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -354,19 +359,19 @@
         top: 80px;
         left: 15px;
         padding: 10px 20px;
-        font-size: var(--fs-14);
+        font-size: 0.875rem;
     }
 
     .post-main-title {
-        font-size: var(--fs-28);
+        font-size: 1.75rem;
     }
 
     .post-lead {
-        font-size: var(--fs-16);
+        font-size: 1rem;
     }
 
     .post-content-text {
-        font-size: var(--fs-16);
+        font-size: 1rem;
     }
 
     .gallery-grid {
@@ -384,8 +389,4 @@
         margin: 0 auto;
     }
 }
-
-
-
-
 

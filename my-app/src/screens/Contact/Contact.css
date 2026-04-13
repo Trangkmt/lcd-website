@@ -1,4 +1,4 @@
-.contact-page {
+﻿.contact-page {
     width: 100%;
     min-height: 100vh;
     background: var(--color-whitesmoke);
@@ -15,7 +15,7 @@
 
 .contact-title {
     margin: 0 0 10px;
-    font-size: var(--fs-32);
+    font-size: 2rem;
     font-weight: 800;
     color: var(--color-darkslateblue);
     text-align: center;
@@ -52,7 +52,7 @@
 }
 
 .contact-field label {
-    font-size: var(--fs-14);
+    font-size: 0.875rem;
     font-weight: 600;
     color: var(--color-darkslateblue);
 }
@@ -63,7 +63,7 @@
     border: 1px solid var(--color-border-soft);
     border-radius: 8px;
     padding: 12px 14px;
-    font-size: var(--fs-14);
+    font-size: 0.875rem;
     color: var(--color-text-strong);
     outline: none;
     transition: border-color 0.2s ease;
@@ -85,7 +85,7 @@
     margin: 0;
     padding: 12px 14px;
     border-radius: 8px;
-    font-size: var(--fs-14);
+    font-size: 0.875rem;
 }
 
 .contact-message--success {
@@ -106,7 +106,7 @@
     border-radius: 8px;
     background: var(--color-darkslateblue);
     color: var(--color-white);
-    font-size: var(--fs-14);
+    font-size: 0.875rem;
     font-weight: 700;
     padding: 12px 18px;
     cursor: pointer;
@@ -132,6 +132,7 @@
     }
 
     .contact-title {
-        font-size: var(--fs-28);
+        font-size: 1.75rem;
     }
 }
+

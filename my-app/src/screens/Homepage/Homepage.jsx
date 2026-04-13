@@ -368,6 +368,9 @@ const Homepage = () => {
         </div>
         <b className="section-title section-title--activity">HOẠT ĐỘNG NỔI BẬT</b>
         <img className="section-divider section-divider--activity" alt="" />
+        <Link to="/activity" className="btn-view-more" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <b className="btn-view-more__text">Xem thêm</b>
+        </Link>
         {activityPosts.map((activity, index) => (
           <Link
             key={activity.id}
@@ -381,8 +384,8 @@ const Homepage = () => {
               {activity.start_date ? new Date(activity.start_date).toLocaleDateString('vi-VN') : ''}
             </div>
             <b className="activity-post__title">{activity.title}</b>
-            <div className="category-badge category-badge--activity">
-              <b className="category-badge__text">{activity.category_name || ''}</b>
+            <div className="home-category-badge home-category-badge--activity">
+              <b className="home-category-badge__text">{activity.category_name || ''}</b>
             </div>
           </Link>
         ))}
@@ -391,8 +394,8 @@ const Homepage = () => {
 
       {/* News Section */}
       <div className="news-section">
-        <img className="section-divider section-divider--news" alt="" />
         <b className="section-title section-title--news">TIN TỨC NỔI BẬT</b>
+        <img className="section-divider section-divider--news" alt="" />
         <Link to="/news" className="btn-view-more" style={{ textDecoration: 'none', color: 'inherit' }}>
           <b className="btn-view-more__text">Xem thêm</b>
         </Link>
@@ -410,8 +413,8 @@ const Homepage = () => {
               src={card.thumbnail || `https://picsum.photos/300/200?random=${card.id}`}
               alt={card.title}
             />
-            <div className="category-badge category-badge--news">
-              <b className="category-badge__text">{card.category_name || ''}</b>
+            <div className="home-category-badge home-category-badge--news">
+              <b className="home-category-badge__text">{card.category_name || ''}</b>
             </div>
             <div className="news-card__date">
               {card.published_at ? new Date(card.published_at).toLocaleDateString('vi-VN') : ''}
@@ -423,13 +426,13 @@ const Homepage = () => {
 
       {/* Achievement Section */}
       <div className="achievement-section">
+        <b className="section-title section-title--achievement">THÀNH TÍCH NỔI BẬT</b>
+        <img className="section-divider section-divider--achievement" alt="" />
         <div className="btn-view-more-wrapper">
           <Link to="/achievement" className="btn-view-more" style={{ textDecoration: 'none', color: 'inherit' }}>
             <b className="btn-view-more__text">Xem thêm</b>
           </Link>
         </div>
-        <img className="section-divider section-divider--achievement" alt="" />
-        <b className="section-title section-title--achievement">THÀNH TÍCH NỔI BẬT</b>
         {achievements.map((card, index) => (
           <Link
             key={card.id}
