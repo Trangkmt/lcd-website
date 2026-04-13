@@ -1,4 +1,4 @@
-.admin-login-page {
+﻿.admin-login-page {
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -18,14 +18,14 @@
 
 .admin-login-title {
     margin: 0;
-    font-size: var(--fs-28);
+    font-size: 1.75rem;
     color: var(--color-text-strong);
 }
 
 .admin-login-subtitle {
     margin: 8px 0 22px;
     color: #99A3BA;
-    font-size: var(--fs-14);
+    font-size: 0.875rem;
 }
 
 .admin-login-form {
@@ -41,7 +41,7 @@
 }
 
 .admin-login-form .form-label {
-    font-size: var(--fs-14);
+    font-size: 0.875rem;
     color: var(--color-text-strong);
     font-weight: 600;
 }
@@ -50,7 +50,7 @@
     border: 1px solid var(--color-gainsboro);
     border-radius: 8px;
     padding: 10px 12px;
-    font-size: var(--fs-14);
+    font-size: 0.875rem;
 }
 
 .admin-login-form .btn-primary {
@@ -60,7 +60,7 @@
     border: none;
     border-radius: 8px;
     padding: 11px 14px;
-    font-size: var(--fs-15);
+    font-size: 0.9375rem;
     font-weight: 600;
     cursor: pointer;
 }
@@ -77,5 +77,6 @@
 .admin-login-form .error-text {
     margin: 0;
     color: var(--color-state-danger);
-    font-size: var(--fs-13);
+    font-size: 0.8125rem;
 }
+

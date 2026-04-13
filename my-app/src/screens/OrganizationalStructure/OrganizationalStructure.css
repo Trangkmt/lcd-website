@@ -1,4 +1,4 @@
-.organizational-structure {
+﻿.organizational-structure {
     min-height: 100vh;
     background:
         radial-gradient(circle at 18% 22%, rgba(255, 214, 0, 0.18), transparent 34%),
@@ -16,14 +16,14 @@
 }
 
 .org-title {
-    font-size: var(--fs-48);
+    font-size: 3rem;
     font-weight: 700;
     color: white;
     margin: 0 0 16px 0;
 }
 
 .org-subtitle {
-    font-size: var(--fs-20);
+    font-size: 1.25rem;
     color: rgba(255, 255, 255, 0.9);
     margin: 0;
     font-weight: 400;
@@ -48,19 +48,19 @@
     background: white;
     border-radius: 22px;
     padding: 30px 34px;
-border: 2px solid rgba(255, 214, 0, 0.7);
+    border: 2px solid rgba(255, 214, 0, 0.7);
     text-align: center;
     animation: fadeIn 0.7s ease-out 0.2s both;
 }
 
 .mindmap-center__icon {
-    font-size: 42px;
+    font-size: 2.625rem;
     margin-bottom: 10px;
 }
 
 .mindmap-center__title {
     margin: 0;
-    font-size: 32px;
+    font-size: 2rem;
     font-weight: 700;
     color: var(--color-brand-indigo-dark);
 }
@@ -85,7 +85,7 @@ border: 2px solid rgba(255, 214, 0, 0.7);
 }
 
 .role-chip__label {
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -94,7 +94,7 @@ border: 2px solid rgba(255, 214, 0, 0.7);
 
 .role-chip strong {
     color: var(--color-brand-indigo-dark);
-    font-size: 15px;
+    font-size: 0.9375rem;
 }
 
 .role-chip__list {
@@ -108,7 +108,7 @@ border: 2px solid rgba(255, 214, 0, 0.7);
     background: rgba(44, 107, 204, 0.12);
     color: var(--color-brand-indigo-dark);
     padding: 4px 10px;
-    font-size: 13px;
+    font-size: 0.8125rem;
     font-weight: 600;
 }
 
@@ -120,7 +120,7 @@ border: 2px solid rgba(255, 214, 0, 0.7);
 .mindmap-center__subtext {
     margin-top: 16px;
     color: var(--color-text-secondary);
-    font-size: 14px;
+    font-size: 0.875rem;
     line-height: 1.6;
 }
 
@@ -142,13 +142,13 @@ border: 2px solid rgba(255, 214, 0, 0.7);
     background: white;
     border-radius: 18px;
     padding: 20px;
-transition: all 0.3s ease;
+    transition: all 0.3s ease;
     border: 2px solid rgba(255, 255, 255, 0.55);
 }
 
 .mindmap-node:hover {
     transform: translateY(-4px);
-border-color: var(--color-secondary);
+    border-color: var(--color-secondary);
 }
 
 .mindmap-node__head {
@@ -159,12 +159,12 @@ border-color: var(--color-secondary);
 }
 
 .mindmap-node__icon {
-    font-size: 28px;
+    font-size: 1.75rem;
 }
 
 .mindmap-node__title {
     margin: 0;
-    font-size: 20px;
+    font-size: 1.25rem;
     font-weight: 700;
     color: var(--color-brand-indigo-dark);
 }
@@ -172,7 +172,7 @@ border-color: var(--color-secondary);
 .mindmap-node__description {
     margin: 0;
     color: var(--color-text-secondary);
-    font-size: 14px;
+    font-size: 0.875rem;
     line-height: 1.6;
 }
 
@@ -193,12 +193,12 @@ border-color: var(--color-secondary);
 }
 
 .node-role-line span {
-    font-size: 13px;
+    font-size: 0.8125rem;
     color: var(--color-text-muted);
 }
 
 .node-role-line strong {
-    font-size: 14px;
+    font-size: 0.875rem;
     color: var(--color-brand-indigo-dark);
     text-align: right;
 }
@@ -213,15 +213,24 @@ border-color: var(--color-secondary);
 .member-tag {
     border-radius: 999px;
     padding: 5px 10px;
-    font-size: 12px;
-    background: rgba(255, 214, 0, 0.2);
-    color: #7b5a00;
+    font-size: 0.75rem;
+    background: transparent;
+    color: var(--color-primary);
     font-weight: 700;
+    display: inline-block;
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    line-height: 1.3;
+    max-width: 120px;
 }
 
 .member-tag--muted {
-    background: rgba(31, 41, 55, 0.08);
-    color: var(--color-text-caption);
+    background: transparent;
+    color: var(--color-primary);
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
 }
 
 /* Statistics Section */
@@ -239,7 +248,7 @@ border-color: var(--color-secondary);
     border-radius: 16px;
     padding: 32px 24px;
     text-align: center;
-transition: transform 0.3s ease;
+    transition: transform 0.3s ease;
 }
 
 .stat-card:hover {
@@ -247,14 +256,14 @@ transition: transform 0.3s ease;
 }
 
 .stat-number {
-    font-size: var(--fs-48);
+    font-size: 3rem;
     font-weight: 700;
     color: var(--color-primary);
     margin-bottom: 8px;
 }
 
 .stat-label {
-    font-size: var(--fs-16);
+    font-size: 1rem;
     color: var(--color-text-muted);
     font-weight: 500;
 }
@@ -303,11 +312,11 @@ transition: transform 0.3s ease;
     }
 
     .org-title {
-        font-size: var(--fs-36);
+        font-size: 2.25rem;
     }
 
     .org-subtitle {
-        font-size: var(--fs-16);
+        font-size: 1rem;
     }
 
     .mindmap-center {
@@ -315,7 +324,7 @@ transition: transform 0.3s ease;
     }
 
     .mindmap-center__title {
-        font-size: 26px;
+        font-size: 1.625rem;
     }
 
     .mindmap-center__roles {
@@ -338,24 +347,25 @@ transition: transform 0.3s ease;
     }
 
     .stat-number {
-        font-size: var(--fs-36);
+        font-size: 2.25rem;
     }
 
     .stat-label {
-        font-size: var(--fs-14);
+        font-size: 0.875rem;
     }
 }
 
 @media (max-width: 480px) {
     .org-title {
-        font-size: var(--fs-28);
+        font-size: 1.75rem;
     }
 
     .org-subtitle {
-        font-size: var(--fs-14);
+        font-size: 0.875rem;
     }
 
     .mindmap-node {
         padding: 16px;
     }
 }
+

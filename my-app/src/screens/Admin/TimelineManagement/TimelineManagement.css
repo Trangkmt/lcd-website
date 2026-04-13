@@ -1,4 +1,4 @@
-.timeline-management-page {
+﻿.timeline-management-page {
     padding: var(--space-10);
     max-width: 1400px;
     background: var(--color-white);
@@ -10,13 +10,13 @@
 
 .timeline-management-title {
     margin: 0;
-    font-size: var(--fs-36);
+    font-size: 2.25rem;
     color: var(--color-text-strong);
 }
 
 .timeline-management-subtitle {
     margin: 8px 0 0;
-    font-size: var(--fs-15);
+    font-size: 0.9375rem;
     color: var(--color-text-subtle);
 }
 
@@ -39,12 +39,11 @@
     background: var(--color-white);
     border: 1px solid var(--color-border-subtle);
     border-radius: 12px;
-padding: 20px;
+    padding: 20px;
 }
 
 .timeline-management-card__title {
     margin: 0 0 16px;
-    font-size: var(--fs-20);
     color: var(--color-text-strong);
 }
 
@@ -61,7 +60,7 @@ padding: 20px;
 }
 
 .timeline-form__field span {
-    font-size: var(--fs-13);
+    font-size: 0.8125rem;
     font-weight: 600;
     color: var(--color-text-subtle);
 }
@@ -73,7 +72,7 @@ padding: 20px;
     border: 1px solid var(--color-border-subtle);
     border-radius: 8px;
     padding: 9px 12px;
-    font-size: var(--fs-14);
+    font-size: 0.875rem;
     color: var(--color-text-primary);
     outline: none;
     font-family: inherit;
@@ -95,7 +94,7 @@ padding: 20px;
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    font-size: var(--fs-14);
+    font-size: 0.875rem;
     color: var(--color-text-primary);
 }
 
@@ -109,7 +108,7 @@ padding: 20px;
     border: 1px solid transparent;
     border-radius: 8px;
     padding: 8px 12px;
-    font-size: var(--fs-13);
+    font-size: 0.8125rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -170,7 +169,7 @@ padding: 20px;
     margin-bottom: 12px;
     border-radius: 8px;
     padding: 10px 12px;
-    font-size: var(--fs-13);
+    font-size: 0.8125rem;
 }
 
 .timeline-alert--error {
@@ -275,7 +274,7 @@ padding: 20px;
 }
 
 .timeline-vertical-card__month {
-    font-size: var(--fs-12);
+    font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -288,14 +287,13 @@ padding: 20px;
 
 .timeline-vertical-card__title {
     margin: 0;
-    font-size: var(--fs-16);
     line-height: 1.35;
     color: var(--color-text-strong);
 }
 
 .timeline-vertical-card__summary {
     margin: 8px 0 12px;
-    font-size: var(--fs-14);
+    font-size: 0.875rem;
     line-height: 1.55;
     color: var(--color-text-primary);
 }
@@ -309,7 +307,7 @@ padding: 20px;
 }
 
 .timeline-vertical-card__order {
-    font-size: var(--fs-13);
+    font-size: 0.8125rem;
     color: var(--color-text-subtle);
     font-weight: 600;
 }
@@ -333,7 +331,7 @@ padding: 20px;
     align-items: center;
     border-radius: 6px;
     padding: 4px 8px;
-    font-size: var(--fs-12);
+    font-size: 0.75rem;
     font-weight: 700;
 }
 

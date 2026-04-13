@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Achievement.css';
 import { newsAPI } from '../../services/api';
+import AchievementCard from '../../components/AchievementCard/AchievementCard';
 
 const asTimestamp = (item) => {
     const value = item?.published_at || item?.created_at;
@@ -136,26 +137,11 @@ const Achievement = () => {
                 {/* Achievement Grid */}
                 <div className="achievement-grid">
                     {filtered.map(item => (
-                        <Link key={item.id} to={`/achievement/${item.id}`} className="achievement-card-item">
-                            <div className="achievement-card-item__image">
-                                <img
-                                    src={item.thumbnail || `https://picsum.photos/400/250?random=${50 + item.id}`}
-                                    alt={item.title}
-                                />
-                                {item.is_featured && (
-                                    <div className="achievement-card-item__badge">Nổi bật</div>
-                                )}
-                            </div>
-                            <div className="achievement-card-item__body">
-                                <span className="achievement-card-item__date">
-                                    {item.published_at
-                                        ? new Date(item.published_at).toLocaleDateString('vi-VN')
-                                        : ''}
-                                </span>
-                                <h3 className="achievement-card-item__title">{item.title}</h3>
-                                <p className="achievement-card-item__summary">{item.summary}</p>
-                            </div>
-                        </Link>
+                        <AchievementCard
+                            key={item.id}
+                            achievement={item}
+                            to={`/achievement/${item.id}`}
+                        />
                     ))}
                 </div>
             </div>

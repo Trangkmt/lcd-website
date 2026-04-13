@@ -1,4 +1,4 @@
-/* Annual Activity Page */
+﻿/* Annual Activity Page */
 .annual-activity-page {
     width: 100%;
     min-height: 100vh;
@@ -21,7 +21,7 @@
 }
 
 .annual-title {
-    font-size: var(--fs-32);
+    font-size: 2rem;
     font-weight: 800;
     color: var(--color-darkslateblue);
     text-align: center;
@@ -30,7 +30,7 @@
 }
 
 .annual-subtitle {
-    font-size: var(--fs-16);
+    font-size: 1rem;
     color: var(--color-text-muted);
     text-align: center;
     margin: 0 0 48px 0;
@@ -39,7 +39,7 @@
 .annual-loading {
     text-align: center;
     color: var(--color-text-soft);
-    font-size: var(--fs-16);
+    font-size: 1rem;
     padding: var(--space-10);
 }
 
@@ -97,7 +97,7 @@ transition: transform 0.2s ease;
 }
 
 .annual-event-image-placeholder span {
-    font-size: var(--fs-64);
+    font-size: 4rem;
     font-weight: 800;
     color: rgba(255, 255, 255, 0.4);
     text-transform: uppercase;
@@ -112,14 +112,14 @@ transition: transform 0.2s ease;
 }
 
 .annual-event-name {
-    font-size: var(--fs-22);
+    font-size: 1.375rem;
     font-weight: 700;
     color: var(--color-darkslateblue);
     margin: 0 0 8px 0;
 }
 
 .annual-event-link {
-    font-size: var(--fs-14);
+    font-size: 0.875rem;
     font-weight: 600;
     color: var(--color-primary);
     align-self: flex-start;
@@ -136,13 +136,15 @@ transition: transform 0.2s ease;
     }
 
     .annual-title {
-        font-size: var(--fs-24);
+        font-size: 1.5rem;
     }
 
     .annual-events-grid {
         grid-template-columns: 1fr;
     }
 }
+
+
 
 
 

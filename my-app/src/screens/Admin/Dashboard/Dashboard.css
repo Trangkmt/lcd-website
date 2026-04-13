@@ -1,4 +1,4 @@
-/* Dashboard Page */
+﻿/* Dashboard Page */
 .dashboard-page {
     padding: var(--space-10);
     max-width: 1400px;
@@ -10,14 +10,14 @@
 }
 
 .dashboard-title {
-    font-size: var(--fs-36);
+    font-size: 2.25rem;
     font-weight: 700;
     color: var(--color-text-strong);
     margin: 0 0 8px 0;
 }
 
 .dashboard-subtitle {
-    font-size: var(--fs-16);
+    font-size: 1rem;
     color: var(--color-text-subtle);
     margin: 0;
 }
@@ -31,7 +31,7 @@
     border-radius: 12px;
     padding: 20px 24px;
     border: 1px solid var(--color-border-subtle);
-margin-bottom: 32px;
+    margin-bottom: 32px;
     flex-wrap: wrap;
 }
 
@@ -43,7 +43,7 @@ margin-bottom: 32px;
 }
 
 .filter-label {
-    font-size: var(--fs-12);
+    font-size: 0.75rem;
     font-weight: 600;
     color: var(--color-text-subtle);
     text-transform: uppercase;
@@ -54,7 +54,7 @@ margin-bottom: 32px;
     padding: 8px 12px;
     border: 1px solid var(--color-border-subtle);
     border-radius: 8px;
-    font-size: var(--fs-14);
+    font-size: 0.875rem;
     color: var(--color-text-primary);
     background: var(--color-white);
     outline: none;
@@ -74,7 +74,7 @@ margin-bottom: 32px;
     background: var(--color-state-danger-surface);
     color: var(--color-state-danger-strong);
     border-radius: 8px;
-    font-size: var(--fs-13);
+    font-size: 0.8125rem;
     font-weight: 600;
     cursor: pointer;
     transition: background 0.2s;
@@ -102,7 +102,7 @@ margin-bottom: 32px;
     align-items: center;
     gap: 20px;
     border: 1px solid var(--color-border-subtle);
-border-left: 4px solid;
+    border-left: 4px solid;
     transition: all 0.3s ease;
 }
 
@@ -117,7 +117,7 @@ border-left: 4px solid;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: var(--fs-28);
+    font-size: 1.75rem;
 }
 
 .stat-info {
@@ -125,13 +125,13 @@ border-left: 4px solid;
 }
 
 .stat-label {
-    font-size: var(--fs-14);
+    font-size: 0.875rem;
     color: var(--color-text-subtle);
     margin: 0 0 4px 0;
 }
 
 .stat-value {
-    font-size: var(--fs-32);
+    font-size: 2rem;
     font-weight: 700;
     color: var(--color-text-strong);
     margin: 0;
@@ -162,7 +162,6 @@ border-left: 4px solid;
 }
 
 .card-title {
-    font-size: var(--fs-20);
     font-weight: 600;
     color: var(--color-text-strong);
     margin: 0;
@@ -171,7 +170,7 @@ border-left: 4px solid;
 .card-link {
     color: var(--color-brand-indigo);
     text-decoration: none;
-    font-size: var(--fs-14);
+    font-size: 0.875rem;
     font-weight: 500;
     transition: color 0.3s ease;
 }
@@ -193,7 +192,7 @@ border-left: 4px solid;
 .posts-table th {
     text-align: left;
     padding: var(--space-3);
-    font-size: var(--fs-13);
+    font-size: 0.8125rem;
     font-weight: 600;
     color: var(--color-text-subtle);
     text-transform: uppercase;
@@ -204,7 +203,7 @@ border-left: 4px solid;
 .posts-table td {
     padding: 16px 12px;
     border-bottom: 1px solid var(--color-border-subtle);
-    font-size: var(--fs-14);
+    font-size: 0.875rem;
     color: var(--color-text-primary);
 }
 
@@ -219,7 +218,7 @@ border-left: 4px solid;
     background: #F2F6FD;
     color: var(--color-text-primary);
     border-radius: 6px;
-    font-size: var(--fs-12);
+    font-size: 0.75rem;
     font-weight: 500;
 }
 
@@ -227,7 +226,7 @@ border-left: 4px solid;
     display: inline-block;
     padding: 4px 12px;
     border-radius: 6px;
-    font-size: var(--fs-12);
+    font-size: 0.75rem;
     font-weight: 500;
 }
 
@@ -243,7 +242,7 @@ border-left: 4px solid;
 
 .date-cell {
     color: var(--color-text-subtle);
-    font-size: var(--fs-13);
+    font-size: 0.8125rem;
 }
 
 /* Activities List */
@@ -284,14 +283,14 @@ border-left: 4px solid;
 }
 
 .activity-action {
-    font-size: var(--fs-14);
+    font-size: 0.875rem;
     color: var(--color-text-primary);
     margin: 0 0 4px 0;
     line-height: 1.5;
 }
 
 .activity-time {
-    font-size: var(--fs-12);
+    font-size: 0.75rem;
     color: var(--color-text-subtle);
     margin: 0;
 }
@@ -305,7 +304,7 @@ border-left: 4px solid;
 }
 
 .section-title {
-    font-size: var(--fs-20);
+    font-size: 1.25rem;
     font-weight: 600;
     color: var(--color-text-strong);
     margin: 0 0 20px 0;
@@ -326,7 +325,7 @@ border-left: 4px solid;
     color: white;
     border: none;
     border-radius: 8px;
-    font-size: var(--fs-15);
+    font-size: 0.9375rem;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -338,7 +337,7 @@ border-left: 4px solid;
 }
 
 .action-icon {
-    font-size: var(--fs-20);
+    font-size: 1.25rem;
 }
 
 .action-label {

@@ -37,7 +37,7 @@
     align-items: center;
     justify-content: center;
     color: var(--color-white);
-    font-size: var(--fs-20);
+    font-size: 1.25rem;
     text-decoration: none;
     transition: all 0.3s ease;
     cursor: pointer;
@@ -61,7 +61,7 @@
 }
 
 .footer-column h3 {
-    font-size: var(--fs-16);
+    font-size: 1rem;
     font-weight: 700;
     margin-bottom: 8px;
     color: var(--color-white);
@@ -70,14 +70,14 @@
 .footer-column a {
     color: var(--color-white);
     text-decoration: none;
-    font-size: var(--fs-14);
+    font-size: 0.875rem;
     transition: all 0.3s ease;
 }
 
 .footer-column p {
     margin: 0;
     color: var(--color-surface-info);
-    font-size: var(--fs-14);
+    font-size: 0.875rem;
     line-height: 1.6;
 }
 
@@ -127,9 +127,11 @@
     .social-icon {
         width: 30px;
         height: 30px;
-        font-size: var(--fs-16);
+        font-size: 1rem;
     }
 }
+
+
 
 
 

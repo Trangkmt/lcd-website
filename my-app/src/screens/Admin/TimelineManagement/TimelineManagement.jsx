@@ -93,31 +93,6 @@ export default function TimelineManagement() {
     const [editingId, setEditingId] = useState(null);
     const [filters, setFilters] = useState({ month: '', status: 'all' });
 
-    useEffect(() => {
-        fetchTimelineEvents(filters);
-    }, [filters, fetchTimelineEvents]);
-
-    useEffect(() => {
-        fetchAnnualEventOptions();
-    }, []);
-
-    async function fetchAnnualEventOptions() {
-        setLoadingEventOptions(true);
-        try {
-            const categories = await categoriesAPI.getAll({ page_type: 'activity_annual' });
-            const mappedOptions = Array.isArray(categories)
-                ? categories
-                    .map((item) => (item?.name ? String(item.name).trim() : ''))
-                    .filter(Boolean)
-                : [];
-            setAnnualEventOptions(Array.from(new Set(mappedOptions)));
-        } catch (err) {
-            setError((prev) => prev || 'Không thể tải danh sách sự kiện thường niên: ' + err.message);
-        } finally {
-            setLoadingEventOptions(false);
-        }
-    }
-
     const fetchTimelineEvents = useCallback(async (nextFilters = filters) => {
         setLoading(true);
         setError('');
@@ -142,6 +117,31 @@ export default function TimelineManagement() {
             setLoading(false);
         }
     }, [filters]);
+
+    useEffect(() => {
+        fetchTimelineEvents(filters);
+    }, [filters, fetchTimelineEvents]);
+
+    useEffect(() => {
+        fetchAnnualEventOptions();
+    }, []);
+
+    async function fetchAnnualEventOptions() {
+        setLoadingEventOptions(true);
+        try {
+            const categories = await categoriesAPI.getAll({ page_type: 'activity_annual' });
+            const mappedOptions = Array.isArray(categories)
+                ? categories
+                    .map((item) => (item?.name ? String(item.name).trim() : ''))
+                    .filter(Boolean)
+                : [];
+            setAnnualEventOptions(Array.from(new Set(mappedOptions)));
+        } catch (err) {
+            setError((prev) => prev || 'Không thể tải danh sách sự kiện thường niên: ' + err.message);
+        } finally {
+            setLoadingEventOptions(false);
+        }
+    }
 
     const hasActiveFilter = useMemo(() => {
         return !!filters.month || filters.status !== 'all';
