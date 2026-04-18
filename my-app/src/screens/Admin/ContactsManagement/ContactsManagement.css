@@ -1,4 +1,13 @@
-﻿@import url('../PostsManagement/PostsManagement.css');
+@import url('../PostsManagement/PostsManagement.css');
+
+.contacts-management .btn-primary:focus-visible,
+.contacts-management .btn-secondary:focus-visible,
+.contacts-management .btn-reply:focus-visible,
+.contacts-management input:focus-visible,
+.contacts-management textarea:focus-visible,
+.contacts-management select:focus-visible {
+    outline: none;
+}
 
 .contact-row-unread {
     background: var(--color-surface-panel);
@@ -39,7 +48,7 @@
 .reply-original {
     background: var(--color-surface-muted);
     padding: var(--space-4);
-    border-radius: 8px;
+    border-radius: 10px;
     margin-bottom: 24px;
     border-left: 3px solid var(--color-brand-indigo);
 }
@@ -79,9 +88,13 @@
     line-height: 1.3;
 }
 
+.contacts-table .status-badge {
+    border-radius: 999px;
+    font-weight: 700;
+}
+
 @media (max-width: 768px) {
     .contacts-management {
         padding: var(--space-5);
     }
 }
-

@@ -2,12 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Layout } from './components';
-import { Homepage } from './screens/Homepage';
-import { Activity, AnnualActivity, AnnualActivityDetail, NonAnnualActivity, NonAnnualActivityDetail, PostDetail } from './screens/Activity';
-import OrganizationalStructure from './screens/OrganizationalStructure';
-import Contact from './screens/Contact';
-import { News, NewsDetail } from './screens/News';
-import { Achievement, AchievementDetail } from './screens/Achievement';
+import { Homepage } from './screens/User/Homepage';
+import { Activity, AnnualActivity, AnnualActivityDetail, NonAnnualActivity, NonAnnualActivityDetail, PostDetail } from './screens/User/Activity';
+import OrganizationalStructure from './screens/User/OrganizationalStructure';
+import Contact from './screens/User/Contact';
+import { News, NewsDetail } from './screens/User/News';
+import { Achievement, AchievementDetail } from './screens/User/Achievement';
 import {
   AdminLayout,
   AdminLogin,

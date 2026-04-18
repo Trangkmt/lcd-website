@@ -78,7 +78,6 @@ export default function Dashboard() {
         <div className="dashboard-page">
             <div className="dashboard-header">
                 <h1 className="dashboard-title">Tổng quan quản trị</h1>
-                <p className="dashboard-subtitle">Chào mừng quay trở lại! Đây là tổng quan hệ thống của bạn.</p>
             </div>
 
             {/* Filter Bar */}

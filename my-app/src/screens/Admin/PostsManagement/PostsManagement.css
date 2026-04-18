@@ -1,4 +1,4 @@
-﻿/* ===== Grouped Category Dropdown ===== */
+/* ===== Grouped Category Dropdown ===== */
 .cat-dropdown-wrapper {
     position: relative;
 }
@@ -50,7 +50,7 @@
     background: var(--color-white);
     border: 1px solid var(--color-border-muted);
     border-radius: 8px;
-    z-index: 3000;
+    z-index: var(--z-dropdown);
     overflow: visible;
 }
 
@@ -107,7 +107,7 @@
     background: var(--color-white);
     border: 1px solid var(--color-border-muted);
     border-radius: 8px;
-    z-index: 3001;
+    z-index: var(--z-popover);
     overflow: hidden;
 }
 
@@ -165,12 +165,6 @@
     font-size: 2rem;
     font-weight: 700;
     color: var(--color-text-strong);
-    margin: 0 0 8px 0;
-}
-
-.page-subtitle {
-    font-size: 1rem;
-    color: var(--color-text-muted);
     margin: 0;
 }
 
@@ -211,17 +205,6 @@
     background: var(--color-gray-200);
 }
 
-.btn-icon {
-    font-size: 1.125rem;
-}
-
-/* Tabs */
-.tabs-container {
-    background: white;
-    border-radius: 12px 12px 0 0;
-    padding: 0 24px;
-}
-
 .tabs {
     display: flex;
     gap: 8px;
@@ -257,6 +240,20 @@
     background: white;
     flex-wrap: wrap;
     align-items: center;
+}
+
+.doc-tools-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 24px 16px;
+    background: var(--color-white);
+    border-top: 1px solid var(--color-surface-soft-blue);
+}
+
+.doc-tools-hint {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
 }
 
 .search-box {
@@ -317,11 +314,11 @@
 .template-modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.35);
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 5000;
+    z-index: var(--z-modal-backdrop);
     padding: 16px;
 }
 
@@ -331,6 +328,17 @@
     background: var(--color-white);
     border-radius: 12px;
     padding: 16px;
+}
+
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible,
+.filter-select:focus-visible,
+.cat-dropdown-trigger:focus-visible,
+.search-input:focus-visible,
+.tab:focus-visible,
+.cat-submenu-item:focus-visible,
+.cat-page-type-row:focus-visible {
+    outline: none;
 }
 
 .template-modal-title {
@@ -483,6 +491,11 @@
     transition: all 0.3s ease;
 }
 
+.btn-action:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 .btn-action:hover {
     background: var(--color-whitesmoke);
 }
@@ -510,6 +523,18 @@
 .btn-publish:hover {
     background: var(--color-state-success-soft);
     border-color: var(--color-state-success);
+}
+
+.btn-export {
+    color: var(--color-brand-indigo);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    min-width: 52px;
+}
+
+.btn-export:hover {
+    background: var(--color-info-light);
+    border-color: var(--color-brand-indigo);
 }
 
 /* Pagination */
@@ -808,9 +833,8 @@
 
 .editor-screen {
     margin-top: 16px;
-    background: var(--color-surface-muted);
+    background: var(--color-surface-soft-blue);
     border: 1px solid var(--color-border-soft);
-    border-radius: 12px;
     padding: var(--space-5);
 }
 
@@ -822,21 +846,70 @@
     margin-bottom: 14px;
 }
 
-.editor-title {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--color-text-strong);
+.editor-header--actions-only {
+    justify-content: flex-end;
+}
+
+.editor-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
 .editor-meta-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 40px;
+    row-gap: 20px;
+    align-items: end;
 }
 
 .editor-meta-grid .full-row {
     grid-column: 1 / -1;
+}
+
+.editor-meta-grid .form-group {
+    min-width: 0;
+}
+
+.template-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.template-controls .form-control {
+    flex: 1;
+    min-width: 0;
+}
+
+.template-action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+}
+
+.template-action-buttons .btn-secondary {
+    white-space: nowrap;
+    padding: 10px 14px;
+}
+
+.thumbnail-input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.thumbnail-input-row .form-control {
+    flex: 1;
+    min-width: 0;
+}
+
+.thumbnail-input-row .btn-secondary {
+    white-space: nowrap;
+    padding: 10px 18px;
 }
 
 .checkbox-row {
@@ -893,7 +966,7 @@
 }
 
 .wp-editor-body:empty::before {
-    content: 'Nháº­p ná»™i dung bÃ i viáº¿t táº¡i Ä‘Ã¢y...';
+    content: 'Nhập nội dung bài viết tại đây...';
     color: var(--color-darkgray);
 }
 
@@ -934,13 +1007,35 @@
         flex-direction: column;
     }
 
+    .doc-tools-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 0 16px 16px;
+    }
+
     .editor-meta-grid {
         grid-template-columns: 1fr;
+        row-gap: 16px;
+    }
+
+    .template-controls,
+    .thumbnail-input-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .template-action-buttons {
+        width: 100%;
+        flex-wrap: wrap;
     }
 
     .editor-header {
         flex-direction: column;
         align-items: flex-start;
+    }
+
+    .editor-header-actions {
+        width: 100%;
     }
 
     .wp-editor-body {
@@ -956,4 +1051,3 @@
         padding: var(--space-70px);
     }
 }
-

@@ -4,6 +4,14 @@
     background: var(--color-white);
 }
 
+.timeline-management-page .timeline-btn:focus-visible,
+.timeline-management-page input:focus-visible,
+.timeline-management-page textarea:focus-visible,
+.timeline-management-page select:focus-visible,
+.timeline-management-page button:focus-visible {
+    outline: none;
+}
+
 .timeline-management-header {
     margin-bottom: 24px;
 }
@@ -12,12 +20,6 @@
     margin: 0;
     font-size: 2.25rem;
     color: var(--color-text-strong);
-}
-
-.timeline-management-subtitle {
-    margin: 8px 0 0;
-    font-size: 0.9375rem;
-    color: var(--color-text-subtle);
 }
 
 .timeline-management-grid {
@@ -38,7 +40,7 @@
 .timeline-management-card {
     background: var(--color-white);
     border: 1px solid var(--color-border-subtle);
-    border-radius: 12px;
+    border-radius: 0;
     padding: 20px;
 }
 
@@ -70,7 +72,7 @@
 .timeline-form__field textarea,
 .timeline-list-filters select {
     border: 1px solid var(--color-border-subtle);
-    border-radius: 8px;
+    border-radius: 10px;
     padding: 9px 12px;
     font-size: 0.875rem;
     color: var(--color-text-primary);
@@ -106,7 +108,7 @@
 
 .timeline-btn {
     border: 1px solid transparent;
-    border-radius: 8px;
+    border-radius: 10px;
     padding: 8px 12px;
     font-size: 0.8125rem;
     font-weight: 600;
@@ -140,13 +142,13 @@
 }
 
 .timeline-btn--danger {
-    background: #fff5f5;
-    border-color: #ffd4d4;
-    color: #c43232;
+    background: var(--color-state-danger-soft);
+    border-color: var(--color-state-danger-border);
+    color: var(--color-state-danger-strong);
 }
 
 .timeline-btn--danger:hover {
-    background: #ffe9e9;
+    background: var(--color-state-danger-surface);
 }
 
 .timeline-list-header {
@@ -227,7 +229,7 @@
     position: relative;
     background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
     border: 1px solid #dfe9f8;
-    border-radius: 14px;
+    border-radius: 0;
     padding: 14px;
 }
 
@@ -300,16 +302,10 @@
 
 .timeline-vertical-card__footer {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     gap: 10px;
     flex-wrap: wrap;
-}
-
-.timeline-vertical-card__order {
-    font-size: 0.8125rem;
-    color: var(--color-text-subtle);
-    font-weight: 600;
 }
 
 .timeline-table__empty {

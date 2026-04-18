@@ -2,6 +2,31 @@ const API_BASE = '/api';
 const ADMIN_TOKEN_KEY = 'admin_auth_token';
 const ADMIN_AUTH_KEY = 'admin_auth_user';
 
+function normalizeApiErrorMessage(message) {
+    if (typeof message !== 'string') {
+        return message;
+    }
+
+    const lowerMessage = message.toLowerCase();
+
+    if (
+        lowerMessage.includes('high demand') ||
+        lowerMessage.includes('spikes in demand') ||
+        lowerMessage.includes('please try again later') ||
+        lowerMessage.includes('resource_exhausted') ||
+        lowerMessage.includes('quota') ||
+        lowerMessage.includes('rate limit')
+    ) {
+        return 'AI đang quá tải hoặc bị giới hạn tạm thời. Vui lòng thử lại sau ít phút.';
+    }
+
+    if (lowerMessage.includes('cannot delete or update a parent row') && lowerMessage.includes('categories')) {
+        return 'Không thể xóa danh mục vì đang liên kết với bài viết, nội dung hoặc danh mục con. Vui lòng chuyển hoặc xóa dữ liệu liên quan trước.';
+    }
+
+    return message;
+}
+
 async function parseResponseBody(res) {
     if (res.status === 204 || res.status === 205) {
         return null;
@@ -20,10 +45,11 @@ async function handleResponse(res) {
     const payload = await parseResponseBody(res);
 
     if (!res.ok) {
-        const message =
+        const rawMessage =
             (payload && typeof payload === 'object' && (payload.error || payload.message)) ||
             (typeof payload === 'string' && payload) ||
             res.statusText;
+        const message = normalizeApiErrorMessage(rawMessage);
 
         if (res.status === 401) {
             localStorage.removeItem(ADMIN_TOKEN_KEY);
@@ -77,6 +103,7 @@ export const newsAPI = {
 };
 
 export const usersAPI = {
+    getPublic: () => apiFetch('/users/public'),
     getAll: () => apiFetch('/users'),
     getById: (id) => apiFetch(`/users/${id}`),
     create: (data) => apiFetch('/users', { method: 'POST', body: data }),

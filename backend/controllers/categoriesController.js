@@ -144,9 +144,53 @@ exports.updateCategory = withErrorHandling(async (req, res) => {
 // DELETE /api/categories/:id - Xóa category
 exports.deleteCategory = withErrorHandling(async (req, res) => {
     const pool = await getConnection();
-    const result = await pool.request()
-        .input('id', sql.Int, req.params.id)
-        .query('DELETE FROM categories WHERE id = @id');
+    const categoryId = Number.parseInt(req.params.id, 10);
+
+    if (!Number.isInteger(categoryId)) {
+        return sendBadRequest(res, 'ID danh mục không hợp lệ');
+    }
+
+    const usageResult = await pool.request()
+        .input('id', sql.Int, categoryId)
+        .query(`
+            SELECT
+                (SELECT COUNT(*) FROM news WHERE category_id = @id) AS news_count,
+                (SELECT COUNT(*) FROM activities WHERE category_id = @id) AS activities_count,
+                (SELECT COUNT(*) FROM documents WHERE category_id = @id) AS documents_count,
+                (SELECT COUNT(*) FROM categories WHERE parent_id = @id) AS child_categories_count
+        `);
+
+    const usage = getRecordOrNull(usageResult) || {};
+    const newsCount = Number(usage.news_count || 0);
+    const activitiesCount = Number(usage.activities_count || 0);
+    const documentsCount = Number(usage.documents_count || 0);
+    const childCategoriesCount = Number(usage.child_categories_count || 0);
+
+    if (newsCount > 0 || activitiesCount > 0 || documentsCount > 0 || childCategoriesCount > 0) {
+        return res.status(409).json({
+            error: 'Không thể xóa danh mục đang được liên kết với bài viết, nội dung hoặc danh mục con. Vui lòng chuyển hoặc xóa dữ liệu liên quan trước.',
+            details: {
+                news: newsCount,
+                activities: activitiesCount,
+                documents: documentsCount,
+                child_categories: childCategoriesCount,
+            },
+        });
+    }
+
+    let result;
+    try {
+        result = await pool.request()
+            .input('id', sql.Int, categoryId)
+            .query('DELETE FROM categories WHERE id = @id');
+    } catch (err) {
+        if (err && (err.code === 'ER_ROW_IS_REFERENCED_2' || err.errno === 1451)) {
+            return res.status(409).json({
+                error: 'Không thể xóa danh mục vì đang được liên kết với dữ liệu khác. Vui lòng chuyển hoặc xóa dữ liệu liên quan trước.',
+            });
+        }
+        throw err;
+    }
 
     if (!hasAffectedRows(result)) {
         return sendNotFound(res, 'Category không tồn tại');

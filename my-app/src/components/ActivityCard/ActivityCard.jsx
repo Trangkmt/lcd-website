@@ -1,14 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './ActivityCard.css';
-
-function formatDate(value) {
-    if (!value) {
-        return '';
-    }
-
-    return new Date(value).toLocaleDateString('vi-VN');
-}
+import { formatVietnameseDate } from '../../utils/date';
 
 export default function ActivityCard({ activity, to }) {
     if (!activity) {
@@ -30,7 +23,7 @@ export default function ActivityCard({ activity, to }) {
             </div>
             <div className="activity-card__body">
                 <div className="activity-card__meta">
-                    <span className="activity-card__date">{formatDate(activity.start_date || activity.published_at || activity.created_at)}</span>
+                    <span className="activity-card__date">{formatVietnameseDate(activity.start_date || activity.published_at || activity.created_at)}</span>
                     <span className="activity-card__arrow">↗</span>
                 </div>
                 <h3 className="activity-card__title">{activity.title || ''}</h3>

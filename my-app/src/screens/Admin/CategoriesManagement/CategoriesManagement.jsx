@@ -21,6 +21,24 @@ const PAGE_TYPE_LABELS = {
     activity_non_annual: 'Hoạt động không thường niên',
 };
 
+const resolveTabKey = (pageType, fallback = 'news') => {
+    if (PAGE_TABS.some(tab => tab.key === pageType)) {
+        return pageType;
+    }
+
+    // Legacy value from old data model.
+    if (pageType === 'activity') {
+        return fallback;
+    }
+
+    return fallback;
+};
+
+const normalizeCategoryForTab = (category, tabKey) => ({
+    ...category,
+    page_type: resolveTabKey(category?.page_type, tabKey),
+});
+
 const EMPTY_FORM = (page_type) => ({ name: '', slug: '', description: '', intro_image: '', page_type: page_type || 'news', display_order: 0 });
 
 export default function CategoriesManagement() {
@@ -39,7 +57,8 @@ export default function CategoriesManagement() {
         setLoadingTab(prev => ({ ...prev, [tab]: true }));
         try {
             const data = await categoriesAPI.getAll({ page_type: tab });
-            setCategoriesByTab(prev => ({ ...prev, [tab]: Array.isArray(data) ? data : [] }));
+            const normalized = Array.isArray(data) ? data.map(item => normalizeCategoryForTab(item, tab)) : [];
+            setCategoriesByTab(prev => ({ ...prev, [tab]: normalized }));
         } catch (err) { console.error(err); }
         finally { setLoadingTab(prev => ({ ...prev, [tab]: false })); }
     }
@@ -48,7 +67,8 @@ export default function CategoriesManagement() {
         setLoadingTab(prev => ({ ...prev, [tab]: true }));
         try {
             const data = await categoriesAPI.getAll({ page_type: tab });
-            setCategoriesByTab(prev => ({ ...prev, [tab]: Array.isArray(data) ? data : [] }));
+            const normalized = Array.isArray(data) ? data.map(item => normalizeCategoryForTab(item, tab)) : [];
+            setCategoriesByTab(prev => ({ ...prev, [tab]: normalized }));
         } catch (err) { console.error(err); }
         finally { setLoadingTab(prev => ({ ...prev, [tab]: false })); }
     }
@@ -103,9 +123,10 @@ export default function CategoriesManagement() {
         if (!window.confirm('Bạn có chắc muốn xóa danh mục này?')) return;
         try {
             await categoriesAPI.delete(cat.id);
+            const tabKey = resolveTabKey(cat.page_type, activeTab);
             setCategoriesByTab(prev => ({
                 ...prev,
-                [cat.page_type || activeTab]: prev[cat.page_type || activeTab].filter(c => c.id !== cat.id),
+                [tabKey]: (prev[tabKey] || []).filter(c => c.id !== cat.id),
             }));
         } catch (err) { alert('Xóa thất bại: ' + err.message); }
     }
@@ -119,7 +140,6 @@ export default function CategoriesManagement() {
             <div className="page-header">
                 <div className="header-content">
                     <h1 className="page-title">Quản lý danh mục</h1>
-                    <p className="page-subtitle">Danh mục được phân theo từng trang của website</p>
                 </div>
                 <button className="btn-primary" onClick={openCreate}>
                     <span className="btn-icon">➕</span>

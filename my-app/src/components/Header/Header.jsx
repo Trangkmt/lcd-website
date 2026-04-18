@@ -104,12 +104,13 @@ const Header = () => {
                     <input
                         type="text"
                         className="header__search-input"
-                        placeholder="..."
+                        placeholder="Tìm kiếm nội dung..."
+                        aria-label="Tìm kiếm"
                         value={searchValue}
                         onChange={(e) => setSearchValue(e.target.value)}
-                        onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                        onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                     />
-                    <button className="header__search-btn" onClick={handleSearch}>
+                    <button className="header__search-btn" onClick={handleSearch} aria-label="Thực hiện tìm kiếm">
                         <svg className="header__search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <circle cx="11" cy="11" r="8"></circle>
                             <path d="M21 21l-4.35-4.35"></path>

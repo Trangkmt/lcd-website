@@ -69,7 +69,6 @@ export default function ContactsManagement() {
             <div className="page-header">
                 <div className="header-content">
                     <h1 className="page-title">Quản lý liên hệ {unread > 0 && <span className="badge-new">{unread} mới</span>}</h1>
-                    <p className="page-subtitle">Xem và quản lý các liên hệ từ sinh viên</p>
                 </div>
             </div>
 
