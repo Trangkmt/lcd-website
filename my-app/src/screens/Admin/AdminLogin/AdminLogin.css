@@ -11,7 +11,7 @@
     width: 100%;
     max-width: 420px;
     background: white;
-    border-radius: 14px;
+    border-radius: 0;
     padding: var(--space-7);
     border: 1px solid #E9EDF2;
 }
@@ -79,4 +79,5 @@
     color: var(--color-state-danger);
     font-size: 0.8125rem;
 }
+
 

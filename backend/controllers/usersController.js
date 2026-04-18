@@ -13,6 +13,22 @@ function sanitizeIncomingRole(role) {
     return normalizeRole(role || ROLES.POST_AUTHOR);
 }
 
+function mapPublicUser(user) {
+    if (!user) return user;
+    return {
+        id: user.id,
+        email: user.email,
+        full_name: user.full_name,
+        avatar_url: user.avatar_url || null,
+        member_type: user.member_type,
+        student_code: user.student_code,
+        class_name: user.class_name,
+        department: user.department,
+        department_position: user.department_position,
+        is_active: user.is_active,
+    };
+}
+
 async function hasUserAvatarColumn(pool) {
     const result = await pool.request().query(`
         SELECT COLUMN_NAME
@@ -39,6 +55,28 @@ exports.getAllUsers = async (req, res) => {
             ORDER BY created_at DESC
         `);
         res.json((result.recordset || []).map(mapUserRole));
+    } catch (err) {
+        console.error('Error:', err);
+        res.status(500).json({ error: err.message });
+    }
+};
+
+// GET /api/users/public - Lấy danh sách thành viên public
+exports.getPublicUsers = async (req, res) => {
+    try {
+        const pool = await getConnection();
+        const hasAvatarColumn = await hasUserAvatarColumn(pool);
+        const avatarSelect = hasAvatarColumn ? 'avatar_url' : 'NULL AS avatar_url';
+
+        const result = await pool.request().query(`
+            SELECT id, email, full_name, ${avatarSelect}, is_active,
+                   member_type, student_code, class_name, department, department_position
+            FROM users
+            WHERE is_active = 1
+            ORDER BY full_name ASC
+        `);
+
+        res.json((result.recordset || []).map(mapPublicUser));
     } catch (err) {
         console.error('Error:', err);
         res.status(500).json({ error: err.message });

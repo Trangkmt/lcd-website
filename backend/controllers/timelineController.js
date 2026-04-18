@@ -20,6 +20,53 @@ function parseMonth(value) {
     return month;
 }
 
+function parseYear(value) {
+    const year = parseInteger(value, 0);
+    if (year < 2000 || year > 2100) {
+        return null;
+    }
+    return year;
+}
+
+function getTimelineReferenceDate() {
+    return new Date();
+}
+
+function resolveTimelineYear(month, referenceDate = getTimelineReferenceDate()) {
+    const normalizedMonth = parseMonth(month);
+    if (!normalizedMonth) {
+        return null;
+    }
+
+    const currentMonth = referenceDate.getMonth() + 1;
+    const currentYear = referenceDate.getFullYear();
+    return normalizedMonth < currentMonth ? currentYear + 1 : currentYear;
+}
+
+function normalizeTimelineYear(month, year, referenceDate = getTimelineReferenceDate()) {
+    const normalizedYear = parseYear(year);
+    if (normalizedYear) {
+        return normalizedYear;
+    }
+
+    return resolveTimelineYear(month, referenceDate);
+}
+
+function enrichTimelineEvent(event, referenceDate = getTimelineReferenceDate()) {
+    if (!event) {
+        return event;
+    }
+
+    return {
+        ...event,
+        year: parseYear(event.year) || resolveTimelineYear(event.month, referenceDate),
+    };
+}
+
+function enrichTimelineEvents(events, referenceDate = getTimelineReferenceDate()) {
+    return (Array.isArray(events) ? events : []).map((event) => enrichTimelineEvent(event, referenceDate));
+}
+
 function parseIsPublished(value, fallback = true) {
     if (value === undefined || value === null || value === '') {
         return fallback;
@@ -44,7 +91,7 @@ exports.getPublicTimeline = withErrorHandling(async (req, res) => {
 
     let query = `
         SELECT
-            t.id, t.month, t.event_name, t.summary, t.sort_order,
+            t.id, t.month, t.year, t.event_name, t.summary, t.sort_order,
             t.is_published, t.created_at, t.updated_at,
             u.full_name as created_by_name
         FROM timeline_events t
@@ -64,11 +111,11 @@ exports.getPublicTimeline = withErrorHandling(async (req, res) => {
         query += ' AND t.month = @month';
     }
 
-    query += ' ORDER BY t.month ASC, t.sort_order ASC, t.created_at ASC';
+    query += ' ORDER BY t.year ASC, t.month ASC, t.sort_order ASC, t.created_at ASC';
     query = applyPagination({ request, sql, query, pagination });
 
     const result = await request.query(query);
-    res.json(result.recordset);
+    res.json(enrichTimelineEvents(result.recordset));
 });
 
 // GET /api/timeline/admin - Admin list with drafts
@@ -79,7 +126,7 @@ exports.getAdminTimeline = withErrorHandling(async (req, res) => {
 
     let query = `
         SELECT
-            t.id, t.month, t.event_name, t.summary, t.sort_order,
+            t.id, t.month, t.year, t.event_name, t.summary, t.sort_order,
             t.is_published, t.created_by, t.created_at, t.updated_at,
             u.full_name as created_by_name
         FROM timeline_events t
@@ -104,11 +151,11 @@ exports.getAdminTimeline = withErrorHandling(async (req, res) => {
         query += ' AND t.is_published = @is_published';
     }
 
-    query += ' ORDER BY t.month ASC, t.sort_order ASC, t.created_at ASC';
+    query += ' ORDER BY t.year ASC, t.month ASC, t.sort_order ASC, t.created_at ASC';
     query = applyPagination({ request, sql, query, pagination });
 
     const result = await request.query(query);
-    res.json(result.recordset);
+    res.json(enrichTimelineEvents(result.recordset));
 });
 
 // GET /api/timeline/:id
@@ -119,7 +166,7 @@ exports.getTimelineById = withErrorHandling(async (req, res) => {
         .input('event_type', sql.NVarChar, ANNUAL_EVENT_TYPE)
         .query(`
             SELECT
-                t.id, t.month, t.event_name, t.summary, t.sort_order,
+                t.id, t.month, t.year, t.event_name, t.summary, t.sort_order,
                 t.is_published, t.created_by, t.created_at, t.updated_at,
                 u.full_name as created_by_name
             FROM timeline_events t
@@ -133,12 +180,12 @@ exports.getTimelineById = withErrorHandling(async (req, res) => {
         return sendNotFound(res, 'Sự kiện timeline không tồn tại');
     }
 
-    res.json(timelineEvent);
+    res.json(enrichTimelineEvent(timelineEvent));
 });
 
 // POST /api/timeline
 exports.createTimelineEvent = withErrorHandling(async (req, res) => {
-    const { month, event_name, summary, sort_order, is_published } = req.body;
+    const { month, year, event_name, summary, sort_order, is_published } = req.body;
 
     const normalizedMonth = parseMonth(month);
     if (!normalizedMonth) {
@@ -149,31 +196,33 @@ exports.createTimelineEvent = withErrorHandling(async (req, res) => {
         return sendBadRequest(res, 'Tên sự kiện là bắt buộc');
     }
 
-    if (String(event_name).trim().length > 20) {
-        return sendBadRequest(res, 'Tên sự kiện không được vượt quá 20 ký tự');
+    const normalizedYear = normalizeTimelineYear(normalizedMonth, year);
+    if (!normalizedYear) {
+        return sendBadRequest(res, 'Năm timeline không hợp lệ');
     }
 
     const pool = await getConnection();
     const result = await pool.request()
         .input('event_type', sql.NVarChar, ANNUAL_EVENT_TYPE)
         .input('month', sql.Int, normalizedMonth)
+        .input('year', sql.Int, normalizedYear)
         .input('event_name', sql.NVarChar, String(event_name).trim())
         .input('summary', sql.NVarChar, summary || null)
         .input('sort_order', sql.Int, parseInteger(sort_order, 0))
         .input('is_published', sql.Bit, parseIsPublished(is_published, true))
         .input('created_by', sql.Int, req.authUser?.id || null)
         .query(`
-            INSERT INTO timeline_events (event_type, month, event_name, summary, sort_order, is_published, created_by)
+            INSERT INTO timeline_events (event_type, month, year, event_name, summary, sort_order, is_published, created_by)
             OUTPUT INSERTED.*
-            VALUES (@event_type, @month, @event_name, @summary, @sort_order, @is_published, @created_by)
+            VALUES (@event_type, @month, @year, @event_name, @summary, @sort_order, @is_published, @created_by)
         `);
 
-    res.status(201).json(getRecordOrNull(result));
+    res.status(201).json(enrichTimelineEvent(getRecordOrNull(result)));
 });
 
 // PUT /api/timeline/:id
 exports.updateTimelineEvent = withErrorHandling(async (req, res) => {
-    const { month, event_name, summary, sort_order, is_published } = req.body;
+    const { month, year, event_name, summary, sort_order, is_published } = req.body;
 
     const normalizedMonth = parseMonth(month);
     if (!normalizedMonth) {
@@ -184,8 +233,9 @@ exports.updateTimelineEvent = withErrorHandling(async (req, res) => {
         return sendBadRequest(res, 'Tên sự kiện là bắt buộc');
     }
 
-    if (String(event_name).trim().length > 20) {
-        return sendBadRequest(res, 'Tên sự kiện không được vượt quá 20 ký tự');
+    const normalizedYear = normalizeTimelineYear(normalizedMonth, year);
+    if (!normalizedYear) {
+        return sendBadRequest(res, 'Năm timeline không hợp lệ');
     }
 
     const pool = await getConnection();
@@ -193,6 +243,7 @@ exports.updateTimelineEvent = withErrorHandling(async (req, res) => {
         .input('id', sql.Int, req.params.id)
         .input('event_type', sql.NVarChar, ANNUAL_EVENT_TYPE)
         .input('month', sql.Int, normalizedMonth)
+        .input('year', sql.Int, normalizedYear)
         .input('event_name', sql.NVarChar, String(event_name).trim())
         .input('summary', sql.NVarChar, summary || null)
         .input('sort_order', sql.Int, parseInteger(sort_order, 0))
@@ -201,6 +252,7 @@ exports.updateTimelineEvent = withErrorHandling(async (req, res) => {
             UPDATE timeline_events
             SET event_type = @event_type,
                 month = @month,
+                year = @year,
                 event_name = @event_name,
                 summary = @summary,
                 sort_order = @sort_order,
@@ -216,7 +268,7 @@ exports.updateTimelineEvent = withErrorHandling(async (req, res) => {
         return sendNotFound(res, 'Sự kiện timeline không tồn tại');
     }
 
-    res.json(timelineEvent);
+    res.json(enrichTimelineEvent(timelineEvent));
 });
 
 // DELETE /api/timeline/:id

@@ -1,15 +1,54 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './NewsCard.css';
+import { formatVietnameseDate } from '../../utils/date';
 
-const NewsCard = ({ category, date, image, content }) => {
-    return (
-        <div className="news-card">
-            <div className="news-image" style={{ backgroundImage: `url(${image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
-            <div className="news-info">
-                <span className="news-category">{category}</span>
-                <span className="news-date">{date}</span>
+const NewsCard = ({
+    category,
+    date,
+    image,
+    content,
+    title,
+    description,
+    summary,
+    to,
+    className = '',
+    style,
+}) => {
+    const displayTitle = title || content || '';
+    const displayDescription = description || summary || '';
+    const cardClassName = ['news-card', className].filter(Boolean).join(' ');
+
+    const cardContent = (
+        <>
+            <div className="news-card__background" />
+            <img
+                className="news-card__image"
+                src={image || 'https://picsum.photos/300/200?random=1'}
+                alt={displayTitle || 'News'}
+            />
+            <div className="news-card__meta">
+                <div className="news-card__badge">
+                    <b className="news-card__badge-text">{category || ''}</b>
+                </div>
+                <div className="news-card__date">{formatVietnameseDate(date) || date || ''}</div>
             </div>
-            <div className="news-text">{content}</div>
+            <b className="news-card__title">{displayTitle}</b>
+            <div className="news-card__description">{displayDescription}</div>
+        </>
+    );
+
+    if (to) {
+        return (
+            <Link to={to} className={cardClassName} style={style || { textDecoration: 'none', color: 'inherit' }}>
+                {cardContent}
+            </Link>
+        );
+    }
+
+    return (
+        <div className={cardClassName} style={style}>
+            {cardContent}
         </div>
     );
 };

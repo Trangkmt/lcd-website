@@ -19,7 +19,18 @@ export default function AdminLayout() {
     const showPostTabs = isAdminFull(currentUser) || isPostAuthor(currentUser);
     const showUtilityTab = isAdminFull(currentUser) || isUtilityOnly(currentUser);
     const isActive = (path) => location.pathname.startsWith(path);
+    const isPostsActive = isActive('/admin/posts');
+    const postsTab = new URLSearchParams(location.search).get('tab') || 'list';
+    const isPostsListActive = isPostsActive && postsTab === 'list';
+    const isPostsCreateActive = isPostsActive && postsTab === 'create';
+    const isMembersActive = isActive('/admin/members');
+    const membersTab = new URLSearchParams(location.search).get('tab') || 'student';
+    const isMembersStudentActive = isMembersActive && membersTab === 'student';
+    const isMembersTeacherActive = isMembersActive && membersTab === 'teacher';
     const isUtilitiesActive = isActive('/admin/utilities');
+    const utilitiesTab = new URLSearchParams(location.search).get('tab') || 'bulk-export';
+    const isBulkExportActive = isUtilitiesActive && utilitiesTab === 'bulk-export';
+    const isSharedDocsActive = isUtilitiesActive && utilitiesTab === 'shared-docs';
     const pageLabel = (() => {
         if (location.pathname.startsWith('/admin/posts')) return 'Quản lý bài viết';
         if (location.pathname.startsWith('/admin/categories')) return 'Quản lý danh mục';
@@ -70,13 +81,32 @@ export default function AdminLayout() {
                     )}
 
                     {showPostTabs && (
-                        <Link
-                            to="/admin/posts"
-                            className={`nav-item ${isActive('/admin/posts') ? 'active' : ''}`}
-                        >
-                            <span className="nav-icon">📝</span>
-                            {!sidebarCollapsed && <span className="nav-label">Quản lý bài viết</span>}
-                        </Link>
+                        <>
+                            <Link
+                                to="/admin/posts?tab=list"
+                                className={`nav-item ${isPostsActive ? 'active' : ''}`}
+                            >
+                                <span className="nav-icon">📝</span>
+                                {!sidebarCollapsed && <span className="nav-label">Quản lý bài viết</span>}
+                            </Link>
+
+                            {!sidebarCollapsed && isPostsActive && (
+                                <div className="nav-submenu" role="group" aria-label="Subtab quản lý bài viết">
+                                    <Link
+                                        to="/admin/posts?tab=list"
+                                        className={`nav-subitem ${isPostsListActive ? 'active' : ''}`}
+                                    >
+                                        Danh sách bài viết
+                                    </Link>
+                                    <Link
+                                        to="/admin/posts?tab=create"
+                                        className={`nav-subitem ${isPostsCreateActive ? 'active' : ''}`}
+                                    >
+                                        Tạo/ Chỉnh sửa bài viết
+                                    </Link>
+                                </div>
+                            )}
+                        </>
                     )}
 
                     {showAdminTabs && (
@@ -90,13 +120,32 @@ export default function AdminLayout() {
                     )}
 
                     {showAdminTabs && (
-                        <Link
-                            to="/admin/members"
-                            className={`nav-item ${isActive('/admin/members') ? 'active' : ''}`}
-                        >
-                            <span className="nav-icon">👥</span>
-                            {!sidebarCollapsed && <span className="nav-label">Quản lý thành viên</span>}
-                        </Link>
+                        <>
+                            <Link
+                                to="/admin/members?tab=student"
+                                className={`nav-item ${isMembersActive ? 'active' : ''}`}
+                            >
+                                <span className="nav-icon">👥</span>
+                                {!sidebarCollapsed && <span className="nav-label">Quản lý thành viên</span>}
+                            </Link>
+
+                            {!sidebarCollapsed && isMembersActive && (
+                                <div className="nav-submenu" role="group" aria-label="Subtab quản lý thành viên">
+                                    <Link
+                                        to="/admin/members?tab=student"
+                                        className={`nav-subitem ${isMembersStudentActive ? 'active' : ''}`}
+                                    >
+                                        Sinh viên
+                                    </Link>
+                                    <Link
+                                        to="/admin/members?tab=teacher"
+                                        className={`nav-subitem ${isMembersTeacherActive ? 'active' : ''}`}
+                                    >
+                                        Thầy cô
+                                    </Link>
+                                </div>
+                            )}
+                        </>
                     )}
 
                     {showAdminTabs && (
@@ -122,8 +171,8 @@ export default function AdminLayout() {
                     {showUtilityTab && (
                         <>
                             <Link
-                                to="/admin/utilities"
-                                className={`nav-item ${isUtilitiesActive ? 'active' : ''}`}
+                                to="/admin/utilities?tab=bulk-export"
+                                className="nav-item"
                             >
                                 <span className="nav-icon">🛠️</span>
                                 {!sidebarCollapsed && <span className="nav-label">Tiện ích khác</span>}
@@ -133,13 +182,13 @@ export default function AdminLayout() {
                                 <div className="nav-submenu" role="group" aria-label="Subtab tiện ích khác">
                                     <Link
                                         to="/admin/utilities?tab=bulk-export"
-                                        className={`nav-subitem ${location.search.includes('tab=bulk-export') || !location.search ? 'active' : ''}`}
+                                        className={`nav-subitem ${isBulkExportActive ? 'active' : ''}`}
                                     >
                                         Xuất giấy mời/ chứng chỉ hàng loạt
                                     </Link>
                                     <Link
                                         to="/admin/utilities?tab=shared-docs"
-                                        className={`nav-subitem ${location.search.includes('tab=shared-docs') ? 'active' : ''}`}
+                                        className={`nav-subitem ${isSharedDocsActive ? 'active' : ''}`}
                                     >
                                         Tài liệu chung
                                     </Link>

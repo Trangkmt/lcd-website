@@ -103,6 +103,9 @@ export default function OtherUtilities() {
 
     const previewName = names[0] || 'Nguyễn Văn A';
     const hasData = useMemo(() => names.length > 0 && !!templateImageUrl, [names.length, templateImageUrl]);
+    const pageTitle = activeSubtab === SUBTABS.SHARED_DOCS
+        ? 'Tài liệu chung'
+        : 'Xuất giấy mời/ chứng chỉ hàng loạt';
 
     const isValidCanvaLink = useMemo(
         () => /^https:\/\/(www\.)?canva\.com\//i.test(canvaTemplateLink.trim()),
@@ -340,8 +343,7 @@ export default function OtherUtilities() {
         <div className="other-utilities">
             <div className="page-header">
                 <div className="header-content">
-                    <h1 className="page-title">Tiện ích khác</h1>
-                    <p className="page-subtitle">Công cụ xuất hàng loạt và quản lý tài liệu chung theo từng ban</p>
+                    <h1 className="page-title">{pageTitle}</h1>
                 </div>
             </div>
 

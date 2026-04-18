@@ -4,12 +4,24 @@
     font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 }
 
+.categories-management .btn-primary:focus-visible,
+.categories-management .btn-secondary:focus-visible,
+.categories-management .cat-tab:focus-visible,
+.categories-management input:focus-visible,
+.categories-management textarea:focus-visible,
+.categories-management select:focus-visible {
+    outline: none;
+}
+
 /* Page Tabs */
 .cat-tabs {
     display: flex;
-    gap: 4px;
+    gap: 8px;
     margin-bottom: 28px;
-    border-bottom: 2px solid var(--color-gray-300);
+    padding: 6px;
+    border: 1px solid var(--color-border-subtle);
+    background: var(--color-white);
+    border-radius: 12px;
     flex-wrap: wrap;
 }
 
@@ -17,28 +29,27 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 20px;
-    background: none;
-    border: none;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -2px;
+    padding: 10px 16px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 10px;
     cursor: pointer;
     font-size: 0.875rem;
     font-weight: 500;
     color: var(--color-text-muted);
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
     white-space: nowrap;
-    border-radius: 6px 6px 0 0;
 }
 
 .cat-tab:hover {
     background: var(--color-surface-panel);
     color: var(--color-brand-action);
+    border-color: var(--color-border-subtle);
 }
 
 .cat-tab--active {
     color: var(--color-brand-action);
-    border-bottom-color: var(--color-brand-action);
+    border-color: rgba(44, 107, 204, 0.22);
     background: var(--color-surface-accent);
     font-weight: 600;
 }
@@ -66,14 +77,16 @@
 }
 
 .category-card {
-    background: white;
-    border-radius: 12px;
+    background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+    border-radius: 0;
     padding: var(--space-6);
-transition: all 0.3s ease;
+    border: 1px solid var(--color-border-subtle);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
 .category-card:hover {
     transform: translateY(-4px);
+    border-color: rgba(44, 107, 204, 0.22);
 }
 
 .category-header {
@@ -96,7 +109,7 @@ transition: all 0.3s ease;
     padding: 4px 12px;
     border-radius: 12px;
     font-size: 0.75rem;
-    font-weight: 500;
+    font-weight: 700;
 }
 
 .category-description {
@@ -126,6 +139,23 @@ transition: all 0.3s ease;
     gap: 20px;
 }
 
+.category-form input,
+.category-form textarea,
+.category-form select {
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font: inherit;
+    background: var(--color-white);
+    color: var(--color-text-primary);
+}
+
+.category-form input:focus,
+.category-form textarea:focus,
+.category-form select:focus {
+    border-color: var(--color-primary);
+}
+
 @media (max-width: 768px) {
     .categories-management {
         padding: var(--space-5);
@@ -135,10 +165,4 @@ transition: all 0.3s ease;
         grid-template-columns: 1fr;
     }
 }
-
-
-
-
-
-
 

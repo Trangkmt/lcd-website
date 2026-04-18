@@ -321,6 +321,7 @@ CREATE TABLE timeline_events (
     id INT AUTO_INCREMENT PRIMARY KEY,
     event_type ENUM('annual') NOT NULL DEFAULT 'annual',
     month TINYINT NOT NULL,
+    year SMALLINT NOT NULL,
     event_name VARCHAR(255) NOT NULL,
     summary TEXT,
     sort_order INT DEFAULT 0,
@@ -329,17 +330,18 @@ CREATE TABLE timeline_events (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT chk_timeline_month CHECK (month BETWEEN 1 AND 12),
+    CONSTRAINT chk_timeline_year CHECK (year BETWEEN 2000 AND 2100),
     FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
 );
 
-INSERT INTO timeline_events (event_type, month, event_name, summary, sort_order, is_published, created_by) VALUES
-('annual', 1, 'Khởi động học kỳ xuân', 'Ra quân đội ngũ cộng tác viên và triển khai kế hoạch học kỳ mới.', 1, TRUE, 1),
-('annual', 3, 'Chuỗi workshop học thuật', 'Tổ chức chuyên đề học thuật theo nhóm công nghệ và định hướng nghề nghiệp.', 1, TRUE, 1),
-('annual', 5, 'Chiến dịch tình nguyện', 'Các đội hình tình nguyện thực hiện hoạt động cộng đồng tại địa phương.', 1, TRUE, 1),
-('annual', 8, 'Hackathon sinh viên FIT', 'Sân chơi công nghệ thường niên cho các đội thi liên ngành.', 1, TRUE, 1),
-('annual', 9, 'Chào tân sinh viên', 'Sự kiện kết nối tân sinh viên với các ban chuyên môn của Liên Chi đoàn.', 1, TRUE, 1),
-('annual', 10, 'FIT Cup', 'Giải thể thao thường niên với các nội dung thi đấu và cổ vũ tập thể.', 1, TRUE, 1),
-('annual', 12, 'Tổng kết cuối năm', 'Tổng kết thành tích, vinh danh và công bố định hướng năm tới.', 1, TRUE, 1);
+INSERT INTO timeline_events (event_type, month, year, event_name, summary, sort_order, is_published, created_by) VALUES
+('annual', 1, CASE WHEN 1 < MONTH(CURDATE()) THEN YEAR(CURDATE()) + 1 ELSE YEAR(CURDATE()) END, 'Khởi động học kỳ xuân', 'Ra quân đội ngũ cộng tác viên và triển khai kế hoạch học kỳ mới.', 1, TRUE, 1),
+('annual', 3, CASE WHEN 3 < MONTH(CURDATE()) THEN YEAR(CURDATE()) + 1 ELSE YEAR(CURDATE()) END, 'Chuỗi workshop học thuật', 'Tổ chức chuyên đề học thuật theo nhóm công nghệ và định hướng nghề nghiệp.', 1, TRUE, 1),
+('annual', 5, CASE WHEN 5 < MONTH(CURDATE()) THEN YEAR(CURDATE()) + 1 ELSE YEAR(CURDATE()) END, 'Chiến dịch tình nguyện', 'Các đội hình tình nguyện thực hiện hoạt động cộng đồng tại địa phương.', 1, TRUE, 1),
+('annual', 8, CASE WHEN 8 < MONTH(CURDATE()) THEN YEAR(CURDATE()) + 1 ELSE YEAR(CURDATE()) END, 'Hackathon sinh viên FIT', 'Sân chơi công nghệ thường niên cho các đội thi liên ngành.', 1, TRUE, 1),
+('annual', 9, CASE WHEN 9 < MONTH(CURDATE()) THEN YEAR(CURDATE()) + 1 ELSE YEAR(CURDATE()) END, 'Chào tân sinh viên', 'Sự kiện kết nối tân sinh viên với các ban chuyên môn của Liên Chi đoàn.', 1, TRUE, 1),
+('annual', 10, CASE WHEN 10 < MONTH(CURDATE()) THEN YEAR(CURDATE()) + 1 ELSE YEAR(CURDATE()) END, 'FIT Cup', 'Giải thể thao thường niên với các nội dung thi đấu và cổ vũ tập thể.', 1, TRUE, 1),
+('annual', 12, CASE WHEN 12 < MONTH(CURDATE()) THEN YEAR(CURDATE()) + 1 ELSE YEAR(CURDATE()) END, 'Tổng kết cuối năm', 'Tổng kết thành tích, vinh danh và công bố định hướng năm tới.', 1, TRUE, 1);
 
 -- ================================================
 -- ORGANIZATIONS
@@ -411,8 +413,8 @@ CREATE INDEX idx_documents_uploaded_by ON documents(uploaded_by);
 CREATE INDEX idx_activities_category ON activities(category_id);
 CREATE INDEX idx_activities_created_by ON activities(created_by);
 CREATE INDEX idx_activities_dates ON activities(start_date, end_date);
-CREATE INDEX idx_timeline_month_published ON timeline_events(month, is_published);
-CREATE INDEX idx_timeline_sort ON timeline_events(sort_order, month);
+CREATE INDEX idx_timeline_year_month_published ON timeline_events(year, month, is_published);
+CREATE INDEX idx_timeline_year_sort ON timeline_events(year, sort_order, month);
 CREATE INDEX idx_categories_slug ON categories(slug);
 CREATE INDEX idx_categories_parent ON categories(parent_id);
 CREATE INDEX idx_categories_page_type ON categories(page_type);

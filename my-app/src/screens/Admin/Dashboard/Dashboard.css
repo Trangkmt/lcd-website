@@ -13,12 +13,6 @@
     font-size: 2.25rem;
     font-weight: 700;
     color: var(--color-text-strong);
-    margin: 0 0 8px 0;
-}
-
-.dashboard-subtitle {
-    font-size: 1rem;
-    color: var(--color-text-subtle);
     margin: 0;
 }
 
@@ -96,7 +90,7 @@
 
 .stat-card {
     background: white;
-    border-radius: 12px;
+    border-radius: 0;
     padding: var(--space-6);
     display: flex;
     align-items: center;
@@ -147,7 +141,7 @@
 
 .dashboard-card {
     background: white;
-    border-radius: 12px;
+    border-radius: 0;
     padding: var(--space-6);
     border: 1px solid var(--color-border-subtle);
 }
@@ -215,11 +209,11 @@
 .category-badge {
     display: inline-block;
     padding: 4px 12px;
-    background: #F2F6FD;
-    color: var(--color-text-primary);
+    background: var(--color-surface-info);
+    color: var(--color-primary);
     border-radius: 6px;
     font-size: 0.75rem;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .status-badge {
@@ -273,7 +267,7 @@
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: #8CB5F2;
+    background: var(--admin-secondary-chart);
     flex-shrink: 0;
     margin-top: 4px;
 }
@@ -303,7 +297,7 @@
     border: 1px solid var(--color-border-subtle);
 }
 
-.section-title {
+.quick-actions .section-title {
     font-size: 1.25rem;
     font-weight: 600;
     color: var(--color-text-strong);

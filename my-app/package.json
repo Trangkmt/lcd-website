@@ -12,9 +12,11 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "docx": "^9.5.1",
     "@mui/material": "^7.3.7",
     "docxtemplater": "^3.67.3",
     "jszip": "^3.10.1",
+    "mammoth": "^1.10.0",
     "pizzip": "^3.2.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",

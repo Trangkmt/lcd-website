@@ -3,21 +3,26 @@
     width: 100%;
     background: var(--color-primary);
     color: var(--color-white);
-    padding: 60px 160px 40px 160px;
+    padding: var(--space-12) var(--space-10) var(--space-8);
     box-sizing: border-box;
 }
 
 .footer-content {
-    max-width: 1440px;
+    max-width: 1200px;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
+    gap: var(--space-8);
 }
 
 .footer-left {
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: var(--space-6);
+    padding: var(--space-4);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-lg);
+    min-width: 220px;
 }
 
 .footer-logo {
@@ -27,7 +32,7 @@
 
 .social-icons {
     display: flex;
-    gap: 15px;
+    gap: var(--space-3);
 }
 
 .social-icon {
@@ -39,18 +44,22 @@
     color: var(--color-white);
     font-size: 1.25rem;
     text-decoration: none;
-    transition: all 0.3s ease;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    transition: transform var(--transition-normal), color var(--transition-normal), border-color var(--transition-normal), background-color var(--transition-normal);
     cursor: pointer;
 }
 
 .social-icon:hover {
-    transform: scale(1.2);
+    transform: translateY(-2px);
     color: var(--color-secondary);
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.4);
 }
 
 .footer-columns {
     display: flex;
-    gap: 80px;
+    gap: var(--space-8);
 }
 
 .footer-column {
@@ -58,6 +67,9 @@
     flex-direction: column;
     gap: 12px;
     max-width: 320px;
+    padding: var(--space-4);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .footer-column h3 {
@@ -89,27 +101,27 @@
 /* Responsive Design for Footer */
 @media (max-width: 1024px) {
     .footer {
-        padding: 40px 60px 30px 60px;
+        padding: var(--space-10) var(--space-6) var(--space-6);
     }
 
     .footer-columns {
-        gap: 40px;
+        gap: var(--space-5);
     }
 }
 
 @media (max-width: 768px) {
     .footer {
-        padding: 30px 40px 20px 40px;
+        padding: var(--space-6) var(--space-4) var(--space-5);
     }
 
     .footer-content {
         flex-direction: column;
-        gap: 30px;
+        gap: var(--space-5);
     }
 
     .footer-columns {
         flex-direction: column;
-        gap: 30px;
+        gap: var(--space-4);
     }
 }
 
@@ -130,10 +142,3 @@
         font-size: 1rem;
     }
 }
-
-
-
-
-
-
-

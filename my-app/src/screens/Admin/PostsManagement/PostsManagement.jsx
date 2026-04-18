@@ -1,5 +1,7 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import mammoth from 'mammoth';
+import { Document, Packer, Paragraph, TextRun } from 'docx';
 import './PostsManagement.css';
 import { newsAPI, categoriesAPI, usersAPI, aiAPI, uploadsAPI, postTemplatesAPI } from '../../../services/api';
 import { canMutatePost, canPublishPost, getStoredAdminUser, isAdminFull } from '../../../utils/adminPermissions';
@@ -22,21 +24,149 @@ const PAGE_TYPE_LABELS = {
     activity: '🎯 Hoạt động',
 };
 
+const CLOUDINARY_POST_FOLDER_BY_PAGE_TYPE = {
+    news: 'lcd/news-post-images',
+    achievement: 'lcd/achievement-images',
+    activity: 'lcd/activity-post-images',
+    activity_annual: 'lcd/activity-post-images',
+    activity_non_annual: 'lcd/activity-post-images',
+};
+
 function getPageTypeLabel(pageType) {
     if (!pageType) return '📁 Khác';
     return PAGE_TYPE_LABELS[pageType] || `📁 ${pageType}`;
 }
 
+function resolvePostUploadFolder(pageType) {
+    const normalizedPageType = String(pageType || '').trim();
+    return CLOUDINARY_POST_FOLDER_BY_PAGE_TYPE[normalizedPageType] || CLOUDINARY_POST_FOLDER_BY_PAGE_TYPE.news;
+}
+
+function normalizeDocText(value) {
+    return String(value || '').replace(/\s+/g, ' ').trim();
+}
+
+function isWholeParagraphStyled(paragraphEl, allowedTags) {
+    if (!paragraphEl) return false;
+    const html = String(paragraphEl.innerHTML || '').trim();
+    if (!html) return false;
+
+    const pattern = new RegExp(`^<(${allowedTags.join('|')})(\\s[^>]*)?>[\\s\\S]*<\\/\\1>$`, 'i');
+    return pattern.test(html);
+}
+
+function extractStructuredDocContentFromHtml(html) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(`<div>${html || ''}</div>`, 'text/html');
+    const blockNodes = Array.from(doc.body.querySelectorAll('p,h1,h2,h3,h4,li'));
+
+    const blocks = blockNodes
+        .map((node, index) => ({
+            index,
+            node,
+            text: normalizeDocText(node.textContent),
+            html: node.outerHTML,
+            isBoldBlock: node.tagName === 'H1' || isWholeParagraphStyled(node, ['strong', 'b']),
+            isItalicBlock: isWholeParagraphStyled(node, ['em', 'i']),
+        }))
+        .filter((item) => !!item.text);
+
+    if (!blocks.length) {
+        return { title: '', subtitle: '', bodyHtml: '<p><br/></p>' };
+    }
+
+    let titleIndex = blocks.find((item) => item.isBoldBlock)?.index;
+    if (titleIndex === undefined) {
+        titleIndex = blocks[0].index;
+    }
+
+    let subtitleIndex = blocks.find((item) => item.index !== titleIndex && item.isItalicBlock)?.index;
+    if (subtitleIndex === undefined) {
+        const fallback = blocks.find((item) => item.index !== titleIndex);
+        subtitleIndex = fallback ? fallback.index : undefined;
+    }
+
+    const title = blocks.find((item) => item.index === titleIndex)?.text || '';
+    const subtitle = subtitleIndex === undefined
+        ? ''
+        : (blocks.find((item) => item.index === subtitleIndex)?.text || '');
+
+    const bodyBlocks = blocks.filter((item) => item.index !== titleIndex && item.index !== subtitleIndex);
+    const bodyHtml = bodyBlocks.length ? bodyBlocks.map((item) => item.html).join('') : '<p><br/></p>';
+
+    return { title, subtitle, bodyHtml };
+}
+
+function extractPlainBodyLinesFromHtml(html) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(`<div>${html || ''}</div>`, 'text/html');
+    const blockNodes = Array.from(doc.body.querySelectorAll('p,h1,h2,h3,h4,h5,h6,li'));
+
+    const lines = [];
+
+    blockNodes.forEach((node, nodeIndex) => {
+        const segments = String(node.innerHTML || '').split(/<br\s*\/?\s*>/gi);
+
+        if (segments.length === 0) {
+            lines.push('');
+            return;
+        }
+
+        segments.forEach((segment) => {
+            const temp = parser.parseFromString(`<div>${segment}</div>`, 'text/html');
+            const text = String(temp.body.textContent || '').replace(/\u00a0/g, ' ').trim();
+            lines.push(text);
+        });
+
+        if (nodeIndex < blockNodes.length - 1) {
+            // Preserve spacing between paragraph-like blocks.
+            lines.push('');
+        }
+    });
+
+    if (lines.length) {
+        return lines;
+    }
+
+    const fallbackText = String(doc.body.textContent || '').replace(/\u00a0/g, ' ').trim();
+    return fallbackText ? [fallbackText] : [];
+}
+
+function buildDocFilename(sourceTitle) {
+    const fallback = 'bai-viet';
+    const slug = slugifyPostTitle(sourceTitle || '') || fallback;
+    return `${slug}.docx`;
+}
+
+const DOCX_SAMPLE_POST = {
+    title: 'Bai viet mau nhập file docx',
+    subtitle: 'Dong nay la subtitle va duoc viet nghieng',
+    content: `
+        <p>Day la doan mo dau cho noi dung bai viet.</p>
+        <p>Ban co the them nhieu doan van ban o phan body.</p>
+        <p>Noi dung body su dung chu thuong, khong can in dam hay in nghieng.</p>
+    `,
+};
+
 export default function PostsManagement() {
     const location = useLocation();
+    const navigate = useNavigate();
+    const postsMode = useMemo(() => {
+        return new URLSearchParams(location.search).get('tab') || 'list';
+    }, [location.search]);
+    const postsEditorMode = useMemo(() => {
+        return new URLSearchParams(location.search).get('mode') || '';
+    }, [location.search]);
     const initialPageType = useMemo(() => {
         const value = new URLSearchParams(location.search).get('page_type') || '';
         return value;
     }, [location.search]);
+    const viewTab = useMemo(() => {
+        return postsMode === 'list' ? 'list' : 'editor';
+    }, [postsMode]);
     const currentUser = useMemo(() => getStoredAdminUser(), []);
     const canPublish = canPublishPost(currentUser);
     const [statusTab, setStatusTab] = useState('all');
-    const [viewTab, setViewTab] = useState('list');
     const [editingPost, setEditingPost] = useState(null);
     const [form, setForm] = useState(EMPTY_FORM);
     const [searchQuery, setSearchQuery] = useState('');
@@ -61,11 +191,14 @@ export default function PostsManagement() {
     const [templateDraftPayload, setTemplateDraftPayload] = useState(null);
     const [showCatDropdown, setShowCatDropdown] = useState(false);
     const [hoveredPageType, setHoveredPageType] = useState(null);
+    const [docImporting, setDocImporting] = useState(false);
+    const [docExportingId, setDocExportingId] = useState('');
     const autoAppliedTemplateCategoryRef = useRef('');
     const catDropdownRef = useRef(null);
     const editorRef = useRef(null);
     const imageInputRef = useRef(null);
     const thumbnailInputRef = useRef(null);
+    const docInputRef = useRef(null);
 
     useEffect(() => {
         categoriesAPI.getAll().then(data => setCategories(Array.isArray(data) ? data : [])).catch(() => { });
@@ -86,6 +219,23 @@ export default function PostsManagement() {
             return { ...prev, page_type: initialPageType };
         });
     }, [initialPageType]);
+
+    useEffect(() => {
+        if (postsMode !== 'create' || postsEditorMode === 'edit') {
+            return;
+        }
+
+        if (editingPost) {
+            setEditingPost(null);
+            setForm(buildCreatePostForm(EMPTY_FORM, { authorId: currentUser?.id || '' }));
+            setAiKeywords('');
+            setAiTopic('');
+            setAiError('');
+            setSelectedTemplateId('');
+            setTemplates([]);
+            autoAppliedTemplateCategoryRef.current = '';
+        }
+    }, [postsMode, postsEditorMode, editingPost, currentUser]);
 
     const hasActiveFilter = apiFilters.category_id || apiFilters.year || apiFilters.page_type || apiFilters.is_featured !== '';
     const resetFilters = () => setApiFilters({ category_id: '', year: '', page_type: '', is_featured: '' });
@@ -124,18 +274,6 @@ export default function PostsManagement() {
         }
     }
 
-    function openCreate() {
-        setEditingPost(null);
-        setForm(buildCreatePostForm(EMPTY_FORM, { authorId: currentUser?.id || '' }));
-        setAiKeywords('');
-        setAiTopic('');
-        setAiError('');
-        setViewTab('editor');
-        setSelectedTemplateId('');
-        setTemplates([]);
-        autoAppliedTemplateCategoryRef.current = '';
-    }
-
     function openEdit(post) {
         if (!ensureCanMutatePost(currentUser, post, 'Bạn chỉ có thể chỉnh sửa bài viết của mình.')) {
             return;
@@ -146,14 +284,14 @@ export default function PostsManagement() {
         setAiKeywords('');
         setAiTopic(post.title || '');
         setAiError('');
-        setViewTab('editor');
+        setPostsTabInUrl('edit');
         setSelectedTemplateId('');
         setTemplates([]);
         autoAppliedTemplateCategoryRef.current = '';
     }
 
     function closeEditor() {
-        setViewTab('list');
+        setPostsTabInUrl('list');
         setEditingPost(null);
         setForm(EMPTY_FORM);
         setAiKeywords('');
@@ -163,6 +301,22 @@ export default function PostsManagement() {
         setSelectedTemplateId('');
         setTemplates([]);
         autoAppliedTemplateCategoryRef.current = '';
+    }
+
+    function setPostsTabInUrl(nextTab) {
+        const params = new URLSearchParams(location.search);
+        if (nextTab === 'create' || nextTab === 'edit') {
+            params.set('tab', 'create');
+            if (nextTab === 'edit') {
+                params.set('mode', 'edit');
+            } else {
+                params.delete('mode');
+            }
+        } else {
+            params.set('tab', 'list');
+            params.delete('mode');
+        }
+        navigate({ pathname: location.pathname, search: params.toString() }, { replace: true });
     }
 
     function applyTemplateToForm(template, { force = false } = {}) {
@@ -505,13 +659,154 @@ export default function PostsManagement() {
         setThumbnailUploading(true);
         try {
             const fileData = await readFileAsDataUrl(file);
-            const result = await uploadsAPI.uploadImage(fileData);
+            const selectedCategory = categories.find((item) => String(item.id) === String(form.category_id));
+            const selectedPageType = selectedCategory?.page_type || apiFilters.page_type || 'news';
+            const uploadFolder = resolvePostUploadFolder(selectedPageType);
+            const result = await uploadsAPI.uploadImage(fileData, uploadFolder);
             handleFormChange('thumbnail', result?.secure_url || '');
         } catch (err) {
             alert('Upload ảnh thất bại: ' + err.message);
         } finally {
             setThumbnailUploading(false);
         }
+    }
+
+    function openDocImportPicker() {
+        docInputRef.current?.click();
+    }
+
+    async function handleDocImport(event) {
+        const file = event.target.files?.[0];
+        event.target.value = '';
+
+        if (!file) {
+            return;
+        }
+
+        const isDocx = file.name.toLowerCase().endsWith('.docx')
+            || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+
+        if (!isDocx) {
+            alert('Vui lòng chọn file .docx hợp lệ.');
+            return;
+        }
+
+        setDocImporting(true);
+        try {
+            if (postsMode === 'list') {
+                setEditingPost(null);
+                setPostsTabInUrl('create');
+            }
+            const arrayBuffer = await file.arrayBuffer();
+            const result = await mammoth.convertToHtml({ arrayBuffer });
+            const { title, subtitle, bodyHtml } = extractStructuredDocContentFromHtml(result.value || '');
+
+            if (!title && !subtitle && normalizeDocText(bodyHtml.replace(/<[^>]*>/g, '')) === '') {
+                alert('Không đọc được nội dung từ file DOCX. Vui lòng kiểm tra lại định dạng file.');
+                return;
+            }
+
+            setForm((prev) => {
+                const resolvedTitle = title || prev.title;
+                return {
+                    ...prev,
+                    title: resolvedTitle,
+                    slug: resolvedTitle ? slugifyPostTitle(resolvedTitle) : prev.slug,
+                    summary: subtitle || prev.summary,
+                    content: bodyHtml,
+                };
+            });
+
+            if (editorRef.current) {
+                editorRef.current.innerHTML = bodyHtml;
+            }
+
+            if (title) {
+                setAiTopic(title);
+            }
+
+            alert('Nhập file docx thành công. Quy chuẩn nhận dạng: title in đậm, subtitle in nghiêng, body chữ thường.');
+        } catch (err) {
+            alert('nhập file docx thất bại: ' + (err.message || 'Lỗi không xác định'));
+        } finally {
+            setDocImporting(false);
+        }
+    }
+
+    async function exportPostAsDocx({ title, subtitle, content, fileNameHint, exportKey }) {
+        if (!normalizeDocText(title)) {
+            alert('Không thể xuất file docx vì bài viết chưa có tiêu đề.');
+            return;
+        }
+
+        setDocExportingId(exportKey || 'exporting');
+        try {
+            const bodyLines = extractPlainBodyLinesFromHtml(content);
+            const children = [
+                new Paragraph({
+                    children: [new TextRun({ text: normalizeDocText(title), bold: true, size: 30 })],
+                    spacing: { after: 240 },
+                }),
+            ];
+
+            if (normalizeDocText(subtitle)) {
+                children.push(
+                    new Paragraph({
+                        children: [new TextRun({ text: normalizeDocText(subtitle), italics: true, size: 24 })],
+                        spacing: { after: 220 },
+                    })
+                );
+            }
+
+            if (!bodyLines.length) {
+                children.push(new Paragraph({ children: [new TextRun({ text: '', bold: false, italics: false })] }));
+            } else {
+                bodyLines.forEach((line) => {
+                    children.push(
+                        new Paragraph({
+                            children: [new TextRun({ text: line, bold: false, italics: false, size: 24 })],
+                            spacing: { after: 140 },
+                        })
+                    );
+                });
+            }
+
+            const doc = new Document({ sections: [{ children }] });
+            const blob = await Packer.toBlob(doc);
+            const downloadUrl = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = buildDocFilename(fileNameHint || title);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(downloadUrl);
+        } catch (err) {
+            alert('Xuất file docx thất bại: ' + (err.message || 'Lỗi không xác định'));
+        } finally {
+            setDocExportingId('');
+        }
+    }
+
+    function handleExportCurrentDocx() {
+        const content = editorRef.current ? editorRef.current.innerHTML : form.content;
+        exportPostAsDocx({
+            title: form.title,
+            subtitle: form.summary,
+            content,
+            fileNameHint: form.slug || form.title,
+            exportKey: 'current-editor',
+        });
+    }
+
+    function handleDownloadSampleDocx() {
+        exportPostAsDocx({
+            title: DOCX_SAMPLE_POST.title,
+            subtitle: DOCX_SAMPLE_POST.subtitle,
+            content: DOCX_SAMPLE_POST.content,
+            fileNameHint: 'mau-import-docx',
+            exportKey: 'sample-docx',
+        });
     }
 
     useEffect(() => {
@@ -548,32 +843,20 @@ export default function PostsManagement() {
         return matchesSearch && matchesStatus;
     });
 
+    const pageTitle = viewTab === 'list'
+        ? 'Danh sách bài viết'
+        : (editingPost ? 'Chỉnh sửa bài viết' : 'Tạo bài viết');
+
     return (
         <div className="posts-management">
             {/* Header */}
             <div className="page-header">
                 <div className="header-content">
-                    <h1 className="page-title">Quản lý bài viết</h1>
-                    <p className="page-subtitle">Tạo, chỉnh sửa và quản lý tất cả bài viết</p>
+                    <h1 className="page-title">{pageTitle}</h1>
                 </div>
-                <button className="btn-primary" onClick={openCreate}>
-                    <span className="btn-icon">➕</span>
-                    Tạo bài viết mới
-                </button>
             </div>
 
             {error && <div style={{ background: '#fee', color: '#c00', padding: '12px', borderRadius: '8px', marginBottom: '16px' }}>{error}</div>}
-
-            <div className="tabs-container">
-                <div className="tabs">
-                    <button className={`tab ${viewTab === 'list' ? 'active' : ''}`} onClick={() => setViewTab('list')}>
-                        Danh sách bài viết
-                    </button>
-                    <button className={`tab ${viewTab === 'editor' ? 'active' : ''}`} onClick={() => setViewTab('editor')}>
-                        {editingPost ? 'Chỉnh sửa bài viết' : 'Tạo bài viết'}
-                    </button>
-                </div>
-            </div>
 
             {viewTab === 'list' ? (
                 <>
@@ -682,10 +965,38 @@ export default function PostsManagement() {
                 </>
             ) : (
                 <div className="editor-screen">
-                    <div className="editor-header">
-                        <h2 className="editor-title">{editingPost ? 'Chỉnh sửa bài viết' : 'Tạo bài viết mới'}</h2>
-                        <button type="button" className="btn-secondary" onClick={closeEditor}>← Quay lại danh sách</button>
+                    <div className="editor-header editor-header--actions-only">
+                        <div className="editor-header-actions">
+                            <button type="button" className="btn-secondary" onClick={openDocImportPicker} disabled={docImporting}>
+                                {docImporting ? 'Đang nhập file docx...' : 'Nhập file docx'}
+                            </button>
+                            <button
+                                type="button"
+                                className="btn-secondary"
+                                onClick={handleDownloadSampleDocx}
+                                disabled={docExportingId === 'sample-docx'}
+                            >
+                                {docExportingId === 'sample-docx' ? 'Đang tạo mẫu...' : 'Tải file mẫu DOCX'}
+                            </button>
+                            <button
+                                type="button"
+                                className="btn-secondary"
+                                onClick={handleExportCurrentDocx}
+                                disabled={docExportingId === 'current-editor'}
+                            >
+                                {docExportingId === 'current-editor' ? 'Đang xuất file docx...' : 'Xuất file docx'}
+                            </button>
+                            <button type="button" className="btn-secondary" onClick={closeEditor}>← Quay lại danh sách</button>
+                        </div>
                     </div>
+
+                    <input
+                        ref={docInputRef}
+                        type="file"
+                        accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                        style={{ display: 'none' }}
+                        onChange={handleDocImport}
+                    />
 
                     <form className="create-form" onSubmit={handleSave}>
                         <div className="editor-meta-grid">
@@ -736,49 +1047,7 @@ export default function PostsManagement() {
                                 </div>
                             </div>
 
-                            {!editingPost && (
-                                <div className="form-group">
-                                    <label className="form-label">Template nội dung</label>
-                                    <select
-                                        className="form-control"
-                                        value={selectedTemplateId}
-                                        onChange={(e) => {
-                                            const nextId = e.target.value;
-                                            setSelectedTemplateId(nextId);
-                                            const nextTemplate = templates.find((item) => String(item.id) === String(nextId));
-                                            if (nextTemplate) {
-                                                applyTemplateToForm(nextTemplate, { force: true });
-                                            }
-                                        }}
-                                        disabled={!form.category_id || templateLoading}
-                                    >
-                                        <option value="">{templateLoading ? 'Đang tải template...' : 'Chọn template đã lưu'}</option>
-                                        {templates.map((template) => (
-                                            <option key={template.id} value={template.id}>
-                                                {template.name}{template.is_default ? ' (mặc định)' : ''}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    <div style={{ marginTop: '8px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                                        <button
-                                            type="button"
-                                            className="btn-secondary"
-                                            onClick={handleApplySelectedTemplate}
-                                            disabled={!selectedTemplateId}
-                                        >
-                                            Áp dụng template
-                                        </button>
-                                        <button
-                                            type="button"
-                                            className="btn-secondary"
-                                            onClick={handleSaveTemplateFromCurrentForm}
-                                            disabled={templateSaving}
-                                        >
-                                            {templateSaving ? 'Đang lưu template...' : 'Lưu mẫu hiện tại'}
-                                        </button>
-                                    </div>
-                                </div>
-                            )}
+
 
                             {isAdminFull(currentUser) ? (
                                 <div className="form-group">
@@ -795,12 +1064,29 @@ export default function PostsManagement() {
                                 </div>
                             )}
 
-                            <div className="form-group full-row">
+                            <div className={`form-group${editingPost ? ' full-row' : ''}`}>
+                                <label className="form-label">URL ảnh bìa</label>
+                                <div className="thumbnail-input-row">
+                                    <input type="text" className="form-control" value={form.thumbnail} onChange={e => handleFormChange('thumbnail', e.target.value)} placeholder="https://..." />
+                                    <button type="button" className="btn-secondary" onClick={pickThumbnailImage} disabled={thumbnailUploading}>
+                                        {thumbnailUploading ? 'Đang upload ảnh...' : 'Upload ảnh bìa lên cloud'}
+                                    </button>
+                                </div>
+                                <input
+                                    ref={thumbnailInputRef}
+                                    type="file"
+                                    accept="image/*"
+                                    style={{ display: 'none' }}
+                                    onChange={handleThumbnailUpload}
+                                />
+                            </div>
+
+                            <div className="form-group">
                                 <label className="form-label">Tiêu đề *</label>
                                 <input type="text" className="form-control" value={form.title} onChange={e => handleFormChange('title', e.target.value)} placeholder="Nhập tiêu đề bài viết..." required />
                             </div>
 
-                            <div className="form-group full-row">
+                            <div className="form-group">
                                 <label className="form-label">Slug *</label>
                                 <input type="text" className="form-control" value={form.slug} onChange={e => handleFormChange('slug', e.target.value)} placeholder="slug-bai-viet" required />
                             </div>
@@ -808,23 +1094,6 @@ export default function PostsManagement() {
                             <div className="form-group full-row">
                                 <label className="form-label">Tóm tắt</label>
                                 <textarea className="form-control" rows="3" value={form.summary} onChange={e => handleFormChange('summary', e.target.value)} placeholder="Tóm tắt nội dung..." />
-                            </div>
-
-                            <div className="form-group full-row">
-                                <label className="form-label">URL ảnh bìa</label>
-                                <input type="text" className="form-control" value={form.thumbnail} onChange={e => handleFormChange('thumbnail', e.target.value)} placeholder="https://..." />
-                                <div style={{ marginTop: '8px' }}>
-                                    <button type="button" className="btn-secondary" onClick={pickThumbnailImage} disabled={thumbnailUploading}>
-                                        {thumbnailUploading ? 'Đang upload ảnh...' : 'Upload ảnh bìa lên Cloud'}
-                                    </button>
-                                    <input
-                                        ref={thumbnailInputRef}
-                                        type="file"
-                                        accept="image/*"
-                                        style={{ display: 'none' }}
-                                        onChange={handleThumbnailUpload}
-                                    />
-                                </div>
                             </div>
 
                             <div className="form-group full-row checkbox-row">
