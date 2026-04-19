@@ -13,6 +13,18 @@ function sanitizeIncomingRole(role) {
     return normalizeRole(role || ROLES.POST_AUTHOR);
 }
 
+function sanitizeDepartmentPosition(value) {
+    if (value === undefined || value === null) return null;
+
+    if (typeof value === 'object') {
+        const asJson = JSON.stringify(value);
+        return asJson === '{}' ? null : asJson;
+    }
+
+    const asText = String(value).trim();
+    return asText || null;
+}
+
 function mapPublicUser(user) {
     if (!user) return user;
     return {
@@ -142,7 +154,7 @@ exports.createUser = async (req, res) => {
             .input('student_code', sql.NVarChar, student_code || null)
             .input('class_name', sql.NVarChar, class_name || null)
             .input('department', sql.NVarChar, department || null)
-            .input('department_position', sql.NVarChar, department_position || null);
+            .input('department_position', sql.NVarChar, sanitizeDepartmentPosition(department_position));
 
         if (hasAvatarColumn) {
             request.input('avatar_url', sql.NVarChar, avatar_url || null);
@@ -199,7 +211,7 @@ exports.updateUser = async (req, res) => {
             .input('student_code', sql.NVarChar, student_code || null)
             .input('class_name', sql.NVarChar, class_name || null)
             .input('department', sql.NVarChar, department || null)
-            .input('department_position', sql.NVarChar, department_position || null);
+            .input('department_position', sql.NVarChar, sanitizeDepartmentPosition(department_position));
 
         if (hasAvatarColumn) {
             request.input('avatar_url', sql.NVarChar, avatar_url || null);

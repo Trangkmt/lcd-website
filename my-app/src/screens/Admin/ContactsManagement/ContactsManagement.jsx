@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import './ContactsManagement.css';
+import { SearchBar } from '../../../components';
 import { contactAPI } from '../../../services/api';
+import { ViewIcon, MailIcon, DeleteIcon, CloseIcon } from '../../../SvgIcons';
+import useAdminConfirm from '../useAdminConfirm';
 
 export default function ContactsManagement() {
+    const { confirm, confirmModal } = useAdminConfirm();
     const [contacts, setContacts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedContact, setSelectedContact] = useState(null);
@@ -41,7 +45,15 @@ export default function ContactsManagement() {
     }
 
     async function handleDelete(id) {
-        if (!window.confirm('Bạn có chắc muốn xóa liên hệ này?')) return;
+        const confirmed = await confirm({
+            title: 'Xác nhận xóa',
+            message: 'Bạn có chắc muốn xóa liên hệ này?',
+            detail: 'Liên hệ đã xóa sẽ không thể khôi phục.',
+            variant: 'delete',
+            confirmText: 'Xóa liên hệ',
+            confirmButtonClassName: 'btn-action btn-delete',
+        });
+        if (!confirmed) return;
         try {
             await contactAPI.delete(id);
             setContacts(prev => prev.filter(c => c.id !== id));
@@ -90,17 +102,13 @@ export default function ContactsManagement() {
             </div>
 
             <div className="filters-bar">
-                <div className="search-box">
-                    <span className="search-icon">🔍</span>
-                    <input
-                        type="text"
-                        placeholder="Tìm kiếm theo tên, email, chủ đề..."
-                        value={searchQuery}
-                        onChange={e => setSearchQuery(e.target.value)}
-                        className="search-input"
-                    />
-                    {searchQuery && <span className="search-clear" onClick={() => setSearchQuery('')}>✕</span>}
-                </div>
+                <SearchBar
+                    value={searchQuery}
+                    onChange={e => setSearchQuery(e.target.value)}
+                    onClear={() => setSearchQuery('')}
+                    placeholder="Tìm kiếm theo tên, email, chủ đề..."
+                    variant="toolbar"
+                />
             </div>
 
             {loading ? (
@@ -141,11 +149,17 @@ export default function ContactsManagement() {
                                     <td className="date-cell">{contact.created_at ? new Date(contact.created_at).toLocaleDateString('vi-VN') : ''}</td>
                                     <td>
                                         <div className="action-buttons">
-                                            <button className="btn-action btn-view" onClick={() => handleView(contact)} title="Xem chi tiết">👁️</button>
+                                            <button className="btn-action btn-view btn-action--icon-only" onClick={() => handleView(contact)} title="Xem chi tiết">
+                                                <span className="btn-action-icon" aria-hidden="true"><ViewIcon /></span>
+                                            </button>
                                             {!contact.is_replied && (
-                                                <button className="btn-action btn-edit" onClick={() => handleMarkReplied(contact.id)} title="Đánh dấu đã trả lời">✉️</button>
+                                                <button className="btn-action btn-edit btn-action--icon-only" onClick={() => handleMarkReplied(contact.id)} title="Đánh dấu đã trả lời">
+                                                    <span className="btn-action-icon" aria-hidden="true"><MailIcon /></span>
+                                                </button>
                                             )}
-                                            <button className="btn-action btn-delete" onClick={() => handleDelete(contact.id)} title="Xóa liên hệ">🗑️</button>
+                                            <button className="btn-action btn-delete btn-action--icon-only" onClick={() => handleDelete(contact.id)} title="Xóa liên hệ">
+                                                <span className="btn-action-icon" aria-hidden="true"><DeleteIcon /></span>
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -156,13 +170,16 @@ export default function ContactsManagement() {
             )}
 
             {showDetailModal && selectedContact && (
-                <div className="modal-overlay" onClick={() => setShowDetailModal(false)}>
-                    <div className="modal-content" style={{ maxWidth: '900px' }} onClick={e => e.stopPropagation()}>
-                        <div className="modal-header">
-                            <h2 className="modal-title">Chi tiết liên hệ</h2>
-                            <button className="modal-close" onClick={() => setShowDetailModal(false)}>×</button>
+                <div className="admin-modal" role="dialog" aria-modal="true" aria-label="Chi tiết liên hệ">
+                    <div className="admin-modal__backdrop" onClick={() => setShowDetailModal(false)} />
+                    <section className="admin-modal__panel" style={{ maxWidth: '900px' }}>
+                        <div className="admin-modal__header">
+                            <h2 className="admin-modal__title">Chi tiết liên hệ</h2>
+                            <button className="admin-modal__close" onClick={() => setShowDetailModal(false)} aria-label="Đóng">
+                                <CloseIcon />
+                            </button>
                         </div>
-                        <div className="modal-body">
+                        <div className="admin-modal__body">
                             <div className="reply-original">
                                 <p><strong>Người gửi:</strong> {selectedContact.name}</p>
                                 <p><strong>Email:</strong> {selectedContact.email}</p>
@@ -175,15 +192,23 @@ export default function ContactsManagement() {
                             </div>
                             <div className="form-actions" style={{ marginTop: '16px' }}>
                                 {!selectedContact.is_replied && (
-                                    <button className="btn-primary" onClick={() => handleMarkReplied(selectedContact.id)}>✉️ Đánh dấu đã trả lời</button>
+                                    <button className="btn-primary" onClick={() => handleMarkReplied(selectedContact.id)}>
+                                        <span className="btn-icon" aria-hidden="true"><MailIcon /></span>
+                                        Đánh dấu đã trả lời
+                                    </button>
                                 )}
-                                <button className="btn-action btn-delete" onClick={() => handleDelete(selectedContact.id)}>🗑️ Xóa</button>
+                                <button className="btn-action btn-delete" onClick={() => handleDelete(selectedContact.id)}>
+                                    <span className="btn-action-icon" aria-hidden="true"><DeleteIcon /></span>
+                                    Xóa
+                                </button>
                                 <button className="btn-secondary" onClick={() => setShowDetailModal(false)}>Đóng</button>
                             </div>
                         </div>
-                    </div>
+                    </section>
                 </div>
             )}
+
+            {confirmModal}
         </div>
     );
 }

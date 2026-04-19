@@ -8,7 +8,6 @@
 
 .activity-page button:focus-visible,
 .activity-page input:focus-visible,
-.activity-page .search-close:focus-visible,
 .activity-page .filter-option:focus-visible,
 .activity-page .activity-box:focus-visible,
 .activity-page .pagination-btn:focus-visible,
@@ -109,55 +108,6 @@
     align-items: center;
 }
 
-.search-bar {
-    flex: 1;
-    max-width: 720px;
-    height: 50px;
-    background: var(--color-surface-muted);
-    border-radius: 0;
-    display: flex;
-    align-items: center;
-    padding: 0 20px;
-    gap: 10px;
-    border: 1px solid var(--color-gray-300);
-    transition: all 0.3s ease;
-}
-
-.search-bar:focus-within {
-    background: var(--color-white);
-    border-color: var(--color-text-primary);
-}
-
-.search-icon {
-    font-size: 1.25rem;
-    color: var(--color-text-muted);
-}
-
-.search-input {
-    flex: 1;
-    border: none;
-    background: transparent;
-    outline: none;
-    color: var(--color-text-primary);
-    font-size: 1rem;
-    font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-}
-
-.search-input::placeholder {
-    color: var(--color-text-subtle);
-}
-
-.search-close {
-    font-size: 1.125rem;
-    color: var(--color-text-muted);
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-
-.search-close:hover {
-    color: var(--color-text-primary);
-}
-
 .filter-wrapper {
     display: flex;
     align-items: center;
@@ -166,8 +116,16 @@
 }
 
 .filter-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     font-size: 1.25rem;
     color: var(--color-text-heading);
+}
+
+.filter-icon svg {
+    width: 1em;
+    height: 1em;
 }
 
 .filter-button {
@@ -319,7 +277,15 @@
 }
 
 .arrow-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     font-size: 1rem;
+}
+
+.arrow-icon svg {
+    width: 1em;
+    height: 1em;
 }
 
 .pagination-list {

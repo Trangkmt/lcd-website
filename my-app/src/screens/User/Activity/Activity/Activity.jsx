@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './Activity.css';
 import { activitiesAPI } from '../../../../services/api';
+import { SearchBar } from '../../../../components';
 import ActivityCard from '../../../../components/ActivityCard/ActivityCard';
+import { SettingsIcon, ChevronLeftIcon, ChevronRightIcon } from '../../../../SvgIcons';
 
 const Activity = () => {
     const [filterOpen, setFilterOpen] = useState(false);
@@ -32,21 +34,15 @@ const Activity = () => {
                 <div className="content-wrapper">
                     {/* Search and Filter Section */}
                     <div className="search-section">
-                        <div className="search-bar">
-                            <div className="search-icon">🔍</div>
-                            <input
-                                type="text"
-                                placeholder="Tìm kiếm"
-                                className="search-input"
-                                value={searchQuery}
-                                onChange={e => setSearchQuery(e.target.value)}
-                            />
-                            {searchQuery && (
-                                <div className="search-close" onClick={() => setSearchQuery('')}>✕</div>
-                            )}
-                        </div>
+                        <SearchBar
+                            value={searchQuery}
+                            onChange={e => setSearchQuery(e.target.value)}
+                            onClear={() => setSearchQuery('')}
+                            placeholder="Tìm kiếm"
+                            variant="activity"
+                        />
                         <div className="filter-wrapper">
-                            <div className="filter-icon">⚙</div>
+                            <div className="filter-icon" aria-hidden="true"><SettingsIcon /></div>
                             <button
                                 className="filter-button"
                                 onClick={() => setFilterOpen(!filterOpen)}
@@ -95,7 +91,7 @@ const Activity = () => {
                     {/* Pagination */}
                     <div className="pagination">
                         <button className="pagination-btn pagination-prev" disabled>
-                            <span className="arrow-icon">‹</span>
+                            <span className="arrow-icon" aria-hidden="true"><ChevronLeftIcon /></span>
                             Previous
                         </button>
                         <div className="pagination-list">
@@ -108,7 +104,7 @@ const Activity = () => {
                         </div>
                         <button className="pagination-btn pagination-next">
                             Next
-                            <span className="arrow-icon">›</span>
+                            <span className="arrow-icon" aria-hidden="true"><ChevronRightIcon /></span>
                         </button>
                     </div>
                 </div>

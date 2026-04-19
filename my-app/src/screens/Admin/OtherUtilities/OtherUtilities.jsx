@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import JSZip from 'jszip';
 import './OtherUtilities.css';
+import { FolderIcon } from '../../../SvgIcons';
 
 function sanitizeFileName(value) {
     return (value || 'khong-ten')
@@ -523,7 +524,7 @@ export default function OtherUtilities() {
                         {SHARED_DEPARTMENT_FOLDERS.map((folder) => (
                             <article key={folder.id} className="folder-card">
                                 <div className="folder-card__header">
-                                    <div className="folder-icon" aria-hidden="true">📁</div>
+                                    <div className="folder-icon" aria-hidden="true"><FolderIcon /></div>
                                     <div>
                                         <h3 className="folder-name">{folder.name}</h3>
                                         <p className="folder-code">{folder.code}</p>

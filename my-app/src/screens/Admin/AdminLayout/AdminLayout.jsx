@@ -8,6 +8,19 @@ import {
     isPostAuthor,
     isUtilityOnly,
 } from '../../../utils/adminPermissions';
+import {
+    MenuIcon,
+    CloseIcon,
+    DashboardIcon,
+    PostIcon,
+    FolderIcon,
+    UsersIcon,
+    TimelineIcon,
+    MailIcon,
+    ToolsIcon,
+    HomeIcon,
+    LogoutIcon,
+} from '../../../SvgIcons';
 import './AdminLayout.css';
 
 export default function AdminLayout() {
@@ -18,6 +31,7 @@ export default function AdminLayout() {
     const showAdminTabs = isAdminFull(currentUser);
     const showPostTabs = isAdminFull(currentUser) || isPostAuthor(currentUser);
     const showUtilityTab = isAdminFull(currentUser) || isUtilityOnly(currentUser);
+    const showDashboardTab = !!currentUser?.id;
     const isActive = (path) => location.pathname.startsWith(path);
     const isPostsActive = isActive('/admin/posts');
     const postsTab = new URLSearchParams(location.search).get('tab') || 'list';
@@ -64,18 +78,19 @@ export default function AdminLayout() {
                     <button
                         className="sidebar-toggle"
                         onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                        aria-label={sidebarCollapsed ? 'Mở menu' : 'Thu gọn menu'}
                     >
-                        {sidebarCollapsed ? '☰' : '×'}
+                        {sidebarCollapsed ? <MenuIcon /> : <CloseIcon />}
                     </button>
                 </div>
 
                 <nav className="sidebar-nav">
-                    {showAdminTabs && (
+                    {showDashboardTab && (
                         <Link
                             to="/admin"
                             className={`nav-item ${isActive('/admin') && location.pathname === '/admin' ? 'active' : ''}`}
                         >
-                            <span className="nav-icon">📊</span>
+                            <span className="nav-icon" aria-hidden="true"><DashboardIcon /></span>
                             {!sidebarCollapsed && <span className="nav-label">Dashboard</span>}
                         </Link>
                     )}
@@ -86,7 +101,7 @@ export default function AdminLayout() {
                                 to="/admin/posts?tab=list"
                                 className={`nav-item ${isPostsActive ? 'active' : ''}`}
                             >
-                                <span className="nav-icon">📝</span>
+                                <span className="nav-icon" aria-hidden="true"><PostIcon /></span>
                                 {!sidebarCollapsed && <span className="nav-label">Quản lý bài viết</span>}
                             </Link>
 
@@ -114,7 +129,7 @@ export default function AdminLayout() {
                             to="/admin/categories"
                             className={`nav-item ${isActive('/admin/categories') ? 'active' : ''}`}
                         >
-                            <span className="nav-icon">📁</span>
+                            <span className="nav-icon" aria-hidden="true"><FolderIcon /></span>
                             {!sidebarCollapsed && <span className="nav-label">Quản lý danh mục</span>}
                         </Link>
                     )}
@@ -125,7 +140,7 @@ export default function AdminLayout() {
                                 to="/admin/members?tab=student"
                                 className={`nav-item ${isMembersActive ? 'active' : ''}`}
                             >
-                                <span className="nav-icon">👥</span>
+                                <span className="nav-icon" aria-hidden="true"><UsersIcon /></span>
                                 {!sidebarCollapsed && <span className="nav-label">Quản lý thành viên</span>}
                             </Link>
 
@@ -153,7 +168,7 @@ export default function AdminLayout() {
                             to="/admin/timeline"
                             className={`nav-item ${isActive('/admin/timeline') ? 'active' : ''}`}
                         >
-                            <span className="nav-icon">🗓️</span>
+                            <span className="nav-icon" aria-hidden="true"><TimelineIcon /></span>
                             {!sidebarCollapsed && <span className="nav-label">Sự kiện thường niên</span>}
                         </Link>
                     )}
@@ -163,7 +178,7 @@ export default function AdminLayout() {
                             to="/admin/contacts"
                             className={`nav-item ${isActive('/admin/contacts') ? 'active' : ''}`}
                         >
-                            <span className="nav-icon">✉️</span>
+                            <span className="nav-icon" aria-hidden="true"><MailIcon /></span>
                             {!sidebarCollapsed && <span className="nav-label">Quản lý liên hệ</span>}
                         </Link>
                     )}
@@ -174,7 +189,7 @@ export default function AdminLayout() {
                                 to="/admin/utilities?tab=bulk-export"
                                 className="nav-item"
                             >
-                                <span className="nav-icon">🛠️</span>
+                                <span className="nav-icon" aria-hidden="true"><ToolsIcon /></span>
                                 {!sidebarCollapsed && <span className="nav-label">Tiện ích khác</span>}
                             </Link>
 
@@ -200,12 +215,12 @@ export default function AdminLayout() {
                     <div className="nav-divider"></div>
 
                     <Link to="/" className="nav-item">
-                        <span className="nav-icon">🏠</span>
+                        <span className="nav-icon" aria-hidden="true"><HomeIcon /></span>
                         {!sidebarCollapsed && <span className="nav-label">Về trang chủ</span>}
                     </Link>
 
                     <button className="nav-item logout-btn" onClick={handleLogout}>
-                        <span className="nav-icon">🚪</span>
+                        <span className="nav-icon" aria-hidden="true"><LogoutIcon /></span>
                         {!sidebarCollapsed && <span className="nav-label">Đăng xuất</span>}
                     </button>
                 </nav>

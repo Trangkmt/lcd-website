@@ -377,6 +377,12 @@
     font-size: 1.25rem;
 }
 
+.folder-icon svg {
+    width: 1em;
+    height: 1em;
+    color: var(--color-brand-indigo);
+}
+
 .folder-name {
     margin: 0;
     color: var(--color-text-strong);

@@ -178,10 +178,22 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 6px;
     padding: 4px 10px;
     font-size: 0.75rem;
     font-weight: 800;
     color: var(--color-brand-blue-deep);
+}
+
+.post-detail-featured-badge__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.post-detail-featured-badge__icon svg {
+    width: 1em;
+    height: 1em;
 }
 
 .post-category-badge {

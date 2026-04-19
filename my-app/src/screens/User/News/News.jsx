@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import './News.css';
 import { newsAPI, categoriesAPI } from '../../../services/api';
 import NewsCard from '../../../components/NewsCard/NewsCard';
+import { SearchBar } from '../../../components';
+import { SettingsIcon, ChevronLeftIcon, ChevronRightIcon } from '../../../SvgIcons';
 
 const asTimestamp = (item) => {
     const value = item?.published_at || item?.created_at;
@@ -88,7 +90,7 @@ const News = () => {
                             onClick={() => setHeroIndex((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)}
                             aria-label="Slide trước"
                         >
-                            ‹
+                            <ChevronLeftIcon />
                         </button>
                         <button
                             type="button"
@@ -96,7 +98,7 @@ const News = () => {
                             onClick={() => setHeroIndex((prev) => (prev + 1) % heroSlides.length)}
                             aria-label="Slide kế tiếp"
                         >
-                            ›
+                            <ChevronRightIcon />
                         </button>
                         <div className="news-page__hero-dots">
                             {heroSlides.map((slide, idx) => (
@@ -116,22 +118,16 @@ const News = () => {
             <div className="news-page__content">
                 {/* Controls */}
                 <div className="news-page__controls">
-                    <div className="news-search-bar">
-                        <span className="news-search-icon">🔍</span>
-                        <input
-                            type="text"
-                            placeholder="Tìm kiếm tin tức..."
-                            className="news-search-input"
-                            value={searchQuery}
-                            onChange={e => setSearchQuery(e.target.value)}
-                        />
-                        {searchQuery && (
-                            <span className="news-search-clear" onClick={() => setSearchQuery('')}>✕</span>
-                        )}
-                    </div>
+                    <SearchBar
+                        value={searchQuery}
+                        onChange={e => setSearchQuery(e.target.value)}
+                        onClear={() => setSearchQuery('')}
+                        placeholder="Tìm kiếm tin tức..."
+                        variant="page"
+                    />
 
                     <div className="news-filter-wrapper">
-                        <span className="news-filter-icon">⚙</span>
+                        <span className="news-filter-icon" aria-hidden="true"><SettingsIcon /></span>
                         <button
                             className="news-filter-btn"
                             onClick={() => setFilterOpen(!filterOpen)}

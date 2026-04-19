@@ -8,8 +8,7 @@
 
 .achievement-page button:focus-visible,
 .achievement-page input:focus-visible,
-.achievement-page .achievement-card-item:focus-visible,
-.achievement-page .achievement-search-clear:focus-visible {
+.achievement-page .achievement-card-item:focus-visible {
     outline: none;
 }
 
@@ -147,6 +146,11 @@
     cursor: pointer;
 }
 
+.achievement-page__hero-control svg {
+    width: 1em;
+    height: 1em;
+}
+
 .achievement-page__hero-control--prev {
     left: 16px;
 }
@@ -188,55 +192,11 @@
     margin-bottom: 32px;
 }
 
-/* Search Bar */
-.achievement-search-bar {
-    flex: 1;
-    max-width: 520px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--color-white);
-    border-radius: 0;
-    padding: 10px 16px;
-    border: 1px solid var(--color-border-soft);
-}
-
-.achievement-search-icon {
-    font-size: 1rem;
-    color: var(--color-text-cool-muted);
-    flex-shrink: 0;
-}
-
-.achievement-search-input {
-    flex: 1;
-    border: none;
-    outline: none;
-    font-size: 0.9375rem;
-    color: var(--color-text-deep);
-    background: transparent;
-    font-family: inherit;
-}
-
-.achievement-search-input::placeholder {
-    color: var(--color-text-cool-muted);
-}
-
-.achievement-search-clear {
-    cursor: pointer;
-    color: var(--color-text-cool-muted);
-    font-size: 0.875rem;
-    line-height: 1;
-}
-
-.achievement-search-clear:hover {
-    color: var(--color-text-muted);
-}
-
 /* Section Title */
 .achievement-page__title {
     font-size: 1.75rem;
     font-weight: 800;
-    color: var(--color-primary);
+    color: var(--color-darkslateblue);
     margin-bottom: 28px;
     letter-spacing: -0.01em;
     font-family: 'Work Sans', sans-serif;

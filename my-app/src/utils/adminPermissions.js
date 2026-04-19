@@ -66,6 +66,10 @@ export function canAccessAdminPath(user, pathname) {
     if (!user?.id) return false;
     if (isAdminFull(user)) return true;
 
+    if (pathname === '/admin') {
+        return true;
+    }
+
     if (isUtilityOnly(user)) {
         return pathname.startsWith('/admin/utilities');
     }

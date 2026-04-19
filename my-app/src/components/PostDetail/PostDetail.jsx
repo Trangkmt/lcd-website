@@ -55,14 +55,15 @@ export default function PostDetail({
                     <div className="post-detail-layout">
                         <article className="post-detail-article">
                             <div className="post-header-section">
+
+                                <h1 className="post-main-title">{post.title}</h1>
+                                {post.summary && <p className="post-lead">{post.summary}</p>}
                                 <div className="post-meta">
                                     {renderMetaExtras ? renderMetaExtras(post) : null}
                                     <span className="post-category-badge">{post.category_name || ''}</span>
                                     <span className="post-date-text">{formatVietnameseDate(post.published_at || post.created_at)}</span>
                                     {post.author_name && <span className="post-author">Bởi: {post.author_name}</span>}
                                 </div>
-                                <h1 className="post-main-title">{post.title}</h1>
-                                {post.summary && <p className="post-lead">{post.summary}</p>}
                             </div>
 
                             {post.thumbnail && (

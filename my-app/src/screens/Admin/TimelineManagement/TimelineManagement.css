@@ -1,4 +1,8 @@
-﻿.timeline-management-page {
+﻿@import url('../Styles/AdminButtons.css');
+@import url('../Styles/AdminForm.css');
+@import url('../Styles/AdminModal.css');
+
+.timeline-management-page {
     padding: var(--space-10);
     max-width: 1400px;
     background: var(--color-white);
@@ -29,10 +33,6 @@
     align-items: start;
 }
 
-.timeline-management-card--form {
-    width: 100%;
-}
-
 .timeline-management-card--list {
     width: 100%;
 }
@@ -44,7 +44,7 @@
     padding: 20px;
 }
 
-.timeline-management-card__title {
+.timeline-management-card .page-title {
     margin: 0 0 16px;
     color: var(--color-text-strong);
 }
@@ -53,12 +53,37 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
+    width: 100%;
+    max-width: 860px;
+    margin: 0 auto;
+    padding-inline: 12px;
+    box-sizing: border-box;
+}
+
+.timeline-form__row {
+    display: grid;
+    grid-template-columns: minmax(420px, 1fr) max-content;
+    gap: 12px;
+    align-items: start;
 }
 
 .timeline-form__field {
     display: flex;
     flex-direction: column;
     gap: 6px;
+}
+
+.timeline-form__field--month {
+    width: fit-content;
+}
+
+.timeline-form__field--event-name {
+    min-width: 0;
+}
+
+.timeline-form__field--month input {
+    width: fit-content;
+    min-width: 180px;
 }
 
 .timeline-form__field span {
@@ -165,6 +190,27 @@
     align-items: center;
     flex-wrap: wrap;
     justify-content: flex-end;
+}
+
+.admin-modal .timeline-form {
+    max-width: none;
+    margin: 0;
+    padding-inline: 0;
+}
+
+.timeline-delete-modal__panel {
+    width: min(560px, 100%);
+}
+
+.timeline-delete-modal__body {
+    padding: 8px 12px 12px;
+}
+
+.timeline-delete-modal__actions {
+    margin-top: 14px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
 }
 
 .timeline-alert {
@@ -319,7 +365,7 @@
 
 .timeline-table__actions {
     display: inline-flex;
-    gap: 6px;
+    gap: 8px;
 }
 
 .timeline-status {
@@ -351,6 +397,14 @@
         padding: var(--space-8);
     }
 
+    .timeline-form__row {
+        grid-template-columns: 1fr;
+    }
+
+    .timeline-form {
+        padding-inline: 0;
+    }
+
     .timeline-vertical-item {
         grid-template-columns: 30px minmax(0, 1fr);
         gap: 10px;
@@ -377,4 +431,5 @@
         right: auto;
         transform: rotate(225deg);
     }
+
 }

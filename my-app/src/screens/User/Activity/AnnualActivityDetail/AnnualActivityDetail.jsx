@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import './AnnualActivityDetail.css';
+import { SearchBar } from '../../../../components';
 import { categoriesAPI, newsAPI } from '../../../../services/api';
 
 function formatEventNameFromSlug(slug) {
@@ -63,19 +64,13 @@ const AnnualActivityDetail = () => {
                     <div className="posts-section">
                         <div className="posts-header">
                             <h2 className="posts-title">TẤT CẢ BÀI ĐĂNG</h2>
-                            <div className="search-bar-posts">
-                                <div className="search-icon">🔍</div>
-                                <input
-                                    type="text"
-                                    placeholder="Tìm kiếm"
-                                    className="search-input"
-                                    value={searchQuery}
-                                    onChange={e => setSearchQuery(e.target.value)}
-                                />
-                                {searchQuery && (
-                                    <div className="search-close" onClick={() => setSearchQuery('')} style={{ cursor: 'pointer' }}>✕</div>
-                                )}
-                            </div>
+                            <SearchBar
+                                value={searchQuery}
+                                onChange={e => setSearchQuery(e.target.value)}
+                                onClear={() => setSearchQuery('')}
+                                placeholder="Tìm kiếm"
+                                variant="compact"
+                            />
                         </div>
 
                         {loading && <p style={{ textAlign: 'center', color: '#888' }}>Đang tải...</p>}

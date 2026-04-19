@@ -117,10 +117,24 @@
 }
 
 .annual-event-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     font-size: 0.875rem;
     font-weight: 600;
     color: var(--color-primary);
     align-self: flex-start;
+}
+
+.annual-event-link-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.annual-event-link-icon svg {
+    width: 1em;
+    height: 1em;
 }
 
 .annual-event-card:hover .annual-event-link {

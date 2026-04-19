@@ -67,14 +67,22 @@
 }
 
 .sidebar-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background: transparent;
     border: none;
     color: white;
-    font-size: 1.375rem;
+    font-size: 1.25rem;
     cursor: pointer;
     padding: 4px 8px;
     border-radius: 6px;
     transition: background-color 0.2s ease;
+}
+
+.sidebar-toggle svg {
+    width: 1em;
+    height: 1em;
 }
 
 .sidebar-toggle:hover {
@@ -132,10 +140,18 @@
 }
 
 .nav-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     font-size: 1.125rem;
     min-width: 20px;
     text-align: center;
     color: #FFFFFF;
+}
+
+.nav-icon svg {
+    width: 1em;
+    height: 1em;
 }
 
 .nav-label {
@@ -256,6 +272,14 @@
 .admin-content-wrap {
     flex: 1;
     background: var(--admin-bg);
+}
+
+/* Shared admin page title style (inside content area only) */
+.admin-layout .admin-content-wrap .page-title {
+    letter-spacing: var(--ls--0_02);
+    color: var(--color-darkslateblue);
+    font-weight: 800;
+    text-transform: uppercase;
 }
 
 /* Shared admin form field styling across all admin tabs */
