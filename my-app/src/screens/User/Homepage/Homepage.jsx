@@ -1,16 +1,12 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Homepage.css';
 import { newsAPI, timelineAPI } from '../../../services/api';
 import NewsCard from '../../../components/NewsCard/NewsCard';
 import AchievementCard from '../../../components/AchievementCard/AchievementCard';
+import { Timeline } from '../../../components';
 import { formatVietnameseDate } from '../../../utils/date';
-import {
-  toMonthNumber,
-  getTimelineYear,
-  sortTimelineEvents,
-  pickActiveTimelineEvent,
-} from '../../../utils/timeline';
+import { ChevronLeftIcon, ChevronRightIcon } from '../../../SvgIcons';
 
 const getSlideRoute = (item) => {
   if (item.page_type === 'activity_annual' && item.category_slug) {
@@ -60,11 +56,9 @@ const Homepage = () => {
   const [achievements, setAchievements] = useState([]);
   const [heroSlides, setHeroSlides] = useState([]);
   const [timelineEvents, setTimelineEvents] = useState([]);
-  const [activeTimelineId, setActiveTimelineId] = useState(null);
   const [heroIndex, setHeroIndex] = useState(0);
   const [hoveredActivityIndex, setHoveredActivityIndex] = useState(null);
   const [activityImageIndex, setActivityImageIndex] = useState(0);
-  const timelineReferenceDate = useMemo(() => new Date(), []);
 
   useEffect(() => {
     const activityTypes = ['activity_annual', 'activity_non_annual'];
@@ -135,35 +129,12 @@ const Homepage = () => {
 
     timelineAPI.getPublic({ limit: 100 })
       .then((data) => {
-        const events = sortTimelineEvents(asArray(data).filter((item) => toMonthNumber(item.month)), timelineReferenceDate);
-        setTimelineEvents(events);
+        setTimelineEvents(asArray(data));
       })
       .catch(() => {
         setTimelineEvents([]);
       });
-  }, [timelineReferenceDate]);
-
-  useEffect(() => {
-    const updateActiveTimeline = () => {
-      if (!timelineEvents.length) {
-        setActiveTimelineId(null);
-        return;
-      }
-
-      const currentMonth = new Date().getMonth() + 1;
-      const activeEvent = pickActiveTimelineEvent(timelineEvents, currentMonth);
-      setActiveTimelineId(activeEvent?.id || null);
-    };
-
-    updateActiveTimeline();
-    const timer = setInterval(updateActiveTimeline, 60000);
-    return () => clearInterval(timer);
-  }, [timelineEvents]);
-
-  const timelineDisplayEvents = useMemo(
-    () => sortTimelineEvents(timelineEvents, timelineReferenceDate),
-    [timelineEvents, timelineReferenceDate]
-  );
+  }, []);
 
   useEffect(() => {
     if (heroSlides.length <= 1) return undefined;
@@ -191,8 +162,6 @@ const Homepage = () => {
   const displayedActivity = hoveredActivityIndex !== null
     ? activityPosts[hoveredActivityIndex]
     : activityPosts[activityImageIndex];
-
-  const currentMonth = new Date().getMonth() + 1;
 
   const activeHero = heroSlides[heroIndex] || {
     title: 'TIN NỔI BẬT MỚI NHẤT',
@@ -231,7 +200,7 @@ const Homepage = () => {
               }}
               aria-label="Slide trước"
             >
-              ‹
+              <ChevronLeftIcon />
             </button>
             <button
               type="button"
@@ -242,7 +211,7 @@ const Homepage = () => {
               }}
               aria-label="Slide kế tiếp"
             >
-              ›
+              <ChevronRightIcon />
             </button>
             <div className="hero-section__dots">
               {heroSlides.map((slide, idx) => (
@@ -262,54 +231,7 @@ const Homepage = () => {
         )}
       </div>
 
-      {/* Timeline Section */}
-      <div className="timeline-section">
-        <b className="section-title section-title--timeline">LỊCH TRÌNH THƯỜNG NIÊN</b>
-        <div className="section-divider section-divider--timeline" aria-hidden="true" />
-
-        <div className="timeline-track" role="list" aria-label="Timeline sự kiện thường niên">
-          {timelineEvents.length === 0 && (
-            <div className="timeline-empty">Chưa có dữ liệu timeline.</div>
-          )}
-
-          {timelineDisplayEvents.map((event, index) => {
-            const eventMonth = toMonthNumber(event.month);
-            const eventYear = getTimelineYear(event, timelineReferenceDate);
-            const isActive = Number(event.id) === Number(activeTimelineId);
-            const isLeft = index % 2 === 0;
-            const statusLabel = isActive
-              ? eventMonth === currentMonth
-                ? 'Đang diễn ra'
-                : 'Sắp diễn ra'
-              : '';
-
-            const timelineCard = (
-              <div className="timeline-item__card">
-                <div className="timeline-item__month">Năm {eventYear} • Tháng {eventMonth}</div>
-                <h3 className="timeline-item__title">{event.event_name}</h3>
-                <p className="timeline-item__summary">{event.summary || ''}</p>
-                {statusLabel && <span className="timeline-item__status">{statusLabel}</span>}
-              </div>
-            );
-
-            return (
-              <article
-                key={event.id}
-                role="listitem"
-                className={`timeline-item ${isActive ? 'timeline-item--active' : 'timeline-item--muted'}`}
-                aria-label={`Năm ${eventYear}, tháng ${eventMonth}: ${event.event_name}`}
-              >
-                {isLeft ? timelineCard : <div className="timeline-item__spacer" aria-hidden="true" />}
-                <div className="timeline-item__axis" aria-hidden="true">
-                  <span className="timeline-item__dot" />
-                  {index < timelineDisplayEvents.length - 1 && <span className="timeline-item__line" />}
-                </div>
-                {!isLeft ? timelineCard : <div className="timeline-item__spacer" aria-hidden="true" />}
-              </article>
-            );
-          })}
-        </div>
-      </div>
+      <Timeline events={timelineEvents} />
 
       {/* Activity Section */}
       <div className="activity-section">

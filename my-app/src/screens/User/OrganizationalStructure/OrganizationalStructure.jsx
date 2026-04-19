@@ -6,37 +6,37 @@ const BOARD_DEFINITIONS = [
     {
         key: 'ban chap hanh',
         label: 'BAN CHẤP HÀNH',
-        icon: '🏛️',
+        icon: 'executive',
         description: 'Điều phối hoạt động chung và quản lý các ban chuyên môn',
     },
     {
         key: 'ban van the',
         label: 'Ban Văn Thể',
-        icon: '🏃',
+        icon: 'sports',
         description: 'Tổ chức các hoạt động văn hóa, văn nghệ, thể dục thể thao',
     },
     {
         key: 'ban truyen thong ky thuat',
         label: 'Ban Truyền Thông Kỹ Thuật',
-        icon: '📱',
+        icon: 'media',
         description: 'Quản lý fanpage, website, thiết kế poster, quay dựng video',
     },
     {
         key: 'ban to chuc su kien',
         label: 'Ban Tổ Chức Sự Kiện',
-        icon: '🎯',
+        icon: 'events',
         description: 'Lên kế hoạch và tổ chức các sự kiện của Liên Chi Đoàn',
     },
     {
         key: 'ban doi ngoai',
         label: 'Ban Đối Ngoại',
-        icon: '🤝',
+        icon: 'external',
         description: 'Kết nối với các tổ chức bên ngoài, tìm kiếm tài trợ',
     },
     {
         key: 'ban cong tac doan va phat trien dang',
         label: 'Ban Công Tác Đoàn và Phát Triển Đảng',
-        icon: '⭐',
+        icon: 'development',
         description: 'Quản lý đoàn viên, phát triển đảng viên, công tác đoàn',
     },
 ];
@@ -84,6 +84,22 @@ function normalizeDepartmentKey(value) {
 }
 
 function toArray(value) {
+    if (value && typeof value === 'object' && !Array.isArray(value)) {
+        return Object.values(value).flatMap((item) => toArray(item));
+    }
+
+    if (typeof value === 'string') {
+        const raw = value.trim();
+        if (raw.startsWith('{') && raw.endsWith('}')) {
+            try {
+                const parsed = JSON.parse(raw);
+                return toArray(parsed);
+            } catch (error) {
+                // Fall back to delimiter split below.
+            }
+        }
+    }
+
     if (Array.isArray(value)) return value;
     if (value === null || value === undefined) return [];
     return String(value)

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { newsAPI } from '../../../services/api';
 import { PostDetail as PostDetailComponent } from '../../../components';
+import { StarIcon } from '../../../SvgIcons';
 
 const AchievementDetail = () => {
     const { id } = useParams();
@@ -39,7 +40,12 @@ const AchievementDetail = () => {
             notFoundText="Không tìm thấy thành tích"
             loadingText="Đang tải..."
             renderMetaExtras={(entry) => (
-                entry.is_featured ? <span className="post-detail-featured-badge">⭐ Nổi bật</span> : null
+                entry.is_featured ? (
+                    <span className="post-detail-featured-badge">
+                        <span className="post-detail-featured-badge__icon" aria-hidden="true"><StarIcon /></span>
+                        Nổi bật
+                    </span>
+                ) : null
             )}
         />
     );

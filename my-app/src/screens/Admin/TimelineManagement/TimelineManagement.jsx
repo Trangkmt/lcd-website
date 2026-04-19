@@ -9,6 +9,8 @@ import {
     sortTimelineEvents,
     pickActiveTimelineEvent,
 } from '../../../utils/timeline';
+import { EditIcon, DeleteIcon, CloseIcon } from '../../../SvgIcons';
+import { ConfirmationDialog } from '../../../components';
 
 const DEFAULT_CALENDAR_YEAR = new Date().getFullYear();
 
@@ -25,9 +27,12 @@ export default function TimelineManagement() {
     const [loadingEventOptions, setLoadingEventOptions] = useState(false);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [deleting, setDeleting] = useState(false);
     const [error, setError] = useState('');
     const [form, setForm] = useState(EMPTY_FORM);
     const [editingId, setEditingId] = useState(null);
+    const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+    const [deleteTarget, setDeleteTarget] = useState(null);
     const [filters, setFilters] = useState({ month: '', status: 'all' });
     const timelineReferenceDate = useMemo(() => new Date(), []);
 
@@ -112,6 +117,19 @@ export default function TimelineManagement() {
         setEditingId(null);
     }
 
+    function openCreateModal() {
+        resetForm();
+        setIsFormModalOpen(true);
+    }
+
+    function closeFormModal() {
+        if (saving) {
+            return;
+        }
+        setIsFormModalOpen(false);
+        resetForm();
+    }
+
     function handleEdit(item) {
         setEditingId(item.id);
         setForm({
@@ -120,22 +138,38 @@ export default function TimelineManagement() {
             summary: item.summary || '',
             is_published: !!item.is_published,
         });
+        setIsFormModalOpen(true);
     }
 
-    async function handleDelete(item) {
-        const confirmDelete = window.confirm(`Bạn có chắc muốn xóa sự kiện: ${item.event_name}?`);
-        if (!confirmDelete) {
+    function requestDelete(item) {
+        setDeleteTarget(item);
+    }
+
+    function closeDeleteModal() {
+        if (deleting) {
+            return;
+        }
+        setDeleteTarget(null);
+    }
+
+    async function confirmDelete() {
+        if (!deleteTarget) {
             return;
         }
 
+        setDeleting(true);
+
         try {
-            await timelineAPI.delete(item.id);
+            await timelineAPI.delete(deleteTarget.id);
             await fetchTimelineEvents();
-            if (editingId === item.id) {
+            if (editingId === deleteTarget.id) {
                 resetForm();
             }
+            setDeleteTarget(null);
         } catch (err) {
             alert('Xóa sự kiện thất bại: ' + err.message);
+        } finally {
+            setDeleting(false);
         }
     }
 
@@ -175,6 +209,7 @@ export default function TimelineManagement() {
             }
 
             await fetchTimelineEvents();
+            setIsFormModalOpen(false);
             resetForm();
         } catch (err) {
             alert('Lưu timeline thất bại: ' + err.message);
@@ -185,83 +220,18 @@ export default function TimelineManagement() {
 
     return (
         <div className="timeline-management-page">
-            <div className="timeline-management-header">
-                <h1 className="timeline-management-title">Quản lý timeline thường niên</h1>
-            </div>
-
             <div className="timeline-management-grid">
-                <section className="timeline-management-card timeline-management-card--form">
-                    <h2 className="timeline-management-card__title">
-                        {editingId ? 'Chỉnh sửa sự kiện' : 'Thêm sự kiện mới'}
-                    </h2>
-
-                    <form className="timeline-form" onSubmit={handleSubmit}>
-                        <label className="timeline-form__field">
-                            <span>Lịch sự kiện</span>
-                            <input
-                                type="month"
-                                value={form.month}
-                                onChange={(e) => setForm((prev) => ({ ...prev, month: e.target.value }))}
-                                required
-                            />
-                        </label>
-
-                        <label className="timeline-form__field">
-                            <span>Tên sự kiện</span>
-                            <select
-                                value={form.event_name}
-                                onChange={(e) => setForm((prev) => ({ ...prev, event_name: e.target.value }))}
-                                disabled={loadingEventOptions || annualEventOptions.length === 0}
-                                required
-                            >
-                                <option value="">
-                                    {loadingEventOptions ? 'Đang tải danh sách sự kiện...' : 'Chọn sự kiện thường niên'}
-                                </option>
-                                {eventNameOptions.map((eventName) => (
-                                    <option key={eventName} value={eventName}>
-                                        {eventName}
-                                    </option>
-                                ))}
-                            </select>
-                            {!loadingEventOptions && annualEventOptions.length === 0 && (
-                                <small>Chưa có danh mục hoạt động thường niên. Vui lòng tạo ở mục Quản lý danh mục.</small>
-                            )}
-                        </label>
-
-                        <label className="timeline-form__field">
-                            <span>Nội dung tóm tắt</span>
-                            <textarea
-                                rows={4}
-                                value={form.summary}
-                                onChange={(e) => setForm((prev) => ({ ...prev, summary: e.target.value }))}
-                                placeholder="Mô tả ngắn gọn cho timeline homepage"
-                            />
-                        </label>
-
-                        <label className="timeline-form__checkbox">
-                            <input
-                                type="checkbox"
-                                checked={!!form.is_published}
-                                onChange={(e) => setForm((prev) => ({ ...prev, is_published: e.target.checked }))}
-                            />
-                            <span>Hiển thị trên homepage</span>
-                        </label>
-
-                        <div className="timeline-form__actions">
-                            <button type="submit" className="timeline-btn timeline-btn--primary" disabled={saving}>
-                                {saving ? 'Đang lưu...' : editingId ? 'Cập nhật' : 'Thêm mới'}
-                            </button>
-                            <button type="button" className="timeline-btn timeline-btn--ghost" onClick={resetForm} disabled={saving}>
-                                Làm mới
-                            </button>
-                        </div>
-                    </form>
-                </section>
-
                 <section className="timeline-management-card timeline-management-card--list">
                     <div className="timeline-list-header">
-                        <h2 className="timeline-management-card__title">Danh sách timeline</h2>
+                        <h2 className="page-title">Danh sách timeline</h2>
                         <div className="timeline-list-filters">
+                            <button
+                                type="button"
+                                className="timeline-btn timeline-btn--primary"
+                                onClick={openCreateModal}
+                            >
+                                Thêm sự kiện
+                            </button>
                             <input
                                 type="month"
                                 value={filters.month}
@@ -323,11 +293,23 @@ export default function TimelineManagement() {
 
                                     <div className="timeline-vertical-card__footer">
                                         <div className="timeline-table__actions">
-                                            <button type="button" className="timeline-btn timeline-btn--ghost" onClick={() => handleEdit(item)}>
-                                                Sửa
+                                            <button
+                                                type="button"
+                                                className="btn-action btn-edit btn-action--icon-only"
+                                                onClick={() => handleEdit(item)}
+                                                title="Sửa sự kiện"
+                                                aria-label="Sửa sự kiện"
+                                            >
+                                                <span className="btn-action-icon" aria-hidden="true"><EditIcon /></span>
                                             </button>
-                                            <button type="button" className="timeline-btn timeline-btn--danger" onClick={() => handleDelete(item)}>
-                                                Xóa
+                                            <button
+                                                type="button"
+                                                className="btn-action btn-delete btn-action--icon-only"
+                                                onClick={() => requestDelete(item)}
+                                                title="Xóa sự kiện"
+                                                aria-label="Xóa sự kiện"
+                                            >
+                                                <span className="btn-action-icon" aria-hidden="true"><DeleteIcon /></span>
                                             </button>
                                         </div>
                                     </div>
@@ -347,6 +329,140 @@ export default function TimelineManagement() {
                     </div>
                 </section>
             </div>
+
+            {isFormModalOpen && (
+                <div className="admin-modal" role="dialog" aria-modal="true" aria-label={editingId ? 'Chỉnh sửa sự kiện' : 'Thêm sự kiện mới'}>
+                    <div className="admin-modal__backdrop" onClick={closeFormModal} />
+                    <section className="admin-modal__panel">
+                        <div className="admin-modal__header">
+                            <h2 className="page-title">{editingId ? 'Chỉnh sửa sự kiện' : 'Thêm sự kiện mới'}</h2>
+                            <button
+                                type="button"
+                                className="timeline-btn timeline-btn--ghost"
+                                onClick={closeFormModal}
+                                disabled={saving}
+                            >
+                                Đóng
+                            </button>
+                        </div>
+
+                        <form className="timeline-form" onSubmit={handleSubmit}>
+                            <div className="timeline-form__row">
+                                <label className="timeline-form__field timeline-form__field--event-name">
+                                    <span>Tên sự kiện</span>
+                                    <select
+                                        value={form.event_name}
+                                        onChange={(e) => setForm((prev) => ({ ...prev, event_name: e.target.value }))}
+                                        disabled={loadingEventOptions || annualEventOptions.length === 0}
+                                        required
+                                    >
+                                        <option value="">
+                                            {loadingEventOptions ? 'Đang tải danh sách sự kiện...' : 'Chọn sự kiện thường niên'}
+                                        </option>
+                                        {eventNameOptions.map((eventName) => (
+                                            <option key={eventName} value={eventName}>
+                                                {eventName}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    {!loadingEventOptions && annualEventOptions.length === 0 && (
+                                        <small>Chưa có danh mục hoạt động thường niên. Vui lòng tạo ở mục Quản lý danh mục.</small>
+                                    )}
+                                </label>
+
+                                <label className="timeline-form__field timeline-form__field--month">
+                                    <span>Lịch sự kiện</span>
+                                    <input
+                                        type="month"
+                                        value={form.month}
+                                        onChange={(e) => setForm((prev) => ({ ...prev, month: e.target.value }))}
+                                        required
+                                    />
+                                </label>
+                            </div>
+
+                            <label className="timeline-form__field">
+                                <span>Nội dung tóm tắt</span>
+                                <textarea
+                                    rows={4}
+                                    value={form.summary}
+                                    onChange={(e) => setForm((prev) => ({ ...prev, summary: e.target.value }))}
+                                    placeholder="Mô tả ngắn gọn cho timeline homepage"
+                                />
+                            </label>
+
+                            <label className="timeline-form__checkbox">
+                                <input
+                                    type="checkbox"
+                                    checked={!!form.is_published}
+                                    onChange={(e) => setForm((prev) => ({ ...prev, is_published: e.target.checked }))}
+                                />
+                                <span>Hiển thị trên homepage</span>
+                            </label>
+
+                            <div className="timeline-form__actions">
+                                <button type="submit" className="timeline-btn timeline-btn--primary" disabled={saving}>
+                                    {saving ? 'Đang lưu...' : editingId ? 'Cập nhật' : 'Thêm mới'}
+                                </button>
+                                <button type="button" className="timeline-btn timeline-btn--ghost" onClick={closeFormModal} disabled={saving}>
+                                    Hủy
+                                </button>
+                            </div>
+                        </form>
+                    </section>
+                </div>
+            )}
+
+            {deleteTarget && (
+                <div className="admin-modal" role="dialog" aria-modal="true" aria-label="Xác nhận xóa sự kiện">
+                    <div className="admin-modal__backdrop" onClick={closeDeleteModal} />
+                    <section className="admin-modal__panel timeline-delete-modal__panel">
+                        <div className="admin-modal__header">
+                            <h2 className="admin-modal__title">Xác nhận xóa</h2>
+                            <button
+                                type="button"
+                                className="admin-modal__close"
+                                onClick={closeDeleteModal}
+                                disabled={deleting}
+                                aria-label="Đóng"
+                            >
+                                <CloseIcon size={20} />
+                            </button>
+                        </div>
+
+                        <div className="admin-modal__body timeline-delete-modal__body">
+                            <ConfirmationDialog
+                                variant="delete"
+                                title="Bạn có chắc muốn xóa sự kiện này?"
+                                message={(
+                                    <>
+                                        Sự kiện <strong>{deleteTarget.event_name}</strong> sẽ bị xóa và không thể khôi phục.
+                                    </>
+                                )}
+                            />
+
+                            <div className="timeline-delete-modal__actions">
+                                <button
+                                    type="button"
+                                    className="timeline-btn timeline-btn--ghost"
+                                    onClick={closeDeleteModal}
+                                    disabled={deleting}
+                                >
+                                    Hủy
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn-action btn-delete"
+                                    onClick={confirmDelete}
+                                    disabled={deleting}
+                                >
+                                    {deleting ? 'Đang xóa...' : 'Xóa sự kiện'}
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            )}
         </div>
     );
 }

@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import './Achievement.css';
 import { newsAPI } from '../../../services/api';
 import AchievementCard from '../../../components/AchievementCard/AchievementCard';
+import { SearchBar } from '../../../components';
+import { ChevronLeftIcon, ChevronRightIcon } from '../../../SvgIcons';
 
 const asTimestamp = (item) => {
     const value = item?.published_at || item?.created_at;
@@ -77,7 +79,7 @@ const Achievement = () => {
                             onClick={() => setHeroIndex((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)}
                             aria-label="Slide trước"
                         >
-                            ‹
+                            <ChevronLeftIcon />
                         </button>
                         <button
                             type="button"
@@ -85,7 +87,7 @@ const Achievement = () => {
                             onClick={() => setHeroIndex((prev) => (prev + 1) % heroSlides.length)}
                             aria-label="Slide kế tiếp"
                         >
-                            ›
+                            <ChevronRightIcon />
                         </button>
                         <div className="achievement-page__hero-dots">
                             {heroSlides.map((slide, idx) => (
@@ -105,24 +107,13 @@ const Achievement = () => {
             <div className="achievement-page__content">
                 {/* Search */}
                 <div className="achievement-page__controls">
-                    <div className="achievement-search-bar">
-                        <span className="achievement-search-icon">🔍</span>
-                        <input
-                            type="text"
-                            placeholder="Tìm kiếm thành tích..."
-                            className="achievement-search-input"
-                            value={searchQuery}
-                            onChange={e => setSearchQuery(e.target.value)}
-                        />
-                        {searchQuery && (
-                            <span
-                                className="achievement-search-clear"
-                                onClick={() => setSearchQuery('')}
-                            >
-                                ✕
-                            </span>
-                        )}
-                    </div>
+                    <SearchBar
+                        value={searchQuery}
+                        onChange={e => setSearchQuery(e.target.value)}
+                        onClear={() => setSearchQuery('')}
+                        placeholder="Tìm kiếm thành tích..."
+                        variant="page"
+                    />
                 </div>
 
                 <h2 className="achievement-page__title">

@@ -8,6 +8,7 @@
     "dev": "nodemon server.js",
     "db:init": "node database/init-mysql.js",
     "db:migrate:timeline": "node database/migrate-timeline.js",
+    "db:migrate:member-positions": "node database/migrate-member-department-position.js",
     "test:mysql": "node test-sqlserver.js",
     "test:sql": "npm run test:mysql",
     "db:test": "node database/test-connection-sqlserver.js"

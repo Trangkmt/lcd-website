@@ -49,6 +49,20 @@ const Header = () => {
 
                 {/* Menu Items */}
                 <nav className="header__nav">
+                    <Link
+                        to="/"
+                        className={`menu-item menu-item--home ${location.pathname === '/' ? 'menu-item--active' : ''}`}
+                        aria-label="Trang chủ"
+                    >
+                        <div className="menu-item__state-layer">
+                            <span className="menu-item__home-icon" aria-hidden="true">
+                                <svg className="menu-item__home-icon-solid" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10 20V14H14V20H19V12H22L12 3L2 12H5V20H10Z" fill="currentColor" />
+                                </svg>
+                            </span>
+                        </div>
+                    </Link>
+
                     {menuItems.map((item, index) => {
                         if (item.hasDropdown) {
                             const isActive = location.pathname.startsWith(item.path);

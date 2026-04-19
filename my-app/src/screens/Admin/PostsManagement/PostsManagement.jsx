@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import mammoth from 'mammoth';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
 import './PostsManagement.css';
+import { SearchBar } from '../../../components';
 import { newsAPI, categoriesAPI, usersAPI, aiAPI, uploadsAPI, postTemplatesAPI } from '../../../services/api';
 import { canMutatePost, canPublishPost, getStoredAdminUser, isAdminFull } from '../../../utils/adminPermissions';
 import {
@@ -13,15 +14,33 @@ import {
     ensureCanMutatePost,
     slugifyPostTitle,
 } from '../postManagementHelpers';
+import {
+    PublishIcon,
+    EditIcon,
+    DeleteIcon,
+    NewsIcon,
+    TrophyIcon,
+    CalendarIcon,
+    TargetIcon,
+    FolderIcon,
+    CloseIcon,
+    StarIcon,
+    ArrowLeftIcon,
+    ChevronDownIcon,
+    ChevronUpIcon,
+    ChevronRightIcon,
+    CheckIcon,
+} from '../../../SvgIcons';
+import useAdminConfirm from '../useAdminConfirm';
 
 const EMPTY_FORM = { title: '', slug: '', summary: '', content: '', thumbnail: '', category_id: '', author_id: '', is_featured: false, is_published: false };
 
 const PAGE_TYPE_LABELS = {
-    news: '📰 Tin tức',
-    achievement: '🏆 Thành tích',
-    activity_annual: '📅 Hoạt động thường niên',
-    activity_non_annual: '🎯 Hoạt động không thường niên',
-    activity: '🎯 Hoạt động',
+    news: 'Tin tức',
+    achievement: 'Thành tích',
+    activity_annual: 'Hoạt động thường niên',
+    activity_non_annual: 'Hoạt động không thường niên',
+    activity: 'Hoạt động',
 };
 
 const CLOUDINARY_POST_FOLDER_BY_PAGE_TYPE = {
@@ -33,8 +52,16 @@ const CLOUDINARY_POST_FOLDER_BY_PAGE_TYPE = {
 };
 
 function getPageTypeLabel(pageType) {
-    if (!pageType) return '📁 Khác';
-    return PAGE_TYPE_LABELS[pageType] || `📁 ${pageType}`;
+    if (!pageType) return 'Khác';
+    return PAGE_TYPE_LABELS[pageType] || pageType;
+}
+
+function getPageTypeIcon(pageType) {
+    if (pageType === 'news') return NewsIcon;
+    if (pageType === 'achievement') return TrophyIcon;
+    if (pageType === 'activity_annual') return CalendarIcon;
+    if (pageType === 'activity_non_annual' || pageType === 'activity') return TargetIcon;
+    return FolderIcon;
 }
 
 function resolvePostUploadFolder(pageType) {
@@ -149,6 +176,7 @@ const DOCX_SAMPLE_POST = {
 };
 
 export default function PostsManagement() {
+    const { confirm, confirmModal } = useAdminConfirm();
     const location = useLocation();
     const navigate = useNavigate();
     const postsMode = useMemo(() => {
@@ -319,14 +347,21 @@ export default function PostsManagement() {
         navigate({ pathname: location.pathname, search: params.toString() }, { replace: true });
     }
 
-    function applyTemplateToForm(template, { force = false } = {}) {
+    async function applyTemplateToForm(template, { force = false } = {}) {
         if (!template) {
             return;
         }
 
         const hasUserContent = !!(form.title?.trim() || form.summary?.trim() || form.content?.trim());
         if (hasUserContent && !force) {
-            const confirmed = window.confirm('Áp dụng template sẽ ghi đè tiêu đề, tóm tắt và nội dung hiện tại. Bạn có chắc chắn?');
+            const confirmed = await confirm({
+                title: 'Xác nhận áp dụng template',
+                message: 'Áp dụng template sẽ ghi đè tiêu đề, tóm tắt và nội dung hiện tại.',
+                detail: 'Bạn có chắc chắn muốn tiếp tục?',
+                variant: 'warning',
+                confirmText: 'Áp dụng',
+                confirmButtonClassName: 'btn-primary',
+            });
             if (!confirmed) {
                 return;
             }
@@ -367,7 +402,7 @@ export default function PostsManagement() {
             setSelectedTemplateId(pickedTemplate ? String(pickedTemplate.id) : '');
 
             if (autoApplyDefault && defaultTemplate) {
-                applyTemplateToForm(defaultTemplate, { force: true });
+                await applyTemplateToForm(defaultTemplate, { force: true });
             }
         } catch {
             setTemplates([]);
@@ -442,7 +477,7 @@ export default function PostsManagement() {
             await loadTemplatesForCategory(templateDraftPayload.category_id, { autoApplyDefault: false });
             if (createdTemplate?.id) {
                 setSelectedTemplateId(String(createdTemplate.id));
-                applyTemplateToForm(createdTemplate, { force: true });
+                await applyTemplateToForm(createdTemplate, { force: true });
             }
             closeTemplateNameModal();
             alert('Đã lưu template thành công.');
@@ -453,12 +488,12 @@ export default function PostsManagement() {
         }
     }
 
-    function handleApplySelectedTemplate() {
+    async function handleApplySelectedTemplate() {
         const template = templates.find((item) => String(item.id) === String(selectedTemplateId));
         if (!template) {
             return;
         }
-        applyTemplateToForm(template);
+        await applyTemplateToForm(template);
     }
 
     async function handleGenerateWithAI() {
@@ -535,7 +570,15 @@ export default function PostsManagement() {
             alert('Bạn không có quyền duyệt bài viết.');
             return;
         }
-        if (!window.confirm(`Duyệt và xuất bản bài "${post.title}"?`)) return;
+        const confirmed = await confirm({
+            title: 'Xác nhận xuất bản',
+            message: `Duyệt và xuất bản bài "${post.title}"?`,
+            detail: 'Bài viết sẽ hiển thị công khai sau khi xuất bản.',
+            variant: 'info',
+            confirmText: 'Xuất bản',
+            confirmButtonClassName: 'btn-primary',
+        });
+        if (!confirmed) return;
         try {
             await newsAPI.update(post.id, {
                 title: post.title,
@@ -562,6 +605,7 @@ export default function PostsManagement() {
                 currentUser,
                 deniedMessage: 'Bạn chỉ có thể xóa bài viết của mình.',
                 confirmMessage: 'Bạn có chắc muốn xóa bài viết này?',
+                confirmFn: confirm,
                 onSuccess: (deletedId) => {
                     setPosts(prev => prev.filter(p => p.id !== deletedId));
                 },
@@ -876,11 +920,13 @@ export default function PostsManagement() {
 
                     {/* Filters */}
                     <div className="filters-bar">
-                        <div className="search-box">
-                            <span className="search-icon">🔍</span>
-                            <input type="text" placeholder="Tìm kiếm bài viết..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="search-input" />
-                            {searchQuery && <span className="search-clear" onClick={() => setSearchQuery('')}>✕</span>}
-                        </div>
+                        <SearchBar
+                            value={searchQuery}
+                            onChange={e => setSearchQuery(e.target.value)}
+                            onClear={() => setSearchQuery('')}
+                            placeholder="Tìm kiếm bài viết..."
+                            variant="toolbar"
+                        />
                         <select className="filter-select" value={apiFilters.year} onChange={e => setApiFilter('year', e.target.value)}>
                             <option value="">Tất cả năm</option>
                             {availableYears.map(y => <option key={y} value={y}>{y}</option>)}
@@ -897,11 +943,14 @@ export default function PostsManagement() {
                         </select>
                         <select className="filter-select" value={apiFilters.is_featured} onChange={e => setApiFilter('is_featured', e.target.value)}>
                             <option value="">Tất cả bài viết</option>
-                            <option value="true">⭐ Nổi bật</option>
+                            <option value="true">Nổi bật</option>
                             <option value="false">Bình thường</option>
                         </select>
                         {hasActiveFilter && (
-                            <button className="filter-reset-btn" onClick={resetFilters}>✕ Xóa lọc</button>
+                            <button className="filter-reset-btn" onClick={resetFilters}>
+                                <span className="filter-reset-icon" aria-hidden="true"><CloseIcon /></span>
+                                Xóa lọc
+                            </button>
                         )}
                     </div>
 
@@ -931,7 +980,12 @@ export default function PostsManagement() {
                                             <td>
                                                 <div className="post-title-cell">
                                                     {post.title}
-                                                    {post.is_featured ? <span className="featured-badge">⭐ Nổi bật</span> : null}
+                                                    {post.is_featured ? (
+                                                        <span className="featured-badge">
+                                                            <span className="featured-badge-icon" aria-hidden="true"><StarIcon /></span>
+                                                            Nổi bật
+                                                        </span>
+                                                    ) : null}
                                                 </div>
                                             </td>
                                             <td><span className="category-tag">{post.category_name || ''}</span></td>
@@ -946,13 +1000,19 @@ export default function PostsManagement() {
                                             <td>
                                                 <div className="action-buttons">
                                                     {!post.is_published && canPublish && (
-                                                        <button className="btn-action btn-publish" title="Duyệt & Xuất bản" onClick={() => handlePublish(post)}>✅</button>
+                                                        <button className="btn-action btn-publish btn-action--icon-only" title="Duyệt & Xuất bản" onClick={() => handlePublish(post)}>
+                                                            <span className="btn-action-icon" aria-hidden="true"><PublishIcon /></span>
+                                                        </button>
                                                     )}
                                                     {canMutatePost(currentUser, post) && (
-                                                        <button className="btn-action btn-edit" title="Chỉnh sửa" onClick={() => openEdit(post)}>✏️</button>
+                                                        <button className="btn-action btn-edit btn-action--icon-only" title="Chỉnh sửa" onClick={() => openEdit(post)}>
+                                                            <span className="btn-action-icon" aria-hidden="true"><EditIcon /></span>
+                                                        </button>
                                                     )}
                                                     {canMutatePost(currentUser, post) && (
-                                                        <button className="btn-action btn-delete" title="Xóa" onClick={() => handleDelete(post.id)}>🗑️</button>
+                                                        <button className="btn-action btn-delete btn-action--icon-only" title="Xóa" onClick={() => handleDelete(post.id)}>
+                                                            <span className="btn-action-icon" aria-hidden="true"><DeleteIcon /></span>
+                                                        </button>
                                                     )}
                                                 </div>
                                             </td>
@@ -986,7 +1046,10 @@ export default function PostsManagement() {
                             >
                                 {docExportingId === 'current-editor' ? 'Đang xuất file docx...' : 'Xuất file docx'}
                             </button>
-                            <button type="button" className="btn-secondary" onClick={closeEditor}>← Quay lại danh sách</button>
+                            <button type="button" className="btn-secondary" onClick={closeEditor}>
+                                <span className="btn-icon" aria-hidden="true"><ArrowLeftIcon /></span>
+                                Quay lại danh sách
+                            </button>
                         </div>
                     </div>
 
@@ -1011,7 +1074,9 @@ export default function PostsManagement() {
                                         <span className={`cat-dropdown-value${!selectedCatName ? ' placeholder' : ''}`}>
                                             {selectedCatName || 'Chọn danh mục'}
                                         </span>
-                                        <span className="cat-dropdown-arrow">{showCatDropdown ? '▲' : '▼'}</span>
+                                        <span className="cat-dropdown-arrow" aria-hidden="true">
+                                            {showCatDropdown ? <ChevronUpIcon /> : <ChevronDownIcon />}
+                                        </span>
                                     </button>
                                     {showCatDropdown && (
                                         <div className="cat-dropdown-menu">
@@ -1024,8 +1089,11 @@ export default function PostsManagement() {
                                                     className={`cat-page-type-row${hoveredPageType === pt ? ' active' : ''}`}
                                                     onMouseEnter={() => setHoveredPageType(pt)}
                                                 >
-                                                    <span className="cat-page-type-label">{getPageTypeLabel(pt)}</span>
-                                                    <span className="cat-page-type-arrow">›</span>
+                                                    <span className="cat-page-type-label">
+                                                        <span className="cat-page-type-label-icon" aria-hidden="true">{React.createElement(getPageTypeIcon(pt))}</span>
+                                                        {getPageTypeLabel(pt)}
+                                                    </span>
+                                                    <span className="cat-page-type-arrow" aria-hidden="true"><ChevronRightIcon /></span>
                                                     {hoveredPageType === pt && (
                                                         <div className="cat-page-type-submenu">
                                                             {categoriesByPageType[pt].map(cat => (
@@ -1035,7 +1103,9 @@ export default function PostsManagement() {
                                                                     onClick={() => { handleFormChange('category_id', cat.id); setShowCatDropdown(false); setHoveredPageType(null); }}
                                                                 >
                                                                     {cat.name}
-                                                                    {String(form.category_id) === String(cat.id) && <span className="cat-submenu-check"> ✓</span>}
+                                                                    {String(form.category_id) === String(cat.id) && (
+                                                                        <span className="cat-submenu-check" aria-hidden="true"><CheckIcon /></span>
+                                                                    )}
                                                                 </div>
                                                             ))}
                                                         </div>
@@ -1216,6 +1286,8 @@ export default function PostsManagement() {
                     </div>
                 </div>
             )}
+
+            {confirmModal}
         </div>
     );
 }

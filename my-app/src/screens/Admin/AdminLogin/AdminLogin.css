@@ -1,4 +1,6 @@
-﻿.admin-login-page {
+﻿@import url('../Styles/AdminForm.css');
+
+.admin-login-page {
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -32,6 +34,11 @@
     display: flex;
     flex-direction: column;
     gap: 14px;
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto;
+    padding-inline: 8px;
+    box-sizing: border-box;
 }
 
 .admin-login-form .form-group {
@@ -79,5 +86,3 @@
     color: var(--color-state-danger);
     font-size: 0.8125rem;
 }
-
-

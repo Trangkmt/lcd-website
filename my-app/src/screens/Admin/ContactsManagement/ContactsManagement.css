@@ -1,4 +1,7 @@
 @import url('../PostsManagement/PostsManagement.css');
+@import url('../Styles/AdminTable.css');
+@import url('../Styles/AdminButtons.css');
+@import url('../Styles/AdminModal.css');
 
 .contacts-management .btn-primary:focus-visible,
 .contacts-management .btn-secondary:focus-visible,

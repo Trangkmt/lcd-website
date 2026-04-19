@@ -65,6 +65,7 @@ export async function deletePostWithGuard({
     currentUser,
     deniedMessage,
     confirmMessage,
+    confirmFn,
     onSuccess,
 }) {
     const targetPost = (list || []).find((item) => item.id === id);
@@ -72,7 +73,20 @@ export async function deletePostWithGuard({
         return false;
     }
 
-    if (!window.confirm(confirmMessage)) {
+    if (!confirmFn) {
+        throw new Error('Thiếu hàm xác nhận xóa (confirmFn).');
+    }
+
+    const confirmed = await confirmFn({
+        title: 'Xác nhận xóa',
+        message: confirmMessage,
+        detail: 'Bài viết đã xóa sẽ không thể khôi phục.',
+        variant: 'delete',
+        confirmText: 'Xóa bài viết',
+        confirmButtonClassName: 'btn-action btn-delete',
+    });
+
+    if (!confirmed) {
         return false;
     }
 

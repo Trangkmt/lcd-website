@@ -40,6 +40,11 @@
     display: flex;
     flex-direction: column;
     gap: 18px;
+    width: 100%;
+    max-width: 840px;
+    margin: 0 auto;
+    padding-inline: 12px;
+    box-sizing: border-box;
 }
 
 .contact-grid {
@@ -141,5 +146,9 @@
 
     .contact-title {
         font-size: 1.75rem;
+    }
+
+    .contact-form {
+        padding-inline: 0;
     }
 }

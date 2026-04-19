@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './AnnualActivity.css';
 import { categoriesAPI, newsAPI } from '../../../../services/api';
+import { ArrowRightIcon } from '../../../../SvgIcons';
 
 const AnnualActivity = () => {
     const [categories, setCategories] = useState([]);
@@ -70,7 +71,10 @@ const AnnualActivity = () => {
                                         </div>
                                         <div className="annual-event-info">
                                             <h3 className="annual-event-name">{cat.name}</h3>
-                                            <span className="annual-event-link">Xem chi tiết →</span>
+                                            <span className="annual-event-link">
+                                                Xem chi tiết
+                                                <span className="annual-event-link-icon" aria-hidden="true"><ArrowRightIcon /></span>
+                                            </span>
                                         </div>
                                     </Link>
                                 );

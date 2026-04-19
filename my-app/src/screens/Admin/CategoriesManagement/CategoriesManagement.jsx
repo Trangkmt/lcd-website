@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './CategoriesManagement.css';
 import { categoriesAPI } from '../../../services/api';
+import { PlusIcon, EditIcon, DeleteIcon, NewsIcon, TrophyIcon, CalendarIcon, TargetIcon, CloseIcon } from '../../../SvgIcons';
+import useAdminConfirm from '../useAdminConfirm';
 
 function slugify(str) {
     const map = { à: 'a', á: 'a', ả: 'a', ã: 'a', ạ: 'a', ă: 'a', ắ: 'a', ặ: 'a', ằ: 'a', ẳ: 'a', ẵ: 'a', â: 'a', ấ: 'a', ậ: 'a', ầ: 'a', ẩ: 'a', ẫ: 'a', è: 'e', é: 'e', ẻ: 'e', ẽ: 'e', ẹ: 'e', ê: 'e', ế: 'e', ệ: 'e', ề: 'e', ể: 'e', ễ: 'e', ì: 'i', í: 'i', ỉ: 'i', ĩ: 'i', ị: 'i', ò: 'o', ó: 'o', ỏ: 'o', õ: 'o', ọ: 'o', ô: 'o', ố: 'o', ộ: 'o', ồ: 'o', ổ: 'o', ỗ: 'o', ơ: 'o', ớ: 'o', ợ: 'o', ờ: 'o', ở: 'o', ỡ: 'o', ù: 'u', ú: 'u', ủ: 'u', ũ: 'u', ụ: 'u', ư: 'u', ứ: 'u', ự: 'u', ừ: 'u', ử: 'u', ữ: 'u', ỳ: 'y', ý: 'y', ỷ: 'y', ỹ: 'y', ỵ: 'y', đ: 'd' };
@@ -8,10 +10,10 @@ function slugify(str) {
 }
 
 const PAGE_TABS = [
-    { key: 'news', label: '📰 Tin tức' },
-    { key: 'achievement', label: '🏆 Thành tích' },
-    { key: 'activity_annual', label: '📅 Hoạt động thường niên' },
-    { key: 'activity_non_annual', label: '🎯 Hoạt động không thường niên' },
+    { key: 'news', label: 'Tin tức', icon: NewsIcon },
+    { key: 'achievement', label: 'Thành tích', icon: TrophyIcon },
+    { key: 'activity_annual', label: 'Hoạt động thường niên', icon: CalendarIcon },
+    { key: 'activity_non_annual', label: 'Hoạt động không thường niên', icon: TargetIcon },
 ];
 
 const PAGE_TYPE_LABELS = {
@@ -42,6 +44,7 @@ const normalizeCategoryForTab = (category, tabKey) => ({
 const EMPTY_FORM = (page_type) => ({ name: '', slug: '', description: '', intro_image: '', page_type: page_type || 'news', display_order: 0 });
 
 export default function CategoriesManagement() {
+    const { confirm, confirmModal } = useAdminConfirm();
     const [activeTab, setActiveTab] = useState('news');
     const [categoriesByTab, setCategoriesByTab] = useState({ news: [], achievement: [], activity_annual: [], activity_non_annual: [] });
     const [loadingTab, setLoadingTab] = useState({});
@@ -120,7 +123,15 @@ export default function CategoriesManagement() {
     }
 
     async function handleDelete(cat) {
-        if (!window.confirm('Bạn có chắc muốn xóa danh mục này?')) return;
+        const confirmed = await confirm({
+            title: 'Xác nhận xóa',
+            message: 'Bạn có chắc muốn xóa danh mục này?',
+            detail: `Danh mục "${cat.name}" sẽ bị xóa và không thể khôi phục.`,
+            variant: 'delete',
+            confirmText: 'Xóa danh mục',
+            confirmButtonClassName: 'btn-action btn-delete',
+        });
+        if (!confirmed) return;
         try {
             await categoriesAPI.delete(cat.id);
             const tabKey = resolveTabKey(cat.page_type, activeTab);
@@ -142,7 +153,7 @@ export default function CategoriesManagement() {
                     <h1 className="page-title">Quản lý danh mục</h1>
                 </div>
                 <button className="btn-primary" onClick={openCreate}>
-                    <span className="btn-icon">➕</span>
+                    <span className="btn-icon" aria-hidden="true"><PlusIcon /></span>
                     Thêm danh mục mới
                 </button>
             </div>
@@ -155,6 +166,7 @@ export default function CategoriesManagement() {
                         className={`cat-tab ${activeTab === tab.key ? 'cat-tab--active' : ''}`}
                         onClick={() => setActiveTab(tab.key)}
                     >
+                        <span className="cat-tab-icon" aria-hidden="true"><tab.icon /></span>
                         {tab.label}
                         <span className="cat-tab-count">{categoriesByTab[tab.key]?.length ?? 0}</span>
                     </button>
@@ -185,8 +197,12 @@ export default function CategoriesManagement() {
                             <p className="category-description">{category.description || '—'}</p>
                             <p className="category-slug">/{category.slug}</p>
                             <div className="category-actions">
-                                <button className="btn-action btn-edit" onClick={() => openEdit(category)}>✏️ Sửa</button>
-                                <button className="btn-action btn-delete" onClick={() => handleDelete(category)}>🗑️ Xóa</button>
+                                <button className="btn-action btn-edit btn-action--icon-only" onClick={() => openEdit(category)} title="Sửa danh mục" aria-label="Sửa danh mục">
+                                    <span className="btn-action-icon" aria-hidden="true"><EditIcon /></span>
+                                </button>
+                                <button className="btn-action btn-delete btn-action--icon-only" onClick={() => handleDelete(category)} title="Xóa danh mục" aria-label="Xóa danh mục">
+                                    <span className="btn-action-icon" aria-hidden="true"><DeleteIcon /></span>
+                                </button>
                             </div>
                         </div>
                     ))}
@@ -195,13 +211,16 @@ export default function CategoriesManagement() {
 
             {/* Modal */}
             {showModal && (
-                <div className="modal-overlay" onClick={() => setShowModal(false)}>
-                    <div className="modal-content" onClick={e => e.stopPropagation()}>
-                        <div className="modal-header">
-                            <h2 className="modal-title">{editingCategory ? 'Chỉnh sửa danh mục' : 'Thêm danh mục mới'}</h2>
-                            <button className="modal-close" onClick={() => setShowModal(false)}>×</button>
+                <div className="admin-modal" role="dialog" aria-modal="true" aria-label={editingCategory ? 'Chỉnh sửa danh mục' : 'Thêm danh mục mới'}>
+                    <div className="admin-modal__backdrop" onClick={() => setShowModal(false)} />
+                    <section className="admin-modal__panel">
+                        <div className="admin-modal__header">
+                            <h2 className="admin-modal__title">{editingCategory ? 'Chỉnh sửa danh mục' : 'Thêm danh mục mới'}</h2>
+                            <button className="admin-modal__close" onClick={() => setShowModal(false)} aria-label="Đóng">
+                                <CloseIcon />
+                            </button>
                         </div>
-                        <div className="modal-body">
+                        <div className="admin-modal__body">
                             <form className="category-form" onSubmit={handleSave}>
                                 <div className="form-group">
                                     <label className="form-label">Thuộc trang *</label>
@@ -247,9 +266,11 @@ export default function CategoriesManagement() {
                                 </div>
                             </form>
                         </div>
-                    </div>
+                    </section>
                 </div>
             )}
+
+            {confirmModal}
         </div>
     );
 }
