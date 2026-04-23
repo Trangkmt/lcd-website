@@ -45,6 +45,7 @@ export default function AdminLayout() {
     const isMembersStudentActive = isMembersActive && membersTab === 'student';
     const isMembersTeacherActive = isMembersActive && membersTab === 'teacher';
     const isUtilitiesActive = isActive('/admin/utilities');
+    const isAccountActive = isActive('/admin/account');
     const utilitiesTab = new URLSearchParams(location.search).get('tab') || 'bulk-export';
     const isBulkExportActive = isUtilitiesActive && utilitiesTab === 'bulk-export';
     const isSharedDocsActive = isUtilitiesActive && utilitiesTab === 'shared-docs';
@@ -55,6 +56,7 @@ export default function AdminLayout() {
         if (location.pathname.startsWith('/admin/contacts')) return 'Quản lý liên hệ';
         if (location.pathname.startsWith('/admin/timeline')) return 'Quản lý sự kiện thường niên';
         if (location.pathname.startsWith('/admin/utilities')) return 'Tiện ích khác';
+        if (location.pathname.startsWith('/admin/account')) return 'Tài khoản của tôi';
         return 'Tổng quan quản trị';
     })();
     const activeRoleLabel = isAdminFull(currentUser)
@@ -230,6 +232,16 @@ export default function AdminLayout() {
                                 </div>
                             )}
                         </>
+                    )}
+
+                    {showUtilityTab && (
+                        <Link
+                            to="/admin/account"
+                            className={`nav-item ${isAccountActive ? 'active' : ''}`}
+                        >
+                            <span className="nav-icon" aria-hidden="true"><UsersIcon /></span>
+                            {!sidebarCollapsed && <span className="nav-label">Tài khoản của tôi</span>}
+                        </Link>
                     )}
 
                     <div className="nav-divider"></div>

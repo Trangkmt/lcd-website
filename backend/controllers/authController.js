@@ -14,6 +14,29 @@ async function hasUserAvatarColumn(pool) {
     return (result.recordset || []).length > 0;
 }
 
+function mapAuthUser(user) {
+    if (!user) return null;
+    return {
+        ...user,
+        role: normalizeRole(user.role),
+    };
+}
+
+async function loadUserById(pool, userId) {
+    const hasAvatarColumn = await hasUserAvatarColumn(pool);
+    const avatarSelect = hasAvatarColumn ? 'avatar_url' : 'NULL AS avatar_url';
+    const result = await pool.request()
+        .input('id', sql.Int, userId)
+        .query(`
+            SELECT id, username, email, full_name, ${avatarSelect}, role, is_active,
+                   member_type, student_code, class_name, department, department_position
+            FROM users
+            WHERE id = @id
+            LIMIT 1
+        `);
+    return mapAuthUser(result.recordset?.[0] || null);
+}
+
 // POST /api/auth/login
 exports.login = async (req, res) => {
     try {
@@ -48,10 +71,7 @@ exports.login = async (req, res) => {
             return res.status(403).json({ error: 'Tài khoản đã bị ẩn hoặc vô hiệu hóa' });
         }
 
-        const normalizedUser = {
-            ...user,
-            role: normalizeRole(user.role),
-        };
+        const normalizedUser = mapAuthUser(user);
         const token = buildAuthToken(normalizedUser.id);
 
         res.json({
@@ -62,5 +82,104 @@ exports.login = async (req, res) => {
     } catch (err) {
         console.error('Error:', err);
         res.status(500).json({ error: err.message });
+    }
+};
+
+// GET /api/auth/me
+exports.getMyProfile = async (req, res) => {
+    try {
+        const pool = await getConnection();
+        const user = await loadUserById(pool, req.authUser?.id);
+
+        if (!user) {
+            return res.status(404).json({ error: 'Không tìm thấy tài khoản' });
+        }
+
+        return res.json(user);
+    } catch (err) {
+        console.error('Error:', err);
+        return res.status(500).json({ error: err.message });
+    }
+};
+
+// PUT /api/auth/me
+exports.updateMyProfile = async (req, res) => {
+    try {
+        const { email, full_name, avatar_url } = req.body || {};
+
+        if (!email || !String(email).trim()) {
+            return res.status(400).json({ error: 'Email là bắt buộc' });
+        }
+
+        const pool = await getConnection();
+        const hasAvatarColumn = await hasUserAvatarColumn(pool);
+        const request = pool.request()
+            .input('id', sql.Int, req.authUser?.id)
+            .input('email', sql.NVarChar, String(email).trim())
+            .input('full_name', sql.NVarChar, full_name ? String(full_name).trim() : null);
+
+        if (hasAvatarColumn) {
+            request.input('avatar_url', sql.NVarChar, avatar_url ? String(avatar_url).trim() : null);
+        }
+
+        const avatarUpdatePart = hasAvatarColumn ? 'avatar_url = @avatar_url,' : '';
+        const result = await request.query(`
+            UPDATE users
+            SET email = @email,
+                full_name = @full_name,
+                ${avatarUpdatePart}
+                updated_at = GETDATE()
+            OUTPUT INSERTED.id
+            WHERE id = @id
+        `);
+
+        if (!result.recordset?.length) {
+            return res.status(404).json({ error: 'Không tìm thấy tài khoản' });
+        }
+
+        const updatedUser = await loadUserById(pool, req.authUser?.id);
+        return res.json(updatedUser);
+    } catch (err) {
+        console.error('Error:', err);
+        return res.status(500).json({ error: err.message });
+    }
+};
+
+// PUT /api/auth/change-password
+exports.changePassword = async (req, res) => {
+    try {
+        const { password, newPassword } = req.body || {};
+
+        if (!password || !newPassword) {
+            return res.status(400).json({ error: 'Vui lòng nhập mật khẩu hiện tại và mật khẩu mới' });
+        }
+
+        if (String(newPassword).length < 6) {
+            return res.status(400).json({ error: 'Mật khẩu mới phải có ít nhất 6 ký tự' });
+        }
+
+        const pool = await getConnection();
+        const request = pool.request()
+            .input('id', sql.Int, req.authUser?.id)
+            .input('password', sql.NVarChar, password)
+            .input('newPassword', sql.NVarChar, newPassword);
+
+        const result = await request.query(`
+            UPDATE users
+            SET password = @newPassword,
+                updated_at = GETDATE()
+            OUTPUT INSERTED.id
+            WHERE id = @id
+              AND password = @password
+        `);
+
+        if (!result.recordset?.length) {
+            return res.status(400).json({ error: 'Mật khẩu hiện tại không đúng' });
+        }
+
+        return res.json({ message: 'Đổi mật khẩu thành công' });
+    } catch (err) {
+        console.error('Error:', err);
+        return res.status(500).json({ error: err.message });
     }
 };

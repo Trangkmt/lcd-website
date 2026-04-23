@@ -17,7 +17,8 @@ import {
   MembersManagement,
   ContactsManagement,
   OtherUtilities,
-  TimelineManagement
+  TimelineManagement,
+  AccountInfo
 } from './screens/Admin';
 import { canAccessAdminPath, getDefaultAdminPath, getStoredAdminUser } from './utils/adminPermissions';
 import './global.css';  /* Global design system variables */
@@ -67,6 +68,7 @@ const App = () => {
           <Route path="contacts" element={<ContactsManagement />} />
           <Route path="timeline" element={<TimelineManagement />} />
           <Route path="utilities" element={<OtherUtilities />} />
+          <Route path="account" element={<AccountInfo />} />
         </Route>
       </Routes>
     </BrowserRouter>
