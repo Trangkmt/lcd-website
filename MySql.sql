@@ -57,37 +57,7 @@ INSERT INTO users (
     member_type,student_code,class_name,department,department_position,is_active
 ) VALUES
 ('admin','123456','admin@myapp.com','Nguyễn Văn Admin',NULL,'admin_full','teacher',NULL,NULL,'ban chấp hành','admin hệ thống',TRUE),
-('bi-thu-fit','123456','bithu.fit@neu.edu.vn','TS. Nguyễn Văn A',NULL,'utility_only','teacher',NULL,NULL,'ban chấp hành','bí thư',TRUE),
-
-('bvt-truong-ban','123456','bvt.truongban@neu.edu.vn','Trần Quốc Bảo',NULL,'post_author','student','22120001','22CTT1','ban văn thể','{"ban văn thể": ["trưởng ban"]}',TRUE),
-('bvt-pho-ban','123456','bvt.phoban@neu.edu.vn','Phạm Thu Hà',NULL,'post_author','student','22120002','22CTT1','ban văn thể','{"ban văn thể": ["phó ban"]}',TRUE),
-('bvt-tv01','123456','bvt.tv01@neu.edu.vn','Lê Minh Khang',NULL,'post_author','student','22120003','22CTT2','ban văn thể','{"ban văn thể": ["thành viên"]}',TRUE),
-('bvt-tv02','123456','bvt.tv02@neu.edu.vn','Võ Gia Linh',NULL,'post_author','student','22120004','22CTT2','ban văn thể','{"ban văn thể": ["thành viên"]}',TRUE),
-('bvt-tv03','123456','bvt.tv03@neu.edu.vn','Ngô Hoàng Nam',NULL,'post_author','student','22120005','22CTT3','ban văn thể','{"ban văn thể": ["thành viên"]}',TRUE),
-
-('ttkt-truong-ban','123456','ttkt.truongban@neu.edu.vn','Lý Khánh Vy',NULL,'post_author','student','22120006','22CTT3','ban truyền thông kỹ thuật','{"ban truyền thông kỹ thuật": ["trưởng ban"]}',TRUE),
-('ttkt-pho-ban','123456','ttkt.phoban@neu.edu.vn','Bùi Gia Huy',NULL,'post_author','student','22120007','22CTT4','ban truyền thông kỹ thuật','{"ban truyền thông kỹ thuật": ["phó ban"]}',TRUE),
-('ttkt-tv01','123456','ttkt.tv01@neu.edu.vn','Đặng Minh Châu',NULL,'post_author','student','22120008','22CTT4','ban truyền thông kỹ thuật','{"ban truyền thông kỹ thuật": ["thành viên"]}',TRUE),
-('ttkt-tv02','123456','ttkt.tv02@neu.edu.vn','Hoàng Đức Trí',NULL,'post_author','student','22120009','22CTT5','ban truyền thông kỹ thuật','{"ban truyền thông kỹ thuật": ["thành viên"]}',TRUE),
-('ttkt-tv03','123456','ttkt.tv03@neu.edu.vn','Phan Hải My',NULL,'post_author','student','22120010','22CTT5','ban truyền thông kỹ thuật','{"ban truyền thông kỹ thuật": ["thành viên"]}',TRUE),
-
-('tcsk-truong-ban','123456','tcsk.truongban@neu.edu.vn','Nguyễn Thành Đạt',NULL,'post_author','student','22120011','22CTT6','ban tổ chức sự kiện','{"ban tổ chức sự kiện": ["trưởng ban"]}',TRUE),
-('tcsk-pho-ban','123456','tcsk.phoban@neu.edu.vn','Trần Bảo Anh',NULL,'post_author','student','22120012','22CTT6','ban tổ chức sự kiện','{"ban tổ chức sự kiện": ["phó ban"]}',TRUE),
-('tcsk-tv01','123456','tcsk.tv01@neu.edu.vn','Hồ Thanh Tùng',NULL,'post_author','student','22120013','22CTT1','ban tổ chức sự kiện','{"ban tổ chức sự kiện": ["thành viên"]}',TRUE),
-('tcsk-tv02','123456','tcsk.tv02@neu.edu.vn','Mai Hương Giang',NULL,'post_author','student','22120014','22CTT2','ban tổ chức sự kiện','{"ban tổ chức sự kiện": ["thành viên"]}',TRUE),
-('tcsk-tv03','123456','tcsk.tv03@neu.edu.vn','Đoàn Quang Vinh',NULL,'post_author','student','22120015','22CTT3','ban tổ chức sự kiện','{"ban tổ chức sự kiện": ["thành viên"]}',TRUE),
-
-('dn-truong-ban','123456','dn.truongban@neu.edu.vn','Vũ Khánh Linh',NULL,'post_author','student','22120016','22CTT4','ban đối ngoại','{"ban đối ngoại": ["trưởng ban"]}',TRUE),
-('dn-pho-ban','123456','dn.phoban@neu.edu.vn','Phạm Công Minh',NULL,'post_author','student','22120017','22CTT5','ban đối ngoại','{"ban đối ngoại": ["phó ban"]}',TRUE),
-('dn-tv01','123456','dn.tv01@neu.edu.vn','Trịnh Ngọc Mai',NULL,'post_author','student','22120018','22CTT6','ban đối ngoại','{"ban đối ngoại": ["thành viên"]}',TRUE),
-('dn-tv02','123456','dn.tv02@neu.edu.vn','Lương Mạnh Hùng',NULL,'post_author','student','22120019','22CTT1','ban đối ngoại','{"ban đối ngoại": ["thành viên"]}',TRUE),
-('dn-tv03','123456','dn.tv03@neu.edu.vn','Đinh Tú Uyên',NULL,'post_author','student','22120020','22CTT2','ban đối ngoại','{"ban đối ngoại": ["thành viên"]}',TRUE),
-
-('ctdptd-truong-ban','123456','ctdptd.truongban@neu.edu.vn','Nguyễn Đức Long',NULL,'post_author','student','22120021','22CTT3','ban công tác đoàn và phát triển đảng','{"ban công tác đoàn và phát triển đảng": ["trưởng ban"]}',TRUE),
-('ctdptd-pho-ban','123456','ctdptd.phoban@neu.edu.vn','Phạm Ngọc Trâm',NULL,'post_author','student','22120022','22CTT4','ban công tác đoàn và phát triển đảng','{"ban công tác đoàn và phát triển đảng": ["phó ban"]}',TRUE),
-('ctdptd-tv01','123456','ctdptd.tv01@neu.edu.vn','Lê Hoài Phương',NULL,'post_author','student','22120023','22CTT5','ban công tác đoàn và phát triển đảng','{"ban công tác đoàn và phát triển đảng": ["thành viên"]}',TRUE),
-('ctdptd-tv02','123456','ctdptd.tv02@neu.edu.vn','Trương Gia Bảo',NULL,'post_author','student','22120024','22CTT6','ban công tác đoàn và phát triển đảng','{"ban công tác đoàn và phát triển đảng": ["thành viên"]}',TRUE),
-('ctdptd-tv03','123456','ctdptd.tv03@neu.edu.vn','Đặng Hải Yến',NULL,'post_author','student','22120025','22CTT1','ban công tác đoàn và phát triển đảng','{"ban công tác đoàn và phát triển đảng": ["thành viên"]}',TRUE);
+('bi-thu-fit','123456','bithu.fit@neu.edu.vn','TS. Nguyễn Văn A',NULL,'utility_only','teacher',NULL,NULL,'ban chấp hành','bí thư',TRUE);
 
 -- ================================================
 -- CATEGORIES
@@ -116,7 +86,7 @@ INSERT INTO categories (id,name,slug,page_type,description,intro_image,parent_id
 (6,'Hoạt động thể thao','the-thao','activity','Hoạt động thể thao',NULL,NULL),
 (7,'Thành tích','thanh-tich','achievement','Thành tích nổi bật',NULL,NULL),
 (8,'Tài liệu','tai-lieu','document','Tài liệu',NULL,NULL),
-(9,'Chương trình thường niên','thuong-nien','activity_annual','Hoạt động thường niên','https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=80',NULL),
+(9,'Chương trình thường niên','thuong-nien','activity_annual','Hoạt động thường niên',NULL,NULL),
 (10,'Khác','khac','news','Danh mục khác',NULL,NULL),
 (11,'Chào tân sinh viên','chao-tan-sinh-vien','activity_annual','Lễ chào tân sinh viên khóa mới',NULL,9),
 (12,'Quân sự','quan-su','activity_annual','Quân sự huấn luyện sinh viên',NULL,9),
@@ -124,9 +94,8 @@ INSERT INTO categories (id,name,slug,page_type,description,intro_image,parent_id
 (14,'Prom','prom','activity_annual','Lễ prom sinh viên',NULL,9),
 (15,'Talkshow','talkshow','activity_annual','Talkshow và giao lưu',NULL,9),
 (16,'Cuộc thi','cuoc-thi','activity_annual','Các cuộc thi và hackathon',NULL,9),
-(17,'Hoạt động không thường niên','hoat-dong-khong-thuong-nien','activity_non_annual','Hoạt động không thường niên của Liên Chi đoàn',NULL,NULL),
-(18,'Tình nguyện cộng đồng','tinh-nguyen-cong-dong','activity_non_annual','Các hoạt động phục vụ cộng đồng',NULL,17),
-(19,'Kết nối doanh nghiệp','ket-noi-doanh-nghiep','activity_non_annual','Các hoạt động kết nối và định hướng nghề nghiệp',NULL,17);
+(17,'Tình nguyện cộng đồng','tinh-nguyen-cong-dong','activity_non_annual','Các hoạt động phục vụ cộng đồng',NULL,17),
+(18,'Kết nối doanh nghiệp','ket-noi-doanh-nghiep','activity_non_annual','Các hoạt động kết nối và định hướng nghề nghiệp',NULL,17);
 
 -- ================================================
 -- POST TEMPLATES
@@ -206,13 +175,13 @@ INSERT INTO news (title,slug,summary,content,thumbnail,category_id,author_id,is_
 'Chia sẻ ứng dụng AI trong học tập và nghiên cứu.',
 'Chương trình trao đổi với diễn giả từ doanh nghiệp và giảng viên về các công cụ AI trong học tập.',
 'https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&w=1400&q=80',
-1,2,1,1,DATE_SUB(NOW(), INTERVAL 3 DAY)),
+1,1,1,1,DATE_SUB(NOW(), INTERVAL 3 DAY)),
 
 ('Lễ chào tân sinh viên K66','le-chao-tan-sinh-vien-k66',
 'Sự kiện mở đầu năm học dành cho tân sinh viên.',
 'Lễ chào tân sinh viên giới thiệu tổng quan khoa, Liên Chi đoàn và các hoạt động phong trào nổi bật.',
 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1400&q=80',
-11,2,1,1,DATE_SUB(NOW(), INTERVAL 4 DAY)),
+11,1,1,1,DATE_SUB(NOW(), INTERVAL 4 DAY)),
 
 ('FIT Cup 2026 chính thức khởi tranh','fit-cup-2026-khoi-tranh',
 'Giải bóng đá sinh viên thường niên đã quay trở lại.',
@@ -224,13 +193,13 @@ INSERT INTO news (title,slug,summary,content,thumbnail,category_id,author_id,is_
 'Buổi chia sẻ định hướng nghề nghiệp cho sinh viên năm 3-4.',
 'Chương trình tập trung vào kỹ năng CV, phỏng vấn và lộ trình học tập phù hợp theo từng vị trí.',
 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1400&q=80',
-19,3,1,1,DATE_SUB(NOW(), INTERVAL 6 DAY)),
+18,1,1,1,DATE_SUB(NOW(), INTERVAL 6 DAY)),
 
 ('Chiến dịch tình nguyện mùa hè xanh','chien-dich-tinh-nguyen-mua-he-xanh',
 'Hoạt động tình nguyện cộng đồng tại địa phương.',
 'Đội hình sinh viên triển khai nhiều phần việc như dạy học, chuyển đổi số cơ bản và hỗ trợ địa phương.',
 'https://images.unsplash.com/photo-1469571486292-b53601020f00?auto=format&fit=crop&w=1400&q=80',
-18,2,1,1,DATE_SUB(NOW(), INTERVAL 7 DAY)),
+18,1,1,1,DATE_SUB(NOW(), INTERVAL 7 DAY)),
 
 ('Thành tích nghiên cứu khoa học sinh viên','thanh-tich-nghien-cuu-khoa-hoc-sinh-vien',
 'Sinh viên khoa đạt giải cao trong cuộc thi nghiên cứu khoa học.',
@@ -242,7 +211,7 @@ INSERT INTO news (title,slug,summary,content,thumbnail,category_id,author_id,is_
 'Đội tuyển khoa giành huy chương tại Olympic Tin học.',
 'Đội tuyển sinh viên khoa đạt thành tích xuất sắc sau quá trình ôn luyện nghiêm túc và bền bỉ.',
 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1400&q=80',
-7,3,1,1,DATE_SUB(NOW(), INTERVAL 9 DAY)),
+7,1,1,1,DATE_SUB(NOW(), INTERVAL 9 DAY)),
 
 ('Bản tin hoạt động tháng này','ban-tin-hoat-dong-thang-nay',
 'Tổng hợp nhanh các hoạt động nổi bật trong tháng.',
@@ -272,16 +241,7 @@ CREATE TABLE documents (
 );
 
 INSERT INTO documents (title,file_name,file_path,file_type,category_id,uploaded_by) VALUES
-('Quy chế hoạt động','quyche.pdf','/docs/quyche.pdf','pdf',8,1),
-('Hướng dẫn sinh viên','huongdan.pdf','/docs/huongdan.pdf','pdf',8,1),
-('Tài liệu React','react.pdf','/docs/react.pdf','pdf',8,2),
-('Tài liệu NodeJS','nodejs.pdf','/docs/nodejs.pdf','pdf',8,2),
-('Slide AI','ai.ppt','/docs/ai.ppt','ppt',8,2),
-('Slide Data','data.ppt','/docs/data.ppt','ppt',8,2),
-('Tài liệu SQL','sql.pdf','/docs/sql.pdf','pdf',8,3),
-('Hướng dẫn Git','git.pdf','/docs/git.pdf','pdf',8,3),
-('Tài liệu DevOps','devops.pdf','/docs/devops.pdf','pdf',8,3),
-('Tài liệu Docker','docker.pdf','/docs/docker.pdf','pdf',8,3);
+('Quy chế hoạt động','quyche.pdf','/docs/quyche.pdf','pdf',8,1);
 
 -- ================================================
 -- ACTIVITIES
@@ -313,13 +273,13 @@ INSERT INTO activities (title,slug,description,location,start_date,end_date,cate
 ('Lễ chào tân sinh viên 2025','chao-tan-2025','Chương trình chào tân sinh viên khóa 25 được tổ chức nhằm giúp các bạn sinh viên mới làm quen với môi trường đại học.','Hội trường chính','2025-09-01','2025-09-02',11,1),
 ('Quân sự huấn luyện khóa 25','quan-su-2025','Chương trình quân sự huấn luyện sinh viên khóa mới, giúp các bạn nâng cao tinh thần kỷ luật và thể lực.','Sân trường','2025-09-05','2025-09-10',12,1),
 ('FIT Cup 2025','fit-cup-2025','Giải bóng đá FIT Cup thường niên, đây là sân chơi lớn nhất của sinh viên khoa CNTT mỗi năm.','Sân bóng đá UTE','2025-10-01','2025-10-20',13,1),
-('Prom sinh viên 2025','prom-2025','Lễ prom sinh viên khoa CNTT - sự kiện lớn nhất của năm học với sự tham gia của hàng trăm bạn sinh viên.','Sân khấu trước hội trường','2025-12-15','2025-12-15',14,2),
-('Talkshow công nghệ','talkshow-tech','Talkshow về xu hướng công nghệ mới, các chuyên gia chia sẻ kinh nghiệm và cơ hội nghề nghiệp.','Phòng hội thảo','2025-05-20','2025-05-20',15,2),
+('Prom sinh viên 2025','prom-2025','Lễ prom sinh viên khoa CNTT - sự kiện lớn nhất của năm học với sự tham gia của hàng trăm bạn sinh viên.','Sân khấu trước hội trường','2025-12-15','2025-12-15',14,1),
+('Talkshow công nghệ','talkshow-tech','Talkshow về xu hướng công nghệ mới, các chuyên gia chia sẻ kinh nghiệm và cơ hội nghề nghiệp.','Phòng hội thảo','2025-05-20','2025-05-20',15,1),
 ('Hackathon 2025','hackathon-2025','Cuộc thi Hackathon thường niên dành cho sinh viên lập trình và công nghệ thông tin.','Lab CNTT','2025-08-01','2025-08-02',16,1),
-('Giải lập trình sinh viên','giai-lap-trinh','Giải lập trình thường niên với các bài toán thách thức về thuật toán và cấu trúc dữ liệu.','Lab CNTT','2025-12-01','2025-12-05',16,3),
-('Workshop lập trình web','workshop-web','Workshop tập trung vào các công nghệ web hiện đại như React, Node.js, và các framework khác.','Phòng lab','2025-06-15','2025-06-15',15,2),
+('Giải lập trình sinh viên','giai-lap-trinh','Giải lập trình thường niên với các bài toán thách thức về thuật toán và cấu trúc dữ liệu.','Lab CNTT','2025-12-01','2025-12-05',16,1),
+('Workshop lập trình web','workshop-web','Workshop tập trung vào các công nghệ web hiện đại như React, Node.js, và các framework khác.','Phòng lab','2025-06-15','2025-06-15',15,1),
 ('FIT Cup futsal','fit-cup-futsal','Giải bóng đá futsal trong khuôn khổ FIT Cup với sự tham gia của nhiều đội bóng từ các lớp.','Sân futsal','2025-11-01','2025-11-15',13,1),
-('Workshop AI & Data Science','workshop-ai-data','Workshop về ứng dụng AI và Data Science trong doanh nghiệp và nghiên cứu khoa học.','Phòng hội thảo','2025-07-10','2025-07-10',15,2);
+('Workshop AI & Data Science','workshop-ai-data','Workshop về ứng dụng AI và Data Science trong doanh nghiệp và nghiên cứu khoa học.','Phòng hội thảo','2025-07-10','2025-07-10',15,1);
 
 -- ================================================
 -- TIMELINE EVENTS
@@ -372,7 +332,7 @@ CREATE TABLE organizations (
 );
 
 INSERT INTO organizations (name,name_abbr,description,display_order) VALUES
-('Ban Chấp Hành','BCH','Gồm bí thư, phó bí thư và các ủy viên là trưởng ban',0),
+('Ban Chấp Hành','BCH','Gồm bí thư, phó bí thư và các ủy viên là trưởng ban, phó ban',0),
 ('Ban Văn Thể','BVT','Tổ chức các hoạt động văn hóa, văn nghệ, thể dục thể thao',1),
 ('Ban Truyền Thông Kỹ Thuật','TTKT','Quản lý fanpage, website, thiết kế poster, quay dựng video',2),
 ('Ban Tổ Chức Sự Kiện','TCSK','Lên kế hoạch và tổ chức các sự kiện của Liên Chi Đoàn',3),
@@ -428,3 +388,8 @@ CREATE INDEX idx_categories_page_type ON categories(page_type);
 CREATE INDEX idx_organizations_parent ON organizations(parent_id);
 CREATE INDEX idx_contact_read ON contact_info(is_read);
 CREATE INDEX idx_contact_replied ON contact_info(is_replied);
+
+USE MyAppDB;
+SHOW TABLES;
+SELECT COUNT(*) FROM news;
+SELECT COUNT(*) FROM categories;
