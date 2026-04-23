@@ -149,6 +149,9 @@ export const organizationsAPI = {
 
 export const authAPI = {
     login: (data) => apiFetch('/auth/login', { method: 'POST', body: data }),
+    getMyProfile: () => apiFetch('/auth/me'),
+    updateMyProfile: (data) => apiFetch('/auth/me', { method: 'PUT', body: data }),
+    changePassword: (data) => apiFetch('/auth/change-password', { method: 'PUT', body: data }),
 };
 
 export const aiAPI = {

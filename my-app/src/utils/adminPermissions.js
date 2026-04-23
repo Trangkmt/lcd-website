@@ -79,6 +79,10 @@ export function canAccessAdminPath(user, pathname) {
         return true;
     }
 
+    if (pathname.startsWith('/admin/account')) {
+        return true;
+    }
+
     if (pathname.startsWith('/admin/utilities')) {
         return true;
     }

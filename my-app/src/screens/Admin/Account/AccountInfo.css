@@ -1,0 +1,92 @@
+.account-info-container {
+    max-width: 500px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 32px 24px;
+}
+
+.account-info-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.account-message {
+    margin: 0 0 12px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.account-message.error {
+    background: #fdeaea;
+    color: #b42318;
+}
+
+.account-message.success {
+    background: #eaf7ef;
+    color: #067647;
+}
+
+.avatar-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.avatar-img {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 8px;
+    border: 2px solid #eee;
+}
+
+.info-section label {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+
+.info-section input {
+    margin-top: 4px;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+
+.action-section {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.action-section button {
+    padding: 8px 20px;
+    border-radius: 4px;
+    border: none;
+    background: #1976d2;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.action-section button[type="button"] {
+    background: #aaa;
+}
+
+.action-section button:hover {
+    opacity: 0.9;
+}
+
+.action-section button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
