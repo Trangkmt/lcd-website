@@ -118,9 +118,30 @@ export default function AccountInfo({ user }) {
       return;
     }
 
+    const originalFullName = (activeProfile?.full_name || '').trim();
+    const originalEmail = (activeProfile?.email || '').trim();
+    const originalAvatar = (activeProfile?.avatar_url || '').trim();
+    const currentFullName = (form.full_name || '').trim();
+    const currentEmail = (form.email || '').trim();
+    const currentAvatar = (form.avatar_url || '').trim();
+
+    const hasProfileChanges = Boolean(
+      avatarFile
+      || originalFullName !== currentFullName
+      || originalEmail !== currentEmail
+      || originalAvatar !== currentAvatar
+    );
+    const hasPasswordChange = Boolean(form.password && form.newPassword);
+
+    if (!hasProfileChanges && !hasPasswordChange) {
+      setSuccessMessage('Không có thay đổi để lưu.');
+      return;
+    }
+
     setSaving(true);
     try {
       let nextAvatarUrl = form.avatar_url || '';
+      let updatedProfile = activeProfile;
 
       if (avatarFile) {
         setUploadingAvatar(true);
@@ -129,13 +150,15 @@ export default function AccountInfo({ user }) {
         nextAvatarUrl = uploadResult?.secure_url || nextAvatarUrl;
       }
 
-      const updatedProfile = await authAPI.updateMyProfile({
-        full_name: form.full_name,
-        email: form.email,
-        avatar_url: nextAvatarUrl || null,
-      });
+      if (hasProfileChanges) {
+        updatedProfile = await authAPI.updateMyProfile({
+          full_name: currentFullName,
+          email: currentEmail,
+          avatar_url: nextAvatarUrl || null,
+        });
+      }
 
-      if (form.password && form.newPassword) {
+      if (hasPasswordChange) {
         await authAPI.changePassword({
           password: form.password,
           newPassword: form.newPassword,
@@ -143,9 +166,17 @@ export default function AccountInfo({ user }) {
       }
 
       setProfile(updatedProfile);
-      localStorage.setItem(ADMIN_AUTH_KEY, JSON.stringify(updatedProfile));
+      if (updatedProfile) {
+        localStorage.setItem(ADMIN_AUTH_KEY, JSON.stringify(updatedProfile));
+      }
       setEditMode(false);
-      setSuccessMessage('Cập nhật thông tin tài khoản thành công.');
+      setSuccessMessage(
+        hasProfileChanges && hasPasswordChange
+          ? 'Cập nhật thông tin và mật khẩu thành công.'
+          : hasProfileChanges
+            ? 'Cập nhật thông tin tài khoản thành công.'
+            : 'Đổi mật khẩu thành công.'
+      );
     } catch (err) {
       setErrorMessage(err.message || 'Không thể cập nhật thông tin tài khoản');
     } finally {
