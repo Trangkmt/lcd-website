@@ -129,7 +129,7 @@ exports.updateMyProfile = async (req, res) => {
                 full_name = @full_name,
                 ${avatarUpdatePart}
                 updated_at = GETDATE()
-            OUTPUT INSERTED.id
+            OUTPUT INSERTED.*
             WHERE id = @id
         `);
 
