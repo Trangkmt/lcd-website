@@ -1,6 +1,7 @@
-const API_BASE = '/api';
+const API_BASE = import.meta.env.VITE_API_URL + '/api';
 const ADMIN_TOKEN_KEY = 'admin_auth_token';
 const ADMIN_AUTH_KEY = 'admin_auth_user';
+console.log("API_BASE:", API_BASE);
 
 function normalizeApiErrorMessage(message) {
     if (typeof message !== 'string') {
