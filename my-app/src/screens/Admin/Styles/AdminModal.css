@@ -94,3 +94,34 @@
         max-width: calc(100vw - 24px);
     }
 }
+
+@media (max-width: 640px) {
+    .admin-modal {
+        padding: 8px;
+    }
+
+    .admin-modal__panel {
+        width: 100%;
+        max-height: calc(100dvh - 16px);
+        padding: 12px;
+        border-radius: 8px;
+    }
+
+    .admin-modal__title {
+        font-size: 1.125rem;
+    }
+
+    .admin-modal__body {
+        padding: 8px;
+    }
+
+    .admin-modal__actions {
+        margin-top: 10px;
+        flex-wrap: wrap;
+        justify-content: stretch;
+    }
+
+    .admin-modal__actions > * {
+        flex: 1 1 100%;
+    }
+}

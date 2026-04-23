@@ -366,17 +366,18 @@ p {
    --z-tooltip: 700;
 
    /* =======================================
-       BREAKPOINTS (for reference)
-       ======================================= */
+         BREAKPOINTS
+         ======================================= */
 
-   /* 
-    --bp-xs: 480px;
-    --bp-sm: 640px;
-    --bp-md: 768px;
-    --bp-lg: 1024px;
-    --bp-xl: 1200px;
-    --bp-2xl: 1440px;
-    */
+   --bp-xs: 480px;
+   --bp-sm: 640px;
+   --bp-md: 768px;
+   --bp-lg: 1024px;
+   --bp-xl: 1280px;
+
+   /* Layout helpers */
+   --container-max: 1200px;
+   --container-gutter: 24px;
 }
 
 /* ===========================================
@@ -423,4 +424,34 @@ p {
    width: 100%;
    overflow-x: hidden;
    background-color: #FFFFFF;
+}
+
+.app-container {
+   width: 100%;
+   max-width: var(--container-max);
+   margin: 0 auto;
+   padding-left: var(--container-gutter);
+   padding-right: var(--container-gutter);
+}
+
+@media (max-width: 1024px) {
+   :root {
+      --container-gutter: 20px;
+   }
+}
+
+@media (max-width: 640px) {
+   :root {
+      --container-gutter: 16px;
+   }
+}
+
+@media (max-width: 480px) {
+   :root {
+      --space-10: 28px;
+      --space-8: 24px;
+      --space-6: 20px;
+      --space-5: 16px;
+      --space-4: 14px;
+   }
 }

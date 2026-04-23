@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import JSZip from 'jszip';
 import './OtherUtilities.css';
-import { FolderIcon } from '../../../SvgIcons';
+import SharedFolderManager from './SharedFolderManager';
 
 function sanitizeFileName(value) {
     return (value || 'khong-ten')
@@ -35,51 +35,6 @@ const SUBTABS = {
     SHARED_DOCS: 'shared-docs',
 };
 
-const SHARED_DEPARTMENT_FOLDERS = [
-    {
-        id: 'bch',
-        name: 'Ban Chấp Hành',
-        code: 'BCH',
-        description: 'Tài liệu điều hành, kế hoạch tổng và biên bản họp liên tịch.',
-        documents: ['Quy chế BCH', 'Kế hoạch học kỳ', 'Biên bản họp tháng'],
-    },
-    {
-        id: 'van-the',
-        name: 'Ban Văn Thể',
-        code: 'BVT',
-        description: 'Kịch bản văn nghệ, lịch tập luyện và kế hoạch phong trào thể thao.',
-        documents: ['Kế hoạch văn nghệ', 'Lịch tập luyện', 'Checklist hậu cần sân khấu'],
-    },
-    {
-        id: 'tcsk',
-        name: 'Ban Tổ Chức Sự Kiện',
-        code: 'TCSK',
-        description: 'Run sheet, phân công nhân sự và tài liệu vận hành sự kiện.',
-        documents: ['Run sheet sự kiện', 'Sơ đồ nhân sự', 'Mẫu checklist setup'],
-    },
-    {
-        id: 'ttkt',
-        name: 'Ban Truyền Thông Kỹ Thuật',
-        code: 'TTKT',
-        description: 'Media kit, guideline thiết kế và tài nguyên truyền thông số.',
-        documents: ['Brand guideline', 'Template poster', 'Danh sách asset truyền thông'],
-    },
-    {
-        id: 'ctd-ptd',
-        name: 'Ban Công Tác Đoàn và Phát Triển Đảng',
-        code: 'CTD & PTD',
-        description: 'Mẫu biểu đoàn vụ, hồ sơ đoàn viên và tài liệu phát triển đảng.',
-        documents: ['Mẫu báo cáo đoàn vụ', 'Mẫu phiếu đoàn viên', 'Quy trình phát triển đảng'],
-    },
-    {
-        id: 'doi-ngoai',
-        name: 'Ban Đối Ngoại',
-        code: 'ĐN',
-        description: 'Hồ sơ đối tác, mẫu thư ngỏ và proposal tài trợ.',
-        documents: ['Danh sách đối tác', 'Mẫu thư ngỏ', 'Proposal tài trợ'],
-    },
-];
-
 export default function OtherUtilities() {
     const [searchParams, setSearchParams] = useSearchParams();
     const [activeSubtab, setActiveSubtab] = useState(SUBTABS.BULK_EXPORT);
@@ -104,9 +59,6 @@ export default function OtherUtilities() {
 
     const previewName = names[0] || 'Nguyễn Văn A';
     const hasData = useMemo(() => names.length > 0 && !!templateImageUrl, [names.length, templateImageUrl]);
-    const pageTitle = activeSubtab === SUBTABS.SHARED_DOCS
-        ? 'Tài liệu chung'
-        : 'Xuất giấy mời/ chứng chỉ hàng loạt';
 
     const isValidCanvaLink = useMemo(
         () => /^https:\/\/(www\.)?canva\.com\//i.test(canvaTemplateLink.trim()),
@@ -342,32 +294,9 @@ export default function OtherUtilities() {
 
     return (
         <div className="other-utilities">
-            <div className="page-header">
-                <div className="header-content">
-                    <h1 className="page-title">{pageTitle}</h1>
-                </div>
-            </div>
-
-            <div className="utilities-subtabs" role="tablist" aria-label="Tiện ích khác">
-                <button
-                    type="button"
-                    className={`utilities-subtab ${activeSubtab === SUBTABS.BULK_EXPORT ? 'active' : ''}`}
-                    onClick={() => handleSubtabChange(SUBTABS.BULK_EXPORT)}
-                >
-                    Xuất giấy mời/ chứng chỉ hàng loạt
-                </button>
-                <button
-                    type="button"
-                    className={`utilities-subtab ${activeSubtab === SUBTABS.SHARED_DOCS ? 'active' : ''}`}
-                    onClick={() => handleSubtabChange(SUBTABS.SHARED_DOCS)}
-                >
-                    Tài liệu chung
-                </button>
-            </div>
-
             {activeSubtab === SUBTABS.BULK_EXPORT && (
                 <div className="utility-card">
-                    <h2 className="utility-title">Xuất giấy mời/ chứng chỉ hàng loạt</h2>
+                    <h2 className="page-title">Xuất giấy mời/ chứng chỉ hàng loạt</h2>
 
                     <div className="utility-hint">
                         Dùng template bạn đã thiết kế trên Canva: export PNG/JPG, tải lên đây rồi thay tên hàng loạt từ Excel.
@@ -516,32 +445,7 @@ export default function OtherUtilities() {
             )}
 
             {activeSubtab === SUBTABS.SHARED_DOCS && (
-                <div className="utility-card">
-                    <h2 className="utility-title">Tài liệu chung</h2>
-                    <p className="utility-hint">Giao diện thư mục theo từng ban để tập trung quản lý tài liệu nội bộ.</p>
-
-                    <div className="folders-grid">
-                        {SHARED_DEPARTMENT_FOLDERS.map((folder) => (
-                            <article key={folder.id} className="folder-card">
-                                <div className="folder-card__header">
-                                    <div className="folder-icon" aria-hidden="true"><FolderIcon /></div>
-                                    <div>
-                                        <h3 className="folder-name">{folder.name}</h3>
-                                        <p className="folder-code">{folder.code}</p>
-                                    </div>
-                                </div>
-
-                                <p className="folder-description">{folder.description}</p>
-
-                                <div className="folder-documents">
-                                    {folder.documents.map((doc) => (
-                                        <span key={doc} className="folder-doc-chip">{doc}</span>
-                                    ))}
-                                </div>
-                            </article>
-                        ))}
-                    </div>
-                </div>
+                <SharedFolderManager />
             )}
         </div>
     );

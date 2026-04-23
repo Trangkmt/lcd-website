@@ -4,6 +4,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    flex-wrap: wrap;
 }
 
 .btn-action {
@@ -119,4 +120,30 @@
 .btn-export:hover:not(:disabled) {
     border-color: rgba(71, 85, 182, 0.45);
     background: #e2e7ff;
+}
+
+@media (max-width: 768px) {
+    .btn-action {
+        min-height: 32px;
+        padding: 6px 10px;
+        font-size: 0.75rem;
+    }
+
+    .btn-action--icon-only {
+        min-width: 32px;
+        padding: 6px 8px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .action-buttons,
+    .row-actions {
+        gap: 6px;
+    }
+
+    .btn-action {
+        min-height: 30px;
+        padding: 6px 8px;
+    }
 }

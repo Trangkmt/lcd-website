@@ -30,6 +30,7 @@ const authRoutes = require('./routes/auth');
 const aiRoutes = require('./routes/ai');
 const migrationsRoutes = require('./routes/migrations');
 const uploadsRoutes = require('./routes/uploads');
+const sharedFoldersRoutes = require('./routes/sharedFolders');
 const postTemplatesRoutes = require('./routes/postTemplates');
 const timelineRoutes = require('./routes/timeline');
 
@@ -64,6 +65,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/migrations', migrationsRoutes);
 app.use('/api/uploads', uploadsRoutes);
+app.use('/api/shared-folders', sharedFoldersRoutes);
 app.use('/api/post-templates', postTemplatesRoutes);
 app.use('/api/timeline', timelineRoutes);
 
@@ -84,6 +86,7 @@ app.get('/', (req, res) => {
             auth: '/api/auth',
             ai: '/api/ai',
             uploads: '/api/uploads',
+            sharedFolders: '/api/shared-folders',
             postTemplates: '/api/post-templates',
             timeline: '/api/timeline'
         }
@@ -126,6 +129,7 @@ app.listen(PORT, () => {
     console.log(`  POST http://localhost:${PORT}/api/auth/login`);
     console.log(`  POST http://localhost:${PORT}/api/ai/generate-post`);
     console.log(`  POST http://localhost:${PORT}/api/uploads/image`);
+    console.log(`  GET  http://localhost:${PORT}/api/shared-folders`);
     console.log(`  GET  http://localhost:${PORT}/api/post-templates`);
     console.log(`  GET  http://localhost:${PORT}/api/timeline`);
     console.log('\n');

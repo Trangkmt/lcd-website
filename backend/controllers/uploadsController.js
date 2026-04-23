@@ -3,7 +3,7 @@ const { v2: cloudinary } = require('cloudinary');
 let isConfigured = false;
 
 function normalizeUploadFolder(folderInput) {
-    const defaultFolder = process.env.CLOUDINARY_FOLDER || 'lcd';
+    const defaultFolder = process.env.CLOUDINARY_FOLDER || 'lcd/images';
 
     if (typeof folderInput !== 'string') {
         return defaultFolder;

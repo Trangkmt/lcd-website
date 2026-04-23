@@ -2,6 +2,7 @@ const ROLES = {
     ADMIN_FULL: 'admin_full',
     UTILITY_ONLY: 'utility_only',
     POST_AUTHOR: 'post_author',
+    CONTACT_MANAGER: 'contact_manager',
 };
 
 function normalizeRole(role) {
@@ -13,6 +14,10 @@ function normalizeRole(role) {
 
     if (raw === ROLES.UTILITY_ONLY || raw === 'utility-only') {
         return ROLES.UTILITY_ONLY;
+    }
+
+    if (raw === ROLES.CONTACT_MANAGER || raw === 'contact-manager') {
+        return ROLES.CONTACT_MANAGER;
     }
 
     if (

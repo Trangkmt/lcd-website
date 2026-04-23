@@ -66,6 +66,7 @@
     background: var(--color-white);
     border: 1px solid var(--color-border-subtle);
     border-radius: 12px;
+    overflow-x: auto;
 }
 
 .tab-btn {
@@ -424,5 +425,47 @@
 
     .member-form {
         padding-inline: 0;
+    }
+}
+
+@media (max-width: 640px) {
+    .members-management {
+        padding: 14px;
+    }
+
+    .members-table {
+        min-width: 560px;
+    }
+
+    .tab-btn {
+        white-space: nowrap;
+        font-size: 0.8125rem;
+        padding: 9px 10px;
+    }
+
+    .position-checkboxes,
+    .department-checkboxes {
+        grid-template-columns: 1fr;
+    }
+
+    .member-image-uploader {
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+
+    .row-actions {
+        min-width: 136px;
+    }
+}
+
+@media (max-width: 480px) {
+    .members-header-actions,
+    .members-bulk-toolbar {
+        align-items: stretch;
+    }
+
+    .members-header-actions > *,
+    .members-bulk-toolbar > * {
+        width: 100%;
     }
 }

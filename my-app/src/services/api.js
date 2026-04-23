@@ -165,6 +165,15 @@ export const uploadsAPI = {
     uploadImage: (fileData, folder) => apiFetch('/uploads/image', { method: 'POST', body: { fileData, folder } }),
 };
 
+export const sharedFoldersAPI = {
+    getFolders: () => apiFetch('/shared-folders'),
+    getFolderFiles: (folderId) => apiFetch(`/shared-folders/${encodeURIComponent(folderId)}/files`),
+    uploadFile: (folderId, data) => apiFetch(`/shared-folders/${encodeURIComponent(folderId)}/files`, { method: 'POST', body: data }),
+    updateFile: (folderId, data) => apiFetch(`/shared-folders/${encodeURIComponent(folderId)}/files`, { method: 'PUT', body: data }),
+    deleteFile: (folderId, publicId) => apiFetch(`/shared-folders/${encodeURIComponent(folderId)}/files`, { method: 'DELETE', body: { publicId } }),
+    getDownloadInfo: (folderId, publicId) => apiFetch(`/shared-folders/${encodeURIComponent(folderId)}/files/download?publicId=${encodeURIComponent(publicId)}`),
+};
+
 export const timelineAPI = {
     getPublic: (params = {}) => apiFetch(`/timeline?${new URLSearchParams(params)}`),
     getAdmin: async (params = {}) => {

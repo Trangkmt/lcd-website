@@ -60,6 +60,16 @@ export function ViewIcon(props) {
     );
 }
 
+export function DownloadIcon(props) {
+    return (
+        <IconBase {...props}>
+            <path d="M12 4V15" />
+            <path d="M8 11L12 15L16 11" />
+            <path d="M5 20H19" />
+        </IconBase>
+    );
+}
+
 export function PublishIcon(props) {
     return (
         <IconBase {...props}>

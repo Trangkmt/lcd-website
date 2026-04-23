@@ -4,6 +4,7 @@
 .table-wrapper,
 .posts-table {
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .posts-table-container,
@@ -66,5 +67,35 @@ table.posts-table tbody tr:hover,
     .members-table td,
     .posts-table table td {
         padding: 12px 10px;
+    }
+
+    table.posts-table th,
+    .members-table th,
+    .posts-table table th {
+        font-size: 0.75rem;
+    }
+
+    table.posts-table td,
+    .members-table td,
+    .posts-table table td {
+        font-size: 0.8125rem;
+    }
+}
+
+@media (max-width: 640px) {
+
+    .posts-table-container,
+    .table-wrapper,
+    .posts-table {
+        border-radius: 10px;
+    }
+
+    table.posts-table th,
+    .members-table th,
+    .posts-table table th,
+    table.posts-table td,
+    .members-table td,
+    .posts-table table td {
+        padding: 10px 8px;
     }
 }

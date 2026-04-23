@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import {
     ADMIN_AUTH_KEY,
     ADMIN_TOKEN_KEY,
     getStoredAdminUser,
     isAdminFull,
+    isContactManager,
     isPostAuthor,
     isUtilityOnly,
 } from '../../../utils/adminPermissions';
@@ -25,12 +26,14 @@ import './AdminLayout.css';
 
 export default function AdminLayout() {
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+    const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
     const currentUser = getStoredAdminUser();
     const showAdminTabs = isAdminFull(currentUser);
     const showPostTabs = isAdminFull(currentUser) || isPostAuthor(currentUser);
-    const showUtilityTab = isAdminFull(currentUser) || isUtilityOnly(currentUser);
+    const showUtilityTab = !!currentUser?.id;
+    const showContactTabs = isAdminFull(currentUser) || isContactManager(currentUser);
     const showDashboardTab = !!currentUser?.id;
     const isActive = (path) => location.pathname.startsWith(path);
     const isPostsActive = isActive('/admin/posts');
@@ -56,9 +59,11 @@ export default function AdminLayout() {
     })();
     const activeRoleLabel = isAdminFull(currentUser)
         ? 'Admin toàn quyền'
-        : isPostAuthor(currentUser)
-            ? 'Biên tập nội dung'
-            : 'Quản trị tiện ích';
+        : isContactManager(currentUser)
+            ? 'Quản lý liên hệ'
+            : isPostAuthor(currentUser)
+                ? 'Biên tập nội dung'
+                : 'Quản trị tiện ích';
     const displayName = currentUser?.full_name || currentUser?.username || 'Quản trị viên';
 
     function handleLogout() {
@@ -67,10 +72,25 @@ export default function AdminLayout() {
         navigate('/admin/login', { replace: true });
     }
 
+    useEffect(() => {
+        setIsMobileNavOpen(false);
+    }, [location.pathname, location.search]);
+
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth > 768) {
+                setIsMobileNavOpen(false);
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     return (
         <div className="admin-layout">
             {/* Sidebar */}
-            <aside className={`admin-sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}>
+            <aside className={`admin-sidebar ${sidebarCollapsed ? 'collapsed' : ''} ${isMobileNavOpen ? 'mobile-open' : ''}`}>
                 <div className="sidebar-header">
                     <h2 className="sidebar-logo">
                         {!sidebarCollapsed && 'FIT Admin'}
@@ -173,7 +193,7 @@ export default function AdminLayout() {
                         </Link>
                     )}
 
-                    {showAdminTabs && (
+                    {showContactTabs && (
                         <Link
                             to="/admin/contacts"
                             className={`nav-item ${isActive('/admin/contacts') ? 'active' : ''}`}
@@ -226,9 +246,27 @@ export default function AdminLayout() {
                 </nav>
             </aside>
 
+            {isMobileNavOpen && (
+                <button
+                    type="button"
+                    className="admin-sidebar-backdrop"
+                    aria-label="Đóng menu quản trị"
+                    onClick={() => setIsMobileNavOpen(false)}
+                ></button>
+            )}
+
             {/* Main Content */}
             <main className="admin-main">
                 <header className="admin-topbar">
+                    <button
+                        type="button"
+                        className="admin-mobile-nav-toggle"
+                        aria-label={isMobileNavOpen ? 'Đóng menu' : 'Mở menu'}
+                        aria-expanded={isMobileNavOpen}
+                        onClick={() => setIsMobileNavOpen((prev) => !prev)}
+                    >
+                        {isMobileNavOpen ? <CloseIcon /> : <MenuIcon />}
+                    </button>
                     <div className="admin-topbar-heading">
                         <p className="admin-topbar-breadcrumb">Admin Panel / {pageLabel}</p>
                         <p className="admin-topbar-title">{pageLabel}</p>

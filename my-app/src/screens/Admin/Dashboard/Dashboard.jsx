@@ -17,16 +17,17 @@ import { Timeline } from '../../../components';
 import {
     getStoredAdminUser,
     isAdminFull,
+    isContactManager,
     isPostAuthor,
     isUtilityOnly,
 } from '../../../utils/adminPermissions';
 
 export default function Dashboard() {
     const currentUser = getStoredAdminUser();
-    const currentRole = currentUser?.role;
     const showAdminOverview = isAdminFull(currentUser);
     const showPostFunctions = isAdminFull(currentUser) || isPostAuthor(currentUser);
-    const showUtilityFunctions = isAdminFull(currentUser) || isUtilityOnly(currentUser);
+    const showUtilityFunctions = isAdminFull(currentUser) || isUtilityOnly(currentUser) || isContactManager(currentUser);
+    const showContactFunctions = isAdminFull(currentUser) || isContactManager(currentUser);
     const [loading, setLoading] = useState(true);
     const [allPosts, setAllPosts] = useState([]);
     const [allUsers, setAllUsers] = useState([]);
@@ -122,11 +123,18 @@ export default function Dashboard() {
         { icon: PlusIcon, label: 'Tiện ích khác', href: '/admin/utilities' },
     ];
 
+    const contactQuickLinks = [
+        { icon: MailIcon, label: 'Quản lý liên hệ', href: '/admin/contacts' },
+        { icon: PlusIcon, label: 'Tiện ích khác', href: '/admin/utilities' },
+    ];
+
     const quickLinks = showAdminOverview
         ? adminQuickLinks
-        : showPostFunctions
-            ? postQuickLinks
-            : utilityQuickLinks;
+        : showContactFunctions
+            ? contactQuickLinks
+            : showPostFunctions
+                ? postQuickLinks
+                : utilityQuickLinks;
 
     return (
         <div className="dashboard-page">
@@ -136,7 +144,9 @@ export default function Dashboard() {
                     <p className="dashboard-subtitle">
                         {isPostAuthor(currentUser)
                             ? 'Bạn có thể xem timeline và các chức năng biên tập nội dung của mình.'
-                            : 'Bạn có thể xem timeline và các công cụ tiện ích được phân quyền.'}
+                            : isContactManager(currentUser)
+                                ? 'Bạn có thể xem timeline, quản lý liên hệ và các tiện ích được phân quyền.'
+                                : 'Bạn có thể xem timeline và các công cụ tiện ích được phân quyền.'}
                     </p>
                 )}
             </div>
@@ -321,7 +331,20 @@ export default function Dashboard() {
                             </>
                         )}
 
-                        {!showAdminOverview && showUtilityFunctions && (
+                        {!showAdminOverview && showContactFunctions && (
+                            <>
+                                <button className="action-btn" onClick={() => window.location.href = '/admin/contacts'}>
+                                    <span className="action-icon" aria-hidden="true"><MailIcon /></span>
+                                    <span className="action-label">Quản lý liên hệ</span>
+                                </button>
+                                <button className="action-btn" onClick={() => window.location.href = '/admin/utilities'}>
+                                    <span className="action-icon" aria-hidden="true"><FolderIcon /></span>
+                                    <span className="action-label">Mở tiện ích</span>
+                                </button>
+                            </>
+                        )}
+
+                        {!showAdminOverview && !showContactFunctions && showUtilityFunctions && (
                             <>
                                 <button className="action-btn" onClick={() => window.location.href = '/admin/utilities'}>
                                     <span className="action-icon" aria-hidden="true"><FolderIcon /></span>
