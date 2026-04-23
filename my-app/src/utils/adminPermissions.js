@@ -5,6 +5,7 @@ export const ROLE_GROUPS = {
     ADMIN_FULL: 'admin_full',
     UTILITY_ONLY: 'utility_only',
     POST_AUTHOR: 'post_author',
+    CONTACT_MANAGER: 'contact_manager',
 };
 
 export function normalizeRole(role) {
@@ -16,6 +17,10 @@ export function normalizeRole(role) {
 
     if (raw === ROLE_GROUPS.UTILITY_ONLY || raw === 'utility-only') {
         return ROLE_GROUPS.UTILITY_ONLY;
+    }
+
+    if (raw === ROLE_GROUPS.CONTACT_MANAGER || raw === 'contact-manager') {
+        return ROLE_GROUPS.CONTACT_MANAGER;
     }
 
     if (
@@ -62,6 +67,10 @@ export function isPostAuthor(user) {
     return normalizeRole(user?.role) === ROLE_GROUPS.POST_AUTHOR;
 }
 
+export function isContactManager(user) {
+    return normalizeRole(user?.role) === ROLE_GROUPS.CONTACT_MANAGER;
+}
+
 export function canAccessAdminPath(user, pathname) {
     if (!user?.id) return false;
     if (isAdminFull(user)) return true;
@@ -70,8 +79,16 @@ export function canAccessAdminPath(user, pathname) {
         return true;
     }
 
+    if (pathname.startsWith('/admin/utilities')) {
+        return true;
+    }
+
     if (isUtilityOnly(user)) {
         return pathname.startsWith('/admin/utilities');
+    }
+
+    if (isContactManager(user)) {
+        return pathname.startsWith('/admin/contacts') || pathname.startsWith('/admin/utilities');
     }
 
     if (isPostAuthor(user)) {
@@ -84,6 +101,7 @@ export function canAccessAdminPath(user, pathname) {
 export function getDefaultAdminPath(user) {
     if (isAdminFull(user)) return '/admin';
     if (isUtilityOnly(user)) return '/admin/utilities';
+    if (isContactManager(user)) return '/admin/contacts';
     if (isPostAuthor(user)) return '/admin/posts';
     return '/admin/login';
 }

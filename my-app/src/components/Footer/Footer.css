@@ -60,6 +60,7 @@
 .footer-columns {
     display: flex;
     gap: var(--space-8);
+    flex-wrap: wrap;
 }
 
 .footer-column {
@@ -121,6 +122,23 @@
 
     .footer-columns {
         flex-direction: column;
+        gap: var(--space-4);
+    }
+
+    .footer-left,
+    .footer-column {
+        min-width: 0;
+        width: 100%;
+        max-width: none;
+    }
+}
+
+@media (max-width: 640px) {
+    .footer {
+        padding: var(--space-5) var(--space-4);
+    }
+
+    .footer-content {
         gap: var(--space-4);
     }
 }

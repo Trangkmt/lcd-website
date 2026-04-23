@@ -90,7 +90,8 @@ async function loadActiveUserById(userId) {
     const result = await pool.request()
         .input('id', sql.Int, userId)
         .query(`
-            SELECT id, username, email, full_name, ${avatarSelect}, role, member_type, is_active
+            SELECT id, username, email, full_name, ${avatarSelect}, role, member_type,
+                   department, department_position, is_active
             FROM users
             WHERE id = @id
             LIMIT 1

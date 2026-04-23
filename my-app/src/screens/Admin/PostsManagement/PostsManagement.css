@@ -208,7 +208,7 @@
 }
 
 .page-title {
-    font-size: 2rem;
+    font-size: clamp(1.35rem, 2.8vw, 2rem);
     font-weight: 700;
     color: var(--color-text-strong);
     margin: 0;
@@ -993,6 +993,11 @@
 
     .filters-bar {
         flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filters-bar > * {
+        width: 100%;
     }
 
     .doc-tools-bar {
@@ -1024,6 +1029,9 @@
 
     .editor-header-actions {
         width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
     }
 
     .wp-editor-body {
@@ -1041,5 +1049,65 @@
 
     .modal-body {
         padding: var(--space-70px);
+    }
+
+    .cat-page-type-submenu {
+        left: 0;
+        right: auto;
+        top: calc(100% + 4px);
+        min-width: min(300px, calc(100vw - 42px));
+    }
+}
+
+@media (max-width: 640px) {
+    .posts-management {
+        padding: 14px;
+    }
+
+    .tabs,
+    .cat-tabs {
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 2px;
+    }
+
+    .tab,
+    .cat-tab {
+        white-space: nowrap;
+        padding: 10px 12px;
+        font-size: 0.8125rem;
+    }
+
+    .wp-editor-toolbar {
+        gap: 6px;
+        padding: 8px;
+    }
+
+    .toolbar-btn {
+        padding: 6px 8px;
+        font-size: 0.75rem;
+    }
+
+    .wp-editor-body {
+        min-height: 320px;
+        max-height: 56vh;
+        padding: 14px;
+        line-height: 1.65;
+    }
+
+    .filter-menu {
+        right: auto;
+        left: 0;
+        min-width: min(270px, calc(100vw - 32px));
+    }
+}
+
+@media (max-width: 480px) {
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+        justify-content: center;
+        padding: 10px 14px;
+        font-size: 0.875rem;
     }
 }

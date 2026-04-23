@@ -47,7 +47,7 @@ DB_HOST=127.0.0.1
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
-CLOUDINARY_FOLDER=lcd
+CLOUDINARY_FOLDER=lcd/images
 ```
 
 ---

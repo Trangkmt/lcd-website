@@ -135,3 +135,38 @@
     width: 0.95em;
     height: 0.95em;
 }
+
+@media (max-width: 768px) {
+
+    .app-searchbar--toolbar,
+    .app-searchbar--toolbar-wide,
+    .app-searchbar--page,
+    .app-searchbar--activity {
+        --searchbar-flex: 1 1 100%;
+        --searchbar-width: 100%;
+        --searchbar-min-width: 0;
+        --searchbar-max-width: none;
+    }
+
+    .app-searchbar--activity {
+        --searchbar-height: 46px;
+        --searchbar-padding: 0 14px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .app-searchbar--compact,
+    .app-searchbar--activity,
+    .app-searchbar--page,
+    .app-searchbar--toolbar,
+    .app-searchbar--toolbar-wide {
+        --searchbar-height: 44px;
+        --searchbar-padding: 0 12px;
+        --searchbar-gap: 8px;
+    }
+
+    .app-searchbar__input {
+        font-size: 0.8125rem;
+    }
+}

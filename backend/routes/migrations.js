@@ -57,4 +57,48 @@ router.post('/migrate-intro-image', async (req, res) => {
     }
 });
 
+// Migration endpoint - Add contact_manager to users.role enum
+router.post('/migrate-user-role', async (req, res) => {
+    try {
+        const pool = await getConnection();
+
+        console.log('Running migration: add contact_manager to users.role enum...');
+
+        const [columns] = await pool.request().query(`
+            SELECT COLUMN_TYPE
+            FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE TABLE_SCHEMA = DATABASE()
+              AND TABLE_NAME = 'users'
+              AND COLUMN_NAME = 'role'
+            LIMIT 1
+        `);
+
+        const columnType = String(columns?.[0]?.COLUMN_TYPE || '').toLowerCase();
+        if (!columnType.includes('contact_manager')) {
+            await pool.request().query(`
+                ALTER TABLE users
+                MODIFY COLUMN role ENUM('admin_full', 'utility_only', 'contact_manager', 'post_author') NOT NULL DEFAULT 'post_author'
+            `);
+        }
+
+        await pool.request().query(`
+            UPDATE users
+            SET role = 'post_author'
+            WHERE role NOT IN ('admin_full', 'utility_only', 'contact_manager', 'post_author')
+        `);
+
+        return res.json({
+            success: true,
+            message: 'users.role enum updated successfully',
+        });
+    } catch (error) {
+        console.error('❌ Migration failed:', error);
+        res.status(500).json({
+            success: false,
+            error: error.message,
+            sqlMessage: error.sqlMessage
+        });
+    }
+});
+
 module.exports = router;

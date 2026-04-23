@@ -33,7 +33,7 @@
 .achievement-page__banner-title {
     position: relative;
     z-index: 1;
-    font-size: 3rem;
+    font-size: clamp(1.6rem, 5.2vw, 3rem);
     font-weight: 800;
     color: var(--color-white);
     letter-spacing: 0.05em;
@@ -108,7 +108,7 @@
 .achievement-page__hero-title {
     margin: 0;
     color: var(--color-white);
-    font-size: 2.25rem;
+    font-size: clamp(1.35rem, 3.5vw, 2.25rem);
     line-height: 1.2;
     font-weight: 800;
     max-width: 900px;
@@ -215,6 +215,17 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
     gap: 28px;
+}
+
+@media (max-width: 1024px) {
+    .achievement-page__content {
+        padding: 32px 18px 52px;
+    }
+
+    .achievement-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 18px;
+    }
 }
 
 /* Achievement Card Item */
@@ -364,5 +375,21 @@
         width: 34px;
         height: 34px;
         font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .achievement-page__banner {
+        height: 220px;
+    }
+
+    .achievement-card-item__image {
+        height: 180px;
+    }
+
+    .achievement-page__hero-content {
+        left: 14px;
+        right: 14px;
+        bottom: 18px;
     }
 }

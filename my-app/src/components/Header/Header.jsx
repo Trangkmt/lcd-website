@@ -1,12 +1,15 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './Header.css';
 import Logo from '../../images/Logo.png';
 import IconRightArrow from '../../images/icon-right-arrow.svg';
+import { MenuIcon, CloseIcon } from '../../SvgIcons';
 
 const Header = () => {
     const location = useLocation();
     const [searchValue, setSearchValue] = useState('');
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isMobileActivityOpen, setIsMobileActivityOpen] = useState(false);
 
     const menuItems = [
         { id: 2, label: "Cơ cấu tổ chức", path: "/organization" },
@@ -29,6 +32,26 @@ const Header = () => {
         console.log(`Searching for: ${searchValue}`);
     }, [searchValue]);
 
+    useEffect(() => {
+        setIsMobileMenuOpen(false);
+        setIsMobileActivityOpen(false);
+    }, [location.pathname]);
+
+    useEffect(() => {
+        if (!isMobileMenuOpen) {
+            return undefined;
+        }
+
+        const handleEscape = (event) => {
+            if (event.key === 'Escape') {
+                setIsMobileMenuOpen(false);
+            }
+        };
+
+        document.addEventListener('keydown', handleEscape);
+        return () => document.removeEventListener('keydown', handleEscape);
+    }, [isMobileMenuOpen]);
+
     return (
         <header className="header">
             <div className="header__menu">
@@ -46,6 +69,16 @@ const Header = () => {
                     <span className="header__org-line header__org-line--medium">TRƯỜNG CÔNG NGHỆ</span>
                     <span className="header__org-line header__org-line--bold">LIÊN CHI ĐOÀN KHOA CÔNG NGHỆ THÔNG TIN</span>
                 </div>
+
+                <button
+                    type="button"
+                    className="header__mobile-toggle"
+                    aria-label={isMobileMenuOpen ? 'Đóng menu' : 'Mở menu'}
+                    aria-expanded={isMobileMenuOpen}
+                    onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+                >
+                    {isMobileMenuOpen ? <CloseIcon /> : <MenuIcon />}
+                </button>
 
                 {/* Menu Items */}
                 <nav className="header__nav">
@@ -132,6 +165,57 @@ const Header = () => {
                     </button>
                 </div>
             </div>
+
+            <div
+                className={`header__mobile-backdrop ${isMobileMenuOpen ? 'header__mobile-backdrop--visible' : ''}`}
+                onClick={() => setIsMobileMenuOpen(false)}
+            ></div>
+
+            <aside className={`header__mobile-drawer ${isMobileMenuOpen ? 'header__mobile-drawer--open' : ''}`}>
+                <div className="header__mobile-search">
+                    <input
+                        type="text"
+                        className="header__search-input"
+                        placeholder="Tìm kiếm nội dung..."
+                        aria-label="Tìm kiếm"
+                        value={searchValue}
+                        onChange={(e) => setSearchValue(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                    />
+                    <button className="header__search-btn" onClick={handleSearch} aria-label="Thực hiện tìm kiếm">
+                        <svg className="header__search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="M21 21l-4.35-4.35"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <nav className="header__mobile-nav" aria-label="Menu di động">
+                    <Link to="/" className="header__mobile-link">Trang chủ</Link>
+                    <Link to="/organization" className="header__mobile-link">Cơ cấu tổ chức</Link>
+                    <button
+                        type="button"
+                        className="header__mobile-link header__mobile-link--toggle"
+                        onClick={() => setIsMobileActivityOpen((prev) => !prev)}
+                        aria-expanded={isMobileActivityOpen}
+                    >
+                        <span>Hoạt động</span>
+                        <span className="header__mobile-toggle-arrow">{isMobileActivityOpen ? '−' : '+'}</span>
+                    </button>
+                    {isMobileActivityOpen && (
+                        <div className="header__mobile-submenu">
+                            {activityDropdownItems.map((dropItem, i) => (
+                                <Link key={i} to={dropItem.path} className="header__mobile-sublink">
+                                    {dropItem.label}
+                                </Link>
+                            ))}
+                        </div>
+                    )}
+                    <Link to="/news" className="header__mobile-link">Tin tức</Link>
+                    <Link to="/achievement" className="header__mobile-link">Thành tích</Link>
+                    <Link to="/contact" className="header__mobile-link">Liên hệ</Link>
+                </nav>
+            </aside>
 
             {/* Bottom Bar */}
             <div className="header__bottom-bar"></div>
