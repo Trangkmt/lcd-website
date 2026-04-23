@@ -464,7 +464,8 @@
 @media (max-width: 1024px) {
     .header {
         height: auto;
-        min-height: 96px; /* bỏ 136px, để tự co giãn */
+        min-height: 96px;
+        /* bỏ 136px, để tự co giãn */
     }
 
     .layout-main {
@@ -476,7 +477,8 @@
         height: auto;
         padding: 8px 16px;
         display: grid;
-        grid-template-columns: auto 1fr auto; /* logo | org-title | search */
+        grid-template-columns: auto 1fr auto;
+        /* logo | org-title | search */
         grid-template-rows: auto auto;
         align-items: center;
         column-gap: 12px;
@@ -486,7 +488,8 @@
     .header__background {
         position: absolute;
         width: 100%;
-        height: 100%; /* theo chiều cao thực của menu */
+        height: 100%;
+        /* theo chiều cao thực của menu */
         left: 0;
         transform: none;
     }
@@ -524,7 +527,8 @@
         position: relative;
         top: auto;
         left: auto;
-        grid-column: 1 / -1; /* span full width */
+        grid-column: 1 / -1;
+        /* span full width */
         grid-row: 2;
         width: 100vw;
         margin-left: calc(50% - 50vw);

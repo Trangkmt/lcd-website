@@ -38,14 +38,7 @@ CREATE TABLE users (
     member_type ENUM('student', 'teacher') NOT NULL DEFAULT 'student',
     student_code VARCHAR(30),
     class_name VARCHAR(50),
-    department ENUM(
-        'ban chấp hành',
-        'ban văn thể',
-        'ban truyền thông kỹ thuật',
-        'ban tổ chức sự kiện',
-        'ban đối ngoại',
-        'ban công tác đoàn và phát triển đảng'
-    ),
+    department VARCHAR(100),
     department_position TEXT,
     is_active BOOLEAN DEFAULT TRUE,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
