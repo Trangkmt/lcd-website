@@ -15,7 +15,26 @@
 }
 
 /* ============================================
-   SECTION TITLES & UNDERLINE
+   SECTION HEADER (title + divider wrapper)
+   ============================================ */
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    width: 100%;
+    grid-column: 1 / -1;
+    grid-row: 1;
+    min-width: 0;
+}
+
+.section-header .section-divider {
+    flex: 1;
+    width: auto;
+    margin: 0;
+}
+
+/* ============================================
+   SECTION TITLES
    ============================================ */
 .section-title {
     position: relative;
@@ -27,27 +46,22 @@
     color: var(--color-darkslateblue);
     font-weight: 900;
     white-space: nowrap;
+    flex-shrink: 0;
     z-index: 2;
 }
 
 .section-divider {
     position: relative;
     display: block;
-    justify-self: stretch;
-    margin-top: 0;
     height: 2px;
     background-color: #6faedd;
     border-radius: 999px;
+    margin-top: 0;
 }
 
-.section-divider--news,
-.section-divider--activity,
-.section-divider--achievement,
-.section-divider--timeline {
-    width: 100%;
-    max-width: none;
-}
-
+/* ============================================
+   BUTTONS
+   ============================================ */
 .btn-view-more-wrapper {
     position: relative;
     width: auto;
@@ -147,11 +161,9 @@
     font-family: var(--font-open-sans);
 }
 
-.news-section .section-title--news {
-    grid-column: 1;
+.news-section .section-header {
+    grid-column: 1 / -1;
     grid-row: 1;
-    align-self: center;
-    max-width: none;
 }
 
 .news-section .btn-view-more {
@@ -179,15 +191,6 @@
     font-weight: 600;
 }
 
-.news-section .section-divider--news {
-    grid-column: 2 / -1;
-    grid-row: 1;
-    align-self: center;
-    width: 100%;
-    margin: 0;
-}
-
-
 /* ============================================
    ACTIVITY SECTION
    ============================================ */
@@ -202,19 +205,9 @@
     font-size: 0.75rem;
 }
 
-.activity-section .section-title--activity {
-    grid-column: 1;
+.activity-section .section-header {
+    grid-column: 1 / -1;
     grid-row: 1;
-    align-self: center;
-    max-width: none;
-}
-
-.activity-section .section-divider--activity {
-    grid-column: 2;
-    grid-row: 1;
-    align-self: center;
-    width: 100%;
-    margin: 0;
 }
 
 .activity-section .btn-view-more {
@@ -268,7 +261,7 @@
     line-height: 1.5;
 }
 
-/* Activity Posts - Base */
+/* Activity Posts */
 .activity-post {
     position: relative;
     width: 100%;
@@ -348,19 +341,9 @@
     font-family: var(--font-open-sans);
 }
 
-.achievement-section .section-title--achievement {
-    grid-column: 1;
+.achievement-section .section-header {
+    grid-column: 1 / -1;
     grid-row: 1;
-    align-self: center;
-    max-width: none;
-}
-
-.achievement-section .section-divider--achievement {
-    grid-column: 2 / -1;
-    grid-row: 1;
-    align-self: center;
-    width: 100%;
-    margin: 0;
 }
 
 .btn-view-more-wrapper {
@@ -547,6 +530,9 @@
     background: rgba(255, 255, 255, 1);
 }
 
+/* ============================================
+   RESPONSIVE
+   ============================================ */
 @media (max-width: 1024px) {
     .homepage {
         grid-template-columns: 1fr;
@@ -575,65 +561,49 @@
         font-size: 0.9375rem;
     }
 
-    .activity-section,
-    .news-section,
-    .achievement-section {
-        grid-column: 1;
+    /* Tất cả section về 1 cột */
+    .homepage .news-section,
+    .homepage .achievement-section {
+        grid-template-columns: 1fr !important;
     }
 
-    .activity-section {
-        grid-template-columns: 1fr;
+    .homepage .news-section>*,
+    .homepage .achievement-section>* {
+        grid-column: 1 !important;
+        grid-row: auto !important;
     }
 
-    .activity-section__featured-box,
+    /* Activity dùng flex để dùng order */
+    .homepage .activity-section {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .activity-section .section-header {
+        order: 1;
+    }
+
+    .activity-section .btn-view-more {
+        order: 2;
+        align-self: flex-start;
+    }
+
+    .activity-section__featured-box {
+        order: 3;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+    }
+
+    .activity-section .activity-post {
+        order: 4;
+    }
+
     .activity-section__subtitle {
-        grid-column: 1;
-        grid-row: auto;
-    }
-
-    .news-section,
-    .achievement-section {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        order: 5;
     }
 
     .activity-post__title {
         padding-right: 0;
-    }
-}
-
-@media (max-width: 680px) {
-    .homepage {
-        padding: var(--space-4) var(--space-3) var(--space-10);
-    }
-
-    .hero-section {
-        height: 320px;
-    }
-
-    .hero-section__title {
-        font-size: 1.5rem;
-    }
-
-    .hero-section__summary {
-        font-size: 0.875rem;
-        -webkit-line-clamp: 3;
-        line-clamp: 3;
-    }
-
-    .activity-section,
-    .news-section,
-    .achievement-section {
-        padding: var(--space-4);
-    }
-
-    .news-section,
-    .achievement-section {
-        grid-template-columns: 1fr;
-    }
-
-    .news-card,
-    .achievement-card {
-        min-height: 0;
     }
 }
 

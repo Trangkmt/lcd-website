@@ -242,8 +242,10 @@ const Homepage = () => {
             alt={displayedActivity?.title || 'Featured Activity'}
           />
         </div>
-        <b className="section-title section-title--activity">HOẠT ĐỘNG NỔI BẬT</b>
-        <div className="section-divider section-divider--activity" aria-hidden="true" />
+        <div className="section-header">
+          <b className="section-title section-title--activity">HOẠT ĐỘNG NỔI BẬT</b>
+          <div className="section-divider section-divider--activity" aria-hidden="true" />
+        </div>
         <Link to="/activity" className="btn-view-more" style={{ textDecoration: 'none', color: 'inherit' }}>
           <b className="btn-view-more__text">Xem thêm</b>
         </Link>
@@ -270,8 +272,10 @@ const Homepage = () => {
 
       {/* News Section */}
       <div className="news-section">
-        <b className="section-title section-title--news">TIN TỨC NỔI BẬT</b>
-        <div className="section-divider section-divider--news" aria-hidden="true" />
+        <div className="section-header">
+          <b className="section-title section-title--news">TIN TỨC NỔI BẬT</b>
+          <div className="section-divider section-divider--news" aria-hidden="true" />
+        </div>
         <Link to="/news" className="btn-view-more" style={{ textDecoration: 'none', color: 'inherit' }}>
           <b className="btn-view-more__text">Xem thêm</b>
         </Link>
@@ -291,8 +295,10 @@ const Homepage = () => {
 
       {/* Achievement Section */}
       <div className="achievement-section">
-        <b className="section-title section-title--achievement">THÀNH TÍCH NỔI BẬT</b>
-        <div className="section-divider section-divider--achievement" aria-hidden="true" />
+        <div className="section-header">
+          <b className="section-title section-title--achievement">THÀNH TÍCH NỔI BẬT</b>
+          <div className="section-divider section-divider--achievement" aria-hidden="true" />
+        </div>
         <div className="btn-view-more-wrapper">
           <Link to="/achievement" className="btn-view-more" style={{ textDecoration: 'none', color: 'inherit' }}>
             <b className="btn-view-more__text">Xem thêm</b>
