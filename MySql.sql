@@ -86,9 +86,7 @@ INSERT INTO categories (id,name,slug,page_type,description,intro_image,parent_id
 (13,'FIT Cup','fit-cup','activity_annual','Giải bóng đá FIT Cup',NULL,9),
 (14,'Prom','prom','activity_annual','Lễ prom sinh viên',NULL,9),
 (15,'Talkshow','talkshow','activity_annual','Talkshow và giao lưu',NULL,9),
-(16,'Cuộc thi','cuoc-thi','activity_annual','Các cuộc thi và hackathon',NULL,9),
-(17,'Tình nguyện cộng đồng','tinh-nguyen-cong-dong','activity_non_annual','Các hoạt động phục vụ cộng đồng',NULL,17),
-(18,'Kết nối doanh nghiệp','ket-noi-doanh-nghiep','activity_non_annual','Các hoạt động kết nối và định hướng nghề nghiệp',NULL,17);
+(16,'Cuộc thi','cuoc-thi','activity_annual','Các cuộc thi và hackathon',NULL,9);
 
 -- ================================================
 -- POST TEMPLATES
@@ -151,66 +149,6 @@ CREATE TABLE news (
     FOREIGN KEY (author_id) REFERENCES users(id)
 );
 
-INSERT INTO news (title,slug,summary,content,thumbnail,category_id,author_id,is_featured,is_published,published_at) VALUES
-('Thông báo kế hoạch học kỳ mới','thong-bao-ke-hoach-hoc-ky-moi',
-'Cập nhật kế hoạch hoạt động học kỳ mới của Liên Chi đoàn.',
-'Bài viết tổng hợp kế hoạch hoạt động theo từng tháng, kèm định hướng trọng tâm và các mốc triển khai.',
-'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1400&q=80',
-2,1,1,1,DATE_SUB(NOW(), INTERVAL 1 DAY)),
-
-('Ngày hội việc làm IT 2026','ngay-hoi-viec-lam-it-2026',
-'Sự kiện kết nối sinh viên với doanh nghiệp công nghệ.',
-'Ngày hội việc làm quy tụ nhiều doanh nghiệp, mở rộng cơ hội thực tập và việc làm cho sinh viên.',
-'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1400&q=80',
-3,1,1,1,DATE_SUB(NOW(), INTERVAL 2 DAY)),
-
-('Talkshow ứng dụng AI trong học tập','talkshow-ung-dung-ai-trong-hoc-tap',
-'Chia sẻ ứng dụng AI trong học tập và nghiên cứu.',
-'Chương trình trao đổi với diễn giả từ doanh nghiệp và giảng viên về các công cụ AI trong học tập.',
-'https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&w=1400&q=80',
-1,1,1,1,DATE_SUB(NOW(), INTERVAL 3 DAY)),
-
-('Lễ chào tân sinh viên K66','le-chao-tan-sinh-vien-k66',
-'Sự kiện mở đầu năm học dành cho tân sinh viên.',
-'Lễ chào tân sinh viên giới thiệu tổng quan khoa, Liên Chi đoàn và các hoạt động phong trào nổi bật.',
-'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1400&q=80',
-11,1,1,1,DATE_SUB(NOW(), INTERVAL 4 DAY)),
-
-('FIT Cup 2026 chính thức khởi tranh','fit-cup-2026-khoi-tranh',
-'Giải bóng đá sinh viên thường niên đã quay trở lại.',
-'Giải đấu năm nay mở rộng số đội tham gia và có thêm hoạt động đồng hành dành cho cổ động viên.',
-'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=1400&q=80',
-13,1,1,1,DATE_SUB(NOW(), INTERVAL 5 DAY)),
-
-('Workshop định hướng nghề nghiệp IT','workshop-dinh-huong-nghe-nghiep-it',
-'Buổi chia sẻ định hướng nghề nghiệp cho sinh viên năm 3-4.',
-'Chương trình tập trung vào kỹ năng CV, phỏng vấn và lộ trình học tập phù hợp theo từng vị trí.',
-'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1400&q=80',
-18,1,1,1,DATE_SUB(NOW(), INTERVAL 6 DAY)),
-
-('Chiến dịch tình nguyện mùa hè xanh','chien-dich-tinh-nguyen-mua-he-xanh',
-'Hoạt động tình nguyện cộng đồng tại địa phương.',
-'Đội hình sinh viên triển khai nhiều phần việc như dạy học, chuyển đổi số cơ bản và hỗ trợ địa phương.',
-'https://images.unsplash.com/photo-1469571486292-b53601020f00?auto=format&fit=crop&w=1400&q=80',
-18,1,1,1,DATE_SUB(NOW(), INTERVAL 7 DAY)),
-
-('Thành tích nghiên cứu khoa học sinh viên','thanh-tich-nghien-cuu-khoa-hoc-sinh-vien',
-'Sinh viên khoa đạt giải cao trong cuộc thi nghiên cứu khoa học.',
-'Nhiều đề tài nghiên cứu của sinh viên được đánh giá cao nhờ tính ứng dụng và khả năng triển khai thực tế.',
-'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1400&q=80',
-7,1,1,1,DATE_SUB(NOW(), INTERVAL 8 DAY)),
-
-('Thành tích Olympic Tin học toàn quốc','thanh-tich-olympic-tin-hoc-toan-quoc',
-'Đội tuyển khoa giành huy chương tại Olympic Tin học.',
-'Đội tuyển sinh viên khoa đạt thành tích xuất sắc sau quá trình ôn luyện nghiêm túc và bền bỉ.',
-'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1400&q=80',
-7,1,1,1,DATE_SUB(NOW(), INTERVAL 9 DAY)),
-
-('Bản tin hoạt động tháng này','ban-tin-hoat-dong-thang-nay',
-'Tổng hợp nhanh các hoạt động nổi bật trong tháng.',
-'Bản tin tổng hợp các sự kiện đã diễn ra cùng lịch hoạt động sắp tới của Liên Chi đoàn.',
-'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1400&q=80',
-1,1,0,1,DATE_SUB(NOW(), INTERVAL 10 DAY));
 
 -- ================================================
 -- DOCUMENTS
@@ -232,9 +170,6 @@ CREATE TABLE documents (
     FOREIGN KEY (category_id) REFERENCES categories(id),
     FOREIGN KEY (uploaded_by) REFERENCES users(id)
 );
-
-INSERT INTO documents (title,file_name,file_path,file_type,category_id,uploaded_by) VALUES
-('Quy chế hoạt động','quyche.pdf','/docs/quyche.pdf','pdf',8,1);
 
 -- ================================================
 -- ACTIVITIES
@@ -263,16 +198,11 @@ CREATE TABLE activities (
 );
 
 INSERT INTO activities (title,slug,description,location,start_date,end_date,category_id,created_by) VALUES
-('Lễ chào tân sinh viên 2025','chao-tan-2025','Chương trình chào tân sinh viên khóa 25 được tổ chức nhằm giúp các bạn sinh viên mới làm quen với môi trường đại học.','Hội trường chính','2025-09-01','2025-09-02',11,1),
-('Quân sự huấn luyện khóa 25','quan-su-2025','Chương trình quân sự huấn luyện sinh viên khóa mới, giúp các bạn nâng cao tinh thần kỷ luật và thể lực.','Sân trường','2025-09-05','2025-09-10',12,1),
-('FIT Cup 2025','fit-cup-2025','Giải bóng đá FIT Cup thường niên, đây là sân chơi lớn nhất của sinh viên khoa CNTT mỗi năm.','Sân bóng đá UTE','2025-10-01','2025-10-20',13,1),
-('Prom sinh viên 2025','prom-2025','Lễ prom sinh viên khoa CNTT - sự kiện lớn nhất của năm học với sự tham gia của hàng trăm bạn sinh viên.','Sân khấu trước hội trường','2025-12-15','2025-12-15',14,1),
-('Talkshow công nghệ','talkshow-tech','Talkshow về xu hướng công nghệ mới, các chuyên gia chia sẻ kinh nghiệm và cơ hội nghề nghiệp.','Phòng hội thảo','2025-05-20','2025-05-20',15,1),
-('Hackathon 2025','hackathon-2025','Cuộc thi Hackathon thường niên dành cho sinh viên lập trình và công nghệ thông tin.','Lab CNTT','2025-08-01','2025-08-02',16,1),
-('Giải lập trình sinh viên','giai-lap-trinh','Giải lập trình thường niên với các bài toán thách thức về thuật toán và cấu trúc dữ liệu.','Lab CNTT','2025-12-01','2025-12-05',16,1),
-('Workshop lập trình web','workshop-web','Workshop tập trung vào các công nghệ web hiện đại như React, Node.js, và các framework khác.','Phòng lab','2025-06-15','2025-06-15',15,1),
-('FIT Cup futsal','fit-cup-futsal','Giải bóng đá futsal trong khuôn khổ FIT Cup với sự tham gia của nhiều đội bóng từ các lớp.','Sân futsal','2025-11-01','2025-11-15',13,1),
-('Workshop AI & Data Science','workshop-ai-data','Workshop về ứng dụng AI và Data Science trong doanh nghiệp và nghiên cứu khoa học.','Phòng hội thảo','2025-07-10','2025-07-10',15,1);
+('Lễ chào tân sinh viên','chao-tan','Chương trình chào tân sinh viên khóa 25 được tổ chức nhằm giúp các bạn sinh viên mới làm quen với môi trường đại học.','Hội trường chính','2025-09-01','2025-09-02',11,1),
+('Quân sự','quan-su','Chương trình quân sự huấn luyện sinh viên khóa mới, giúp các bạn nâng cao tinh thần kỷ luật và thể lực.','Sân trường','2025-09-05','2025-09-10',12,1),
+('FIT Cup','fit-cup','Giải bóng đá FIT Cup thường niên, đây là sân chơi lớn nhất của sinh viên khoa CNTT mỗi năm.','Sân bóng đá UTE','2025-10-01','2025-10-20',13,1),
+('Prom sinh viên','prom-2025','Lễ prom sinh viên khoa CNTT - sự kiện lớn nhất của năm học với sự tham gia của hàng trăm bạn sinh viên.','Sân khấu trước hội trường','2025-12-15','2025-12-15',14,1),
+('Talkshow công nghệ','talkshow-tech','Talkshow về xu hướng công nghệ mới, các chuyên gia chia sẻ kinh nghiệm và cơ hội nghề nghiệp.','Phòng hội thảo','2025-05-20','2025-05-20',15,1);
 
 -- ================================================
 -- TIMELINE EVENTS
@@ -293,15 +223,6 @@ CREATE TABLE timeline_events (
     CONSTRAINT chk_timeline_year CHECK (year BETWEEN 2000 AND 2100),
     FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
 );
-
-INSERT INTO timeline_events (event_type, month, year, event_name, summary, sort_order, is_published, created_by) VALUES
-('annual', 1, CASE WHEN 1 < MONTH(CURDATE()) THEN YEAR(CURDATE()) + 1 ELSE YEAR(CURDATE()) END, 'Khởi động học kỳ xuân', 'Ra quân đội ngũ cộng tác viên và triển khai kế hoạch học kỳ mới.', 1, TRUE, 1),
-('annual', 3, CASE WHEN 3 < MONTH(CURDATE()) THEN YEAR(CURDATE()) + 1 ELSE YEAR(CURDATE()) END, 'Chuỗi workshop học thuật', 'Tổ chức chuyên đề học thuật theo nhóm công nghệ và định hướng nghề nghiệp.', 1, TRUE, 1),
-('annual', 5, CASE WHEN 5 < MONTH(CURDATE()) THEN YEAR(CURDATE()) + 1 ELSE YEAR(CURDATE()) END, 'Chiến dịch tình nguyện', 'Các đội hình tình nguyện thực hiện hoạt động cộng đồng tại địa phương.', 1, TRUE, 1),
-('annual', 8, CASE WHEN 8 < MONTH(CURDATE()) THEN YEAR(CURDATE()) + 1 ELSE YEAR(CURDATE()) END, 'Hackathon sinh viên FIT', 'Sân chơi công nghệ thường niên cho các đội thi liên ngành.', 1, TRUE, 1),
-('annual', 9, CASE WHEN 9 < MONTH(CURDATE()) THEN YEAR(CURDATE()) + 1 ELSE YEAR(CURDATE()) END, 'Chào tân sinh viên', 'Sự kiện kết nối tân sinh viên với các ban chuyên môn của Liên Chi đoàn.', 1, TRUE, 1),
-('annual', 10, CASE WHEN 10 < MONTH(CURDATE()) THEN YEAR(CURDATE()) + 1 ELSE YEAR(CURDATE()) END, 'FIT Cup', 'Giải thể thao thường niên với các nội dung thi đấu và cổ vũ tập thể.', 1, TRUE, 1),
-('annual', 12, CASE WHEN 12 < MONTH(CURDATE()) THEN YEAR(CURDATE()) + 1 ELSE YEAR(CURDATE()) END, 'Tổng kết cuối năm', 'Tổng kết thành tích, vinh danh và công bố định hướng năm tới.', 1, TRUE, 1);
 
 -- ================================================
 -- ORGANIZATIONS
@@ -386,3 +307,75 @@ USE MyAppDB;
 SHOW TABLES;
 SELECT COUNT(*) FROM news;
 SELECT COUNT(*) FROM categories;
+
+INSERT INTO news (title, slug, summary, content, thumbnail, category_id, author_id, is_published, published_at) VALUES (
+'CHÍNH THỨC RA MẮT SỰ KIỆN CHÀO TÂN K67 - AETERNIA',
+'chao-tan-k67-aeternia',
+'Ra mắt chuỗi sự kiện chào tân sinh viên K67',
+'“Ngai vàng có thể chỉ thuộc về một gia tộc, nhưng vinh quang thuộc về tất cả những ai đã dũng cảm bước vào cuộc chiến này.” Chuỗi sự kiện chào tân K67 của Khoa Công nghệ thông tin đã chính thức khởi động với chủ đề Aeternia - hành trình trở về vương quốc huy hoàng, nơi những tân sinh viên K67 sẽ đấu tranh và khẳng định bản lĩnh của mình. Từ những bước chân đầu tiên cho đến khi ánh sáng đêm gala bùng cháy, tất cả sẽ trở thành thử thách về tinh thần, ý chí và tài năng. Hãy theo dõi và đồng hành cùng LCĐ để chứng kiến hành trình chinh phục đầy cảm hứng này.',
+'https://scontent.fhan1-1.fna.fbcdn.net/v/t39.30808-6/555062645_122182622720363677_7711415447417702913_n.jpg',
+11,
+1,
+TRUE,
+NOW()
+);
+
+INSERT INTO news (title, slug, summary, content, thumbnail, category_id, author_id, is_published, published_at) VALUES (
+'RECAP TEAM BUILDING CHÀO TÂN SINH VIÊN K67',
+'recap-team-building-k67',
+'Tổng kết hoạt động team building chào tân K67',
+'Vào Chủ nhật ngày 12/10, sự kiện team building chào đón tân sinh viên K67 của Khoa Công Nghệ Thông Tin đã diễn ra trong không khí sôi nổi, hào hứng và đầy cảm xúc. Với sự góp mặt đông đảo của các bạn sinh viên K67 cùng sự chuẩn bị chu đáo từ ban tổ chức AETERNIA, chương trình đã trở thành cầu nối giúp các bạn xóa tan sự bỡ ngỡ ban đầu, tạo nên những khoảnh khắc gắn kết và khơi dậy tinh thần nhiệt huyết. Những trò chơi đồng đội và thử thách sáng tạo đã giúp sinh viên thể hiện cá tính và tinh thần đoàn kết. K67 – hãy tiếp tục lan tỏa tinh thần Dám nghĩ – Dám làm – Dám bứt phá!',
+'https://scontent.fhan1-1.fna.fbcdn.net/v/t39.30808-6/561656044_122184900914363677_5354723265214253294_n.jpg',
+11,
+1,
+TRUE,
+NOW()
+);
+
+INSERT INTO news (title, slug, summary, content, thumbnail, category_id, author_id, is_published, published_at) VALUES (
+'THÔNG BÁO LỊCH THI ĐẤU TỨ KẾT – FIT CUP S2',
+'fit-cup-tu-ket-s2',
+'Lịch thi đấu vòng tứ kết FIT CUP',
+'Sau những vòng đấu đầy kịch tính, FIT CUP S2 đã chính thức bước vào giai đoạn Tứ kết – nơi chỉ còn lại những đội bóng xuất sắc nhất tranh tài cho tấm vé đi tiếp. Ban tổ chức công bố lịch thi đấu với những cặp đấu hấp dẫn và khó đoán. Đây là những trận đấu mang tính quyết định, nơi bản lĩnh và chiến thuật được đẩy lên cao nhất. Hãy theo dõi và cổ vũ cho đội bóng bạn yêu thích!',
+'https://scontent.fhan1-1.fna.fbcdn.net/v/t39.30808-6/672631244_122204880152363677_895006564231560541_n.jpg',
+13,
+1,
+TRUE,
+NOW()
+);
+
+INSERT INTO news (title, slug, summary, content, thumbnail, category_id, author_id, is_published, published_at) VALUES (
+'FIT RACE – BỨT PHÁ GIỚI HẠN, LAN TỎA TINH THẦN THỂ THAO',
+'fit-race-2026',
+'Giải chạy FIT RACE 2026',
+'FIT RACE không chỉ là một giải chạy mà còn là hành trình vượt qua giới hạn bản thân. Trên mỗi cung đường, từng bước chân là sự kiên trì, nỗ lực và quyết tâm không bỏ cuộc. Mỗi chặng đường mang đến cảm xúc riêng và lan tỏa năng lượng tích cực của tuổi trẻ. FIT RACE – nơi mỗi bước chạy là một lần bứt phá.',
+'https://scontent.fhan1-1.fna.fbcdn.net/v/t39.30808-6/672631244_122204880152363677_895006564231560541_n.jpg',
+6,
+1,
+TRUE,
+NOW()
+);
+
+INSERT INTO news (title, slug, summary, content, thumbnail, category_id, author_id, is_published, published_at) VALUES (
+'CHÀO MỪNG 95 NĂM NGÀY THÀNH LẬP ĐOÀN TNCS HỒ CHÍ MINH',
+'chao-mung-95-nam-doan',
+'Kỷ niệm 95 năm thành lập Đoàn TNCS Hồ Chí Minh',
+'Tuổi trẻ Khoa Công nghệ thông tin xin gửi lời chúc mừng tới tổ chức Đoàn TNCS Hồ Chí Minh nhân dịp kỷ niệm 95 năm thành lập. Đây là hành trình của lý tưởng, cống hiến và khát vọng tuổi trẻ Việt Nam. Chúc các cán bộ Đoàn và đoàn viên luôn giữ vững nhiệt huyết, sáng tạo và sẵn sàng cống hiến.',
+'https://scontent.fhan1-1.fna.fbcdn.net/v/t39.30808-6/658149560_122202375770363677_2379326581682089881_n.jpg',
+2,
+1,
+TRUE,
+NOW()
+);
+
+INSERT INTO news (title, slug, summary, content, thumbnail, category_id, author_id, is_published, published_at) VALUES (
+'TUYÊN DƯƠNG TRẦN MINH KHÁNH – CÁN BỘ ĐOÀN TIÊU BIỂU 2026',
+'tuyen-duong-tran-minh-khanh-2026',
+'Tuyên dương cán bộ đoàn tiêu biểu năm 2026',
+'Đồng chí Trần Minh Khánh – Phó Bí thư Liên chi Đoàn Khoa Công nghệ thông tin đã được tuyên dương là cán bộ Đoàn tiêu biểu năm 2026. Đây là sự ghi nhận xứng đáng cho những nỗ lực trong học tập và công tác Đoàn. Chúc đồng chí tiếp tục phát huy năng lực và đóng góp cho phong trào sinh viên.',
+'https://scontent.fhan1-1.fna.fbcdn.net/v/t39.30808-6/657727925_122202465020363677_6172855170766289206_n.jpg',
+7,
+1,
+TRUE,
+NOW()
+);

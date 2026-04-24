@@ -247,17 +247,13 @@
     grid-column: 2;
     grid-row: 2 / span 8;
     width: 100%;
-    min-height: 320px;
+    aspect-ratio: 16 / 9;
     overflow: hidden;
 }
 
 .activity-section__featured-image {
-    position: relative;
     width: 100%;
-    background-color: var(--color-gainsboro);
-    border: 1px solid rgba(44, 107, 204, 0.14);
     height: 100%;
-    transition: opacity 0.5s ease;
     object-fit: cover;
 }
 

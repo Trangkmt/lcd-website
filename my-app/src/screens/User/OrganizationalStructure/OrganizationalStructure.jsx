@@ -233,7 +233,7 @@ const OrganizationalStructure = () => {
                         })
                         : members.filter((member) => parseDepartments(member.department).includes(definition.key));
                     const head = relatedMembers.find((member) => hasPosition(member, 'trưởng ban')) || null;
-                    const deputy = relatedMembers.find((member) => hasPosition(member, 'phó ban')) || null;
+                    const deputies = relatedMembers.filter((member) => hasPosition(member, 'phó ban'));
 
                     return {
                         id: org?.id || definition.key,
@@ -242,7 +242,7 @@ const OrganizationalStructure = () => {
                         description: org?.description || definition.description,
                         icon: definition.icon,
                         head,
-                        deputy,
+                        deputies,
                         members: relatedMembers,
                     };
                 });
@@ -301,10 +301,10 @@ const OrganizationalStructure = () => {
                     }));
             }
 
-            const leaderIds = new Set(
-                [selectedBoard.head?.id, selectedBoard.deputy?.id]
-                    .filter((value) => value !== undefined && value !== null)
-            );
+            const leaderIds = new Set([
+                selectedBoard.head?.id,
+                ...(selectedBoard.deputies || []).map(d => d.id)
+            ].filter(Boolean));
 
             const otherMembers = uniqueMembersById(
                 selectedBoard.members.filter((member) => !leaderIds.has(member?.id))
@@ -314,8 +314,12 @@ const OrganizationalStructure = () => {
             if (selectedBoard.head) {
                 rankedMembers.push({ member: selectedBoard.head, role: 'Trưởng ban' });
             }
-            if (selectedBoard.deputy && selectedBoard.deputy.id !== selectedBoard.head?.id) {
-                rankedMembers.push({ member: selectedBoard.deputy, role: 'Phó ban' });
+            if (selectedBoard.deputies && selectedBoard.deputies.length > 0) {
+                selectedBoard.deputies.forEach((deputy) => {
+                    if (deputy.id !== selectedBoard.head?.id) {
+                        rankedMembers.push({ member: deputy, role: 'Phó ban' });
+                    }
+                });
             }
 
             otherMembers.forEach((member) => {

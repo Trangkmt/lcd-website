@@ -27,7 +27,7 @@ const getSlideCategoryLabel = (item) => {
 const mapHeroSlide = (item) => ({
   id: `${item.page_type || 'news'}-${item.id}`,
   title: item.title || '',
-  image: item.thumbnail || `https://picsum.photos/1440/600?random=${item.id}`,
+  image: item.thumbnail || '',
   summary: item.summary || '',
   date: item.published_at || item.created_at,
   categoryLabel: getSlideCategoryLabel(item),
@@ -165,7 +165,7 @@ const Homepage = () => {
 
   const activeHero = heroSlides[heroIndex] || {
     title: 'TIN NỔI BẬT MỚI NHẤT',
-    image: 'https://picsum.photos/1440/600?random=20',
+    image: '',
     summary: 'Theo dõi các thông tin nổi bật mới nhất từ Tin tức, Hoạt động thường niên và Hoạt động không thường niên.',
     categoryLabel: 'Nổi bật',
     date: null,
@@ -238,7 +238,7 @@ const Homepage = () => {
         <div className="activity-section__featured-box">
           <img
             className="activity-section__featured-image"
-            src={displayedActivity?.thumbnail || 'https://picsum.photos/652/367?random=10'}
+            src={displayedActivity?.thumbnail}
             alt={displayedActivity?.title || 'Featured Activity'}
           />
         </div>
@@ -280,7 +280,7 @@ const Homepage = () => {
             key={card.id}
             to={`/news/${card.id}`}
             className={`news-card news-card--${index + 1}`}
-            image={card.thumbnail || `https://picsum.photos/300/200?random=${card.id}`}
+            image={card.thumbnail || ''}
             category={card.category_name || ''}
             date={card.published_at || card.created_at}
             title={card.title || ''}
