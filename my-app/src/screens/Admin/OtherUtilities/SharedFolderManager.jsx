@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { sharedFoldersAPI } from '../../../services/api';
 import { getStoredAdminUser } from '../../../utils/adminPermissions';
-import { getAccessibleSharedFolders, getSharedFolderById } from '../../../utils/sharedFolders';
 import { DeleteIcon, DownloadIcon, FolderIcon, PlusIcon } from '../../../SvgIcons';
 
 const ALLOWED_EXTENSIONS = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'ppt', 'pptx', 'txt'];
@@ -65,7 +64,6 @@ export default function SharedFolderManager() {
     const [pendingAction, setPendingAction] = useState(null);
     const fileInputRef = useRef(null);
 
-    const accessibleFolders = useMemo(() => getAccessibleSharedFolders(currentUser), [currentUser]);
     const selectedFolder = useMemo(
         () => folders.find((folder) => folder.id === selectedFolderId) || null,
         [folders, selectedFolderId]
@@ -230,7 +228,6 @@ export default function SharedFolderManager() {
 
     const hasFolders = folders.length > 0;
     const canManageSelectedFolder = !!selectedFolder?.canManage;
-    const selectedFolderEntry = getSharedFolderById(selectedFolderId);
 
     return (
         <section className="shared-folder-manager">
@@ -244,7 +241,7 @@ export default function SharedFolderManager() {
                     </p>
                 </div>
                 <div className="shared-folder-manager__summary">
-                    <span className="shared-folder-manager__summary-item">Ban khả dụng: {accessibleFolders.length}</span>
+                    <span className="shared-folder-manager__summary-item">Ban khả dụng: {folders.length}</span>
                     <span className="shared-folder-manager__summary-item">Thư mục đang mở: {selectedFolder?.name || 'Chưa có'}</span>
                 </div>
             </div>
@@ -292,9 +289,9 @@ export default function SharedFolderManager() {
                     <div className="shared-folder-main">
                         <div className="shared-folder-main__header">
                             <div>
-                                <h3 className="shared-folder-main__title">{selectedFolder?.name || selectedFolderEntry?.name || 'Folder'}</h3>
+                                <h3 className="shared-folder-main__title">{selectedFolder?.name || 'Folder'}</h3>
                                 <p className="shared-folder-main__subtitle">
-                                    {selectedFolder?.description || selectedFolderEntry?.description || 'Chọn một folder để xem file.'}
+                                    {selectedFolder?.description || 'Chọn một folder để xem file.'}
                                 </p>
                             </div>
                             <div className="shared-folder-main__actions">

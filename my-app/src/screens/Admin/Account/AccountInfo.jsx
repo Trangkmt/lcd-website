@@ -118,9 +118,30 @@ export default function AccountInfo({ user }) {
       return;
     }
 
+    const originalFullName = (activeProfile?.full_name || '').trim();
+    const originalEmail = (activeProfile?.email || '').trim();
+    const originalAvatar = (activeProfile?.avatar_url || '').trim();
+    const currentFullName = (form.full_name || '').trim();
+    const currentEmail = (form.email || '').trim();
+    const currentAvatar = (form.avatar_url || '').trim();
+
+    const hasProfileChanges = Boolean(
+      avatarFile
+      || originalFullName !== currentFullName
+      || originalEmail !== currentEmail
+      || originalAvatar !== currentAvatar
+    );
+    const hasPasswordChange = Boolean(form.password && form.newPassword);
+
+    if (!hasProfileChanges && !hasPasswordChange) {
+      setSuccessMessage('Không có thay đổi để lưu.');
+      return;
+    }
+
     setSaving(true);
     try {
       let nextAvatarUrl = form.avatar_url || '';
+      let updatedProfile = activeProfile;
 
       if (avatarFile) {
         setUploadingAvatar(true);
@@ -129,13 +150,15 @@ export default function AccountInfo({ user }) {
         nextAvatarUrl = uploadResult?.secure_url || nextAvatarUrl;
       }
 
-      const updatedProfile = await authAPI.updateMyProfile({
-        full_name: form.full_name,
-        email: form.email,
-        avatar_url: nextAvatarUrl || null,
-      });
+      if (hasProfileChanges) {
+        updatedProfile = await authAPI.updateMyProfile({
+          full_name: currentFullName,
+          email: currentEmail,
+          avatar_url: nextAvatarUrl || null,
+        });
+      }
 
-      if (form.password && form.newPassword) {
+      if (hasPasswordChange) {
         await authAPI.changePassword({
           password: form.password,
           newPassword: form.newPassword,
@@ -143,9 +166,17 @@ export default function AccountInfo({ user }) {
       }
 
       setProfile(updatedProfile);
-      localStorage.setItem(ADMIN_AUTH_KEY, JSON.stringify(updatedProfile));
+      if (updatedProfile) {
+        localStorage.setItem(ADMIN_AUTH_KEY, JSON.stringify(updatedProfile));
+      }
       setEditMode(false);
-      setSuccessMessage('Cập nhật thông tin tài khoản thành công.');
+      setSuccessMessage(
+        hasProfileChanges && hasPasswordChange
+          ? 'Cập nhật thông tin và mật khẩu thành công.'
+          : hasProfileChanges
+            ? 'Cập nhật thông tin tài khoản thành công.'
+            : 'Đổi mật khẩu thành công.'
+      );
     } catch (err) {
       setErrorMessage(err.message || 'Không thể cập nhật thông tin tài khoản');
     } finally {
@@ -164,7 +195,7 @@ export default function AccountInfo({ user }) {
 
     return (
         <div className="account-info-container">
-            <h2>Tài khoản của tôi</h2>
+            <h2 className="page-title">Tài khoản của tôi</h2>
       {errorMessage && <p className="account-message error">{errorMessage}</p>}
       {successMessage && <p className="account-message success">{successMessage}</p>}
             <form className="account-info-form" onSubmit={handleSave}>
@@ -237,13 +268,13 @@ export default function AccountInfo({ user }) {
                 <div className="action-section">
                     {editMode ? (
                         <>
-              <button type="submit" disabled={saving}>
+              <button type="submit" className="btn-primary" disabled={saving}>
                 {uploadingAvatar ? 'Đang upload ảnh...' : saving ? 'Đang lưu...' : 'Lưu thay đổi'}
               </button>
-              <button type="button" onClick={handleCancel} disabled={saving}>Hủy</button>
+              <button type="button" className="btn-secondary" onClick={handleCancel} disabled={saving}>Hủy</button>
                         </>
                     ) : (
-            <button type="button" onClick={handleEdit}>Chỉnh sửa</button>
+            <button type="button" className="btn-primary" onClick={handleEdit}>Chỉnh sửa</button>
                     )}
                 </div>
             </form>
