@@ -27,7 +27,7 @@ const getSlideCategoryLabel = (item) => {
 const mapHeroSlide = (item) => ({
   id: `${item.page_type || 'news'}-${item.id}`,
   title: item.title || '',
-  image: item.thumbnail || `https://picsum.photos/1440/600?random=${item.id}`,
+  image: item.thumbnail || '',
   summary: item.summary || '',
   date: item.published_at || item.created_at,
   categoryLabel: getSlideCategoryLabel(item),
@@ -165,7 +165,7 @@ const Homepage = () => {
 
   const activeHero = heroSlides[heroIndex] || {
     title: 'TIN NỔI BẬT MỚI NHẤT',
-    image: 'https://picsum.photos/1440/600?random=20',
+    image: '',
     summary: 'Theo dõi các thông tin nổi bật mới nhất từ Tin tức, Hoạt động thường niên và Hoạt động không thường niên.',
     categoryLabel: 'Nổi bật',
     date: null,
@@ -238,12 +238,14 @@ const Homepage = () => {
         <div className="activity-section__featured-box">
           <img
             className="activity-section__featured-image"
-            src={displayedActivity?.thumbnail || 'https://picsum.photos/652/367?random=10'}
+            src={displayedActivity?.thumbnail}
             alt={displayedActivity?.title || 'Featured Activity'}
           />
         </div>
-        <b className="section-title section-title--activity">HOẠT ĐỘNG NỔI BẬT</b>
-        <div className="section-divider section-divider--activity" aria-hidden="true" />
+        <div className="section-header">
+          <b className="section-title section-title--activity">HOẠT ĐỘNG NỔI BẬT</b>
+          <div className="section-divider section-divider--activity" aria-hidden="true" />
+        </div>
         <Link to="/activity" className="btn-view-more" style={{ textDecoration: 'none', color: 'inherit' }}>
           <b className="btn-view-more__text">Xem thêm</b>
         </Link>
@@ -270,8 +272,10 @@ const Homepage = () => {
 
       {/* News Section */}
       <div className="news-section">
-        <b className="section-title section-title--news">TIN TỨC NỔI BẬT</b>
-        <div className="section-divider section-divider--news" aria-hidden="true" />
+        <div className="section-header">
+          <b className="section-title section-title--news">TIN TỨC NỔI BẬT</b>
+          <div className="section-divider section-divider--news" aria-hidden="true" />
+        </div>
         <Link to="/news" className="btn-view-more" style={{ textDecoration: 'none', color: 'inherit' }}>
           <b className="btn-view-more__text">Xem thêm</b>
         </Link>
@@ -280,7 +284,7 @@ const Homepage = () => {
             key={card.id}
             to={`/news/${card.id}`}
             className={`news-card news-card--${index + 1}`}
-            image={card.thumbnail || `https://picsum.photos/300/200?random=${card.id}`}
+            image={card.thumbnail || ''}
             category={card.category_name || ''}
             date={card.published_at || card.created_at}
             title={card.title || ''}
@@ -291,8 +295,10 @@ const Homepage = () => {
 
       {/* Achievement Section */}
       <div className="achievement-section">
-        <b className="section-title section-title--achievement">THÀNH TÍCH NỔI BẬT</b>
-        <div className="section-divider section-divider--achievement" aria-hidden="true" />
+        <div className="section-header">
+          <b className="section-title section-title--achievement">THÀNH TÍCH NỔI BẬT</b>
+          <div className="section-divider section-divider--achievement" aria-hidden="true" />
+        </div>
         <div className="btn-view-more-wrapper">
           <Link to="/achievement" className="btn-view-more" style={{ textDecoration: 'none', color: 'inherit' }}>
             <b className="btn-view-more__text">Xem thêm</b>
