@@ -302,33 +302,6 @@ export default function OtherUtilities() {
                         Dùng template bạn đã thiết kế trên Canva: export PNG/JPG, tải lên đây rồi thay tên hàng loạt từ Excel.
                     </div>
 
-                    <div className="canva-link-box">
-                        <div className="canva-link-title">Template Canva</div>
-                        <p className="canva-link-hint">
-                            Dán link template Canva để mở nhanh. Sau đó export ảnh từ Canva và tải ảnh vào bên dưới để render + thay tên.
-                        </p>
-                        <div className="canva-link-row">
-                            <input
-                                type="url"
-                                className="form-control"
-                                placeholder="https://www.canva.com/design/..."
-                                value={canvaTemplateLink}
-                                onChange={(e) => setCanvaTemplateLink(e.target.value)}
-                            />
-                            <button
-                                type="button"
-                                className="btn-secondary"
-                                onClick={openCanvaTemplate}
-                                disabled={!canvaTemplateLink.trim()}
-                            >
-                                Mở link Canva
-                            </button>
-                        </div>
-                        <p className="canva-link-note">
-                            Cách lấy link: Canva, vào Share/Chia sẻ, sau đó Copy link.
-                        </p>
-                    </div>
-
                     <div className="templates-grid">
                         <div className="form-group">
                             <label className="form-label">Ảnh template export từ Canva (PNG/JPG)</label>
