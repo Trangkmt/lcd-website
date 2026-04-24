@@ -30,35 +30,6 @@
     line-height: 1.5;
 }
 
-.canva-link-box {
-    border: 1px solid var(--color-surface-accent);
-    background: var(--color-surface-panel);
-    border-radius: 10px;
-    padding: var(--space-14px);
-    margin-bottom: 16px;
-}
-
-.canva-link-title {
-    font-size: 0.9375rem;
-    font-weight: 700;
-    color: var(--color-text-strong);
-    margin-bottom: 4px;
-}
-
-.canva-link-hint,
-.canva-link-note {
-    margin: 0;
-    font-size: 0.8125rem;
-    color: var(--color-gray-700);
-}
-
-.canva-link-row {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 10px;
-    margin: 10px 0;
-}
-
 .btn-secondary {
     border: 1px solid var(--color-brand-indigo);
     background: var(--color-white);
@@ -696,10 +667,6 @@
     }
 
     .overlay-controls {
-        grid-template-columns: 1fr;
-    }
-
-    .canva-link-row {
         grid-template-columns: 1fr;
     }
 
