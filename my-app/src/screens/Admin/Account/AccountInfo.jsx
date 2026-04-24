@@ -195,7 +195,7 @@ export default function AccountInfo({ user }) {
 
     return (
         <div className="account-info-container">
-            <h2>Tài khoản của tôi</h2>
+            <h2 className="page-title">Tài khoản của tôi</h2>
       {errorMessage && <p className="account-message error">{errorMessage}</p>}
       {successMessage && <p className="account-message success">{successMessage}</p>}
             <form className="account-info-form" onSubmit={handleSave}>
@@ -268,13 +268,13 @@ export default function AccountInfo({ user }) {
                 <div className="action-section">
                     {editMode ? (
                         <>
-              <button type="submit" disabled={saving}>
+              <button type="submit" className="btn-primary" disabled={saving}>
                 {uploadingAvatar ? 'Đang upload ảnh...' : saving ? 'Đang lưu...' : 'Lưu thay đổi'}
               </button>
-              <button type="button" onClick={handleCancel} disabled={saving}>Hủy</button>
+              <button type="button" className="btn-secondary" onClick={handleCancel} disabled={saving}>Hủy</button>
                         </>
                     ) : (
-            <button type="button" onClick={handleEdit}>Chỉnh sửa</button>
+            <button type="button" className="btn-primary" onClick={handleEdit}>Chỉnh sửa</button>
                     )}
                 </div>
             </form>
