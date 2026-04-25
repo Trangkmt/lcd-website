@@ -952,6 +952,15 @@ export default function PostsManagement() {
                                 Xóa lọc
                             </button>
                         )}
+
+                        <button
+                            type="button"
+                            className="btn-primary"
+                            onClick={() => setPostsTabInUrl('create')}
+                            style={{ marginLeft: 'auto', whiteSpace: 'nowrap' }}
+                        >
+                            Tạo bài viết
+                        </button>
                     </div>
 
                     {/* Posts Table */}
@@ -1022,7 +1031,11 @@ export default function PostsManagement() {
                             </table>
                         )}
                     </div>
+
+
+
                 </>
+
             ) : (
                 <div className="editor-screen">
                     <div className="editor-header editor-header--actions-only">
