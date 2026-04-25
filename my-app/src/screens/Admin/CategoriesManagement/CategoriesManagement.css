@@ -120,15 +120,6 @@
     margin: 0;
 }
 
-.category-posts {
-    background: var(--color-surface-accent);
-    color: var(--color-brand-action);
-    padding: 4px 12px;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: 700;
-}
-
 .category-description {
     font-size: 0.875rem;
     color: var(--color-text-muted);
