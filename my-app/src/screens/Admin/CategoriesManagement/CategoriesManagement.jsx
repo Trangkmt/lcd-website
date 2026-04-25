@@ -192,7 +192,6 @@ export default function CategoriesManagement() {
                             )}
                             <div className="category-header">
                                 <h3 className="category-name">{category.name}</h3>
-                                <span className="category-posts">{category.display_order ? `#${category.display_order}` : ''}</span>
                             </div>
                             <p className="category-description">{category.description || '—'}</p>
                             <p className="category-slug">/{category.slug}</p>
