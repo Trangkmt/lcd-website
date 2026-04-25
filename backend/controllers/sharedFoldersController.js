@@ -39,7 +39,13 @@ function ensureCloudinaryConfig() {
 
 function isAdminLike(user) {
     const role = normalizeRole(user?.role);
-    return role === ROLES.ADMIN_FULL || role === ROLES.UTILITY_ONLY;
+    return role === ROLES.ADMIN_FULL;
+}
+
+//hàm kiểm tra nếu user có role utility-only thì sẽ xem folder theo ban
+function isUtilityOnly(user) {
+    const role = normalizeRole(user?.role);
+    return role === ROLES.UTILITY_ONLY;
 }
 
 function getUserDepartments(user) {
@@ -90,26 +96,42 @@ function folderPositionsForUser(folder, user) {
 }
 
 function canViewFolder(user, folder) {
+    // 1. CHỈ admin_full mới được xem tất cả
     if (isAdminLike(user)) {
         return true;
     }
-
+    // 2. utility_only và các role khác đều phải check department
     const userDepartments = getUserDepartments(user);
+    console.log('User departments after parsing:', userDepartments);
+    // 3. Nếu user không có department nào -> không được xem folder nào
     if (!userDepartments.length) {
+        console.log('User has no departments');
         return false;
     }
-
-    return folderMatchesDepartment(folder, userDepartments);
+    // 4. Nếu folder không có departmentValues -> không cho xem (folder lỗi cấu hình)
+    if (!folder.departmentValues || folder.departmentValues.length === 0) {
+        console.log('Folder has no department values (misconfigured)');
+        return false;
+    }
+    // 5. Kiểm tra department của user có match với folder không
+    const folderDepartmentValues = (folder.departmentValues || []).map(normalizeText);
+    const hasMatch = folderDepartmentValues.some(folderDept =>
+        userDepartments.includes(folderDept)
+    );
+    return hasMatch;
 }
 
 function canManageFolder(user, folder) {
+    // 1. Chỉ admin_full mới manage được tất cả
     if (isAdminLike(user)) {
+        console.log('Full admin, can manage all folders');
         return true;
     }
-
+    // 2. utility_only và các role khác phải có position phù hợp trong ban đó
     const positions = folderPositionsForUser(folder, user);
     const allowedPositions = new Set((folder.managerPositions || ['trưởng ban', 'phó ban']).map(normalizeText));
-    return positions.some((position) => allowedPositions.has(position));
+    const canManage = positions.some((position) => allowedPositions.has(position));
+    return canManage;
 }
 
 function buildFileDownloadUrl(folderId, publicId) {

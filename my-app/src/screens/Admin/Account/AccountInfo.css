@@ -1,10 +1,8 @@
+@import url('../Styles/AdminModal.css');
+
 .account-info-container {
-    max-width: 500px;
     margin: 0 auto;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    padding: 32px 24px;
+    padding: 50px 100px;
 }
 
 .account-info-form {
@@ -67,26 +65,52 @@
     justify-content: flex-end;
 }
 
-.action-section button {
-    padding: 8px 20px;
-    border-radius: 4px;
-    border: none;
-    background: #1976d2;
-    color: #fff;
+.account-info-container .page-title {
+    margin: 0 0 12px;
+    font-size: 2rem;
+    letter-spacing: var(--ls--0_02);
+    color: var(--color-darkslateblue);
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+
+.account-info-container .btn-primary,
+.account-info-container .btn-secondary {
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 0.9375rem;
     font-weight: 600;
+    border: 1px solid transparent;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s ease;
 }
 
-.action-section button[type="button"] {
-    background: #aaa;
+.account-info-container .btn-primary {
+    background: var(--color-primary);
+    color: var(--color-white);
+    border-color: var(--color-primary);
 }
 
-.action-section button:hover {
-    opacity: 0.9;
+.account-info-container .btn-primary:hover:not(:disabled) {
+    background: var(--color-brand-indigo-dark);
+    border-color: var(--color-brand-indigo-dark);
+    transform: translateY(-1px);
 }
 
-.action-section button:disabled {
+.account-info-container .btn-secondary {
+    background: var(--color-whitesmoke);
+    color: var(--color-text-primary);
+    border-color: var(--color-gray-300);
+}
+
+.account-info-container .btn-secondary:hover:not(:disabled) {
+    background: var(--color-gray-200);
+}
+
+.account-info-container .btn-primary:disabled,
+.account-info-container .btn-secondary:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+    transform: none;
 }
