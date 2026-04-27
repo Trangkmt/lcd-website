@@ -46,7 +46,7 @@ const AnnualActivityDetail = () => {
                         <div className="event-main-image">
                             <div className="event-image-border">
                                 {category?.intro_image
-                                    ? <img src={category.intro_image} alt={displayTitle} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    ? <img src={category.intro_image} alt={displayTitle} style={{ width: '100%', height: '100%', objectFit: 'cover', minHeight: '300px' }} />
                                     : <div className="event-image-placeholder"></div>
                                 }
                             </div>
@@ -87,7 +87,7 @@ const AnnualActivityDetail = () => {
                                 >
                                     <div className="post-image">
                                         {post.thumbnail && (
-                                            <img src={post.thumbnail} alt={post.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                            <img src={post.thumbnail} alt={post.title} style={{ width: '100%', height: '100%', objectFit: 'cover', minHeight: '300px' }} />
                                         )}
                                     </div>
                                     <div className="post-content">

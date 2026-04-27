@@ -1,3 +1,4 @@
+/* Base styles */
 .achievement-card {
     position: relative;
     width: 100%;
@@ -26,6 +27,16 @@
     height: 205px;
     background-color: var(--color-gainsboro);
     object-fit: cover;
+    flex-shrink: 0;
+}
+
+.achievement-card__content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: center;
+    padding: 12px 14px;
+    min-width: 0;
 }
 
 .achievement-card__title {
@@ -61,4 +72,81 @@
     align-items: center;
     justify-content: flex-start;
     margin: 0;
+}
+
+/* Thêm styles cho wrapper */
+.achievement-card__image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 205px;
+    flex-shrink: 0;
+    background-color: var(--color-gainsboro);
+    overflow: hidden;
+}
+
+.achievement-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+@media (max-width: 640px) {
+    .achievement-card {
+        flex-direction: row;
+        align-items: stretch;
+        min-height: unset;
+        padding-bottom: 0;
+    }
+
+    .achievement-card__image {
+        width: 140px;
+        min-width: 140px;
+        height: auto;
+        min-height: 120px;
+        flex-shrink: 0;
+        object-fit: cover;
+    }
+
+    .achievement-card__content {
+        padding: 10px 12px;
+        justify-content: flex-start;
+    }
+
+    .achievement-card__title {
+        font-size: 0.9375rem;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        margin: var(--space-2) 0 var(--space-1);
+    }
+
+    .achievement-card__date {
+        font-size: 0.75rem;
+    }
+
+    .achievement-card__image-wrapper {
+        width: 140px;
+        min-width: 140px;
+        height: auto;
+        /* wrapper tự co theo card */
+        min-height: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .achievement-card__image-wrapper {
+        width: 110px;
+        min-width: 110px;
+        min-height: 100px;
+    }
+
+    .achievement-card__title {
+        font-size: 0.875rem;
+    }
+
+    .achievement-card__image-wrapper {
+        width: 110px;
+        min-width: 110px;
+        min-height: 100px;
+    }
 }

@@ -40,7 +40,6 @@ const PAGE_TYPE_LABELS = {
     achievement: 'Thành tích',
     activity_annual: 'Hoạt động thường niên',
     activity_non_annual: 'Hoạt động không thường niên',
-    activity: 'Hoạt động',
 };
 
 const CLOUDINARY_POST_FOLDER_BY_PAGE_TYPE = {
