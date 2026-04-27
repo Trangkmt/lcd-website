@@ -38,6 +38,7 @@ export default function AdminLayout() {
     const isActive = (path) => location.pathname.startsWith(path);
     const isPostsActive = isActive('/admin/posts');
     const postsTab = new URLSearchParams(location.search).get('tab') || 'list';
+    const postsEditorMode = new URLSearchParams(location.search).get('mode') || '';
     const isPostsListActive = isPostsActive && postsTab === 'list';
     const isPostsCreateActive = isPostsActive && postsTab === 'create';
     const isMembersActive = isActive('/admin/members');
@@ -139,7 +140,7 @@ export default function AdminLayout() {
                                         to="/admin/posts?tab=create"
                                         className={`nav-subitem ${isPostsCreateActive ? 'active' : ''}`}
                                     >
-                                        Tạo/ Chỉnh sửa bài viết
+                                        {postsEditorMode === 'edit' ? 'Chỉnh sửa bài viết' : 'Tạo bài viết'}
                                     </Link>
                                 </div>
                             )}

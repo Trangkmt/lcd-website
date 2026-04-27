@@ -27,14 +27,17 @@ const NewsCard = ({
                 src={image || 'https://picsum.photos/300/200?random=1'}
                 alt={displayTitle || 'News'}
             />
-            <div className="news-card__meta">
-                <div className="news-card__badge">
-                    <b className="news-card__badge-text">{category || ''}</b>
+            <div className='news-card__body'>
+                <div className="news-card__meta">
+                    <div className="news-card__badge">
+                        <b className="news-card__badge-text">{category || ''}</b>
+                    </div>
+                    <div className="news-card__date">{formatVietnameseDate(date) || date || ''}</div>
                 </div>
-                <div className="news-card__date">{formatVietnameseDate(date) || date || ''}</div>
+                <b className="news-card__title">{displayTitle}</b>
+                <div className="news-card__description">{displayDescription}</div>
             </div>
-            <b className="news-card__title">{displayTitle}</b>
-            <div className="news-card__description">{displayDescription}</div>
+
         </>
     );
 

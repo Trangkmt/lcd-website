@@ -58,9 +58,9 @@ const News = () => {
 
     const activeHero = heroSlides[heroIndex] || {
         id: null,
-        title: 'TIN TUC MOI NHAT',
-        summary: 'Cap nhat nhung tin tuc moi nhat tu Lien Chi doan khoa.',
-        thumbnail: 'https://picsum.photos/1600/620?random=200',
+        title: 'TIN TỨC MỚI NHẤT',
+        summary: 'Cập nhật những tin tức mới nhất từ Liên Chi đoàn khoa.',
+        thumbnail: '',
         published_at: null,
     };
     const heroLink = activeHero.id ? `/news/${activeHero.id}` : '/news';
@@ -71,7 +71,7 @@ const News = () => {
                 <Link to={heroLink} className="news-page__hero-link">
                     <img
                         className="news-page__hero-image"
-                        src={activeHero.thumbnail || `https://picsum.photos/1600/620?random=${activeHero.id || 200}`}
+                        src={activeHero.thumbnail || ''}
                         alt={activeHero.title}
                     />
                     <div className="news-page__hero-overlay" />

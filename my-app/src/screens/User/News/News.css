@@ -331,7 +331,13 @@
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
+    .news-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
     .news-page__content {
         padding: 28px 14px 44px;
     }
