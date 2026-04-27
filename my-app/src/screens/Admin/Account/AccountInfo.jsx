@@ -1,23 +1,24 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { authAPI, uploadsAPI } from '../../../services/api';
 import { ADMIN_AUTH_KEY } from '../../../utils/adminPermissions';
+import { AvatarIcon } from '../../../SvgIcons';
 import './AccountInfo.css';
 
 export default function AccountInfo({ user }) {
   const [profile, setProfile] = useState(null);
   const [loadingProfile, setLoadingProfile] = useState(true);
-    const [editMode, setEditMode] = useState(false);
+  const [editMode, setEditMode] = useState(false);
   const [saving, setSaving] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-    const [form, setForm] = useState({
+  const [form, setForm] = useState({
     full_name: '',
     email: '',
     avatar_url: '',
-        password: '',
-        newPassword: '',
-    });
+    password: '',
+    newPassword: '',
+  });
   const [avatarFile, setAvatarFile] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState('');
 
@@ -72,15 +73,15 @@ export default function AccountInfo({ user }) {
     })
   );
 
-    const handleChange = (e) => {
-        const { name, value, files } = e.target;
-        if (name === 'avatar' && files && files[0]) {
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    if (name === 'avatar' && files && files[0]) {
       setAvatarFile(files[0]);
-            setAvatarPreview(URL.createObjectURL(files[0]));
-        } else {
-            setForm({ ...form, [name]: value });
-        }
-    };
+      setAvatarPreview(URL.createObjectURL(files[0]));
+    } else {
+      setForm({ ...form, [name]: value });
+    }
+  };
 
   const handleEdit = () => {
     setErrorMessage('');
@@ -88,23 +89,23 @@ export default function AccountInfo({ user }) {
     setEditMode(true);
   };
 
-    const handleCancel = () => {
-        setEditMode(false);
+  const handleCancel = () => {
+    setEditMode(false);
     setErrorMessage('');
     setSuccessMessage('');
-        setForm({
+    setForm({
       full_name: activeProfile?.full_name || '',
       email: activeProfile?.email || '',
       avatar_url: activeProfile?.avatar_url || '',
-            password: '',
-            newPassword: '',
-        });
+      password: '',
+      newPassword: '',
+    });
     setAvatarPreview(activeProfile?.avatar_url || '');
     setAvatarFile(null);
-    };
+  };
 
   const handleSave = async (e) => {
-        e.preventDefault();
+    e.preventDefault();
 
     setErrorMessage('');
     setSuccessMessage('');
@@ -183,7 +184,7 @@ export default function AccountInfo({ user }) {
       setSaving(false);
       setUploadingAvatar(false);
     }
-    };
+  };
 
   if (loadingProfile) {
     return (
@@ -193,91 +194,92 @@ export default function AccountInfo({ user }) {
     );
   }
 
-    return (
-        <div className="account-info-container">
-            <h2 className="page-title">Tài khoản của tôi</h2>
+  return (
+    <div className="account-info-container">
+      <h2 className="page-title">Tài khoản của tôi</h2>
       {errorMessage && <p className="account-message error">{errorMessage}</p>}
       {successMessage && <p className="account-message success">{successMessage}</p>}
-            <form className="account-info-form" onSubmit={handleSave}>
-                <div className="avatar-section">
-                    <img
-                        src={avatarPreview || '/default-avatar.png'}
-                        alt="Avatar"
-                        className="avatar-img"
-                    />
-                    {editMode && (
+      <form className="account-info-form" onSubmit={handleSave}>
+        <div className="avatar-section">
+          <div className="avatar-img">
+            {avatarPreview
+              ? <img src={avatarPreview} alt="Avatar" className="avatar-img__photo" />
+              : <AvatarIcon size={80} />
+            }
+          </div>
+          {editMode && (
             <input type="file" name="avatar" accept="image/*" onChange={handleChange} disabled={saving} />
-                    )}
-                </div>
-                <div className="info-section">
-                    <label>
-                        Họ tên:
-                        {editMode ? (
-                            <input
-                                type="text"
-                                name="full_name"
-                                value={form.full_name}
-                                onChange={handleChange}
+          )}
+        </div>
+        <div className="info-section">
+          <label>
+            Họ tên:
+            {editMode ? (
+              <input
+                type="text"
+                name="full_name"
+                value={form.full_name}
+                onChange={handleChange}
                 disabled={saving}
-                                required
-                            />
-                        ) : (
+                required
+              />
+            ) : (
               <span>{activeProfile?.full_name || ''}</span>
-                        )}
-                    </label>
-                    <label>
-                        Gmail:
-                        {editMode ? (
-                            <input
-                                type="email"
-                                name="email"
-                                value={form.email}
-                                onChange={handleChange}
+            )}
+          </label>
+          <label>
+            Gmail:
+            {editMode ? (
+              <input
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
                 disabled={saving}
-                                required
-                            />
-                        ) : (
+                required
+              />
+            ) : (
               <span>{activeProfile?.email || ''}</span>
-                        )}
-                    </label>
-                    {editMode && (
-                        <>
-                            <label>
-                                Mật khẩu hiện tại:
-                                <input
-                                    type="password"
-                                    name="password"
-                                    value={form.password}
-                                    onChange={handleChange}
+            )}
+          </label>
+          {editMode && (
+            <>
+              <label>
+                Mật khẩu hiện tại:
+                <input
+                  type="password"
+                  name="password"
+                  value={form.password}
+                  onChange={handleChange}
                   disabled={saving}
-                                />
-                            </label>
-                            <label>
-                                Mật khẩu mới:
-                                <input
-                                    type="password"
-                                    name="newPassword"
-                                    value={form.newPassword}
-                                    onChange={handleChange}
+                />
+              </label>
+              <label>
+                Mật khẩu mới:
+                <input
+                  type="password"
+                  name="newPassword"
+                  value={form.newPassword}
+                  onChange={handleChange}
                   disabled={saving}
-                                />
-                            </label>
-                        </>
-                    )}
-                </div>
-                <div className="action-section">
-                    {editMode ? (
-                        <>
+                />
+              </label>
+            </>
+          )}
+        </div>
+        <div className="action-section">
+          {editMode ? (
+            <>
               <button type="submit" className="btn-primary" disabled={saving}>
                 {uploadingAvatar ? 'Đang upload ảnh...' : saving ? 'Đang lưu...' : 'Lưu thay đổi'}
               </button>
               <button type="button" className="btn-secondary" onClick={handleCancel} disabled={saving}>Hủy</button>
-                        </>
-                    ) : (
+            </>
+          ) : (
             <button type="button" className="btn-primary" onClick={handleEdit}>Chỉnh sửa</button>
-                    )}
-                </div>
-            </form>
+          )}
         </div>
-    );
+      </form>
+    </div>
+  );
 }

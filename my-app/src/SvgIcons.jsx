@@ -21,6 +21,15 @@ function IconBase({ children, className = '', size = 16, strokeWidth = 1.8 }) {
     );
 }
 
+export function AvatarIcon(props) {
+    return (
+        <IconBase {...props}>
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4 20C4 17 7.6 14 12 14C16.4 14 20 17 20 20" />
+        </IconBase>
+    );
+}
+
 export function PlusIcon(props) {
     return (
         <IconBase {...props}>

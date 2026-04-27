@@ -311,9 +311,7 @@ function inferMemberType(member) {
 }
 
 function generateUsername(email) {
-    const localPart = String(email || 'user').split('@')[0] || 'user';
-    const randomSuffix = Math.floor(1000 + Math.random() * 9000);
-    return `${localPart}-${randomSuffix}`;
+    return String(email || 'user').split('@')[0] || 'user';
 }
 
 function readFileAsDataUrl(file) {
@@ -466,6 +464,7 @@ export default function MembersManagement() {
     const [bulkDepartment, setBulkDepartment] = useState(BULK_NO_CHANGE);
     const [bulkPosition, setBulkPosition] = useState(BULK_NO_CHANGE);
     const [bulkStatus, setBulkStatus] = useState(BULK_NO_CHANGE);
+    const [bulkRole, setBulkRole] = useState(BULK_NO_CHANGE);
     const [bulkUpdating, setBulkUpdating] = useState(false);
     const [csvImporting, setCsvImporting] = useState(false);
     const [memberImageUploading, setMemberImageUploading] = useState(false);
@@ -734,7 +733,7 @@ export default function MembersManagement() {
                     email,
                     full_name: fullName,
                     avatar_url: null,
-                    role: ROLE_GROUPS.POST_AUTHOR,
+                    role: ROLE_GROUPS.UTILITY_ONLY,
                     is_active: true,
                     member_type: memberType,
                     student_code: memberType === TABS.STUDENT ? studentCode : null,
@@ -831,6 +830,7 @@ export default function MembersManagement() {
         setBulkDepartment(BULK_NO_CHANGE);
         setBulkPosition(BULK_NO_CHANGE);
         setBulkStatus(BULK_NO_CHANGE);
+        setBulkRole(BULK_NO_CHANGE);
     }
 
     async function applyBulkUpdate(selectedMembers) {
@@ -843,6 +843,7 @@ export default function MembersManagement() {
             bulkDepartment === BULK_NO_CHANGE
             && bulkPosition === BULK_NO_CHANGE
             && bulkStatus === BULK_NO_CHANGE
+            && bulkRole === BULK_NO_CHANGE
         ) {
             alert('Vui lòng chọn ít nhất 1 trường cần cập nhật hàng loạt.');
             return;
@@ -876,7 +877,7 @@ export default function MembersManagement() {
                     email: member.email,
                     full_name: member.full_name,
                     avatar_url: member.avatar_url || null,
-                    role: normalizeRole(member.role),
+                    role: bulkRole !== BULK_NO_CHANGE ? normalizeRole(bulkRole) : normalizeRole(member.role),
                     is_active: nextStatus,
                     member_type: memberType,
                     student_code: memberType === TABS.STUDENT ? (member.student_code || null) : null,
@@ -1125,6 +1126,17 @@ export default function MembersManagement() {
                         <option value={BULK_NO_CHANGE}>Trạng thái: Không đổi</option>
                         <option value={BULK_STATUS_ACTIVE}>Đang hoạt động</option>
                         <option value={BULK_STATUS_HIDDEN}>Đã ẩn</option>
+                    </select>
+
+                    <select
+                        className="members-bulk-toolbar__select"
+                        value={bulkRole}
+                        onChange={(e) => setBulkRole(e.target.value)}
+                    >
+                        <option value={BULK_NO_CHANGE}>Role: Không đổi</option>
+                        {ROLE_OPTIONS.map((option) => (
+                            <option key={option.value} value={option.value}>{option.label}</option>
+                        ))}
                     </select>
 
                     <button

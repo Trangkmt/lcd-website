@@ -65,10 +65,16 @@ const Header = () => {
 
                 {/* Organization Title Block */}
                 <div className="header__org-title" aria-label="Thông tin đơn vị">
-                    <span className="header__org-line header__org-line--regular">ĐẠI HỌC KINH TẾ QUỐC DÂN</span>
-                    <span className="header__org-line header__org-line--medium">TRƯỜNG CÔNG NGHỆ</span>
-                    <span className="header__org-line header__org-line--bold">LIÊN CHI ĐOÀN KHOA CÔNG NGHỆ THÔNG TIN</span>
-                </div>
+                    <a href="https://neu.edu.vn/" target="_blank" rel="noopener noreferrer" className="header__org-line header__org-line--medium">
+                        ĐẠI HỌC KINH TẾ QUỐC DÂN
+                    </a>
+                    <a href="https://fit.neu.edu.vn/" target="_blank" rel="noopener noreferrer" className="header__org-line header__org-line--medium">
+                        TRƯỜNG CÔNG NGHỆ
+                    </a>
+                    <a href="https://fit.neu.edu.vn/" target="_blank" rel="noopener noreferrer" className="header__org-line header__org-line--bold">
+                        LIÊN CHI ĐOÀN KHOA CÔNG NGHỆ THÔNG TIN
+                    </a>
+                    </div>
 
                 <button
                     type="button"

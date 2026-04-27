@@ -1,4 +1,15 @@
-﻿.homepage {
+﻿@media (max-width: 640px) {
+
+    .news-section,
+    .achievement-section,
+    .activity-section {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+}
+
+.homepage {
     --timeline-sidebar-width: 360px;
     width: 100%;
     max-width: 1480px;
@@ -565,12 +576,6 @@
     .homepage .news-section,
     .homepage .achievement-section {
         grid-template-columns: 1fr !important;
-    }
-
-    .homepage .news-section>*,
-    .homepage .achievement-section>* {
-        grid-column: 1 !important;
-        grid-row: auto !important;
     }
 
     /* Activity dùng flex để dùng order */

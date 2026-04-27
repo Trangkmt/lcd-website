@@ -58,9 +58,8 @@ const NonAnnualActivity = () => {
 
     const activeHero = heroSlides[heroIndex] || {
         id: null,
-        title: 'HOAT DONG KHONG THUONG NIEN MOI NHAT',
-        summary: 'Tong hop cac hoat dong khong thuong nien moi nhat cua Lien Chi doan khoa.',
-        thumbnail: 'https://picsum.photos/1600/620?random=210',
+        title: 'HOẠT ĐỘNG KHÔNG THƯỜNG NIÊN MỚI NHẤT',
+        summary: 'Tổng hợp các hoạt động không thường niên mới nhất của Liên Chi Đoàn khoa.',
         published_at: null,
     };
     const heroLink = activeHero.id ? `/activity/non-annual/${activeHero.id}` : '/activity/non-annual';
@@ -71,7 +70,7 @@ const NonAnnualActivity = () => {
                 <Link to={heroLink} className="news-page__hero-link">
                     <img
                         className="news-page__hero-image"
-                        src={activeHero.thumbnail || `https://picsum.photos/1600/620?random=${activeHero.id || 210}`}
+                        src={activeHero.thumbnail || ''}
                         alt={activeHero.title}
                     />
                     <div className="news-page__hero-overlay" />
@@ -166,7 +165,7 @@ const NonAnnualActivity = () => {
                         <NewsCard
                             key={item.id}
                             to={`/activity/non-annual/${item.id}`}
-                            image={item.thumbnail || `https://picsum.photos/400/250?random=${item.id}`}
+                            image={item.thumbnail || ''}
                             category={item.category_name || ''}
                             date={item.published_at || item.created_at}
                             title={item.title || ''}

@@ -112,3 +112,38 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+
+@media (max-width: 640px) {
+    .activity-card {
+        flex-direction: row;
+        align-items: stretch;
+        min-height: unset;
+    }
+
+    .activity-card__media {
+        width: 120px;
+        min-width: 120px;
+        height: auto;
+        aspect-ratio: unset;
+        flex-shrink: 0;
+    }
+
+    .activity-card__body {
+        flex: 1;
+        padding: 10px 12px;
+        gap: 6px;
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    .activity-card__title {
+        font-size: 0.9375rem;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        margin-bottom: 0;
+    }
+
+    .activity-card__summary {
+        display: none;
+    }
+}

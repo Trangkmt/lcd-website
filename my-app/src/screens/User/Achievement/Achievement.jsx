@@ -47,9 +47,9 @@ const Achievement = () => {
 
     const activeHero = heroSlides[heroIndex] || {
         id: null,
-        title: 'THANH TICH NOI BAT MOI NHAT',
-        summary: 'Cap nhat nhung thanh tich moi nhat cua Lien Chi doan khoa.',
-        thumbnail: 'https://picsum.photos/1600/620?random=220',
+        title: 'THÀNH TÍCH NỔI BẬT MỚI NHẤT',
+        summary: 'Cập nhật những thành tích nổi bật và mới nhất của Liên Chi đoàn khoa.',
+        thumbnail: '',
         published_at: null,
     };
     const heroLink = activeHero.id ? `/achievement/${activeHero.id}` : '/achievement';
@@ -60,7 +60,7 @@ const Achievement = () => {
                 <Link to={heroLink} className="achievement-page__hero-link">
                     <img
                         className="achievement-page__hero-image"
-                        src={activeHero.thumbnail || `https://picsum.photos/1600/620?random=${activeHero.id || 220}`}
+                        src={activeHero.thumbnail || ''}
                         alt={activeHero.title}
                     />
                     <div className="achievement-page__hero-overlay" />

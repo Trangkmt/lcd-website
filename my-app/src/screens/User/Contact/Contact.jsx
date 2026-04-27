@@ -15,6 +15,8 @@ const Contact = () => {
     const [submitting, setSubmitting] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [phoneError, setPhoneError] = useState('');
 
     const isSubmitDisabled = useMemo(() => {
         return !form.name.trim() || !form.email.trim() || !form.message.trim() || submitting;
@@ -23,6 +25,16 @@ const Contact = () => {
     const handleChange = (event) => {
         const { name, value } = event.target;
         setForm((prev) => ({ ...prev, [name]: value }));
+
+        if (name === 'email') {
+            const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+            setEmailError(value && !isValid ? 'Email không đúng định dạng' : '');
+        }
+
+        if (name === 'phone') {
+            const isValid = /^[0-9+\-\s()]{7,15}$/.test(value);
+            setPhoneError(value && !isValid ? 'Số điện thoại không hợp lệ' : '');
+        }
     };
 
     const handleSubmit = async (event) => {
@@ -76,11 +88,13 @@ const Contact = () => {
                                 id="email"
                                 name="email"
                                 type="email"
+                                inputMode="email"
                                 value={form.email}
                                 onChange={handleChange}
                                 placeholder="Nhập email"
                                 required
                             />
+                            {emailError && <span className="contact-message--error">{emailError}</span>}
                         </div>
 
                         <div className="contact-field">
@@ -88,11 +102,13 @@ const Contact = () => {
                             <input
                                 id="phone"
                                 name="phone"
-                                type="text"
+                                type="tel"
+                                maxLength={13}
                                 value={form.phone}
                                 onChange={handleChange}
                                 placeholder="Nhập số điện thoại"
                             />
+                            {phoneError && <span className="contact-message--error">{phoneError}</span>}
                         </div>
 
                         <div className="contact-field">

@@ -14,10 +14,15 @@ export default function AchievementCard({ achievement, to, className = '', style
 
     return (
         <Link to={href} className={cardClassName} style={style || { textDecoration: 'none', color: 'inherit' }}>
-            <div className="achievement-card__background" />
-            <img className="achievement-card__image" src={imageSrc} alt={achievement.title || 'Achievement'} />
-            <b className="achievement-card__title">{achievement.title || ''}</b>
-            <div className="achievement-card__date">{formatVietnameseDate(achievement.published_at || achievement.created_at)}</div>
+            <div className="achievement-card__image-wrapper">
+                <div className="achievement-card__background" />
+                <img className="achievement-card__image" src={imageSrc} alt={achievement.title || 'Achievement'} />
+            </div>
+            <div className="achievement-card__content">
+                <b className="achievement-card__title">{achievement.title || ''}</b>
+                <div className="achievement-card__date">{formatVietnameseDate(achievement.published_at || achievement.created_at)}</div>
+            </div>
+
         </Link>
     );
 }
