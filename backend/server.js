@@ -21,7 +21,7 @@ app.use((req, res, next) => {
 // Import routes
 const usersRoutes = require('./routes/users');
 const categoriesRoutes = require('./routes/categories');
-const newsRoutes = require('./routes/news');
+const postsRoutes = require('./routes/posts');
 const documentsRoutes = require('./routes/documents');
 const activitiesRoutes = require('./routes/activities');
 const organizationsRoutes = require('./routes/organizations');
@@ -56,7 +56,7 @@ app.get('/api/health', async (req, res) => {
 // API Routes
 app.use('/api/users', usersRoutes);
 app.use('/api/categories', categoriesRoutes);
-app.use('/api/news', newsRoutes);
+app.use('/api/posts', postsRoutes);
 app.use('/api/documents', documentsRoutes);
 app.use('/api/activities', activitiesRoutes);
 app.use('/api/organizations', organizationsRoutes);
@@ -78,7 +78,7 @@ app.get('/', (req, res) => {
             health: '/api/health',
             users: '/api/users',
             categories: '/api/categories',
-            news: '/api/news',
+            posts: '/api/posts',
             documents: '/api/documents',
             activities: '/api/activities',
             organizations: '/api/organizations',
@@ -121,7 +121,7 @@ app.listen(PORT, () => {
     console.log(`  GET  http://localhost:${PORT}/api/health`);
     console.log(`  GET  http://localhost:${PORT}/api/users`);
     console.log(`  GET  http://localhost:${PORT}/api/categories`);
-    console.log(`  GET  http://localhost:${PORT}/api/news`);
+    console.log(`  GET  http://localhost:${PORT}/api/posts`);
     console.log(`  GET  http://localhost:${PORT}/api/documents`);
     console.log(`  GET  http://localhost:${PORT}/api/activities`);
     console.log(`  GET  http://localhost:${PORT}/api/organizations`);

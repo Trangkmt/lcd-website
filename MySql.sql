@@ -17,7 +17,7 @@ DROP TABLE IF EXISTS organizations;
 DROP TABLE IF EXISTS timeline_events;
 DROP TABLE IF EXISTS activities;
 DROP TABLE IF EXISTS documents;
-DROP TABLE IF EXISTS news;
+DROP TABLE IF EXISTS posts;
 DROP TABLE IF EXISTS post_templates;
 DROP TABLE IF EXISTS categories;
 DROP TABLE IF EXISTS users;
@@ -62,7 +62,7 @@ CREATE TABLE categories (
     description TEXT,
     intro_image VARCHAR(500),
     parent_id INT,
-    page_type VARCHAR(50) DEFAULT 'news',
+    page_type VARCHAR(50) DEFAULT 'post',
     display_order INT DEFAULT 0,
     is_active BOOLEAN DEFAULT TRUE,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -71,16 +71,16 @@ CREATE TABLE categories (
 );
 
 INSERT INTO categories (id,name,slug,page_type,description,intro_image,parent_id) VALUES
-(1,'Tin tức','tin-tuc','news','Tin tức của Liên Chi đoàn',NULL,NULL),
-(2,'Thông báo','thong-bao','news','Thông báo chính thức',NULL,NULL),
-(3,'Sự kiện','su-kien','news','Các sự kiện',NULL,NULL),
+(1,'Tin tức','tin-tuc','post','Tin tức của Liên Chi đoàn',NULL,NULL),
+(2,'Thông báo','thong-bao','post','Thông báo chính thức',NULL,NULL),
+(3,'Sự kiện','su-kien','post','Các sự kiện',NULL,NULL),
 (4,'Hoạt động học thuật','hoc-thuat','activity','Hoạt động học thuật',NULL,NULL),
 (5,'Hoạt động tình nguyện','tinh-nguyen','activity','Hoạt động cộng đồng',NULL,NULL),
 (6,'Hoạt động thể thao','the-thao','activity','Hoạt động thể thao',NULL,NULL),
 (7,'Thành tích','thanh-tich','achievement','Thành tích nổi bật',NULL,NULL),
 (8,'Tài liệu','tai-lieu','document','Tài liệu',NULL,NULL),
 (9,'Chương trình thường niên','thuong-nien','activity_annual','Hoạt động thường niên',NULL,NULL),
-(10,'Khác','khac','news','Danh mục khác',NULL,NULL),
+(10,'Khác','khac','post','Danh mục khác',NULL,NULL),
 (11,'Chào tân sinh viên','chao-tan-sinh-vien','activity_annual','Lễ chào tân sinh viên khóa mới',NULL,9),
 (12,'Quân sự','quan-su','activity_annual','Quân sự huấn luyện sinh viên',NULL,9),
 (13,'FIT Cup','fit-cup','activity_annual','Giải bóng đá FIT Cup',NULL,9),
@@ -128,9 +128,9 @@ INSERT INTO post_templates (name, category_id, title_template, summary_template,
 );
 
 -- ================================================
--- NEWS
+-- POSTS
 -- ================================================
-CREATE TABLE news (
+CREATE TABLE posts (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     slug VARCHAR(255) NOT NULL UNIQUE,
@@ -285,10 +285,10 @@ INSERT INTO contact_info (name,email,phone,subject,message) VALUES
 -- ================================================
 -- INDEXES
 -- ================================================
-CREATE INDEX idx_news_category ON news(category_id);
-CREATE INDEX idx_news_author ON news(author_id);
-CREATE INDEX idx_news_published ON news(is_published, published_at);
-CREATE INDEX idx_news_slug ON news(slug);
+CREATE INDEX idx_posts_category ON posts(category_id);
+CREATE INDEX idx_posts_author ON posts(author_id);
+CREATE INDEX idx_posts_published ON posts(is_published, published_at);
+CREATE INDEX idx_posts_slug ON posts(slug);
 CREATE INDEX idx_documents_category ON documents(category_id);
 CREATE INDEX idx_documents_uploaded_by ON documents(uploaded_by);
 CREATE INDEX idx_activities_category ON activities(category_id);
@@ -305,10 +305,10 @@ CREATE INDEX idx_contact_replied ON contact_info(is_replied);
 
 USE MyAppDB;
 SHOW TABLES;
-SELECT COUNT(*) FROM news;
+SELECT COUNT(*) FROM posts;
 SELECT COUNT(*) FROM categories;
 
-INSERT INTO news (title, slug, summary, content, thumbnail, category_id, author_id, is_published, published_at) VALUES (
+INSERT INTO posts (title, slug, summary, content, thumbnail, category_id, author_id, is_published, published_at) VALUES (
 'CHÍNH THỨC RA MẮT SỰ KIỆN CHÀO TÂN K67 - AETERNIA',
 'chao-tan-k67-aeternia',
 'Ra mắt chuỗi sự kiện chào tân sinh viên K67',
@@ -320,7 +320,7 @@ TRUE,
 NOW()
 );
 
-INSERT INTO news (title, slug, summary, content, thumbnail, category_id, author_id, is_published, published_at) VALUES (
+INSERT INTO posts (title, slug, summary, content, thumbnail, category_id, author_id, is_published, published_at) VALUES (
 'RECAP TEAM BUILDING CHÀO TÂN SINH VIÊN K67',
 'recap-team-building-k67',
 'Tổng kết hoạt động team building chào tân K67',
@@ -332,7 +332,7 @@ TRUE,
 NOW()
 );
 
-INSERT INTO news (title, slug, summary, content, thumbnail, category_id, author_id, is_published, published_at) VALUES (
+INSERT INTO posts (title, slug, summary, content, thumbnail, category_id, author_id, is_published, published_at) VALUES (
 'THÔNG BÁO LỊCH THI ĐẤU TỨ KẾT – FIT CUP S2',
 'fit-cup-tu-ket-s2',
 'Lịch thi đấu vòng tứ kết FIT CUP',
@@ -344,7 +344,7 @@ TRUE,
 NOW()
 );
 
-INSERT INTO news (title, slug, summary, content, thumbnail, category_id, author_id, is_published, published_at) VALUES (
+INSERT INTO posts (title, slug, summary, content, thumbnail, category_id, author_id, is_published, published_at) VALUES (
 'FIT RACE – BỨT PHÁ GIỚI HẠN, LAN TỎA TINH THẦN THỂ THAO',
 'fit-race-2026',
 'Giải chạy FIT RACE 2026',
@@ -356,7 +356,7 @@ TRUE,
 NOW()
 );
 
-INSERT INTO news (title, slug, summary, content, thumbnail, category_id, author_id, is_published, published_at) VALUES (
+INSERT INTO posts (title, slug, summary, content, thumbnail, category_id, author_id, is_published, published_at) VALUES (
 'CHÀO MỪNG 95 NĂM NGÀY THÀNH LẬP ĐOÀN TNCS HỒ CHÍ MINH',
 'chao-mung-95-nam-doan',
 'Kỷ niệm 95 năm thành lập Đoàn TNCS Hồ Chí Minh',
@@ -368,7 +368,7 @@ TRUE,
 NOW()
 );
 
-INSERT INTO news (title, slug, summary, content, thumbnail, category_id, author_id, is_published, published_at) VALUES (
+INSERT INTO posts (title, slug, summary, content, thumbnail, category_id, author_id, is_published, published_at) VALUES (
 'TUYÊN DƯƠNG TRẦN MINH KHÁNH – CÁN BỘ ĐOÀN TIÊU BIỂU 2026',
 'tuyen-duong-tran-minh-khanh-2026',
 'Tuyên dương cán bộ đoàn tiêu biểu năm 2026',
