@@ -1,0 +1,154 @@
+@startuml
+title BIỂU ĐỒ LỚP CHI TIẾT HỆ THỐNG (PLANTUML) - ĐẦY ĐỦ
+
+class User {
+    # id: int [frozen]
+    # username: string [frozen]
+    # full_name: string [changeable]
+    # role: string [changeable]
+    # member_type: string [changeable]
+    # student_code: string [frozen]
+    # class_name: string [changeable]
+    # department: string [changeable]
+    # department_position: text [changeable]
+    # is_active: boolean [changeable]
+    # created_at: datetime [readOnly]
+    --
+    + login(u, p): boolean
+    + getProfile(id): User
+    + updateProfile(id, d): boolean
+}
+
+class Admin {
+    --
+    + manageCategories(id, a)
+    + manageNews(id, a)
+    + manageDocuments(id, a)
+    + manageActivities(id, a)
+    + manageOrganizations(id, a)
+    + manageTemplates(id, a)
+    + manageTimeline(id, a)
+    + manageContacts(id, a)
+    + manageSharedFolders(id, a)
+    + uploadImage(f): string
+}
+
+class Organization {
+    - id: int [frozen]
+    - name: string [changeable]
+    - name_abbr: string [changeable]
+    - logo: string [changeable]
+    - website: string [changeable]
+    - email: string [changeable]
+    - phone: string [changeable]
+    - address: text [changeable]
+    - is_active: boolean [changeable]
+    --
+    + getAll(): List
+    + getChildren(parentId): List
+}
+
+class News {
+    - id: int [frozen]
+    - title: string [changeable]
+    - slug: string [changeable]
+    - summary: text [changeable]
+    - content: longtext [changeable]
+    - thumbnail: string [changeable]
+    - view_count: int [readOnly]
+    - is_featured: boolean [changeable]
+    - is_published: boolean [changeable]
+    - published_at: datetime [readOnly]
+    --
+    + getAll(f): List
+    + publish(id): boolean
+}
+
+class Activity {
+    - id: int [frozen]
+    - title: string [changeable]
+    - slug: string [changeable]
+    - location: string [changeable]
+    - start_date: datetime [changeable]
+    - end_date: datetime [changeable]
+    - thumbnail: string [changeable]
+    - organizer: string [changeable]
+    - view_count: int [readOnly]
+    --
+    + getByYear(y): List
+    + create(d): boolean
+}
+
+class TimelineEvent {
+    - id: int [frozen]
+    - event_type: string [frozen]
+    - month: int [changeable]
+    - year: int [changeable]
+    - event_name: string [changeable]
+    - sort_order: int [changeable]
+    - is_published: boolean [changeable]
+    --
+    + getPublicTimeline(): List
+    + getAdminTimeline(): List
+}
+
+class Document {
+    - id: int [frozen]
+    - title: string [changeable]
+    - file_name: string [frozen]
+    - file_path: string [frozen]
+    - download_count: int [readOnly]
+    - is_public: boolean [changeable]
+    --
+    + getAll(): List
+    + incrementDownload(id)
+}
+
+class Category {
+    - id: int [frozen]
+    - name: string [changeable]
+    - slug: string [changeable]
+    - page_type: string [changeable]
+    - is_active: boolean [changeable]
+    --
+    + getAll(): List
+    + create(d): boolean
+}
+
+class SharedFolder {
+    - id: string [frozen]
+    - name: string [changeable]
+    - code: string [frozen]
+    - departmentValues: string[] [changeable]
+    --
+    + getSharedFolders(): List
+    + canViewFolder(): boolean
+}
+
+class ContactInfo {
+    - id: int [frozen]
+    - name: string [frozen]
+    - email: string [frozen]
+    - subject: string [frozen]
+    - message: text [frozen]
+    - is_read: boolean [changeable]
+    - is_replied: boolean [readOnly]
+    --
+    + markAsReplied(id, m): boolean
+}
+
+class PostTemplate {
+    - id: int [frozen]
+    - name: string [changeable]
+    - content_template: longtext [changeable]
+    --
+    + create(d): boolean
+}
+
+Admin --|> User
+News "*" -- "1" Category
+Activity "*" -- "1" Category
+Document "*" -- "1" Category
+Organization "0..1" -- "0..*" Organization
+
+@enduml

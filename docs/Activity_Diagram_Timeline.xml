@@ -1,0 +1,121 @@
+<mxGraphModel dx="2175" dy="1413" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+    <mxCell id="2" parent="1" style="swimlane;html=1;childLayout=stackLayout;horizontal=1;horizontalStack=1;startSize=30;resizeParent=1;fontSize=15;" value="Tạo card sự kiện hàng năm trong Timeline" vertex="1">
+      <mxGeometry height="1100" width="1300" x="80" y="80" as="geometry" />
+    </mxCell>
+
+    <!-- LANE: QUẢN TRỊ VIÊN -->
+    <mxCell id="lane_admin" parent="2" style="swimlane;html=1;horizontal=1;startSize=24;fontSize=15;" value="Quản trị viên" vertex="1">
+      <mxGeometry height="1070" width="280" y="30" as="geometry" />
+    </mxCell>
+    <mxCell id="start_node" parent="lane_admin" style="ellipse;html=1;fillColor=#000000;strokeColor=#000000;fontSize=15;" value="" vertex="1">
+      <mxGeometry height="30" width="30" x="125" y="40" as="geometry" />
+    </mxCell>
+    <mxCell id="act_choose_add" parent="lane_admin" style="rounded=1;html=1;fontSize=15;" value="Chọn thêm sự kiện mới" vertex="1">
+      <mxGeometry height="50" width="180" x="50" y="100" as="geometry" />
+    </mxCell>
+    <mxCell id="act_input_data" parent="lane_admin" style="rounded=1;html=1;fontSize=15;" value="Nhập: Tên, Tháng, Năm, &lt;div&gt;Tóm tắt...&lt;/div&gt;" vertex="1">
+      <mxGeometry height="60" width="200" x="40" y="250" as="geometry" />
+    </mxCell>
+    <mxCell id="act_click_save" parent="lane_admin" style="rounded=1;html=1;fontSize=15;" value="Nhấn nút 'Lưu sự kiện'" vertex="1">
+      <mxGeometry height="50" width="180" x="50" y="380" as="geometry" />
+    </mxCell>
+
+    <!-- LANE: GIAO DIỆN TIMELINE -->
+    <mxCell id="lane_ui" parent="2" style="swimlane;html=1;horizontal=1;startSize=24;fontSize=15;" value="Giao diện Timeline" vertex="1">
+      <mxGeometry height="1070" width="350" x="280" y="30" as="geometry" />
+    </mxCell>
+    <mxCell id="act_show_form" parent="lane_ui" style="rounded=1;html=1;fontSize=15;" value="Hiển thị form nhập liệu" vertex="1">
+      <mxGeometry height="50" width="180" x="85" y="100" as="geometry" />
+    </mxCell>
+    <mxCell id="act_validate_ui" parent="lane_ui" style="rhombus;html=1;fontSize=15;" value="Kiểm tra &lt;div&gt;thiếu dữ liệu?&lt;/div&gt;" vertex="1">
+      <mxGeometry height="100" width="140" x="105" y="355" as="geometry" />
+    </mxCell>
+    <mxCell id="act_err_ui" parent="lane_ui" style="rounded=1;html=1;fontSize=15;" value="Thông báo thiếu dữ liệu" vertex="1">
+      <mxGeometry height="50" width="180" x="85" y="255" as="geometry" />
+    </mxCell>
+    <mxCell id="act_err_month" parent="lane_ui" style="rounded=1;html=1;fontSize=15;" value="Thông báo tháng sai &lt;div&gt;(1-12)&lt;/div&gt;" vertex="1">
+      <mxGeometry height="55" width="180" x="85" y="522" as="geometry" />
+    </mxCell>
+    <mxCell id="act_success" parent="lane_ui" style="rounded=1;html=1;fontSize=15;" value="Thông báo thành công" vertex="1">
+      <mxGeometry height="50" width="180" x="85" y="900" as="geometry" />
+    </mxCell>
+    <mxCell id="end_node" parent="lane_ui" style="ellipse;html=1;shape=endState;fillColor=strokeColor;fontSize=15;" value="" vertex="1">
+      <mxGeometry height="30" width="30" x="160" y="1000" as="geometry" />
+    </mxCell>
+
+    <!-- LANE: BACKEND TIMELINE -->
+    <mxCell id="lane_backend" parent="2" style="swimlane;html=1;horizontal=1;startSize=24;fontSize=15;" value="Backend Timeline" vertex="1">
+      <mxGeometry height="1070" width="370" x="630" y="30" as="geometry" />
+    </mxCell>
+    <mxCell id="act_check_month" parent="lane_backend" style="rhombus;html=1;fontSize=15;" value="Tháng hợp lệ &lt;div&gt;(1-12)?&lt;/div&gt;" vertex="1">
+      <mxGeometry height="110" width="150" x="110" y="495" as="geometry" />
+    </mxCell>
+    <mxCell id="act_normalize_year" parent="lane_backend" style="whiteSpace=wrap;html=1;rounded=1;fontSize=15;" value="Chuẩn hóa Năm &lt;div&gt;&amp;amp; Tạo bản ghi (annual)&lt;/div&gt;" vertex="1">
+      <mxGeometry height="65" width="200" x="85" y="650" as="geometry" />
+    </mxCell>
+
+    <!-- LANE: CSDL -->
+    <mxCell id="lane_csdl" parent="2" style="swimlane;html=1;horizontal=1;startSize=24;fontSize=15;" value="CSDL" vertex="1">
+      <mxGeometry height="1070" width="300" x="1000" y="30" as="geometry" />
+    </mxCell>
+    <mxCell id="act_db_save" parent="lane_csdl" style="rounded=1;html=1;fontSize=15;" value="Lưu vào bảng &lt;div&gt;timeline_events&lt;/div&gt;" vertex="1">
+      <mxGeometry height="60" width="180" x="60" y="780" as="geometry" />
+    </mxCell>
+
+    <!-- CONNECTIONS -->
+    <mxCell id="e_start" edge="1" parent="2" source="start_node" target="act_choose_add" style="endArrow=classic;html=1;fontSize=15;">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="e_choose_show" edge="1" parent="2" source="act_choose_add" target="act_show_form" style="endArrow=classic;html=1;fontSize=15;">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="e_show_input" edge="1" parent="2" source="act_show_form" target="act_input_data" style="endArrow=classic;html=1;fontSize=15;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="e_input_save" edge="1" parent="2" source="act_input_data" target="act_click_save" style="endArrow=classic;html=1;fontSize=15;">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="e_save_val" edge="1" parent="2" source="act_click_save" target="act_validate_ui" style="endArrow=classic;html=1;fontSize=15;">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    
+    <mxCell id="e_val_no" edge="1" parent="2" source="act_validate_ui" target="act_err_ui" style="edgeStyle=orthogonalEdgeStyle;endArrow=classic;html=1;fontSize=15;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" value="Có">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="e_err_back" edge="1" parent="2" source="act_err_ui" target="act_input_data" style="edgeStyle=orthogonalEdgeStyle;endArrow=classic;html=1;fontSize=15;">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <mxCell id="e_val_yes" edge="1" parent="2" source="act_validate_ui" target="act_check_month" style="edgeStyle=orthogonalEdgeStyle;endArrow=classic;html=1;fontSize=15;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" value="Không">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <mxCell id="e_month_no" edge="1" parent="2" source="act_check_month" target="act_err_month" style="edgeStyle=orthogonalEdgeStyle;endArrow=classic;html=1;fontSize=15;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" value="Sai">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="e_errmonth_back" edge="1" parent="2" source="act_err_month" target="act_input_data" style="edgeStyle=orthogonalEdgeStyle;endArrow=classic;html=1;fontSize=15;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="140" y="550" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <mxCell id="e_month_yes" edge="1" parent="2" source="act_check_month" target="act_normalize_year" style="endArrow=classic;html=1;fontSize=15;" value="Đúng">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="e_norm_db" edge="1" parent="2" source="act_normalize_year" target="act_db_save" style="edgeStyle=orthogonalEdgeStyle;endArrow=classic;html=1;fontSize=15;">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="e_db_success" edge="1" parent="2" source="act_db_save" target="act_success" style="edgeStyle=orthogonalEdgeStyle;endArrow=classic;html=1;fontSize=15;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="e_success_end" edge="1" parent="2" source="act_success" target="end_node" style="endArrow=classic;html=1;fontSize=15;">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+  </root>
+</mxGraphModel>
