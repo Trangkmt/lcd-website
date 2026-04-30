@@ -139,12 +139,12 @@ export const activitiesAPI = {
     delete: (id) => apiFetch(`/activities/${id}`, { method: 'DELETE' }),
 };
 
-export const organizationsAPI = {
-    getAll: () => apiFetch('/organizations'),
-    getById: (id) => apiFetch(`/organizations/${id}`),
-    create: (data) => apiFetch('/organizations', { method: 'POST', body: data }),
-    update: (id, data) => apiFetch(`/organizations/${id}`, { method: 'PUT', body: data }),
-    delete: (id) => apiFetch(`/organizations/${id}`, { method: 'DELETE' }),
+export const teamsAPI = {
+    getAll: () => apiFetch('/teams'),
+    getById: (id) => apiFetch(`/teams/${id}`),
+    create: (data) => apiFetch('/teams', { method: 'POST', body: data }),
+    update: (id, data) => apiFetch(`/teams/${id}`, { method: 'PUT', body: data }),
+    delete: (id) => apiFetch(`/teams/${id}`, { method: 'DELETE' }),
 };
 
 export const authAPI = {

@@ -47,7 +47,7 @@ export default function SearchResults() {
 
         setLoading(true);
         Promise.all([
-            newsAPI.getAll({ page_type: 'post', limit: 200 }),
+            newsAPI.getAll({ page_type: 'news', limit: 200 }),
             newsAPI.getAll({ page_type: 'achievement', limit: 200 }),
             newsAPI.getAll({ page_type: 'activity_annual', limit: 200 }),
             newsAPI.getAll({ page_type: 'activity_non_annual', limit: 200 }),

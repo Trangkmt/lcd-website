@@ -28,10 +28,11 @@ async function loadUserById(pool, userId) {
     const result = await pool.request()
         .input('id', sql.Int, userId)
         .query(`
-            SELECT id, username, email, full_name, ${avatarSelect}, role, is_active,
-                   member_type, student_code, class_name, department, department_position
-            FROM users
-            WHERE id = @id
+            SELECT u.id, u.username, u.email, u.full_name, ${avatarSelect.replace('avatar_url', 'u.avatar_url')}, u.role, u.is_active,
+                   u.member_type, u.student_code, u.class_name, u.team_id, u.team_position, t.name as team_name
+            FROM users u
+            LEFT JOIN teams t ON u.team_id = t.id
+            WHERE u.id = @id
             LIMIT 1
         `);
     return mapAuthUser(result.recordset?.[0] || null);
@@ -54,11 +55,12 @@ exports.login = async (req, res) => {
             .input('identity', sql.NVarChar, identity)
             .input('password', sql.NVarChar, password)
             .query(`
-                SELECT id, username, email, full_name, ${avatarSelect}, role, is_active,
-                       member_type, student_code, class_name, department, department_position
-                FROM users
-                WHERE (username = @identity OR email = @identity)
-                  AND password = @password
+                SELECT u.id, u.username, u.email, u.full_name, ${avatarSelect.replace('avatar_url', 'u.avatar_url')}, u.role, u.is_active,
+                       u.member_type, u.student_code, u.class_name, u.team_id, u.team_position, t.name as team_name
+                FROM users u
+                LEFT JOIN teams t ON u.team_id = t.id
+                WHERE (u.username = @identity OR u.email = @identity)
+                  AND u.password = @password
                 LIMIT 1
             `);
 
@@ -67,6 +69,15 @@ exports.login = async (req, res) => {
         }
 
         const user = result.recordset[0];
+        const teamsResult = await pool.request()
+            .input('id', sql.Int, user.id)
+            .query(`
+                SELECT ut.team_id, ut.position as team_position, t.name as team_name
+                FROM user_teams ut
+                JOIN teams t ON ut.team_id = t.id
+                WHERE ut.user_id = @id
+            `);
+        user.teams = teamsResult.recordset || [];
         if (!user.is_active) {
             return res.status(403).json({ error: 'Tài khoản đã bị ẩn hoặc vô hiệu hóa' });
         }

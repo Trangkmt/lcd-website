@@ -91,7 +91,7 @@ async function loadActiveUserById(userId) {
         .input('id', sql.Int, userId)
         .query(`
             SELECT id, username, email, full_name, ${avatarSelect}, role, member_type,
-                   department, department_position, is_active
+                   is_active
             FROM users
             WHERE id = @id
             LIMIT 1

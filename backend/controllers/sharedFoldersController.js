@@ -49,11 +49,12 @@ function isUtilityOnly(user) {
 }
 
 function getUserDepartments(user) {
-    return parseFlexibleList(user?.department).map(normalizeText).filter(Boolean);
+    if (!user || !user.teams || !Array.isArray(user.teams)) return [];
+    return user.teams.map(t => normalizeText(t.team_id)).filter(Boolean);
 }
 
 function getUserPositionMap(user) {
-    const raw = user?.department_position;
+    const raw = user?.team_position;
 
     if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
         return raw;
@@ -78,45 +79,49 @@ function findMatchingObjectValue(objectValue, candidateKeys) {
     return undefined;
 }
 
-function folderMatchesDepartment(folder, userDepartments) {
-    const folderDepartmentValues = (folder.departmentValues || []).map(normalizeText);
-    return folderDepartmentValues.some((departmentValue) => userDepartments.includes(departmentValue));
+function folderMatchesDepartment(folder, userTeams) {
+    const folderTeamValues = (folder.teamValues || []).map(normalizeText);
+    return folderTeamValues.some((departmentValue) => userTeams.includes(departmentValue));
 }
 
 function folderPositionsForUser(folder, user) {
-    const positionMap = getUserPositionMap(user);
-    const departmentKeys = [folder.id, ...(folder.departmentValues || [])].map(normalizeText);
-
-    const matchedDepartmentValue = findMatchingObjectValue(positionMap, departmentKeys);
-    if (matchedDepartmentValue !== undefined) {
-        return parseFlexibleList(matchedDepartmentValue).map(normalizeText).filter(Boolean);
-    }
-
-    return parseFlexibleList(positionMap.__all__).map(normalizeText).filter(Boolean);
+    if (!user || !user.teams || !Array.isArray(user.teams)) return [];
+    const folderTeamValues = (folder.teamValues || []).map(normalizeText);
+    
+    // Find all positions for teams that match the folder's teamValues
+    const positions = user.teams
+        .filter(t => folderTeamValues.includes(normalizeText(t.team_id)))
+        .map(t => normalizeText(t.team_position))
+        .filter(Boolean);
+        
+    return positions;
 }
+
+
+
 
 function canViewFolder(user, folder) {
     // 1. CHỈ admin_full mới được xem tất cả
     if (isAdminLike(user)) {
         return true;
     }
-    // 2. utility_only và các role khác đều phải check department
-    const userDepartments = getUserDepartments(user);
-    console.log('User departments after parsing:', userDepartments);
-    // 3. Nếu user không có department nào -> không được xem folder nào
-    if (!userDepartments.length) {
+    // 2. utility_only và các role khác đều phải check team_id
+    const userTeams = getUserDepartments(user);
+    console.log('User departments after parsing:', userTeams);
+    // 3. Nếu user không có team_id nào -> không được xem folder nào
+    if (!userTeams.length) {
         console.log('User has no departments');
         return false;
     }
-    // 4. Nếu folder không có departmentValues -> không cho xem (folder lỗi cấu hình)
-    if (!folder.departmentValues || folder.departmentValues.length === 0) {
-        console.log('Folder has no department values (misconfigured)');
+    // 4. Nếu folder không có teamValues -> không cho xem (folder lỗi cấu hình)
+    if (!folder.teamValues || folder.teamValues.length === 0) {
+        console.log('Folder has no team_id values (misconfigured)');
         return false;
     }
-    // 5. Kiểm tra department của user có match với folder không
-    const folderDepartmentValues = (folder.departmentValues || []).map(normalizeText);
-    const hasMatch = folderDepartmentValues.some(folderDept =>
-        userDepartments.includes(folderDept)
+    // 5. Kiểm tra team_id của user có match với folder không
+    const folderTeamValues = (folder.teamValues || []).map(normalizeText);
+    const hasMatch = folderTeamValues.some(folderTeam =>
+        userTeams.includes(folderTeam)
     );
     return hasMatch;
 }

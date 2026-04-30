@@ -25,7 +25,7 @@ async function testConnection() {
     console.table(dbCheck.recordset);
 
     // Kiểm tra số lượng records
-    const tables = ['users', 'categories', 'news', 'documents', 'activities', 'organizations', 'contact_info'];
+    const tables = ['users', 'categories', 'posts', 'documents', 'activities', 'teams', 'contact_info'];
     console.log('\n📊 Số lượng records:');
 
     for (const table of tables) {
