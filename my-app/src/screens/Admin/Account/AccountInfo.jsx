@@ -119,16 +119,13 @@ export default function AccountInfo({ user }) {
       return;
     }
 
-    const originalFullName = (activeProfile?.full_name || '').trim();
     const originalEmail = (activeProfile?.email || '').trim();
     const originalAvatar = (activeProfile?.avatar_url || '').trim();
-    const currentFullName = (form.full_name || '').trim();
     const currentEmail = (form.email || '').trim();
     const currentAvatar = (form.avatar_url || '').trim();
 
     const hasProfileChanges = Boolean(
       avatarFile
-      || originalFullName !== currentFullName
       || originalEmail !== currentEmail
       || originalAvatar !== currentAvatar
     );
@@ -153,7 +150,6 @@ export default function AccountInfo({ user }) {
 
       if (hasProfileChanges) {
         updatedProfile = await authAPI.updateMyProfile({
-          full_name: currentFullName,
           email: currentEmail,
           avatar_url: nextAvatarUrl || null,
         });
@@ -214,19 +210,22 @@ export default function AccountInfo({ user }) {
         <div className="info-section">
           <label>
             Họ tên:
-            {editMode ? (
-              <input
-                type="text"
-                name="full_name"
-                value={form.full_name}
-                onChange={handleChange}
-                disabled={saving}
-                required
-              />
-            ) : (
-              <span>{activeProfile?.full_name || ''}</span>
-            )}
+            <span>{activeProfile?.full_name || ''}</span>
           </label>
+
+          {activeProfile?.member_type === 'student' && (
+            <>
+              <label>
+                Mã sinh viên:
+                <span>{activeProfile?.student_code || ''}</span>
+              </label>
+              <label>
+                Lớp:
+                <span>{activeProfile?.class_name || ''}</span>
+              </label>
+            </>
+          )}
+
           <label>
             Gmail:
             {editMode ? (
@@ -242,8 +241,26 @@ export default function AccountInfo({ user }) {
               <span>{activeProfile?.email || ''}</span>
             )}
           </label>
+
+          <div className="team-info-section" style={{ marginTop: '15px' }}>
+            <p className="team-info-label" style={{ fontWeight: '600', marginBottom: '8px', color: '#666' }}>Các ban tham gia:</p>
+            {activeProfile?.teams && activeProfile.teams.length > 0 ? (
+              <div className="team-list" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {activeProfile.teams.map((t, idx) => (
+                  <div key={idx} className="team-item" style={{ background: '#f8f9fa', padding: '10px 15px', borderRadius: '8px', border: '1px solid #eee' }}>
+                    <span className="team-name" style={{ fontWeight: 'bold', color: '#333' }}>{t.team_name}</span>
+                    <span className="team-position" style={{ marginLeft: '10px', color: '#007bff' }}>({t.team_position})</span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <span className="no-team" style={{ color: '#999', fontStyle: 'italic' }}>Chưa tham gia ban nào</span>
+            )}
+          </div>
+
           {editMode && (
-            <>
+            <div className="password-change-section" style={{ marginTop: '20px', paddingTop: '15px', borderTop: '1px dashed #ddd' }}>
+              <p style={{ fontWeight: '600', marginBottom: '10px', color: '#444' }}>Đổi mật khẩu (nếu cần):</p>
               <label>
                 Mật khẩu hiện tại:
                 <input
@@ -252,9 +269,10 @@ export default function AccountInfo({ user }) {
                   value={form.password}
                   onChange={handleChange}
                   disabled={saving}
+                  placeholder="Nhập mật khẩu hiện tại"
                 />
               </label>
-              <label>
+              <label style={{ marginTop: '10px' }}>
                 Mật khẩu mới:
                 <input
                   type="password"
@@ -262,9 +280,10 @@ export default function AccountInfo({ user }) {
                   value={form.newPassword}
                   onChange={handleChange}
                   disabled={saving}
+                  placeholder="Nhập mật khẩu mới"
                 />
               </label>
-            </>
+            </div>
           )}
         </div>
         <div className="action-section">
