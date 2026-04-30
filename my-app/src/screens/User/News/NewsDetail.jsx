@@ -16,7 +16,7 @@ const NewsDetail = () => {
         newsAPI.getById(id)
             .then(data => {
                 setPost(data);
-                return newsAPI.getAll({ page_type: 'post', limit: 4 });
+                return newsAPI.getAll({ page_type: 'news', limit: 4 });
             })
             .then(data => {
                 const all = Array.isArray(data) ? data : [];

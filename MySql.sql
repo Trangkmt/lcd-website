@@ -13,16 +13,37 @@ USE MyAppDB;
 SET FOREIGN_KEY_CHECKS = 0;
 
 DROP TABLE IF EXISTS contact_info;
-DROP TABLE IF EXISTS organizations;
+DROP TABLE IF EXISTS teams;
 DROP TABLE IF EXISTS timeline_events;
 DROP TABLE IF EXISTS activities;
 DROP TABLE IF EXISTS documents;
 DROP TABLE IF EXISTS posts;
 DROP TABLE IF EXISTS post_templates;
 DROP TABLE IF EXISTS categories;
+DROP TABLE IF EXISTS categories;
+DROP TABLE IF EXISTS user_teams;
 DROP TABLE IF EXISTS users;
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+-- ================================================
+-- TEAMS
+-- ================================================
+CREATE TABLE teams (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    name_abbr VARCHAR(50),
+    description TEXT,
+    display_order INT DEFAULT 0
+);
+
+INSERT INTO teams (name,name_abbr,description,display_order) VALUES
+('Ban Chấp Hành','BCH','Gồm bí thư, phó bí thư và các ủy viên là trưởng ban, phó ban',0),
+('Ban Văn Thể','BVT','Tổ chức các hoạt động văn hóa, văn nghệ, thể dục thể thao',1),
+('Ban Truyền Thông Kỹ Thuật','TTKT','Quản lý fanpage, website, thiết kế poster, quay dựng video',2),
+('Ban Tổ Chức Sự Kiện','TCSK','Lên kế hoạch và tổ chức các sự kiện của Liên Chi Đoàn',3),
+('Ban Đối Ngoại','ĐN','Kết nối với các tổ chức bên ngoài, tìm kiếm tài trợ',4),
+('Ban Công Tác Đoàn và Phát Triển Đảng','CTD & PTD','Quản lý đoàn viên, phát triển đảng viên, công tác đoàn',5);
 
 -- ================================================
 -- USERS
@@ -38,19 +59,34 @@ CREATE TABLE users (
     member_type ENUM('student', 'teacher') NOT NULL DEFAULT 'student',
     student_code VARCHAR(30),
     class_name VARCHAR(50),
-    department VARCHAR(100),
-    department_position TEXT,
     is_active BOOLEAN DEFAULT TRUE,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+-- ================================================
+-- BẢNG TRUNG GIAN USER_TEAMS (1 User - Nhiều Team)
+-- ================================================
+CREATE TABLE user_teams (
+    user_id INT,
+    team_id INT,
+    position VARCHAR(100),
+    joined_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, team_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE
+);
+
 INSERT INTO users (
     username,password,email,full_name,avatar_url,role,
-    member_type,student_code,class_name,department,department_position,is_active
+    member_type,student_code,class_name,is_active
 ) VALUES
-('admin','123456','admin@myapp.com','Nguyễn Văn Admin',NULL,'admin_full','teacher',NULL,NULL,'ban chấp hành','admin hệ thống',TRUE),
-('bi-thu-fit','123456','bithu.fit@neu.edu.vn','TS. Nguyễn Văn A',NULL,'utility_only','teacher',NULL,NULL,'ban chấp hành','bí thư',TRUE);
+('admin','123456','admin@myapp.com','Nguyễn Văn Admin',NULL,'admin_full','teacher',NULL,NULL,TRUE),
+('bi-thu-fit','123456','bithu.fit@neu.edu.vn','TS. Nguyễn Văn A',NULL,'utility_only','teacher',NULL,NULL,TRUE);
+
+INSERT INTO user_teams (user_id, team_id, position) VALUES
+(1, 1, 'admin hệ thống'),
+(2, 1, 'bí thư');
 
 -- ================================================
 -- CATEGORIES
@@ -62,7 +98,7 @@ CREATE TABLE categories (
     description TEXT,
     intro_image VARCHAR(500),
     parent_id INT,
-    page_type VARCHAR(50) DEFAULT 'post',
+    page_type VARCHAR(50) DEFAULT 'news',
     display_order INT DEFAULT 0,
     is_active BOOLEAN DEFAULT TRUE,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -71,16 +107,16 @@ CREATE TABLE categories (
 );
 
 INSERT INTO categories (id,name,slug,page_type,description,intro_image,parent_id) VALUES
-(1,'Tin tức','tin-tuc','post','Tin tức của Liên Chi đoàn',NULL,NULL),
-(2,'Thông báo','thong-bao','post','Thông báo chính thức',NULL,NULL),
-(3,'Sự kiện','su-kien','post','Các sự kiện',NULL,NULL),
-(4,'Hoạt động học thuật','hoc-thuat','activity','Hoạt động học thuật',NULL,NULL),
-(5,'Hoạt động tình nguyện','tinh-nguyen','activity','Hoạt động cộng đồng',NULL,NULL),
-(6,'Hoạt động thể thao','the-thao','activity','Hoạt động thể thao',NULL,NULL),
+(1,'Tin tức','tin-tuc','news','Tin tức của Liên Chi đoàn',NULL,NULL),
+(2,'Thông báo','thong-bao','news','Thông báo chính thức',NULL,NULL),
+(3,'Sự kiện','su-kien','news','Các sự kiện',NULL,NULL),
+(4,'Hoạt động học thuật','hoc-thuat','activity_non_annual','Hoạt động học thuật',NULL,NULL),
+(5,'Hoạt động tình nguyện','tinh-nguyen','activity_non_annual','Hoạt động cộng đồng',NULL,NULL),
+(6,'Hoạt động thể thao','the-thao','activity_non_annual','Hoạt động thể thao',NULL,NULL),
 (7,'Thành tích','thanh-tich','achievement','Thành tích nổi bật',NULL,NULL),
 (8,'Tài liệu','tai-lieu','document','Tài liệu',NULL,NULL),
 (9,'Chương trình thường niên','thuong-nien','activity_annual','Hoạt động thường niên',NULL,NULL),
-(10,'Khác','khac','post','Danh mục khác',NULL,NULL),
+(10,'Khác','khac','news','Danh mục khác',NULL,NULL),
 (11,'Chào tân sinh viên','chao-tan-sinh-vien','activity_annual','Lễ chào tân sinh viên khóa mới',NULL,9),
 (12,'Quân sự','quan-su','activity_annual','Quân sự huấn luyện sinh viên',NULL,9),
 (13,'FIT Cup','fit-cup','activity_annual','Giải bóng đá FIT Cup',NULL,9),
@@ -224,34 +260,7 @@ CREATE TABLE timeline_events (
     FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
 );
 
--- ================================================
--- ORGANIZATIONS
--- ================================================
-CREATE TABLE organizations (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    name_abbr VARCHAR(50),
-    description TEXT,
-    logo VARCHAR(255),
-    website VARCHAR(255),
-    email VARCHAR(100),
-    phone VARCHAR(20),
-    address TEXT,
-    parent_id INT,
-    display_order INT DEFAULT 0,
-    is_active BOOLEAN DEFAULT TRUE,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (parent_id) REFERENCES organizations(id)
-);
 
-INSERT INTO organizations (name,name_abbr,description,display_order) VALUES
-('Ban Chấp Hành','BCH','Gồm bí thư, phó bí thư và các ủy viên là trưởng ban, phó ban',0),
-('Ban Văn Thể','BVT','Tổ chức các hoạt động văn hóa, văn nghệ, thể dục thể thao',1),
-('Ban Truyền Thông Kỹ Thuật','TTKT','Quản lý fanpage, website, thiết kế poster, quay dựng video',2),
-('Ban Tổ Chức Sự Kiện','TCSK','Lên kế hoạch và tổ chức các sự kiện của Liên Chi Đoàn',3),
-('Ban Đối Ngoại','ĐN','Kết nối với các tổ chức bên ngoài, tìm kiếm tài trợ',4),
-('Ban Công Tác Đoàn và Phát Triển Đảng','CTD & PTD','Quản lý đoàn viên, phát triển đảng viên, công tác đoàn',5);
 
 -- ================================================
 -- CONTACT INFO
@@ -264,10 +273,18 @@ CREATE TABLE contact_info (
     subject VARCHAR(255),
     message TEXT,
     is_read BOOLEAN DEFAULT FALSE,
+    read_by INT,
     is_replied BOOLEAN DEFAULT FALSE,
+    replied_by INT,
     replied_at DATETIME,
+    is_deleted BOOLEAN DEFAULT FALSE,
+    deleted_by INT,
+    deleted_at DATETIME,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (read_by) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (replied_by) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (deleted_by) REFERENCES users(id) ON DELETE SET NULL
 );
 
 INSERT INTO contact_info (name,email,phone,subject,message) VALUES
@@ -299,7 +316,6 @@ CREATE INDEX idx_timeline_year_sort ON timeline_events(year, sort_order, month);
 CREATE INDEX idx_categories_slug ON categories(slug);
 CREATE INDEX idx_categories_parent ON categories(parent_id);
 CREATE INDEX idx_categories_page_type ON categories(page_type);
-CREATE INDEX idx_organizations_parent ON organizations(parent_id);
 CREATE INDEX idx_contact_read ON contact_info(is_read);
 CREATE INDEX idx_contact_replied ON contact_info(is_replied);
 
@@ -307,13 +323,12 @@ USE MyAppDB;
 SHOW TABLES;
 SELECT COUNT(*) FROM posts;
 SELECT COUNT(*) FROM categories;
-
 INSERT INTO posts (title, slug, summary, content, thumbnail, category_id, author_id, is_published, published_at) VALUES (
 'CHÍNH THỨC RA MẮT SỰ KIỆN CHÀO TÂN K67 - AETERNIA',
 'chao-tan-k67-aeternia',
 'Ra mắt chuỗi sự kiện chào tân sinh viên K67',
 '“Ngai vàng có thể chỉ thuộc về một gia tộc, nhưng vinh quang thuộc về tất cả những ai đã dũng cảm bước vào cuộc chiến này.” Chuỗi sự kiện chào tân K67 của Khoa Công nghệ thông tin đã chính thức khởi động với chủ đề Aeternia - hành trình trở về vương quốc huy hoàng, nơi những tân sinh viên K67 sẽ đấu tranh và khẳng định bản lĩnh của mình. Từ những bước chân đầu tiên cho đến khi ánh sáng đêm gala bùng cháy, tất cả sẽ trở thành thử thách về tinh thần, ý chí và tài năng. Hãy theo dõi và đồng hành cùng LCĐ để chứng kiến hành trình chinh phục đầy cảm hứng này.',
-'https://scontent.fhan1-1.fna.fbcdn.net/v/t39.30808-6/555062645_122182622720363677_7711415447417702913_n.jpg',
+'https://res.cloudinary.com/dcny8f58b/image/upload/v1777026774/lcd/activity-post-images/slfkyfyv18gp2ynyde57.jpg',
 11,
 1,
 TRUE,
@@ -325,7 +340,7 @@ INSERT INTO posts (title, slug, summary, content, thumbnail, category_id, author
 'recap-team-building-k67',
 'Tổng kết hoạt động team building chào tân K67',
 'Vào Chủ nhật ngày 12/10, sự kiện team building chào đón tân sinh viên K67 của Khoa Công Nghệ Thông Tin đã diễn ra trong không khí sôi nổi, hào hứng và đầy cảm xúc. Với sự góp mặt đông đảo của các bạn sinh viên K67 cùng sự chuẩn bị chu đáo từ ban tổ chức AETERNIA, chương trình đã trở thành cầu nối giúp các bạn xóa tan sự bỡ ngỡ ban đầu, tạo nên những khoảnh khắc gắn kết và khơi dậy tinh thần nhiệt huyết. Những trò chơi đồng đội và thử thách sáng tạo đã giúp sinh viên thể hiện cá tính và tinh thần đoàn kết. K67 – hãy tiếp tục lan tỏa tinh thần Dám nghĩ – Dám làm – Dám bứt phá!',
-'https://scontent.fhan1-1.fna.fbcdn.net/v/t39.30808-6/561656044_122184900914363677_5354723265214253294_n.jpg',
+'https://res.cloudinary.com/dcny8f58b/image/upload/v1777026790/lcd/activity-post-images/jr9zsl3eegmyocavraiw.jpg',
 11,
 1,
 TRUE,
@@ -337,7 +352,7 @@ INSERT INTO posts (title, slug, summary, content, thumbnail, category_id, author
 'fit-cup-tu-ket-s2',
 'Lịch thi đấu vòng tứ kết FIT CUP',
 'Sau những vòng đấu đầy kịch tính, FIT CUP S2 đã chính thức bước vào giai đoạn Tứ kết – nơi chỉ còn lại những đội bóng xuất sắc nhất tranh tài cho tấm vé đi tiếp. Ban tổ chức công bố lịch thi đấu với những cặp đấu hấp dẫn và khó đoán. Đây là những trận đấu mang tính quyết định, nơi bản lĩnh và chiến thuật được đẩy lên cao nhất. Hãy theo dõi và cổ vũ cho đội bóng bạn yêu thích!',
-'https://scontent.fhan1-1.fna.fbcdn.net/v/t39.30808-6/672631244_122204880152363677_895006564231560541_n.jpg',
+'https://res.cloudinary.com/dcny8f58b/image/upload/v1777027372/lcd/activity-post-images/csrobm7vzxc3uktzjfu6.jpg',
 13,
 1,
 TRUE,
@@ -349,7 +364,7 @@ INSERT INTO posts (title, slug, summary, content, thumbnail, category_id, author
 'fit-race-2026',
 'Giải chạy FIT RACE 2026',
 'FIT RACE không chỉ là một giải chạy mà còn là hành trình vượt qua giới hạn bản thân. Trên mỗi cung đường, từng bước chân là sự kiên trì, nỗ lực và quyết tâm không bỏ cuộc. Mỗi chặng đường mang đến cảm xúc riêng và lan tỏa năng lượng tích cực của tuổi trẻ. FIT RACE – nơi mỗi bước chạy là một lần bứt phá.',
-'https://scontent.fhan1-1.fna.fbcdn.net/v/t39.30808-6/672631244_122204880152363677_895006564231560541_n.jpg',
+'https://res.cloudinary.com/dcny8f58b/image/upload/v1777215718/lcd/activity-post-images/cvtdrzjnjz8ea0i59g9j.jpg',
 6,
 1,
 TRUE,
@@ -361,7 +376,7 @@ INSERT INTO posts (title, slug, summary, content, thumbnail, category_id, author
 'chao-mung-95-nam-doan',
 'Kỷ niệm 95 năm thành lập Đoàn TNCS Hồ Chí Minh',
 'Tuổi trẻ Khoa Công nghệ thông tin xin gửi lời chúc mừng tới tổ chức Đoàn TNCS Hồ Chí Minh nhân dịp kỷ niệm 95 năm thành lập. Đây là hành trình của lý tưởng, cống hiến và khát vọng tuổi trẻ Việt Nam. Chúc các cán bộ Đoàn và đoàn viên luôn giữ vững nhiệt huyết, sáng tạo và sẵn sàng cống hiến.',
-'https://scontent.fhan1-1.fna.fbcdn.net/v/t39.30808-6/658149560_122202375770363677_2379326581682089881_n.jpg',
+'https://res.cloudinary.com/dcny8f58b/image/upload/v1777026944/lcd/news-post-images/hwhb8vvwbcqjbm5xgc4f.jpg',
 2,
 1,
 TRUE,
@@ -373,7 +388,7 @@ INSERT INTO posts (title, slug, summary, content, thumbnail, category_id, author
 'tuyen-duong-tran-minh-khanh-2026',
 'Tuyên dương cán bộ đoàn tiêu biểu năm 2026',
 'Đồng chí Trần Minh Khánh – Phó Bí thư Liên chi Đoàn Khoa Công nghệ thông tin đã được tuyên dương là cán bộ Đoàn tiêu biểu năm 2026. Đây là sự ghi nhận xứng đáng cho những nỗ lực trong học tập và công tác Đoàn. Chúc đồng chí tiếp tục phát huy năng lực và đóng góp cho phong trào sinh viên.',
-'https://scontent.fhan1-1.fna.fbcdn.net/v/t39.30808-6/657727925_122202465020363677_6172855170766289206_n.jpg',
+'https://res.cloudinary.com/dcny8f58b/image/upload/v1777026734/lcd/achievement-images/tvq1eg8kpyqeduhbd83t.jpg',
 7,
 1,
 TRUE,

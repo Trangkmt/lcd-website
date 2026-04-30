@@ -24,7 +24,10 @@ exports.getAllCategories = withErrorHandling(async (req, res) => {
         }
     }
     const result = await request.query(`
-            SELECT c.*, pc.name as parent_name
+            SELECT 
+                c.*, 
+                pc.name as parent_name,
+                (SELECT COUNT(*) FROM categories sc WHERE sc.parent_id = c.id) as subcategories_count
             FROM categories c
             LEFT JOIN categories pc ON c.parent_id = pc.id
             ${whereClause}
@@ -39,7 +42,10 @@ exports.getCategoryById = withErrorHandling(async (req, res) => {
     const result = await pool.request()
         .input('id', sql.Int, req.params.id)
         .query(`
-                SELECT c.*, pc.name as parent_name
+                SELECT 
+                    c.*, 
+                    pc.name as parent_name,
+                    (SELECT COUNT(*) FROM categories sc WHERE sc.parent_id = c.id) as subcategories_count
                 FROM categories c
                 LEFT JOIN categories pc ON c.parent_id = pc.id
                 WHERE c.id = @id
@@ -58,12 +64,14 @@ exports.getCategoryBySlug = withErrorHandling(async (req, res) => {
     const result = await pool.request()
         .input('slug', sql.NVarChar, req.params.slug)
         .query(`
-                SELECT c.*, pc.name as parent_name
+                SELECT 
+                    c.*, 
+                    pc.name as parent_name,
+                    (SELECT COUNT(*) FROM categories sc WHERE sc.parent_id = c.id) as subcategories_count
                 FROM categories c
                 LEFT JOIN categories pc ON c.parent_id = pc.id
                 WHERE c.slug = @slug
                   AND c.is_active = 1
-                LIMIT 1
             `);
 
     const category = getRecordOrNull(result);
@@ -147,23 +155,23 @@ exports.deleteCategory = withErrorHandling(async (req, res) => {
         .input('id', sql.Int, categoryId)
         .query(`
             SELECT
-                (SELECT COUNT(*) FROM news WHERE category_id = @id) AS news_count,
+                (SELECT COUNT(*) FROM posts WHERE category_id = @id) AS posts_count,
                 (SELECT COUNT(*) FROM activities WHERE category_id = @id) AS activities_count,
                 (SELECT COUNT(*) FROM documents WHERE category_id = @id) AS documents_count,
                 (SELECT COUNT(*) FROM categories WHERE parent_id = @id) AS child_categories_count
         `);
 
     const usage = getRecordOrNull(usageResult) || {};
-    const newsCount = Number(usage.news_count || 0);
+    const postsCount = Number(usage.posts_count || 0);
     const activitiesCount = Number(usage.activities_count || 0);
     const documentsCount = Number(usage.documents_count || 0);
     const childCategoriesCount = Number(usage.child_categories_count || 0);
 
-    if (newsCount > 0 || activitiesCount > 0 || documentsCount > 0 || childCategoriesCount > 0) {
+    if (postsCount > 0 || activitiesCount > 0 || documentsCount > 0 || childCategoriesCount > 0) {
         return res.status(409).json({
             error: 'Không thể xóa danh mục đang được liên kết với bài viết, nội dung hoặc danh mục con. Vui lòng chuyển hoặc xóa dữ liệu liên quan trước.',
             details: {
-                news: newsCount,
+                posts: postsCount,
                 activities: activitiesCount,
                 documents: documentsCount,
                 child_categories: childCategoriesCount,

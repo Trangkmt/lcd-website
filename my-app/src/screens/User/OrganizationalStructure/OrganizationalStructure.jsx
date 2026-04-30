@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './OrganizationalStructure.css';
-import { organizationsAPI, usersAPI } from '../../../services/api';
+import { teamsAPI, usersAPI } from '../../../services/api';
 
 const BOARD_DEFINITIONS = [
     {
@@ -197,7 +197,7 @@ function getBchRole(member) {
 const BCH_KEY = 'ban chap hanh';
 const LEADER_ROLES = new Set(['Trưởng ban', 'Phó ban', 'Bí thư', 'Phó bí thư']);
 
-const OrganizationalStructure = () => {
+const TeamalStructure = () => {
     const [boardNodes, setBoardNodes] = useState([]);
     const [selectedBoardKey, setSelectedBoardKey] = useState(null);
     const [secretary, setSecretary] = useState(null);
@@ -208,23 +208,23 @@ const OrganizationalStructure = () => {
 
     useEffect(() => {
         Promise.all([
-            organizationsAPI.getAll().catch(() => []),
+            teamsAPI.getAll().catch(() => []),
             usersAPI.getPublic().catch(() => []),
         ])
             .then(([orgData, usersData]) => {
-                const organizations = Array.isArray(orgData) ? orgData : [];
+                const teams = Array.isArray(orgData) ? orgData : [];
                 const members = Array.isArray(usersData)
                     ? usersData.filter((member) => !!member?.is_active)
                     : [];
 
-                const organizationByKey = new Map();
-                organizations.forEach((org) => {
+                const teamByKey = new Map();
+                teams.forEach((org) => {
                     const key = normalizeDepartmentKey(org?.name);
-                    if (key) organizationByKey.set(key, org);
+                    if (key) teamByKey.set(key, org);
                 });
 
                 const computedNodes = BOARD_DEFINITIONS.map((definition) => {
-                    const org = organizationByKey.get(definition.key);
+                    const org = teamByKey.get(definition.key);
                     const relatedMembers = definition.key === BCH_KEY
                         ? members.filter((member) => {
                             const inBchDepartment = parseDepartments(member.department).includes(BCH_KEY);
@@ -270,7 +270,7 @@ const OrganizationalStructure = () => {
 
     if (loading) {
         return (
-            <div className="organizational-structure">
+            <div className="teamal-structure">
                 <div className="org-header">
                     <h1 className="org-title">Cơ Cấu Tổ Chức</h1>
                     <p className="org-subtitle">Liên Chi Đoàn Khoa Công Nghệ Thông Tin</p>
@@ -365,7 +365,7 @@ const OrganizationalStructure = () => {
     };
 
     return (
-        <div className="organizational-structure">
+        <div className="teamal-structure">
             <div className="org-header">
                 <h1 className="org-title">Cơ Cấu Tổ Chức</h1>
                 <p className="org-subtitle">Liên Chi Đoàn Khoa Công Nghệ Thông Tin</p>
@@ -453,4 +453,4 @@ const OrganizationalStructure = () => {
     );
 };
 
-export default OrganizationalStructure;
+export default TeamalStructure;
