@@ -5,7 +5,7 @@ export const SHARED_FOLDERS = [
         id: 'bch',
         name: 'Ban Chấp Hành',
         code: 'BCH',
-        departmentValues: ['ban chấp hành', 'ban chap hanh', 'bch'],
+        teamValues: [1],
         managerPositions: ['bí thư', 'phó bí thư'],
         description: 'Tài liệu điều hành, kế hoạch tổng và biên bản họp liên tịch.',
     },
@@ -13,7 +13,7 @@ export const SHARED_FOLDERS = [
         id: 'vt',
         name: 'Ban Văn Thể',
         code: 'VT',
-        departmentValues: ['ban văn thể', 'ban van the', 'vt'],
+        teamValues: [2],
         managerPositions: ['trưởng ban', 'phó ban'],
         description: 'Kịch bản văn nghệ, lịch tập luyện và kế hoạch phong trào thể thao.',
     },
@@ -21,7 +21,7 @@ export const SHARED_FOLDERS = [
         id: 'dn',
         name: 'Ban Đối Ngoại',
         code: 'ĐN',
-        departmentValues: ['ban đối ngoại', 'ban doi ngoai', 'dn'],
+        teamValues: [5],
         managerPositions: ['trưởng ban', 'phó ban'],
         description: 'Hồ sơ đối tác, mẫu thư ngỏ và proposal tài trợ.',
     },
@@ -29,7 +29,7 @@ export const SHARED_FOLDERS = [
         id: 'tcsk',
         name: 'Ban Tổ Chức Sự Kiện',
         code: 'TCSK',
-        departmentValues: ['ban tổ chức sự kiện', 'ban to chuc su kien', 'tcsk'],
+        teamValues: [4],
         managerPositions: ['trưởng ban', 'phó ban'],
         description: 'Run sheet, phân công nhân sự và tài liệu vận hành sự kiện.',
     },
@@ -37,7 +37,7 @@ export const SHARED_FOLDERS = [
         id: 'ttkt',
         name: 'Ban Truyền Thông Kỹ Thuật',
         code: 'TTKT',
-        departmentValues: ['ban truyền thông kỹ thuật', 'ban truyen thong ky thuat', 'ttkt'],
+        teamValues: [3],
         managerPositions: ['trưởng ban', 'phó ban'],
         description: 'Media kit, guideline thiết kế và tài nguyên truyền thông số.',
     },
@@ -45,7 +45,7 @@ export const SHARED_FOLDERS = [
         id: 'ctd-ptd',
         name: 'Ban Công Tác Đoàn và Phát Triển Đảng',
         code: 'CTD & PTD',
-        departmentValues: ['ban công tác đoàn và phát triển đảng', 'ban cong tac doan va phat trien dang', 'ctd ptd', 'ctd-ptd'],
+        teamValues: [6],
         managerPositions: ['trưởng ban', 'phó ban'],
         description: 'Mẫu biểu đoàn vụ, hồ sơ đoàn viên và tài liệu phát triển đảng.',
     },
@@ -108,14 +108,13 @@ function isAdminLike(user) {
     return role === 'admin_full' || role === 'utility_only';
 }
 
-function getUserDepartments(user) {
-    return parseSharedFolderList(user?.department)
-        .map(normalizeSharedFolderText)
-        .filter(Boolean);
+function getUserTeams(user) {
+    if (!user || !user.teams || !Array.isArray(user.teams)) return [];
+    return user.teams.map(t => normalizeSharedFolderText(t.team_id)).filter(Boolean);
 }
 
 function getUserPositionMap(user) {
-    const raw = user?.department_position;
+    const raw = user?.team_position;
     if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
         return raw;
     }
@@ -137,19 +136,23 @@ function findMatchingObjectValue(objectValue, candidateKeys) {
     return undefined;
 }
 
-function folderMatchesDepartment(folder, userDepartments) {
-    const folderDepartmentValues = (folder.departmentValues || []).map(normalizeSharedFolderText);
-    return folderDepartmentValues.some((departmentValue) => userDepartments.includes(departmentValue));
+function folderMatchesTeam(folder, userTeams) {
+    const folderTeamValues = (folder.teamValues || []).map(normalizeSharedFolderText);
+    return folderTeamValues.some((teamValue) => userTeams.includes(teamValue));
 }
 
 function folderPositionsForUser(folder, user) {
-    const positionMap = getUserPositionMap(user);
-    const departmentKeys = [folder.id, ...(folder.departmentValues || [])].map(normalizeSharedFolderText);
-
-    const matchedDepartmentValue = findMatchingObjectValue(positionMap, departmentKeys);
-    if (matchedDepartmentValue !== undefined) {
-        return parseSharedFolderList(matchedDepartmentValue).map(normalizeSharedFolderText).filter(Boolean);
-    }
+    if (!user || !user.teams || !Array.isArray(user.teams)) return [];
+    const folderTeamValues = (folder.teamValues || []).map(normalizeSharedFolderText);
+    
+    // Find all positions for teams that match the folder's teamValues
+    const positions = user.teams
+        .filter(t => folderTeamValues.includes(normalizeSharedFolderText(t.team_id)))
+        .map(t => normalizeSharedFolderText(t.team_position))
+        .filter(Boolean);
+        
+    return positions;
+}
 
     return parseSharedFolderList(positionMap.__all__).map(normalizeSharedFolderText).filter(Boolean);
 }
@@ -158,12 +161,12 @@ export function canViewSharedFolder(user, folder) {
     if (!folder) return false;
     if (isAdminLike(user)) return true;
 
-    const userDepartments = getUserDepartments(user);
-    if (!userDepartments.length) {
+    const userTeams = getUserTeams(user);
+    if (!userTeams.length) {
         return false;
     }
 
-    return folderMatchesDepartment(folder, userDepartments);
+    return folderMatchesTeam(folder, userTeams);
 }
 
 export function canManageSharedFolder(user, folder) {

@@ -95,7 +95,7 @@ const Homepage = () => {
       });
 
     // Tin tức nổi bật
-    newsAPI.getAll({ page_type: 'post', is_featured: true, limit: 4 })
+    newsAPI.getAll({ page_type: 'news', is_featured: true, limit: 4 })
       .then(data => {
         const featuredNews = asArray(data).filter(isFeaturedPost).slice(0, 4);
         setNewsCards(featuredNews);

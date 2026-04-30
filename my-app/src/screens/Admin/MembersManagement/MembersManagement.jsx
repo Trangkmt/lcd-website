@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import './MembersManagement.css';
 import { SearchBar } from '../../../components';
-import { usersAPI, uploadsAPI } from '../../../services/api';
+import { usersAPI, uploadsAPI, teamsAPI } from '../../../services/api';
 import { normalizeRole, ROLE_GROUPS } from '../../../utils/adminPermissions';
 import { PlusIcon, EditIcon, HideIcon, ShowIcon, CloseIcon } from '../../../SvgIcons';
 import useAdminConfirm from '../useAdminConfirm';
@@ -14,283 +14,8 @@ const TABS = {
     TEACHER: 'teacher',
 };
 
-const DEPARTMENT_OPTIONS = [
-    { value: 'ban chấp hành', label: 'Ban chấp hành (BCH)' },
-    { value: 'ban văn thể', label: 'Ban văn thể' },
-    { value: 'ban tổ chức sự kiện', label: 'Ban tổ chức sự kiện (TCSK)' },
-    { value: 'ban truyền thông kỹ thuật', label: 'Ban truyền thông kỹ thuật (TTKT)' },
-    { value: 'ban công tác đoàn và phát triển đảng', label: 'Ban công tác đoàn và phát triển đảng (CTD & PTD)' },
-    { value: 'ban đối ngoại', label: 'Ban đối ngoại (ĐN)' },
-];
-
-const DEPARTMENT_ALIASES = {
-    bch: 'ban chấp hành',
-    'ban chấp hành': 'ban chấp hành',
-    'van the': 'ban văn thể',
-    'văn thể': 'ban văn thể',
-    'ban văn thể': 'ban văn thể',
-    tcsk: 'ban tổ chức sự kiện',
-    'to chuc su kien': 'ban tổ chức sự kiện',
-    'tổ chức sự kiện': 'ban tổ chức sự kiện',
-    'ban tổ chức sự kiện': 'ban tổ chức sự kiện',
-    ttkt: 'ban truyền thông kỹ thuật',
-    'truyen thong ky thuat': 'ban truyền thông kỹ thuật',
-    'truyền thông kỹ thuật': 'ban truyền thông kỹ thuật',
-    'ban truyền thông kỹ thuật': 'ban truyền thông kỹ thuật',
-    'ctd & ptd': 'ban công tác đoàn và phát triển đảng',
-    'ctd&ptd': 'ban công tác đoàn và phát triển đảng',
-    ctd: 'ban công tác đoàn và phát triển đảng',
-    ptd: 'ban công tác đoàn và phát triển đảng',
-    'cong tac doan va phat trien dang': 'ban công tác đoàn và phát triển đảng',
-    'công tác đoàn và phát triển đảng': 'ban công tác đoàn và phát triển đảng',
-    'ban công tác đoàn và phát triển đảng': 'ban công tác đoàn và phát triển đảng',
-    'đn': 'ban đối ngoại',
-    dn: 'ban đối ngoại',
-    'doi ngoai': 'ban đối ngoại',
-    'đối ngoại': 'ban đối ngoại',
-    'ban đối ngoại': 'ban đối ngoại',
-};
-
-const DEPARTMENT_LABEL_BY_VALUE = DEPARTMENT_OPTIONS.reduce((acc, option) => {
-    acc[option.value] = option.label;
-    return acc;
-}, {});
-
-function toDepartmentArray(value) {
-    if (Array.isArray(value)) return value;
-    if (value === null || value === undefined) return [];
-    return String(value)
-        .split(/[,;|]/)
-        .map((item) => item.trim())
-        .filter(Boolean);
-}
-
-function normalizeDepartments(value) {
-    const requested = toDepartmentArray(value)
-        .map((item) => {
-            const raw = String(item || '').trim().toLowerCase();
-            return DEPARTMENT_ALIASES[raw] || raw;
-        })
-        .filter(Boolean)
-        .filter((item) => DEPARTMENT_LABEL_BY_VALUE[item]);
-
-    const unique = [...new Set(requested)].slice(0, 2);
-    return unique.length > 0 ? unique : [DEPARTMENT_OPTIONS[0].value];
-}
-
-function serializeDepartments(value) {
-    return normalizeDepartments(value).join(', ');
-}
-
-function getDepartmentLabel(value) {
-    const normalized = normalizeDepartments(value);
-    return normalized
-        .map((item) => DEPARTMENT_LABEL_BY_VALUE[item] || item)
-        .join(', ');
-}
-
-function getDepartmentDisplayLines(value) {
-    const normalized = normalizeDepartments(value);
-    return normalized
-        .map((item) => DEPARTMENT_LABEL_BY_VALUE[item] || item)
-        .join('\n');
-}
-
-const EXECUTIVE_DEPARTMENT = 'ban chấp hành';
-const STUDENT_POSITIONS_EXECUTIVE = ['phó bí thư', 'bí thư', 'thành viên'];
-const STUDENT_POSITIONS_OTHERS = ['trưởng ban', 'phó ban', 'thành viên'];
-const STUDENT_POSITIONS = [
-    ...new Set([...STUDENT_POSITIONS_EXECUTIVE, ...STUDENT_POSITIONS_OTHERS]),
-];
-const TEACHER_POSITIONS = ['bí thư', 'giảng viên'];
-const STUDENT_DEFAULT_POSITIONS = [STUDENT_POSITIONS[STUDENT_POSITIONS.length - 1]];
-const TEACHER_DEFAULT_POSITION = TEACHER_POSITIONS[TEACHER_POSITIONS.length - 1];
-
-function getStudentPositionOptionsByDepartment(department) {
-    const normalizedDepartment = normalizeDepartments([department])[0];
-    if (normalizedDepartment === EXECUTIVE_DEPARTMENT) {
-        return STUDENT_POSITIONS_EXECUTIVE;
-    }
-    return STUDENT_POSITIONS_OTHERS;
-}
-
-function createDefaultStudentPositionMap(departments) {
-    const normalizedDepartments = normalizeDepartments(departments);
-    return normalizedDepartments.reduce((acc, department) => {
-        acc[department] = [...STUDENT_DEFAULT_POSITIONS];
-        return acc;
-    }, {});
-}
-
-function getPositionOptions(memberType) {
-    return memberType === TABS.TEACHER ? TEACHER_POSITIONS : STUDENT_POSITIONS;
-}
-
-function toPositionArray(value) {
-    if (Array.isArray(value)) return value;
-    if (value === null || value === undefined) return [];
-    return String(value)
-        .split(/[,;|]/)
-        .map((item) => item.trim())
-        .filter(Boolean);
-}
-
-const POSITION_ALIASES = {
-    'pho bi thu': 'phó bí thư',
-    'phó bí thư': 'phó bí thư',
-    'bi thu': 'bí thư',
-    'bí thư': 'bí thư',
-    'giao vien': 'giảng viên',
-    'giảng viên': 'giảng viên',
-};
-
-function normalizeDepartmentPosition(value, memberType) {
-    const options = getPositionOptions(memberType);
-    const raw = String(value || '').trim().toLowerCase();
-
-    if (!raw) {
-        return options[options.length - 1];
-    }
-
-    const mapped = POSITION_ALIASES[raw] || raw;
-    const matched = options.find((option) => option.toLowerCase() === mapped);
-    return matched || options[options.length - 1];
-}
-
-function normalizeStudentDepartmentPositions(value, department = null) {
-    const allowedOptions = department
-        ? getStudentPositionOptionsByDepartment(department)
-        : STUDENT_POSITIONS;
-
-    if (value && typeof value === 'object' && !Array.isArray(value)) {
-        const collected = Object.values(value)
-            .flatMap((departmentPositions) => toPositionArray(departmentPositions));
-
-        return normalizeStudentDepartmentPositions(collected, department);
-    }
-
-    if (typeof value === 'string') {
-        const raw = value.trim();
-        if (raw.startsWith('{') && raw.endsWith('}')) {
-            try {
-                const parsed = JSON.parse(raw);
-                return normalizeStudentDepartmentPositions(parsed, department);
-            } catch (error) {
-                // Fallback to legacy comma-separated parsing below.
-            }
-        }
-    }
-
-    const requested = toPositionArray(value)
-        .map((item) => {
-            const raw = String(item || '').trim().toLowerCase();
-            const mapped = POSITION_ALIASES[raw] || raw;
-            return allowedOptions.find((option) => option.toLowerCase() === mapped) || null;
-        })
-        .filter(Boolean);
-
-    const unique = [...new Set(requested)];
-    return unique.length > 0 ? unique : STUDENT_DEFAULT_POSITIONS;
-}
-
-function normalizeSingleStudentPosition(value, department = null) {
-    const normalized = normalizeStudentDepartmentPositions(value, department);
-    const fallback = getStudentPositionOptionsByDepartment(department)[0] || STUDENT_DEFAULT_POSITIONS[0];
-    return normalized[0] || fallback;
-}
-
-function normalizeStudentDepartmentPositionMap(value, departments) {
-    const normalizedDepartments = normalizeDepartments(departments);
-    const fallback = createDefaultStudentPositionMap(normalizedDepartments);
-
-    let rawMap = null;
-    if (value && typeof value === 'object' && !Array.isArray(value)) {
-        rawMap = value;
-    } else if (typeof value === 'string') {
-        const raw = value.trim();
-        if (raw.startsWith('{') && raw.endsWith('}')) {
-            try {
-                const parsed = JSON.parse(raw);
-                if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
-                    rawMap = parsed;
-                }
-            } catch (error) {
-                rawMap = null;
-            }
-        }
-    }
-
-    if (!rawMap) {
-        const sharedPosition = normalizeSingleStudentPosition(value);
-        return normalizedDepartments.reduce((acc, department) => {
-            acc[department] = [normalizeSingleStudentPosition(sharedPosition, department)];
-            return acc;
-        }, fallback);
-    }
-
-    const normalizedMap = { ...fallback };
-    Object.entries(rawMap).forEach(([department, positions]) => {
-        const normalizedKey = normalizeDepartments([department])[0];
-        if (!normalizedDepartments.includes(normalizedKey)) return;
-        normalizedMap[normalizedKey] = [normalizeSingleStudentPosition(positions, normalizedKey)];
-    });
-
-    return normalizedMap;
-}
-
-function updateStudentDepartmentPositionMap(currentValue, departments, department, position) {
-    const normalizedDepartments = normalizeDepartments(departments);
-    const nextMap = normalizeStudentDepartmentPositionMap(currentValue, normalizedDepartments);
-    nextMap[department] = [normalizeSingleStudentPosition(position, department)];
-    return nextMap;
-}
-
-function syncStudentDepartmentPositionMap(currentValue, departments) {
-    return normalizeStudentDepartmentPositionMap(currentValue, departments);
-}
-
-function serializeDepartmentPositions(value, memberType, departments = []) {
-    if (memberType === TABS.TEACHER) {
-        return normalizeDepartmentPosition(value, memberType);
-    }
-
-    const normalizedMap = normalizeStudentDepartmentPositionMap(value, departments);
-    return JSON.stringify(normalizedMap);
-}
-
-function getDisplayDepartmentPosition(value, memberType, departments = []) {
-    if (memberType === TABS.TEACHER) {
-        return normalizeDepartmentPosition(value, memberType);
-    }
-
-    const normalizedMap = normalizeStudentDepartmentPositionMap(value, departments);
-    const mapEntries = Object.entries(normalizedMap)
-        .filter(([department]) => normalizeDepartments(departments).includes(department));
-
-    if (mapEntries.length === 0) {
-        return normalizeStudentDepartmentPositions(value).join('\n');
-    }
-
-    return mapEntries
-        .map(([, positions]) => normalizeStudentDepartmentPositions(positions).join('\n'))
-        .join('\n');
-}
-
-function toggleDepartmentSelection(currentValue, department) {
-    const current = normalizeDepartments(currentValue);
-    if (current.includes(department)) {
-        const next = current.filter((item) => item !== department);
-        return next.length > 0 ? next : [DEPARTMENT_OPTIONS[0].value];
-    }
-
-    if (current.length >= 2) {
-        return current;
-    }
-
-    return [...current, department];
-}
-
 const EMPTY_FORM = {
+
     username: '',
     password: '',
     email: '',
@@ -299,8 +24,7 @@ const EMPTY_FORM = {
     member_type: TABS.STUDENT,
     student_code: '',
     class_name: '',
-    department: [DEPARTMENT_OPTIONS[0].value],
-    department_position: createDefaultStudentPositionMap([DEPARTMENT_OPTIONS[0].value]),
+    teams: [],
     role: ROLE_GROUPS.POST_AUTHOR,
     is_active: true,
 };
@@ -451,6 +175,7 @@ export default function MembersManagement() {
     const { confirm, confirmModal } = useAdminConfirm();
     const location = useLocation();
     const [members, setMembers] = useState([]);
+    const [teams, setTeams] = useState([]);
     const [showHidden, setShowHidden] = useState(false);
     const [selectedDepartment, setSelectedDepartment] = useState(ALL_DEPARTMENTS);
     const [selectedStudentPosition, setSelectedStudentPosition] = useState(ALL_STUDENT_POSITIONS);
@@ -496,10 +221,7 @@ export default function MembersManagement() {
         setForm({
             ...EMPTY_FORM,
             member_type: activeTab,
-            department: [DEPARTMENT_OPTIONS[0].value],
-            department_position: activeTab === TABS.TEACHER
-                ? TEACHER_DEFAULT_POSITION
-                : createDefaultStudentPositionMap([DEPARTMENT_OPTIONS[0].value]),
+            teams: [],
         });
         setShowModal(true);
     }
@@ -516,10 +238,7 @@ export default function MembersManagement() {
             member_type: memberType,
             student_code: member.student_code || '',
             class_name: member.class_name || '',
-            department: normalizeDepartments(member.department),
-            department_position: memberType === TABS.TEACHER
-                ? normalizeDepartmentPosition(member.department_position, memberType)
-                : normalizeStudentDepartmentPositionMap(member.department_position, normalizeDepartments(member.department)),
+            teams: Array.isArray(member.teams) ? member.teams : [],
             role: normalizeRole(member.role),
             is_active: member.is_active !== undefined ? !!member.is_active : true,
         });
@@ -539,7 +258,7 @@ export default function MembersManagement() {
                 member_type: form.member_type,
                 student_code: form.member_type === TABS.STUDENT ? form.student_code : null,
                 class_name: form.member_type === TABS.STUDENT ? form.class_name : null,
-                department: form.member_type === TABS.STUDENT ? serializeDepartments(form.department) : null,
+                team_id: form.member_type === TABS.STUDENT ? form.team_id : null,
                 department_position: serializeDepartmentPositions(
                     form.department_position,
                     form.member_type,
@@ -620,7 +339,7 @@ export default function MembersManagement() {
                 member_type: inferMemberType(member),
                 student_code: member.student_code || null,
                 class_name: member.class_name || null,
-                department: member.department ? serializeDepartments(normalizeDepartments(member.department)) : null,
+                team_id: member.team_id,
                 department_position: serializeDepartmentPositions(
                     member.department_position,
                     inferMemberType(member),
@@ -657,8 +376,8 @@ export default function MembersManagement() {
                     memberType === TABS.STUDENT ? (member.student_code || '') : '',
                     memberType === TABS.STUDENT ? (member.class_name || '') : '',
                     member.email || '',
-                    memberType === TABS.STUDENT ? getDepartmentLabel(member.department) : '',
-                    getDisplayDepartmentPosition(member.department_position, memberType, member.department),
+                    memberType === TABS.STUDENT ? (member.teams || []).map(t => getTeamName(t.team_id)).join(', ') : '',
+                    memberType === TABS.STUDENT ? (member.teams || []).map(t => t.team_position).join(', ') : '',
                 ];
             }),
         ];
@@ -708,7 +427,9 @@ export default function MembersManagement() {
                 const studentCode = getCsvValue(row, ['Mã sinh viên', 'Ma sinh vien', 'Student code']);
                 const className = getCsvValue(row, ['Lớp', 'Lop', 'Class']);
                 const email = getCsvValue(row, ['Gmail', 'Email']);
-                const departmentRaw = getCsvValue(row, ['Ban', 'Department']);
+                const teamRaw = getCsvValue(row, ['Ban', 'Department']);
+const matchedTeam = teams.find(t => t.name.toLowerCase().includes(teamRaw.toLowerCase()) || (t.name_abbr || '').toLowerCase().includes(teamRaw.toLowerCase()));
+const team_id = matchedTeam ? matchedTeam.id : null;
                 const positionRaw = getCsvValue(row, ['Chức vụ', 'Chuc vu', 'Position']);
 
                 if (!fullName || !email) {
@@ -725,9 +446,7 @@ export default function MembersManagement() {
                     continue;
                 }
 
-                const normalizedDepartments = memberType === TABS.STUDENT
-                    ? normalizeDepartments(departmentRaw)
-                    : [];
+                
 
                 const payload = {
                     email,
@@ -738,8 +457,7 @@ export default function MembersManagement() {
                     member_type: memberType,
                     student_code: memberType === TABS.STUDENT ? studentCode : null,
                     class_name: memberType === TABS.STUDENT ? className : null,
-                    department: memberType === TABS.STUDENT ? serializeDepartments(normalizedDepartments) : null,
-                    department_position: serializeDepartmentPositions(positionRaw, memberType, normalizedDepartments),
+                    teams: memberType === TABS.STUDENT && team_id ? [{ team_id, team_position: positionRaw }] : [],
                 };
 
                 const existing = existingMembers.find((member) => {
@@ -937,10 +655,7 @@ export default function MembersManagement() {
                     member_type: memberType,
                     student_code: memberType === TABS.STUDENT ? (member.student_code || null) : null,
                     class_name: memberType === TABS.STUDENT ? (member.class_name || null) : null,
-                    department: memberType === TABS.STUDENT
-                        ? (member.department ? serializeDepartments(normalizeDepartments(member.department)) : null)
-                        : null,
-                    department_position: serializeDepartmentPositions(member.department_position, memberType, member.department),
+                    teams: member.teams || [],
                 };
 
                 try {
@@ -969,8 +684,8 @@ export default function MembersManagement() {
                 member.email,
                 memberType === TABS.STUDENT ? member.student_code : '',
                 memberType === TABS.STUDENT ? member.class_name : '',
-                memberType === TABS.STUDENT ? getDepartmentLabel(member.department) : '',
-                getDisplayDepartmentPosition(member.department_position, memberType, member.department),
+                memberType === TABS.STUDENT ? getTeamName(member.team_id) : '',
+                member.team_position || '',
             ];
 
             return searchableFields.some((field) => normalizeSearchText(field).includes(normalizedSearchQuery));
@@ -1248,8 +963,10 @@ export default function MembersManagement() {
                                         <td>{member.student_code || '-'}</td>
                                         <td>{member.class_name || '-'}</td>
                                         <td>{member.email || '-'}</td>
-                                        <td className="member-department-cell">{member.department ? getDepartmentDisplayLines(member.department) : '-'}</td>
-                                        <td className="member-position-cell">{getDisplayDepartmentPosition(member.department_position, TABS.STUDENT, member.department)}</td>
+                                        <td className="member-department-cell">
+{memberType === TABS.STUDENT ? (member.teams || []).map(t => getTeamName(t.team_id)).join(', ') || '-' : '-'}
+</td>
+                                        <td className="member-position-cell">{memberType === TABS.STUDENT ? (member.teams || []).map(t => t.team_position).join(', ') || '-' : '-'}</td>
                                         <td>
                                             <div className="row-actions">
                                                 <button
@@ -1292,7 +1009,7 @@ export default function MembersManagement() {
                                         </td>
                                         <td>{member.full_name || '-'}</td>
                                         <td>{member.email || '-'}</td>
-                                        <td className="member-position-cell">{getDisplayDepartmentPosition(member.department_position, TABS.TEACHER)}</td>
+                                        <td className="member-position-cell">{member.team_position || "Thành viên"}</td>
                                         <td>
                                             <div className="row-actions">
                                                 <button
@@ -1346,9 +1063,7 @@ export default function MembersManagement() {
                                                 ...p,
                                                 member_type: nextType,
                                                 department: nextType === TABS.TEACHER ? [] : [DEPARTMENT_OPTIONS[0].value],
-                                                department_position: nextType === TABS.TEACHER
-                                                    ? TEACHER_DEFAULT_POSITION
-                                                    : createDefaultStudentPositionMap([DEPARTMENT_OPTIONS[0].value]),
+                                                teams: [],
                                             };
                                         })}
                                     >
@@ -1438,21 +1153,25 @@ export default function MembersManagement() {
                                         <div className="form-group">
                                             <label className="form-label">Ban * (chọn tối đa 2)</label>
                                             <div className="department-checkboxes" role="group" aria-label="Chọn ban cho sinh viên">
-                                                {DEPARTMENT_OPTIONS.map((department) => (
-                                                    <label key={department.value} className="department-checkbox-item">
+                                                {teams.map((team) => (
+                                                    <label key={team.id} className="department-checkbox-item">
                                                         <input
                                                             type="checkbox"
-                                                            checked={normalizeDepartments(form.department).includes(department.value)}
-                                                            onChange={() => setForm((p) => ({
-                                                                ...p,
-                                                                department: toggleDepartmentSelection(p.department, department.value),
-                                                                department_position: syncStudentDepartmentPositionMap(
-                                                                    p.department_position,
-                                                                    toggleDepartmentSelection(p.department, department.value)
-                                                                ),
-                                                            }))}
+                                                            checked={form.teams.some(t => t.team_id === team.id)}
+                                                            onChange={(e) => {
+                                                                setForm(p => {
+                                                                    let nextTeams = [...p.teams];
+                                                                    if (e.target.checked) {
+                                                                        if (nextTeams.length < 2) nextTeams.push({ team_id: team.id, team_position: 'Thành viên' });
+                                                                        else alert('Sinh viên chỉ được tham gia tối đa 2 ban');
+                                                                    } else {
+                                                                        nextTeams = nextTeams.filter(t => t.team_id !== team.id);
+                                                                    }
+                                                                    return { ...p, teams: nextTeams };
+                                                                });
+                                                            }}
                                                         />
-                                                        <span>{department.label}</span>
+                                                        <span>{team.name}</span>
                                                     </label>
                                                 ))}
                                             </div>
@@ -1460,29 +1179,27 @@ export default function MembersManagement() {
                                         <div className="form-group">
                                             <label className="form-label">Chức vụ theo từng ban * (mỗi ban chọn 1)</label>
                                             <div className="department-position-groups" role="group" aria-label="Chọn chức vụ theo từng ban">
-                                                {normalizeDepartments(form.department).map((department) => {
-                                                    const positionMap = normalizeStudentDepartmentPositionMap(form.department_position, form.department);
-                                                    const selectedPosition = normalizeSingleStudentPosition(positionMap[department]);
-
+                                                {form.teams.map(tForm => {
+                                                    const teamInfo = teams.find(t => t.id === tForm.team_id);
+                                                    if (!teamInfo) return null;
                                                     return (
-                                                        <div key={department} className="department-position-group">
-                                                            <p className="department-position-group__title">{DEPARTMENT_LABEL_BY_VALUE[department] || department}</p>
+                                                        <div key={teamInfo.id} className="department-position-group">
+                                                            <p className="department-position-group__title">{teamInfo.name}</p>
                                                             <div className="position-checkboxes">
-                                                                {getStudentPositionOptionsByDepartment(department).map((position) => (
-                                                                    <label key={`${department}-${position}`} className="position-checkbox-item">
+                                                                {['Thành viên', 'Phó ban', 'Trưởng ban'].map((position) => (
+                                                                    <label key={`${teamInfo.id}-${position}`} className="position-checkbox-item">
                                                                         <input
                                                                             type="radio"
-                                                                            name={`department-position-${department}`}
-                                                                            checked={selectedPosition === position}
-                                                                            onChange={() => setForm((p) => ({
-                                                                                ...p,
-                                                                                department_position: updateStudentDepartmentPositionMap(
-                                                                                    p.department_position,
-                                                                                    p.department,
-                                                                                    department,
-                                                                                    position
-                                                                                ),
-                                                                            }))}
+                                                                            name={`team-position-${teamInfo.id}`}
+                                                                            checked={tForm.team_position === position}
+                                                                            onChange={() => {
+                                                                                setForm(p => {
+                                                                                    const nextTeams = [...p.teams];
+                                                                                    const idx = nextTeams.findIndex(t => t.team_id === teamInfo.id);
+                                                                                    if (idx >= 0) nextTeams[idx].team_position = position;
+                                                                                    return { ...p, teams: nextTeams };
+                                                                                });
+                                                                            }}
                                                                         />
                                                                         <span>{position}</span>
                                                                     </label>
@@ -1499,7 +1216,7 @@ export default function MembersManagement() {
                                 {form.member_type === TABS.TEACHER && (
                                     <div className="form-group">
                                         <label className="form-label">Chức vụ *</label>
-                                        <select className="form-control" value={form.department_position} onChange={e => setForm(p => ({ ...p, department_position: e.target.value }))}>
+                                        <select className="form-control" value={form.teams[0]?.team_position || 'Thành viên'} onChange={e => setForm(p => ({ ...p, teams: [{ team_id: null, team_position: e.target.value }] }))}>
                                             {TEACHER_POSITIONS.map((position) => (
                                                 <option key={position} value={position}>{position}</option>
                                             ))}

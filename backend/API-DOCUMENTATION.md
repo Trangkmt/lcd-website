@@ -106,10 +106,10 @@ Xóa user
 ## 📁 Categories API
 
 ### GET `/api/categories`
-Lấy danh sách categories
+Lấy danh sách categories (bao gồm trường `subcategories_count`)
 
 ### GET `/api/categories/:id`
-Lấy category theo ID
+Lấy category theo ID (bao gồm trường `subcategories_count`)
 
 ### POST `/api/categories`
 Tạo category mới
@@ -131,24 +131,24 @@ Xóa category
 
 ---
 
-## 📰 News API
+## 📰 Posts API
 
-### GET `/api/news`
-Lấy danh sách tin tức
+### GET `/api/posts`
+Lấy danh sách bài viết
 **Query params:**
 - `category_id`: number
 - `is_featured`: true | false
 - `limit`: number (default: 50)
 - `offset`: number (default: 0)
 
-### GET `/api/news/:id`
-Lấy tin tức theo ID (tăng view count)
+### GET `/api/posts/:id`
+Lấy bài viết theo ID (tăng view count)
 
-### GET `/api/news/slug/:slug`
-Lấy tin tức theo slug (tăng view count)
+### GET `/api/posts/slug/:slug`
+Lấy bài viết theo slug (tăng view count)
 
-### POST `/api/news`
-Tạo tin tức mới
+### POST `/api/posts`
+Tạo bài viết mới
 ```json
 {
   "title": "string (required)",
@@ -163,11 +163,11 @@ Tạo tin tức mới
 }
 ```
 
-### PUT `/api/news/:id`
-Cập nhật tin tức
+### PUT `/api/posts/:id`
+Cập nhật bài viết
 
-### DELETE `/api/news/:id`
-Xóa tin tức
+### DELETE `/api/posts/:id`
+Xóa bài viết
 
 ---
 
@@ -260,18 +260,18 @@ Xóa hoạt động
 
 ---
 
-## 🏢 Organizations API
+## 🏢 Teams API
 
-### GET `/api/organizations`
+### GET `/api/teams`
 Lấy danh sách tổ chức
 
-### GET `/api/organizations/:id`
+### GET `/api/teams/:id`
 Lấy tổ chức theo ID
 
-### GET `/api/organizations/:id/children`
+### GET `/api/teams/:id/children`
 Lấy các tổ chức con
 
-### POST `/api/organizations`
+### POST `/api/teams`
 Tạo tổ chức mới
 ```json
 {
@@ -288,10 +288,10 @@ Tạo tổ chức mới
 }
 ```
 
-### PUT `/api/organizations/:id`
+### PUT `/api/teams/:id`
 Cập nhật tổ chức
 
-### DELETE `/api/organizations/:id`
+### DELETE `/api/teams/:id`
 Xóa tổ chức
 
 ---
@@ -376,8 +376,8 @@ Xóa liên hệ
 # Health check
 curl http://localhost:5000/api/health
 
-# Lấy danh sách tin tức
-curl http://localhost:5000/api/news
+# Lấy danh sách bài viết
+curl http://localhost:5000/api/posts
 
 # Tạo contact mới
 curl -X POST http://localhost:5000/api/contact \
@@ -396,4 +396,4 @@ Import collection hoặc tạo requests theo format trên.
 - Pagination sử dụng `limit` và `offset`
 - Các endpoint GET có thể có query parameters để filter
 - POST/PUT yêu cầu `Content-Type: application/json`
-- Các endpoint có tăng view count: `/news/:id`, `/news/slug/:slug`, `/activities/:id`, `/activities/slug/:slug`
+- Các endpoint có tăng view count: `/posts/:id`, `/posts/slug/:slug`, `/activities/:id`, `/activities/slug/:slug`
