@@ -6,6 +6,7 @@ function mapUserRole(user) {
     return {
         ...user,
         role: normalizeRole(user.role),
+        teams: user.teams || [],
     };
 }
 
@@ -13,7 +14,7 @@ function sanitizeIncomingRole(role) {
     return normalizeRole(role || ROLES.POST_AUTHOR);
 }
 
-function sanitizeDepartmentPosition(value) {
+function sanitizeTeamPosition(value) {
     if (value === undefined || value === null) return null;
 
     if (typeof value === 'object') {
@@ -35,9 +36,8 @@ function mapPublicUser(user) {
         member_type: user.member_type,
         student_code: user.student_code,
         class_name: user.class_name,
-        department: user.department,
-        department_position: user.department_position,
         is_active: user.is_active,
+        teams: user.teams || [],
     };
 }
 
@@ -60,13 +60,24 @@ exports.getAllUsers = async (req, res) => {
         const hasAvatarColumn = await hasUserAvatarColumn(pool);
         const avatarSelect = hasAvatarColumn ? 'avatar_url' : 'NULL AS avatar_url';
         const result = await pool.request().query(`
-            SELECT id, username, email, full_name, ${avatarSelect}, role, is_active,
-                   member_type, student_code, class_name, department, department_position,
-                   created_at, updated_at
-            FROM users
-            ORDER BY created_at DESC
+            SELECT u.id, u.username, u.email, u.full_name, ${avatarSelect.replace('avatar_url', 'u.avatar_url')}, u.role, u.is_active,
+                   u.member_type, u.student_code, u.class_name,
+                   u.created_at, u.updated_at
+            FROM users u
+            ORDER BY u.created_at DESC
         `);
-        res.json((result.recordset || []).map(mapUserRole));
+        const teamsResult = await pool.request().query(`
+            SELECT ut.user_id, ut.team_id, ut.position as team_position, t.name as team_name
+            FROM user_teams ut
+            JOIN teams t ON ut.team_id = t.id
+        `);
+        const userTeamsMap = {};
+        teamsResult.recordset.forEach(row => {
+            if (!userTeamsMap[row.user_id]) userTeamsMap[row.user_id] = [];
+            userTeamsMap[row.user_id].push({ team_id: row.team_id, team_name: row.team_name, team_position: row.team_position });
+        });
+        const users = result.recordset.map(u => ({ ...u, teams: userTeamsMap[u.id] || [] }));
+        res.json(users.map(mapUserRole));
     } catch (err) {
         console.error('Error:', err);
         res.status(500).json({ error: err.message });
@@ -81,14 +92,24 @@ exports.getPublicUsers = async (req, res) => {
         const avatarSelect = hasAvatarColumn ? 'avatar_url' : 'NULL AS avatar_url';
 
         const result = await pool.request().query(`
-            SELECT id, email, full_name, ${avatarSelect}, is_active,
-                   member_type, student_code, class_name, department, department_position
-            FROM users
-            WHERE is_active = 1
-            ORDER BY full_name ASC
+            SELECT u.id, u.email, u.full_name, ${avatarSelect.replace('avatar_url', 'u.avatar_url')}, u.is_active,
+                   u.member_type, u.student_code, u.class_name
+            FROM users u
+            WHERE u.is_active = 1
+            ORDER BY u.full_name ASC
         `);
-
-        res.json((result.recordset || []).map(mapPublicUser));
+        const teamsResult = await pool.request().query(`
+            SELECT ut.user_id, ut.team_id, ut.position as team_position, t.name as team_name
+            FROM user_teams ut
+            JOIN teams t ON ut.team_id = t.id
+        `);
+        const userTeamsMap = {};
+        teamsResult.recordset.forEach(row => {
+            if (!userTeamsMap[row.user_id]) userTeamsMap[row.user_id] = [];
+            userTeamsMap[row.user_id].push({ team_id: row.team_id, team_name: row.team_name, team_position: row.team_position });
+        });
+        const users = result.recordset.map(u => ({ ...u, teams: userTeamsMap[u.id] || [] }));
+        res.json(users.map(mapPublicUser));
     } catch (err) {
         console.error('Error:', err);
         res.status(500).json({ error: err.message });
@@ -104,17 +125,28 @@ exports.getUserById = async (req, res) => {
         const result = await pool.request()
             .input('id', sql.Int, req.params.id)
             .query(`
-                SELECT id, username, email, full_name, ${avatarSelect}, role, is_active,
-                       member_type, student_code, class_name, department, department_position,
-                       created_at, updated_at
-                FROM users
-                WHERE id = @id
+                SELECT u.id, u.username, u.email, u.full_name, ${avatarSelect.replace('avatar_url', 'u.avatar_url')}, u.role, u.is_active,
+                       u.member_type, u.student_code, u.class_name,
+                       u.created_at, u.updated_at
+                FROM users u
+                WHERE u.id = @id
             `);
 
         if (result.recordset.length === 0) {
             return res.status(404).json({ error: 'User không tồn tại' });
         }
-        res.json(mapUserRole(result.recordset[0]));
+        
+        const teamsResult = await pool.request()
+            .input('id', sql.Int, req.params.id)
+            .query(`
+                SELECT ut.team_id, ut.position as team_position, t.name as team_name
+                FROM user_teams ut
+                JOIN teams t ON ut.team_id = t.id
+                WHERE ut.user_id = @id
+            `);
+            
+        const user = { ...result.recordset[0], teams: teamsResult.recordset || [] };
+        res.json(mapUserRole(user));
     } catch (err) {
         console.error('Error:', err);
         res.status(500).json({ error: err.message });
@@ -134,8 +166,7 @@ exports.createUser = async (req, res) => {
             member_type,
             student_code,
             class_name,
-            department,
-            department_position
+            teams
         } = req.body;
 
         if (!username || !password || !email) {
@@ -146,26 +177,25 @@ exports.createUser = async (req, res) => {
         const hasAvatarColumn = await hasUserAvatarColumn(pool);
         const request = pool.request()
             .input('username', sql.NVarChar, username)
-            .input('password', sql.NVarChar, password) // Lưu ý: Nên hash password trước khi lưu
+            .input('password', sql.NVarChar, password) 
             .input('email', sql.NVarChar, email)
             .input('full_name', sql.NVarChar, full_name || null)
             .input('role', sql.NVarChar, sanitizeIncomingRole(role))
             .input('member_type', sql.NVarChar, member_type || 'student')
             .input('student_code', sql.NVarChar, student_code || null)
             .input('class_name', sql.NVarChar, class_name || null)
-            .input('department', sql.NVarChar, department || null)
-            .input('department_position', sql.NVarChar, sanitizeDepartmentPosition(department_position));
+            ;
 
         if (hasAvatarColumn) {
             request.input('avatar_url', sql.NVarChar, avatar_url || null);
         }
 
         const insertColumns = hasAvatarColumn
-            ? 'username, password, email, full_name, avatar_url, role, member_type, student_code, class_name, department, department_position'
-            : 'username, password, email, full_name, role, member_type, student_code, class_name, department, department_position';
+            ? 'username, password, email, full_name, avatar_url, role, member_type, student_code, class_name, '
+            : 'username, password, email, full_name, role, member_type, student_code, class_name, ';
         const insertValues = hasAvatarColumn
-            ? '@username, @password, @email, @full_name, @avatar_url, @role, @member_type, @student_code, @class_name, @department, @department_position'
-            : '@username, @password, @email, @full_name, @role, @member_type, @student_code, @class_name, @department, @department_position';
+            ? '@username, @password, @email, @full_name, @avatar_url, @role, @member_type, @student_code, @class_name, '
+            : '@username, @password, @email, @full_name, @role, @member_type, @student_code, @class_name, ';
 
         const result = await request.query(`
                 INSERT INTO users (
@@ -177,7 +207,29 @@ exports.createUser = async (req, res) => {
                 )
             `);
 
-        res.status(201).json(mapUserRole(result.recordset[0]));
+        const insertedUser = result.recordset[0];
+        
+        if (teams && Array.isArray(teams)) {
+            for (const t of teams.slice(0, 2)) {
+                await pool.request()
+                    .input('user_id', sql.Int, insertedUser.id)
+                    .input('team_id', sql.Int, t.team_id)
+                    .input('position', sql.NVarChar, t.team_position)
+                    .query(`INSERT INTO user_teams (user_id, team_id, position) VALUES (@user_id, @team_id, @position)`);
+            }
+        }
+        
+        const teamsResult = await pool.request()
+            .input('id', sql.Int, insertedUser.id)
+            .query(`
+                SELECT ut.team_id, ut.position as team_position, t.name as team_name
+                FROM user_teams ut
+                JOIN teams t ON ut.team_id = t.id
+                WHERE ut.user_id = @id
+            `);
+            
+        insertedUser.teams = teamsResult.recordset || [];
+        res.status(201).json(mapUserRole(insertedUser));
     } catch (err) {
         console.error('Error:', err);
         res.status(500).json({ error: err.message });
@@ -196,8 +248,7 @@ exports.updateUser = async (req, res) => {
             member_type,
             student_code,
             class_name,
-            department,
-            department_position
+            teams
         } = req.body;
         const pool = await getConnection();
         const hasAvatarColumn = await hasUserAvatarColumn(pool);
@@ -210,8 +261,7 @@ exports.updateUser = async (req, res) => {
             .input('member_type', sql.NVarChar, member_type)
             .input('student_code', sql.NVarChar, student_code || null)
             .input('class_name', sql.NVarChar, class_name || null)
-            .input('department', sql.NVarChar, department || null)
-            .input('department_position', sql.NVarChar, sanitizeDepartmentPosition(department_position));
+            ;
 
         if (hasAvatarColumn) {
             request.input('avatar_url', sql.NVarChar, avatar_url || null);
@@ -225,8 +275,7 @@ exports.updateUser = async (req, res) => {
                     member_type = @member_type,
                     student_code = @student_code,
                     class_name = @class_name,
-                    department = @department,
-                    department_position = @department_position,
+                    
                     updated_at = GETDATE()
                 OUTPUT INSERTED.*
                 WHERE id = @id
@@ -235,7 +284,36 @@ exports.updateUser = async (req, res) => {
         if (result.recordset.length === 0) {
             return res.status(404).json({ error: 'User không tồn tại' });
         }
-        res.json(mapUserRole(result.recordset[0]));
+        
+        if (teams && Array.isArray(teams)) {
+            await pool.request()
+                .input('user_id', sql.Int, req.params.id)
+                .query(`DELETE FROM user_teams WHERE user_id = @user_id`);
+                
+            for (const t of teams.slice(0, 2)) {
+                await pool.request()
+                    .input('user_id', sql.Int, req.params.id)
+                    .input('team_id', sql.Int, t.team_id)
+                    .input('position', sql.NVarChar, t.team_position)
+                    .query(`INSERT INTO user_teams (user_id, team_id, position) VALUES (@user_id, @team_id, @position)`);
+            }
+        }
+        
+        const updatedResult = await pool.request()
+            .input('id', sql.Int, req.params.id)
+            .query(`SELECT * FROM users WHERE id = @id`);
+
+        const teamsResult = await pool.request()
+            .input('id', sql.Int, req.params.id)
+            .query(`
+                SELECT ut.team_id, ut.position as team_position, t.name as team_name
+                FROM user_teams ut
+                JOIN teams t ON ut.team_id = t.id
+                WHERE ut.user_id = @id
+            `);
+            
+        const user = { ...updatedResult.recordset[0], teams: teamsResult.recordset || [] };
+        res.json(mapUserRole(user));
     } catch (err) {
         console.error('Error:', err);
         res.status(500).json({ error: err.message });

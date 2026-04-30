@@ -53,27 +53,25 @@ export default function CategoriesManagement() {
     const [form, setForm] = useState(EMPTY_FORM('news'));
     const [saving, setSaving] = useState(false);
 
-    useEffect(() => { fetchTab(activeTab); }, [activeTab]);
+    useEffect(() => { fetchAllCategories(); }, []);
 
-    async function fetchTab(tab) {
-        if (categoriesByTab[tab]?.length > 0) return; // already loaded
-        setLoadingTab(prev => ({ ...prev, [tab]: true }));
+    async function fetchAllCategories() {
+        setLoadingTab({ news: true, achievement: true, activity_annual: true, activity_non_annual: true });
         try {
-            const data = await categoriesAPI.getAll({ page_type: tab });
-            const normalized = Array.isArray(data) ? data.map(item => normalizeCategoryForTab(item, tab)) : [];
-            setCategoriesByTab(prev => ({ ...prev, [tab]: normalized }));
+            const data = await categoriesAPI.getAll(); 
+            const newCategoriesByTab = { news: [], achievement: [], activity_annual: [], activity_non_annual: [] };
+            
+            if (Array.isArray(data)) {
+                data.forEach(item => {
+                    const tabKey = resolveTabKey(item.page_type, 'news');
+                    if (newCategoriesByTab[tabKey]) {
+                        newCategoriesByTab[tabKey].push(normalizeCategoryForTab(item, tabKey));
+                    }
+                });
+            }
+            setCategoriesByTab(newCategoriesByTab);
         } catch (err) { console.error(err); }
-        finally { setLoadingTab(prev => ({ ...prev, [tab]: false })); }
-    }
-
-    async function refetchTab(tab) {
-        setLoadingTab(prev => ({ ...prev, [tab]: true }));
-        try {
-            const data = await categoriesAPI.getAll({ page_type: tab });
-            const normalized = Array.isArray(data) ? data.map(item => normalizeCategoryForTab(item, tab)) : [];
-            setCategoriesByTab(prev => ({ ...prev, [tab]: normalized }));
-        } catch (err) { console.error(err); }
-        finally { setLoadingTab(prev => ({ ...prev, [tab]: false })); }
+        finally { setLoadingTab({}); }
     }
 
     function handleFormChange(field, value) {
@@ -108,16 +106,14 @@ export default function CategoriesManagement() {
         if (!form.name) { alert('Tên danh mục là bắt buộc'); return; }
         setSaving(true);
         try {
-            const prevTab = editingCategory?.page_type || activeTab;
             if (editingCategory) {
                 await categoriesAPI.update(editingCategory.id, { ...form, is_active: 1 });
             } else {
                 await categoriesAPI.create(form);
             }
             setShowModal(false);
-            // Refetch affected tabs
-            await refetchTab(form.page_type);
-            if (prevTab !== form.page_type) await refetchTab(prevTab);
+            // Cập nhật lại toàn bộ dữ liệu
+            await fetchAllCategories();
         } catch (err) { alert('Lỗi: ' + err.message); }
         finally { setSaving(false); }
     }
@@ -192,6 +188,11 @@ export default function CategoriesManagement() {
                             )}
                             <div className="category-header">
                                 <h3 className="category-name">{category.name}</h3>
+                                {category.subcategories_count > 0 && (
+                                    <span className="subcategory-badge">
+                                        {category.subcategories_count} danh mục con
+                                    </span>
+                                )}
                             </div>
                             <p className="category-description">{category.description || '—'}</p>
                             <p className="category-slug">/{category.slug}</p>
