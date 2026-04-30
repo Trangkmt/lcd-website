@@ -29,13 +29,26 @@ async function loadUserById(pool, userId) {
         .input('id', sql.Int, userId)
         .query(`
             SELECT u.id, u.username, u.email, u.full_name, ${avatarSelect.replace('avatar_url', 'u.avatar_url')}, u.role, u.is_active,
-                   u.member_type, u.student_code, u.class_name, u.team_id, u.team_position, t.name as team_name
+                   u.member_type, u.student_code, u.class_name
             FROM users u
-            LEFT JOIN teams t ON u.team_id = t.id
             WHERE u.id = @id
             LIMIT 1
         `);
-    return mapAuthUser(result.recordset?.[0] || null);
+
+    if (result.recordset.length === 0) return null;
+    const user = result.recordset[0];
+
+    const teamsResult = await pool.request()
+        .input('id', sql.Int, userId)
+        .query(`
+            SELECT ut.team_id, ut.position as team_position, t.name as team_name
+            FROM user_teams ut
+            JOIN teams t ON ut.team_id = t.id
+            WHERE ut.user_id = @id
+        `);
+    user.teams = teamsResult.recordset || [];
+
+    return mapAuthUser(user);
 }
 
 // POST /api/auth/login
@@ -56,9 +69,8 @@ exports.login = async (req, res) => {
             .input('password', sql.NVarChar, password)
             .query(`
                 SELECT u.id, u.username, u.email, u.full_name, ${avatarSelect.replace('avatar_url', 'u.avatar_url')}, u.role, u.is_active,
-                       u.member_type, u.student_code, u.class_name, u.team_id, u.team_position, t.name as team_name
+                       u.member_type, u.student_code, u.class_name
                 FROM users u
-                LEFT JOIN teams t ON u.team_id = t.id
                 WHERE (u.username = @identity OR u.email = @identity)
                   AND u.password = @password
                 LIMIT 1
@@ -133,13 +145,14 @@ exports.updateMyProfile = async (req, res) => {
             request.input('avatar_url', sql.NVarChar, avatar_url ? String(avatar_url).trim() : null);
         }
 
+        const fullNameUpdatePart = full_name !== undefined ? 'full_name = @full_name,' : '';
         const avatarUpdatePart = hasAvatarColumn ? 'avatar_url = @avatar_url,' : '';
         const result = await request.query(`
             UPDATE users
             SET email = @email,
-                full_name = @full_name,
+                ${fullNameUpdatePart}
                 ${avatarUpdatePart}
-                updated_at = GETDATE()
+                updated_at = NOW()
             OUTPUT INSERTED.*
             WHERE id = @id
         `);

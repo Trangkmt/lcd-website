@@ -108,15 +108,15 @@ function toArray(value) {
         .filter(Boolean);
 }
 
-function parseDepartments(value) {
-    return [...new Set(toArray(value).map(normalizeDepartmentKey).filter(Boolean))];
+function parseDepartments(member) {
+    if (!member || !member.teams || !Array.isArray(member.teams)) return [];
+    return [...new Set(member.teams.map(t => normalizeDepartmentKey(t.team_name || t.team_id)).filter(Boolean))];
 }
 
 function hasPosition(member, target) {
+    if (!member || !member.teams || !Array.isArray(member.teams)) return false;
     const targetNorm = normalizeText(target);
-    return toArray(member?.department_position)
-        .map(normalizeText)
-        .some((position) => position === targetNorm);
+    return member.teams.some(t => normalizeText(t.team_position) === targetNorm);
 }
 
 function uniqueMembersById(members) {
@@ -227,11 +227,11 @@ const TeamalStructure = () => {
                     const org = teamByKey.get(definition.key);
                     const relatedMembers = definition.key === BCH_KEY
                         ? members.filter((member) => {
-                            const inBchDepartment = parseDepartments(member.department).includes(BCH_KEY);
+                            const inBchDepartment = parseDepartments(member).includes(BCH_KEY);
                             const isSecretary = hasPosition(member, 'bí thư');
                             return inBchDepartment || isSecretary;
                         })
-                        : members.filter((member) => parseDepartments(member.department).includes(definition.key));
+                        : members.filter((member) => parseDepartments(member).includes(definition.key));
                     const head = relatedMembers.find((member) => hasPosition(member, 'trưởng ban')) || null;
                     const deputies = relatedMembers.filter((member) => hasPosition(member, 'phó ban'));
 
@@ -256,7 +256,7 @@ const TeamalStructure = () => {
                 ).slice(0, 2);
 
                 const computedHeads = uniqueMembersById(
-                    members.filter((member) => parseDepartments(member.department).includes(BCH_KEY))
+                    members.filter((member) => parseDepartments(member).includes(BCH_KEY))
                 );
 
                 setBoardNodes(computedNodes);
