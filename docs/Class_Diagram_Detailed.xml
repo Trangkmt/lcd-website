@@ -1,0 +1,49 @@
+<mxGraphModel dx="2175" dy="1413" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1600" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+
+    <!-- CLASS: USER -->
+    <mxCell id="class_user" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#eeeeee;fontSize=15;" value="User" vertex="1">
+      <mxGeometry height="350" width="300" x="50" y="50" as="geometry" />
+    </mxCell>
+    <mxCell id="user_attrs" parent="class_user" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=13;" value="# id: int {frozen}&lt;div&gt;# username: string {frozen}&lt;/div&gt;&lt;div&gt;# email: string {changeable}&lt;/div&gt;&lt;div&gt;# created_at: datetime {readOnly}&lt;/div&gt;" vertex="1">
+      <mxGeometry height="80" width="300" y="30" as="geometry" />
+    </mxCell>
+    <mxCell id="user_sep" parent="class_user" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1">
+      <mxGeometry height="8" width="300" y="110" as="geometry" />
+    </mxCell>
+    <mxCell id="user_meths" parent="class_user" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=13;" value="+ login(user: string, pass: string) : boolean&lt;div&gt;+ getProfile(id: int) : User&lt;/div&gt;&lt;div&gt;+ updateProfile(id: int, data: obj) : boolean&lt;/div&gt;&lt;div&gt;+ changePassword(old: str, new: str) : boolean&lt;/div&gt;" vertex="1">
+      <mxGeometry height="100" width="300" y="118" as="geometry" />
+    </mxCell>
+
+    <!-- CLASS: ADMIN -->
+    <mxCell id="class_admin" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#eeeeee;fontSize=15;" value="Admin" vertex="1">
+      <mxGeometry height="220" width="320" x="400" y="50" as="geometry" />
+    </mxCell>
+    <mxCell id="admin_attrs" parent="class_admin" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=13;" value=" (Kế thừa từ User) " vertex="1">
+      <mxGeometry height="30" width="320" y="30" as="geometry" />
+    </mxCell>
+    <mxCell id="admin_sep" parent="class_admin" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1">
+      <mxGeometry height="8" width="320" y="60" as="geometry" />
+    </mxCell>
+    <mxCell id="admin_meths" parent="class_admin" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=13;" value="+ getAllUsers(page: int, limit: int) : List&lt;div&gt;+ createUser(data: obj) : boolean&lt;/div&gt;&lt;div&gt;+ manageNews(id: int, action: str) : void&lt;/div&gt;&lt;div&gt;+ uploadImage(file: stream) : string&lt;/div&gt;" vertex="1">
+      <mxGeometry height="100" width="320" y="68" as="geometry" />
+    </mxCell>
+
+    <!-- CLASS: NEWS -->
+    <mxCell id="class_news" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#eeeeee;fontSize=15;" value="News" vertex="1">
+      <mxGeometry height="320" width="300" x="50" y="450" as="geometry" />
+    </mxCell>
+    <mxCell id="news_attrs" parent="class_news" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=13;" value="- id: int {frozen}&lt;div&gt;- title: string {changeable}&lt;/div&gt;&lt;div&gt;- view_count: int {readOnly}&lt;/div&gt;" vertex="1">
+      <mxGeometry height="80" width="300" y="30" as="geometry" />
+    </mxCell>
+    <mxCell id="news_sep" parent="class_news" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1">
+      <mxGeometry height="8" width="300" y="110" as="geometry" />
+    </mxCell>
+    <mxCell id="news_meths" parent="class_news" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=13;" value="+ getAll(filters: obj) : List&lt;div&gt;+ getBySlug(slug: str) : News&lt;/div&gt;&lt;div&gt;+ publish(id: int) : boolean&lt;/div&gt;&lt;div&gt;+ increaseViewCount(id: int) : void&lt;/div&gt;" vertex="1">
+      <mxGeometry height="100" width="300" y="118" as="geometry" />
+    </mxCell>
+
+  </root>
+</mxGraphModel>

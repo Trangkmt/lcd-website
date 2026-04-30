@@ -96,11 +96,11 @@ function apiFetch(url, options = {}) {
 }
 
 export const newsAPI = {
-    getAll: (params = {}) => apiFetch(`/news?${new URLSearchParams(params)}`),
-    getById: (id) => apiFetch(`/news/${id}`),
-    create: (data) => apiFetch('/news', { method: 'POST', body: data }),
-    update: (id, data) => apiFetch(`/news/${id}`, { method: 'PUT', body: data }),
-    delete: (id) => apiFetch(`/news/${id}`, { method: 'DELETE' }),
+    getAll: (params = {}) => apiFetch(`/posts?${new URLSearchParams(params)}`),
+    getById: (id) => apiFetch(`/posts/${id}`),
+    create: (data) => apiFetch('/posts', { method: 'POST', body: data }),
+    update: (id, data) => apiFetch(`/posts/${id}`, { method: 'PUT', body: data }),
+    delete: (id) => apiFetch(`/posts/${id}`, { method: 'DELETE' }),
 };
 
 export const usersAPI = {
