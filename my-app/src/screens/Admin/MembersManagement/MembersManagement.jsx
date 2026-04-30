@@ -171,6 +171,9 @@ const BULK_NO_CHANGE = '__bulk_no_change__';
 const BULK_STATUS_ACTIVE = 'active';
 const BULK_STATUS_HIDDEN = 'hidden';
 
+const STUDENT_POSITIONS = ['Thành viên', 'Phó ban', 'Trưởng ban'];
+const TEACHER_POSITIONS = ['Cố vấn', 'Trưởng bộ môn', 'Giáo viên'];
+
 export default function MembersManagement() {
     const { confirm, confirmModal } = useAdminConfirm();
     const location = useLocation();
@@ -202,7 +205,22 @@ export default function MembersManagement() {
 
     useEffect(() => {
         fetchMembers();
+        fetchTeams();
     }, []);
+
+    async function fetchTeams() {
+        try {
+            const data = await teamsAPI.getAll();
+            setTeams(Array.isArray(data) ? data : []);
+        } catch (err) {
+            console.error('Lỗi lấy danh sách ban:', err);
+        }
+    }
+
+    const getTeamName = (teamId) => {
+        const team = teams.find(t => t.id === teamId);
+        return team ? team.name : '-';
+    };
 
     async function fetchMembers() {
         setLoading(true);
@@ -258,12 +276,7 @@ export default function MembersManagement() {
                 member_type: form.member_type,
                 student_code: form.member_type === TABS.STUDENT ? form.student_code : null,
                 class_name: form.member_type === TABS.STUDENT ? form.class_name : null,
-                team_id: form.member_type === TABS.STUDENT ? form.team_id : null,
-                department_position: serializeDepartmentPositions(
-                    form.department_position,
-                    form.member_type,
-                    form.department
-                ),
+                teams: form.teams || [],
             };
 
             if (!payload.full_name || !payload.email) {
@@ -277,12 +290,11 @@ export default function MembersManagement() {
             }
 
             if (payload.member_type === TABS.STUDENT) {
-                const selectedDepartments = normalizeDepartments(form.department);
-                if (selectedDepartments.length === 0) {
+                if (!form.teams || form.teams.length === 0) {
                     alert('Sinh viên cần chọn ít nhất 1 ban');
                     return;
                 }
-                if (selectedDepartments.length > 2) {
+                if (form.teams.length > 2) {
                     alert('Chỉ được chọn tối đa 2 ban');
                     return;
                 }
@@ -339,12 +351,7 @@ export default function MembersManagement() {
                 member_type: inferMemberType(member),
                 student_code: member.student_code || null,
                 class_name: member.class_name || null,
-                team_id: member.team_id,
-                department_position: serializeDepartmentPositions(
-                    member.department_position,
-                    inferMemberType(member),
-                    member.department
-                ),
+                teams: member.teams || [],
             };
             const updated = await usersAPI.update(member.id, payload);
             setMembers(prev => prev.map(m => m.id === member.id ? { ...m, ...updated } : m));
@@ -438,9 +445,9 @@ const team_id = matchedTeam ? matchedTeam.id : null;
                     continue;
                 }
 
-                const memberType = studentCode || className || departmentRaw ? TABS.STUDENT : TABS.TEACHER;
+                const memberType = studentCode || className || teamRaw ? TABS.STUDENT : TABS.TEACHER;
 
-                if (memberType === TABS.STUDENT && (!studentCode || !className || !departmentRaw || !positionRaw)) {
+                if (memberType === TABS.STUDENT && (!studentCode || !className || !teamRaw || !positionRaw)) {
                     failedCount += 1;
                     failedRows.push(`Dòng ${rowIndex + 2}: sinh viên cần đủ Mã sinh viên, Lớp, Ban, Chức vụ`);
                     continue;
@@ -600,8 +607,9 @@ const team_id = matchedTeam ? matchedTeam.id : null;
                     member_type: memberType,
                     student_code: memberType === TABS.STUDENT ? (member.student_code || null) : null,
                     class_name: memberType === TABS.STUDENT ? (member.class_name || null) : null,
-                    department: nextDepartment,
-                    department_position: nextPosition,
+                    teams: memberType === TABS.STUDENT && bulkDepartment !== BULK_NO_CHANGE
+                        ? [{ team_id: parseInt(bulkDepartment), team_position: bulkPosition !== BULK_NO_CHANGE ? bulkPosition : 'Thành viên' }]
+                        : member.teams,
                 };
 
                 try {
@@ -697,16 +705,16 @@ const team_id = matchedTeam ? matchedTeam.id : null;
         : selectedDepartment === ALL_DEPARTMENTS
             ? searchedMembers
             : searchedMembers.filter((member) => {
-                if (!member.department) return false;
-                return normalizeDepartments(member.department).includes(selectedDepartment);
+                if (!member.teams || !Array.isArray(member.teams)) return false;
+                return member.teams.some(t => String(t.team_id) === String(selectedDepartment));
             });
     const positionFilteredMembers = activeTab === TABS.TEACHER
         ? departmentFilteredMembers
         : selectedStudentPosition === ALL_STUDENT_POSITIONS
             ? departmentFilteredMembers
             : departmentFilteredMembers.filter((member) => {
-                const positions = normalizeStudentDepartmentPositions(member.department_position);
-                return positions.includes(selectedStudentPosition);
+                if (!member.teams || !Array.isArray(member.teams)) return false;
+                return member.teams.some(t => t.team_position === selectedStudentPosition);
             });
 
     const visibleMembers = showHidden
@@ -774,8 +782,8 @@ const team_id = matchedTeam ? matchedTeam.id : null;
                                 onChange={(e) => setSelectedDepartment(e.target.value)}
                             >
                                 <option value={ALL_DEPARTMENTS}>Tất cả ban</option>
-                                {DEPARTMENT_OPTIONS.map((option) => (
-                                    <option key={option.value} value={option.value}>{option.label}</option>
+                                {teams.map((team) => (
+                                    <option key={team.id} value={team.id}>{team.name}</option>
                                 ))}
                             </select>
                         </div>
@@ -816,8 +824,8 @@ const team_id = matchedTeam ? matchedTeam.id : null;
                             onChange={(e) => setBulkDepartment(e.target.value)}
                         >
                             <option value={BULK_NO_CHANGE}>Ban: Không đổi</option>
-                            {DEPARTMENT_OPTIONS.map((option) => (
-                                <option key={option.value} value={option.value}>{option.label}</option>
+                            {teams.map((team) => (
+                                <option key={team.id} value={team.id}>{team.name}</option>
                             ))}
                         </select>
                     )}
@@ -964,9 +972,11 @@ const team_id = matchedTeam ? matchedTeam.id : null;
                                         <td>{member.class_name || '-'}</td>
                                         <td>{member.email || '-'}</td>
                                         <td className="member-department-cell">
-{memberType === TABS.STUDENT ? (member.teams || []).map(t => getTeamName(t.team_id)).join(', ') || '-' : '-'}
-</td>
-                                        <td className="member-position-cell">{memberType === TABS.STUDENT ? (member.teams || []).map(t => t.team_position).join(', ') || '-' : '-'}</td>
+                                            {(member.teams || []).map(t => t.team_name || getTeamName(t.team_id)).join(', ') || '-'}
+                                        </td>
+                                        <td className="member-position-cell">
+                                            {(member.teams || []).map(t => t.team_position).join(', ') || '-'}
+                                        </td>
                                         <td>
                                             <div className="row-actions">
                                                 <button
@@ -1009,7 +1019,9 @@ const team_id = matchedTeam ? matchedTeam.id : null;
                                         </td>
                                         <td>{member.full_name || '-'}</td>
                                         <td>{member.email || '-'}</td>
-                                        <td className="member-position-cell">{member.team_position || "Thành viên"}</td>
+                                        <td className="member-position-cell">
+                                            {(member.teams || []).length > 0 ? member.teams.map(t => t.team_position).join(', ') : (member.role === 'admin_full' ? 'Admin' : 'Thành viên')}
+                                        </td>
                                         <td>
                                             <div className="row-actions">
                                                 <button
@@ -1062,7 +1074,6 @@ const team_id = matchedTeam ? matchedTeam.id : null;
                                             return {
                                                 ...p,
                                                 member_type: nextType,
-                                                department: nextType === TABS.TEACHER ? [] : [DEPARTMENT_OPTIONS[0].value],
                                                 teams: [],
                                             };
                                         })}
