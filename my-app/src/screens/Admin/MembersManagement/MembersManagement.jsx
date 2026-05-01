@@ -171,8 +171,8 @@ const BULK_NO_CHANGE = '__bulk_no_change__';
 const BULK_STATUS_ACTIVE = 'active';
 const BULK_STATUS_HIDDEN = 'hidden';
 
-const STUDENT_POSITIONS = ['Thành viên', 'Phó ban', 'Trưởng ban'];
-const TEACHER_POSITIONS = ['Cố vấn', 'Trưởng bộ môn', 'Giáo viên'];
+const STUDENT_POSITIONS = ['Thành viên', 'Phó ban', 'Trưởng ban', 'Bí thư', 'Phó bí thư'];
+const TEACHER_POSITIONS = ['Cố vấn', 'Trưởng bộ môn', 'Giáo viên', 'Bí thư'];
 
 export default function MembersManagement() {
     const { confirm, confirmModal } = useAdminConfirm();
@@ -374,20 +374,30 @@ export default function MembersManagement() {
     }
 
     function exportMembersCsv() {
-        const rows = [
-            CSV_HEADERS,
-            ...visibleMembers.map((member) => {
-                const memberType = inferMemberType(member);
-                return [
-                    member.full_name || '',
-                    memberType === TABS.STUDENT ? (member.student_code || '') : '',
-                    memberType === TABS.STUDENT ? (member.class_name || '') : '',
-                    member.email || '',
-                    memberType === TABS.STUDENT ? (member.teams || []).map(t => getTeamName(t.team_id)).join(', ') : '',
-                    memberType === TABS.STUDENT ? (member.teams || []).map(t => t.team_position).join(', ') : '',
-                ];
-            }),
-        ];
+        const rows = [CSV_HEADERS];
+        
+        visibleMembers.forEach(member => {
+            const memberType = inferMemberType(member);
+            const matchingTeams = (member.teams || []).filter(t => {
+                const teamIdMatch = selectedDepartment === ALL_DEPARTMENTS || String(t.team_id) === String(selectedDepartment);
+                const positionMatch = selectedStudentPosition === ALL_STUDENT_POSITIONS || t.team_position === selectedStudentPosition;
+                return teamIdMatch && positionMatch;
+            });
+
+            const assignments = matchingTeams.length > 0 ? matchingTeams : [{ team_id: null, team_position: member.role === 'admin_full' ? 'Admin' : 'Thành viên' }];
+            
+            assignments.forEach((t, idx) => {
+                const isFirst = idx === 0;
+                rows.push([
+                    isFirst ? (member.full_name || '') : '',
+                    isFirst ? (memberType === TABS.STUDENT ? (member.student_code || '') : '') : '',
+                    isFirst ? (memberType === TABS.STUDENT ? (member.class_name || '') : '') : '',
+                    isFirst ? (member.email || '') : '',
+                    memberType === TABS.STUDENT ? (t.team_name || getTeamName(t.team_id)) : '',
+                    t.team_position || '',
+                ]);
+            });
+        });
 
         const fileSuffix = activeTab === TABS.STUDENT ? 'students' : 'teachers';
         downloadCsvFile(`members-${fileSuffix}.csv`, rows);
@@ -687,13 +697,15 @@ const team_id = matchedTeam ? matchedTeam.id : null;
     const searchedMembers = normalizedSearchQuery
         ? filteredMembers.filter((member) => {
             const memberType = inferMemberType(member);
+            const teamsList = Array.isArray(member.teams) ? member.teams : [];
+            
             const searchableFields = [
                 member.full_name,
                 member.email,
                 memberType === TABS.STUDENT ? member.student_code : '',
                 memberType === TABS.STUDENT ? member.class_name : '',
-                memberType === TABS.STUDENT ? getTeamName(member.team_id) : '',
-                member.team_position || '',
+                ...teamsList.map(t => getTeamName(t.team_id)),
+                ...teamsList.map(t => t.team_position),
             ];
 
             return searchableFields.some((field) => normalizeSearchText(field).includes(normalizedSearchQuery));
@@ -949,104 +961,127 @@ const team_id = matchedTeam ? matchedTeam.id : null;
                                 </tr>
                             )}
 
-                            {visibleMembers.map((member) => (
-                                isStudentTab ? (
-                                    <tr key={member.id} className={!member.is_active ? 'row-hidden' : ''}>
-                                        <td className="select-col">
-                                            <input
-                                                type="checkbox"
-                                                checked={selectedMemberIds.includes(member.id)}
-                                                onChange={() => toggleMemberSelection(member.id)}
-                                                aria-label={`Chọn ${member.full_name || 'thành viên'}`}
-                                            />
-                                        </td>
-                                        <td className="member-avatar-cell">
-                                            {member.avatar_url ? (
-                                                <img src={member.avatar_url} alt={member.full_name || 'Ảnh thành viên'} className="member-avatar-thumb" />
-                                            ) : (
-                                                <span className="member-avatar-empty">-</span>
+                            {visibleMembers.map((member) => {
+                                const matchingTeams = (member.teams || []).filter(t => {
+                                    const teamIdMatch = selectedDepartment === ALL_DEPARTMENTS || String(t.team_id) === String(selectedDepartment);
+                                    const positionMatch = selectedStudentPosition === ALL_STUDENT_POSITIONS || t.team_position === selectedStudentPosition;
+                                    return teamIdMatch && positionMatch;
+                                });
+
+                                const rows = matchingTeams.length > 0 ? matchingTeams : [{ team_id: null, team_position: member.role === 'admin_full' ? 'Admin' : 'Thành viên' }];
+                                const rowCount = rows.length;
+
+                                return rows.map((t, idx) => (
+                                    isStudentTab ? (
+                                        <tr key={`${member.id}-${t.team_id || idx}`} className={!member.is_active ? 'row-hidden' : ''}>
+                                            {idx === 0 && (
+                                                <>
+                                                    <td rowSpan={rowCount} className="select-col">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={selectedMemberIds.includes(member.id)}
+                                                            onChange={() => toggleMemberSelection(member.id)}
+                                                            aria-label={`Chọn ${member.full_name || 'thành viên'}`}
+                                                        />
+                                                    </td>
+                                                    <td rowSpan={rowCount} className="member-avatar-cell">
+                                                        {member.avatar_url ? (
+                                                            <img src={member.avatar_url} alt={member.full_name || 'Ảnh thành viên'} className="member-avatar-thumb" />
+                                                        ) : (
+                                                            <span className="member-avatar-empty">-</span>
+                                                        )}
+                                                    </td>
+                                                    <td rowSpan={rowCount}>{member.full_name || '-'}</td>
+                                                    <td rowSpan={rowCount}>{member.student_code || '-'}</td>
+                                                    <td rowSpan={rowCount}>{member.class_name || '-'}</td>
+                                                    <td rowSpan={rowCount}>{member.email || '-'}</td>
+                                                </>
                                             )}
-                                        </td>
-                                        <td>{member.full_name || '-'}</td>
-                                        <td>{member.student_code || '-'}</td>
-                                        <td>{member.class_name || '-'}</td>
-                                        <td>{member.email || '-'}</td>
-                                        <td className="member-department-cell">
-                                            {(member.teams || []).map(t => t.team_name || getTeamName(t.team_id)).join(', ') || '-'}
-                                        </td>
-                                        <td className="member-position-cell">
-                                            {(member.teams || []).map(t => t.team_position).join(', ') || '-'}
-                                        </td>
-                                        <td>
-                                            <div className="row-actions">
-                                                <button
-                                                    className="btn-action btn-edit btn-action--icon-only"
-                                                    onClick={() => openEdit(member)}
-                                                    title="Sửa thành viên"
-                                                    aria-label="Sửa thành viên"
-                                                >
-                                                    <span className="btn-action-icon" aria-hidden="true"><EditIcon /></span>
-                                                </button>
-                                                <button
-                                                    className={`btn-action btn-action--icon-only ${member.is_active ? 'btn-hide' : 'btn-show'}`}
-                                                    onClick={() => handleToggleActive(member)}
-                                                    title={member.is_active ? 'Ẩn thành viên' : 'Hiện thành viên'}
-                                                    aria-label={member.is_active ? 'Ẩn thành viên' : 'Hiện thành viên'}
-                                                >
-                                                    <span className="btn-action-icon" aria-hidden="true">
-                                                        {member.is_active ? <HideIcon /> : <ShowIcon />}
-                                                    </span>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ) : (
-                                    <tr key={member.id} className={!member.is_active ? 'row-hidden' : ''}>
-                                        <td className="select-col">
-                                            <input
-                                                type="checkbox"
-                                                checked={selectedMemberIds.includes(member.id)}
-                                                onChange={() => toggleMemberSelection(member.id)}
-                                                aria-label={`Chọn ${member.full_name || 'thành viên'}`}
-                                            />
-                                        </td>
-                                        <td className="member-avatar-cell">
-                                            {member.avatar_url ? (
-                                                <img src={member.avatar_url} alt={member.full_name || 'Ảnh thành viên'} className="member-avatar-thumb" />
-                                            ) : (
-                                                <span className="member-avatar-empty">-</span>
+                                            <td className="member-department-cell">
+                                                {t.team_name || getTeamName(t.team_id)}
+                                            </td>
+                                            <td className="member-position-cell">
+                                                {t.team_position}
+                                            </td>
+                                            {idx === 0 && (
+                                                <td rowSpan={rowCount}>
+                                                    <div className="row-actions">
+                                                        <button
+                                                            className="btn-action btn-edit btn-action--icon-only"
+                                                            onClick={() => openEdit(member)}
+                                                            title="Sửa thành viên"
+                                                            aria-label="Sửa thành viên"
+                                                        >
+                                                            <span className="btn-action-icon" aria-hidden="true"><EditIcon /></span>
+                                                        </button>
+                                                        <button
+                                                            className={`btn-action btn-action--icon-only ${member.is_active ? 'btn-hide' : 'btn-show'}`}
+                                                            onClick={() => handleToggleActive(member)}
+                                                            title={member.is_active ? 'Ẩn thành viên' : 'Hiện thành viên'}
+                                                            aria-label={member.is_active ? 'Ẩn thành viên' : 'Hiện thành viên'}
+                                                        >
+                                                            <span className="btn-action-icon" aria-hidden="true">
+                                                                {member.is_active ? <HideIcon /> : <ShowIcon />}
+                                                            </span>
+                                                        </button>
+                                                    </div>
+                                                </td>
                                             )}
-                                        </td>
-                                        <td>{member.full_name || '-'}</td>
-                                        <td>{member.email || '-'}</td>
-                                        <td className="member-position-cell">
-                                            {(member.teams || []).length > 0 ? member.teams.map(t => t.team_position).join(', ') : (member.role === 'admin_full' ? 'Admin' : 'Thành viên')}
-                                        </td>
-                                        <td>
-                                            <div className="row-actions">
-                                                <button
-                                                    className="btn-action btn-edit btn-action--icon-only"
-                                                    onClick={() => openEdit(member)}
-                                                    title="Sửa thành viên"
-                                                    aria-label="Sửa thành viên"
-                                                >
-                                                    <span className="btn-action-icon" aria-hidden="true"><EditIcon /></span>
-                                                </button>
-                                                <button
-                                                    className={`btn-action btn-action--icon-only ${member.is_active ? 'btn-hide' : 'btn-show'}`}
-                                                    onClick={() => handleToggleActive(member)}
-                                                    title={member.is_active ? 'Ẩn thành viên' : 'Hiện thành viên'}
-                                                    aria-label={member.is_active ? 'Ẩn thành viên' : 'Hiện thành viên'}
-                                                >
-                                                    <span className="btn-action-icon" aria-hidden="true">
-                                                        {member.is_active ? <HideIcon /> : <ShowIcon />}
-                                                    </span>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                )
-                            ))}
+                                        </tr>
+                                    ) : (
+                                        <tr key={`${member.id}-${t.team_id || idx}`} className={!member.is_active ? 'row-hidden' : ''}>
+                                            {idx === 0 && (
+                                                <>
+                                                    <td rowSpan={rowCount} className="select-col">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={selectedMemberIds.includes(member.id)}
+                                                            onChange={() => toggleMemberSelection(member.id)}
+                                                            aria-label={`Chọn ${member.full_name || 'thành viên'}`}
+                                                        />
+                                                    </td>
+                                                    <td rowSpan={rowCount} className="member-avatar-cell">
+                                                        {member.avatar_url ? (
+                                                            <img src={member.avatar_url} alt={member.full_name || 'Ảnh thành viên'} className="member-avatar-thumb" />
+                                                        ) : (
+                                                            <span className="member-avatar-empty">-</span>
+                                                        )}
+                                                    </td>
+                                                    <td rowSpan={rowCount}>{member.full_name || '-'}</td>
+                                                    <td rowSpan={rowCount}>{member.email || '-'}</td>
+                                                </>
+                                            )}
+                                            <td className="member-position-cell">
+                                                {t.team_position}
+                                            </td>
+                                            {idx === 0 && (
+                                                <td rowSpan={rowCount}>
+                                                    <div className="row-actions">
+                                                        <button
+                                                            className="btn-action btn-edit btn-action--icon-only"
+                                                            onClick={() => openEdit(member)}
+                                                            title="Sửa thành viên"
+                                                            aria-label="Sửa thành viên"
+                                                        >
+                                                            <span className="btn-action-icon" aria-hidden="true"><EditIcon /></span>
+                                                        </button>
+                                                        <button
+                                                            className={`btn-action btn-action--icon-only ${member.is_active ? 'btn-hide' : 'btn-show'}`}
+                                                            onClick={() => handleToggleActive(member)}
+                                                            title={member.is_active ? 'Ẩn thành viên' : 'Hiện thành viên'}
+                                                            aria-label={member.is_active ? 'Ẩn thành viên' : 'Hiện thành viên'}
+                                                        >
+                                                            <span className="btn-action-icon" aria-hidden="true">
+                                                                {member.is_active ? <HideIcon /> : <ShowIcon />}
+                                                            </span>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            )}
+                                        </tr>
+                                    )
+                                ));
+                            })}
                         </tbody>
                     </table>
                 </div>
@@ -1197,7 +1232,7 @@ const team_id = matchedTeam ? matchedTeam.id : null;
                                                         <div key={teamInfo.id} className="department-position-group">
                                                             <p className="department-position-group__title">{teamInfo.name}</p>
                                                             <div className="position-checkboxes">
-                                                                {['Thành viên', 'Phó ban', 'Trưởng ban'].map((position) => (
+                                                                {(teamInfo.id === 1 ? ['Thành viên', 'Phó bí thư', 'Bí thư'] : ['Thành viên', 'Phó ban', 'Trưởng ban']).map((position) => (
                                                                     <label key={`${teamInfo.id}-${position}`} className="position-checkbox-item">
                                                                         <input
                                                                             type="radio"
@@ -1227,7 +1262,15 @@ const team_id = matchedTeam ? matchedTeam.id : null;
                                 {form.member_type === TABS.TEACHER && (
                                     <div className="form-group">
                                         <label className="form-label">Chức vụ *</label>
-                                        <select className="form-control" value={form.teams[0]?.team_position || 'Thành viên'} onChange={e => setForm(p => ({ ...p, teams: [{ team_id: null, team_position: e.target.value }] }))}>
+                                        <select
+                                            className="form-control"
+                                            value={form.teams[0]?.team_position || 'Thành viên'}
+                                            onChange={e => {
+                                                const pos = e.target.value;
+                                                const tid = pos === 'Bí thư' ? 1 : null;
+                                                setForm(p => ({ ...p, teams: [{ team_id: tid, team_position: pos }] }));
+                                            }}
+                                        >
                                             {TEACHER_POSITIONS.map((position) => (
                                                 <option key={position} value={position}>{position}</option>
                                             ))}

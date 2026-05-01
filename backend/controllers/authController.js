@@ -128,7 +128,7 @@ exports.getMyProfile = async (req, res) => {
 // PUT /api/auth/me
 exports.updateMyProfile = async (req, res) => {
     try {
-        const { email, full_name, avatar_url } = req.body || {};
+        const { email, avatar_url } = req.body || {};
 
         if (!email || !String(email).trim()) {
             return res.status(400).json({ error: 'Email là bắt buộc' });
@@ -138,19 +138,16 @@ exports.updateMyProfile = async (req, res) => {
         const hasAvatarColumn = await hasUserAvatarColumn(pool);
         const request = pool.request()
             .input('id', sql.Int, req.authUser?.id)
-            .input('email', sql.NVarChar, String(email).trim())
-            .input('full_name', sql.NVarChar, full_name ? String(full_name).trim() : null);
+            .input('email', sql.NVarChar, String(email).trim());
 
         if (hasAvatarColumn) {
             request.input('avatar_url', sql.NVarChar, avatar_url ? String(avatar_url).trim() : null);
         }
 
-        const fullNameUpdatePart = full_name !== undefined ? 'full_name = @full_name,' : '';
         const avatarUpdatePart = hasAvatarColumn ? 'avatar_url = @avatar_url,' : '';
         const result = await request.query(`
             UPDATE users
             SET email = @email,
-                ${fullNameUpdatePart}
                 ${avatarUpdatePart}
                 updated_at = NOW()
             OUTPUT INSERTED.*

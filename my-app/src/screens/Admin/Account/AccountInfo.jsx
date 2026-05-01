@@ -13,7 +13,6 @@ export default function AccountInfo({ user }) {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [form, setForm] = useState({
-    full_name: '',
     email: '',
     avatar_url: '',
     password: '',
@@ -54,7 +53,6 @@ export default function AccountInfo({ user }) {
     if (!activeProfile) return;
     setForm((prev) => ({
       ...prev,
-      full_name: activeProfile?.full_name || '',
       email: activeProfile?.email || '',
       avatar_url: activeProfile?.avatar_url || '',
       password: '',
@@ -94,7 +92,6 @@ export default function AccountInfo({ user }) {
     setErrorMessage('');
     setSuccessMessage('');
     setForm({
-      full_name: activeProfile?.full_name || '',
       email: activeProfile?.email || '',
       avatar_url: activeProfile?.avatar_url || '',
       password: '',
@@ -240,6 +237,20 @@ export default function AccountInfo({ user }) {
             ) : (
               <span>{activeProfile?.email || ''}</span>
             )}
+          </label>
+
+          <label>
+            Quyền hạn:
+            <span style={{ color: 'var(--color-primary)', fontWeight: '500' }}>
+              {(() => {
+                const role = activeProfile?.role;
+                if (role === 'admin_full') return 'Quản trị viên toàn quyền';
+                if (role === 'utility_only') return 'Quản trị viên tiện ích';
+                if (role === 'contact_manager') return 'Quản lý liên hệ';
+                if (role === 'post_author') return 'Người viết bài';
+                return role || 'N/A';
+              })()}
+            </span>
           </label>
 
           <div className="team-info-section" style={{ marginTop: '15px' }}>
