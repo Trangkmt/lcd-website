@@ -451,7 +451,7 @@ p {
 .form-control {
     width: 100%;
     border: 1px solid var(--color-gray-400);
-    border-radius: 0.625rem;
+    border-radius: var(--radius-md);
     padding: 0.625rem 0.75rem;
     font: inherit;
     color: var(--color-text-primary);
@@ -469,7 +469,7 @@ p {
     overflow-x: auto;
     background: var(--color-white);
     border: 1px solid var(--color-border-subtle);
-    border-radius: 0.75rem;
+    border-radius: var(--radius-md);
 }
 
 .admin-table {
@@ -523,7 +523,7 @@ p {
     overflow: auto;
     background: var(--color-white);
     border: 1px solid var(--color-border-subtle);
-    border-radius: 0.625rem;
+    border-radius: var(--radius-md);
     padding: 1.25rem;
 }
 
