@@ -21,8 +21,6 @@ DROP TABLE IF EXISTS documents;
 DROP TABLE IF EXISTS posts;
 DROP TABLE IF EXISTS post_templates;
 DROP TABLE IF EXISTS categories;
-DROP TABLE IF EXISTS categories;
-DROP TABLE IF EXISTS user_teams;
 DROP TABLE IF EXISTS users;
 
 SET FOREIGN_KEY_CHECKS = 1;
@@ -318,18 +316,10 @@ CREATE TABLE contact_info (
     subject VARCHAR(255),
     message TEXT,
     is_read BOOLEAN DEFAULT FALSE,
-    read_by INT,
     is_replied BOOLEAN DEFAULT FALSE,
-    replied_by INT,
     replied_at DATETIME,
-    is_deleted BOOLEAN DEFAULT FALSE,
-    deleted_by INT,
-    deleted_at DATETIME,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (read_by) REFERENCES users(id) ON DELETE SET NULL,
-    FOREIGN KEY (replied_by) REFERENCES users(id) ON DELETE SET NULL,
-    FOREIGN KEY (deleted_by) REFERENCES users(id) ON DELETE SET NULL
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 INSERT INTO contact_info (name,email,phone,subject,message) VALUES
