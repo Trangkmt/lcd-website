@@ -1,8 +1,4 @@
 /* Members Management */
-@import url('../Styles/AdminTable.css');
-@import url('../Styles/AdminButtons.css');
-@import url('../Styles/AdminForm.css');
-@import url('../Styles/AdminModal.css');
 
 .members-management {
     padding: var(--space-10);
@@ -238,33 +234,6 @@
     box-sizing: border-box;
 }
 
-.members-management .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.members-management .form-label {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--color-text-secondary);
-}
-
-.members-management .form-control {
-    width: 100%;
-    padding: 0.625rem 0.75rem;
-    font-size: 0.9375rem;
-    color: var(--color-text-primary);
-    background: var(--color-white);
-    border: 1px solid var(--color-gray-400);
-    border-radius: 0.625rem;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.members-management .form-control:focus {
-    border-color: var(--color-darkgray);
-    box-shadow: 0 0 0 0.1875rem rgba(156, 163, 175, 0.2);
-}
 
 .member-image-uploader {
     display: flex;

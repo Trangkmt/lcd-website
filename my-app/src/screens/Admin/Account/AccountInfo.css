@@ -1,4 +1,4 @@
-@import url('../Styles/AdminModal.css');
+
 
 .account-info-container {
     margin: 0 auto;
@@ -77,32 +77,13 @@
     justify-content: flex-end;
 }
 
-.account-info-container .page-title {
-    margin: 0 0 0.75rem;
-    font-size: 2rem;
-    letter-spacing: var(--ls--0_02);
-    color: var(--color-darkslateblue);
-    font-weight: 800;
-    text-transform: uppercase;
-}
+.account-info-container 
 
 
 .account-info-container .btn-primary,
-.account-info-container .btn-secondary {
-    padding: 0.625rem 1.125rem;
-    border-radius: 0.5rem;
-    font-size: 0.9375rem;
-    font-weight: 600;
-    border: 1px solid transparent;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
+.account-info-container 
 
-.account-info-container .btn-primary {
-    background: var(--color-primary);
-    color: var(--color-white);
-    border-color: var(--color-primary);
-}
+.account-info-container 
 
 .account-info-container .btn-primary:hover:not(:disabled) {
     background: var(--color-brand-indigo-dark);
@@ -110,11 +91,7 @@
     transform: translateY(-1px);
 }
 
-.account-info-container .btn-secondary {
-    background: var(--color-white);
-    color: var(--color-text-primary);
-    border-color: var(--color-gray-300);
-}
+.account-info-container 
 
 .account-info-container .btn-secondary:hover:not(:disabled) {
     background: var(--color-gray-200);
@@ -126,6 +103,8 @@
     cursor: not-allowed;
     transform: none;
 }
+
+
 
 
 

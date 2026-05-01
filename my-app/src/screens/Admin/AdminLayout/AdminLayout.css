@@ -280,27 +280,8 @@
 }
 
 /* Shared admin page title style (inside content area only) */
-.admin-layout .admin-content-wrap .page-title {
-    letter-spacing: var(--ls--0_02);
-    color: var(--color-darkslateblue);
-    font-weight: 800;
-    text-transform: uppercase;
-}
 
 /* Shared admin form field styling across all admin tabs */
-.admin-layout .admin-content-wrap form .form-control,
-.admin-layout .admin-content-wrap form input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
-.admin-layout .admin-content-wrap form select,
-.admin-layout .admin-content-wrap form textarea {
-    border: 1px solid var(--color-gray-400);
-}
-
-.admin-layout .admin-content-wrap form .form-control:focus,
-.admin-layout .admin-content-wrap form input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]):focus,
-.admin-layout .admin-content-wrap form select:focus,
-.admin-layout .admin-content-wrap form textarea:focus {
-    border-color: var(--color-darkgray);
-}
 
 /* Responsive */
 @media (max-width: 768px) {
