@@ -1,6 +1,11 @@
+@import url('../PostsManagement/PostsManagement.css');
+@import url('../Styles/AdminTable.css');
+@import url('../Styles/AdminButtons.css');
+@import url('../Styles/AdminModal.css');
 
-
-
+.contacts-management {
+    font-family: var(--font-primary);
+}
 
 .contacts-management .btn-primary:focus-visible,
 .contacts-management .btn-secondary:focus-visible,
@@ -31,7 +36,7 @@
 }
 
 .subject-cell {
-    max-width: 17.5rem;
+    max-width: 280px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -50,36 +55,36 @@
 .reply-original {
     background: var(--color-surface-muted);
     padding: var(--space-4);
-    border-radius: 0.625rem;
-    margin-bottom: 1.5rem;
-    border-left: 0.1875rem solid var(--color-brand-indigo);
+    border-radius: 10px;
+    margin-bottom: 24px;
+    border-left: 3px solid var(--color-brand-indigo);
 }
 
 .reply-original h4 {
     font-size: 0.875rem;
     font-weight: 600;
     color: var(--color-text-primary);
-    margin: 0 0 0.75rem 0;
+    margin: 0 0 12px 0;
 }
 
 .reply-original p {
     font-size: 0.8125rem;
     color: var(--color-text-muted);
-    margin: 0.25rem 0;
+    margin: 4px 0;
 }
 
 .reply-form {
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: 20px;
 }
 
 .badge-new {
     display: inline-flex;
     align-items: center;
-    margin-left: 0.625rem;
-    padding: 0.25rem 0.625rem;
-    border-radius: 62.4375rem;
+    margin-left: 10px;
+    padding: 4px 10px;
+    border-radius: 999px;
     background: var(--color-state-danger-surface);
     color: var(--color-state-danger-strong);
     font-size: 0.8125rem;
@@ -91,7 +96,7 @@
 }
 
 .contacts-table .status-badge {
-    border-radius: 62.4375rem;
+    border-radius: 999px;
     font-weight: 700;
 }
 
@@ -100,8 +105,3 @@
         padding: var(--space-5);
     }
 }
-
-
-
-
-

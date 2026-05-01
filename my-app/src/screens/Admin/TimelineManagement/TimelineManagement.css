@@ -1,11 +1,12 @@
-
-
-
+@import url('../Styles/AdminButtons.css');
+@import url('../Styles/AdminForm.css');
+@import url('../Styles/AdminModal.css');
 
 .timeline-management-page {
     padding: var(--space-10);
-    max-width: 87.5rem;
+    max-width: 1400px;
     background: var(--color-white);
+    font-family: var(--font-primary);
 }
 
 .timeline-management-page .timeline-btn:focus-visible,
@@ -17,7 +18,7 @@
 }
 
 .timeline-management-header {
-    margin-bottom: 1.5rem;
+    margin-bottom: 24px;
 }
 
 .timeline-management-title {
@@ -29,7 +30,7 @@
 .timeline-management-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 1.25rem;
+    gap: 20px;
     align-items: start;
 }
 
@@ -41,36 +42,33 @@
     background: var(--color-white);
     border: 1px solid var(--color-border-subtle);
     border-radius: 0;
-    padding: 1.25rem;
+    padding: 20px;
 }
 
-.timeline-management-card .page-title {
-    margin: 0 0 1rem;
-    color: var(--color-text-strong);
-}
+
 
 .timeline-form {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 12px;
     width: 100%;
     max-width: 860px;
     margin: 0 auto;
-    padding-inline: 0.75rem;
+    padding-inline: 12px;
     box-sizing: border-box;
 }
 
 .timeline-form__row {
     display: grid;
-    grid-template-columns: minmax(26.25rem, 1fr) max-content;
-    gap: 0.75rem;
+    grid-template-columns: minmax(420px, 1fr) max-content;
+    gap: 12px;
     align-items: start;
 }
 
 .timeline-form__field {
     display: flex;
     flex-direction: column;
-    gap: 0.375rem;
+    gap: 6px;
 }
 
 .timeline-form__field--month {
@@ -83,7 +81,7 @@
 
 .timeline-form__field--month input {
     width: fit-content;
-    min-width: 11.25rem;
+    min-width: 180px;
 }
 
 .timeline-form__field span {
@@ -97,8 +95,8 @@
 .timeline-form__field textarea,
 .timeline-list-filters select {
     border: 1px solid var(--color-border-subtle);
-    border-radius: 0.625rem;
-    padding: 0.5625rem 0.75rem;
+    border-radius: 10px;
+    padding: 9px 12px;
     font-size: 0.875rem;
     color: var(--color-text-primary);
     outline: none;
@@ -120,21 +118,21 @@
 .timeline-form__checkbox {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 8px;
     font-size: 0.875rem;
     color: var(--color-text-primary);
 }
 
 .timeline-form__actions {
     display: flex;
-    gap: 0.5rem;
-    margin-top: 0.375rem;
+    gap: 8px;
+    margin-top: 6px;
 }
 
 .timeline-btn {
     border: 1px solid transparent;
-    border-radius: 0.625rem;
-    padding: 0.5rem 0.75rem;
+    border-radius: 10px;
+    padding: 8px 12px;
     font-size: 0.8125rem;
     font-weight: 600;
     cursor: pointer;
@@ -179,14 +177,14 @@
 .timeline-list-header {
     display: flex;
     justify-content: space-between;
-    gap: 0.75rem;
-    margin-bottom: 0.75rem;
+    gap: 12px;
+    margin-bottom: 12px;
     align-items: flex-start;
 }
 
 .timeline-list-filters {
     display: inline-flex;
-    gap: 0.5rem;
+    gap: 8px;
     align-items: center;
     flex-wrap: wrap;
     justify-content: flex-end;
@@ -199,44 +197,44 @@
 }
 
 .timeline-delete-modal__panel {
-    width: min(35rem, 100%);
+    width: min(560px, 100%);
 }
 
 .timeline-delete-modal__body {
-    padding: 0.5rem 0.75rem 0.75rem;
+    padding: 8px 12px 12px;
 }
 
 .timeline-delete-modal__actions {
-    margin-top: 0.875rem;
+    margin-top: 14px;
     display: flex;
     justify-content: flex-end;
-    gap: 0.5rem;
+    gap: 8px;
 }
 
 .timeline-alert {
-    margin-bottom: 0.75rem;
-    border-radius: 0.5rem;
-    padding: 0.625rem 0.75rem;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    padding: 10px 12px;
     font-size: 0.8125rem;
 }
 
 .timeline-alert--error {
-    background: var(--color-state-danger-surface);
-    color: var(--color-state-danger-strong);
-    border: 1px solid var(--color-state-danger-surface);
+    background: #fff4f4;
+    color: #c43232;
+    border: 1px solid #ffd8d8;
 }
 
 .timeline-vertical {
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    padding-top: 0.5rem;
+    gap: 16px;
+    padding-top: 8px;
 }
 
 .timeline-vertical-item {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 3rem minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) 48px minmax(0, 1fr);
     gap: 0;
     align-items: stretch;
 }
@@ -253,18 +251,18 @@
     top: -24px;
     bottom: -24px;
     width: 2px;
-    background: linear-gradient(180deg, var(--color-info-tint-soft) 0%, var(--color-info-tint-medium) 100%);
+    background: linear-gradient(180deg, #d9e8ff 0%, #bfd8ff 100%);
 }
 
 .timeline-vertical-axis__dot {
     position: relative;
     z-index: 1;
     align-self: center;
-    width: 0.875rem;
-    height: 0.875rem;
-    border-radius: 62.4375rem;
-    border: 0.1875rem solid var(--color-info-tint-light);
-    background: var(--color-info-vivid);
+    width: 14px;
+    height: 14px;
+    border-radius: 999px;
+    border: 3px solid #f8fbff;
+    background: #2f80ed;
 }
 
 .timeline-vertical-item__empty {
@@ -273,34 +271,34 @@
 
 .timeline-vertical-card {
     position: relative;
-    background: linear-gradient(180deg, #ffffff 0%, var(--color-info-tint-light) 100%);
-    border: 1px solid var(--color-surface-timeline);
+    background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+    border: 1px solid #dfe9f8;
     border-radius: 0;
-    padding: 0.875rem;
+    padding: 14px;
 }
 
 .timeline-vertical-card--active {
     border-color: var(--color-primary);
-    background: linear-gradient(180deg, var(--color-info-tint-light) 0%, #ffffff 100%);
+    background: linear-gradient(180deg, #f6faff 0%, #ffffff 100%);
 }
 
 .timeline-vertical-item>.timeline-vertical-card:first-child {
-    margin-right: 0.75rem;
+    margin-right: 12px;
 }
 
 .timeline-vertical-item>.timeline-vertical-card:last-child {
-    margin-left: 0.75rem;
+    margin-left: 12px;
 }
 
 .timeline-vertical-card::after {
     content: '';
     position: absolute;
-    top: 1.375rem;
-    width: 0.625rem;
-    height: 0.625rem;
+    top: 22px;
+    width: 10px;
+    height: 10px;
     background: #ffffff;
-    border-top: 1px solid var(--color-surface-timeline);
-    border-right: 1px solid var(--color-surface-timeline);
+    border-top: 1px solid #dfe9f8;
+    border-right: 1px solid #dfe9f8;
     transform: rotate(45deg);
 }
 
@@ -317,8 +315,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
+    gap: 8px;
+    margin-bottom: 8px;
 }
 
 .timeline-vertical-card__month {
@@ -326,7 +324,7 @@
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--color-primary-dark);
+    color: #3f6da7;
 }
 
 .timeline-vertical-card--active .timeline-vertical-card__month {
@@ -340,7 +338,7 @@
 }
 
 .timeline-vertical-card__summary {
-    margin: 0.5rem 0 0.75rem;
+    margin: 8px 0 12px;
     font-size: 0.875rem;
     line-height: 1.55;
     color: var(--color-text-primary);
@@ -350,36 +348,36 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    gap: 0.625rem;
+    gap: 10px;
     flex-wrap: wrap;
 }
 
 .timeline-table__empty {
     text-align: center;
     color: var(--color-text-subtle);
-    padding: 1.375rem 0.625rem;
+    padding: 22px 10px;
     border: 1px dashed var(--color-border-subtle);
-    border-radius: 0.625rem;
-    background: var(--color-info-tint-light);
+    border-radius: 10px;
+    background: #fcfdff;
 }
 
 .timeline-table__actions {
     display: inline-flex;
-    gap: 0.5rem;
+    gap: 8px;
 }
 
 .timeline-status {
     display: inline-flex;
     align-items: center;
-    border-radius: 0.375rem;
-    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    padding: 4px 8px;
     font-size: 0.75rem;
     font-weight: 700;
 }
 
 .timeline-status--published {
-    background: var(--color-state-success-soft);
-    color: var(--color-state-success-strong);
+    background: #edf9f1;
+    color: #207d45;
 }
 
 .timeline-status--active {
@@ -388,8 +386,8 @@
 }
 
 .timeline-status--draft {
-    background: var(--color-state-warning-soft);
-    color: var(--color-state-warning-strong);
+    background: #fff7ec;
+    color: #a96513;
 }
 
 @media (max-width: 860px) {
@@ -406,8 +404,8 @@
     }
 
     .timeline-vertical-item {
-        grid-template-columns: 1.875rem minmax(0, 1fr);
-        gap: 0.625rem;
+        grid-template-columns: 30px minmax(0, 1fr);
+        gap: 10px;
     }
 
     .timeline-vertical-axis {
@@ -431,11 +429,4 @@
         right: auto;
         transform: rotate(225deg);
     }
-
 }
-
-
-
-
-
-

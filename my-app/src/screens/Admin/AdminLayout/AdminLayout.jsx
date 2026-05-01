@@ -23,6 +23,10 @@ import {
     LogoutIcon,
 } from '../../../SvgIcons';
 import './AdminLayout.css';
+import '../Styles/AdminButtons.css';
+import '../Styles/AdminForm.css';
+import '../Styles/AdminModal.css';
+import '../Styles/AdminTable.css';
 
 export default function AdminLayout() {
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);

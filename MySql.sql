@@ -96,7 +96,7 @@ INSERT INTO user_teams (user_id, team_id, position) VALUES
 (1, 1, 'admin hệ thống'),
 (2, 1, 'bí thư'),
 (3, 2, 'trường ban'),
-(4, 3, 'phó ban'),
+(4, 3, 'phó ban');
 
 
 
@@ -323,6 +323,7 @@ CREATE TABLE contact_info (
     message TEXT,
     is_read BOOLEAN DEFAULT FALSE,
     is_replied BOOLEAN DEFAULT FALSE,
+    is_deleted BOOLEAN DEFAULT FALSE,
     replied_at DATETIME,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
