@@ -3,7 +3,7 @@
     width: 100%;
     min-height: 100vh;
     background: var(--color-white);
-    font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    font-family: var(--font-primary);
 }
 
 .event-page button:focus-visible,
@@ -135,7 +135,7 @@
     border-radius: 0;
     padding: 0.625rem 1.5rem;
     font-size: 0.875rem;
-    font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    font-family: var(--font-primary);
     font-weight: 600;
     color: var(--color-white);
     cursor: pointer;
@@ -165,7 +165,7 @@
     padding: 0.75rem 1.25rem;
     color: var(--color-text-primary);
     font-size: 0.9375rem;
-    font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    font-family: var(--font-primary);
     cursor: pointer;
     transition: all 0.2s ease;
 }
@@ -255,7 +255,7 @@
     background: transparent;
     border-radius: 0.5rem;
     font-size: 1rem;
-    font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    font-family: var(--font-primary);
     cursor: pointer;
     transition: all 0.3s ease;
 }
@@ -301,7 +301,7 @@
     background: transparent;
     border-radius: 0.5rem;
     font-size: 1rem;
-    font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    font-family: var(--font-primary);
     color: var(--color-text-heading);
     cursor: pointer;
     transition: all 0.3s ease;
@@ -431,5 +431,6 @@
         justify-content: center;
     }
 }
+
 
 

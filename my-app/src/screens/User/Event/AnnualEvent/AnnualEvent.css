@@ -3,7 +3,7 @@
     width: 100%;
     min-height: 100vh;
     background: var(--color-white);
-    font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    font-family: var(--font-primary);
 }
 
 .annual-event-content {
@@ -114,6 +114,7 @@
     font-weight: 700;
     color: var(--color-darkslateblue);
     margin: 0 0 0.5rem 0;
+    text-transform: uppercase;
 }
 
 .annual-event-link {
@@ -155,5 +156,6 @@
         grid-template-columns: 1fr;
     }
 }
+
 
 

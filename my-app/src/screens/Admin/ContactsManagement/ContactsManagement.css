@@ -1,4 +1,3 @@
-@import url('../PostsManagement/PostsManagement.css');
 
 
 
@@ -101,6 +100,7 @@
         padding: var(--space-5);
     }
 }
+
 
 
 

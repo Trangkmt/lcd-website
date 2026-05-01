@@ -1,7 +1,7 @@
 .organizational-structure {
     min-height: 100vh;
     padding: 3.75rem 1.25rem 5rem;
-    font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    font-family: var(--font-primary);
 }
 
 /* Header */
@@ -485,6 +485,7 @@
         justify-content: flex-start;
     }
 }
+
 
 
 

@@ -22,18 +22,20 @@ Thêm font-size và màu sắc chuẩn cho h1, h2.
 ```css
 h1 {
     font-size: clamp(1.75rem, 4vw, 2.5rem);
-    font-weight: 800;
+    font-weight: 900;
     color: var(--color-darkslateblue);
     line-height: 1.2;
     margin-bottom: var(--space-6);
+    text-transform: uppercase; 
 }
 
 h2 {
     font-size: clamp(1.35rem, 3vw, 1.875rem);
-    font-weight: 700;
+    font-weight: 900;
     color: var(--color-darkslateblue);
     line-height: 1.3;
     margin-bottom: var(--space-4);
+    text-transform: uppercase; 
 }
 ```
 
