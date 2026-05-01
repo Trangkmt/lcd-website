@@ -1,38 +1,15 @@
 /* Admin Layout */
 .admin-layout {
-    --admin-primary: var(--color-primary);
-    --admin-sidebar: var(--color-primary);
-    --admin-sidebar-deeper: var(--color-brand-hover);
-    --admin-bg: var(--color-white);
-    --admin-text-main: var(--color-text-strong);
-    --admin-text-main-alt: var(--color-text-primary);
-    --admin-text-sub: var(--color-text-muted);
-    --admin-text-sub-alt: var(--color-text-subtle);
-    --admin-border: var(--color-border-subtle);
-    --admin-secondary-chart: var(--color-info-tint-medium);
-    --color-brand-indigo: var(--admin-primary);
-    --color-brand-action: var(--admin-primary);
-    --color-brand-indigo-dark: var(--admin-sidebar);
-    --color-text-strong: var(--admin-text-main);
-    --color-text-primary: var(--admin-text-main-alt);
-    --color-text-muted: var(--admin-text-sub);
-    --color-text-subtle: var(--admin-text-sub-alt);
-    --color-border-subtle: var(--admin-border);
-    --color-border-soft: var(--admin-border);
-    --color-border-muted: var(--admin-border);
-    --color-surface-panel: #FFFFFF;
-    --color-surface-accent: var(--color-surface-soft-blue);
-    --color-surface-soft-blue: var(--color-surface-lightest);
     display: flex;
     min-height: 100vh;
-    background: var(--admin-bg);
+    background: var(--color-white);
     font-family: var(--font-primary);
 }
 
 /* Sidebar */
 .admin-sidebar {
     width: 16.75rem;
-    background: var(--admin-sidebar);
+    background: var(--color-primary);
     color: white;
     position: fixed;
     left: 0;
@@ -53,7 +30,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: var(--admin-sidebar-deeper);
+    background: var(--color-brand-hover);
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -100,7 +77,7 @@
     flex: 1;
     padding: 0.75rem 0;
     overflow-y: auto;
-    background-color: var(--admin-primary);
+    background-color: var(--color-primary);
 }
 
 .nav-item {
@@ -205,7 +182,7 @@
     margin-left: 16.75rem;
     transition: all 0.3s ease;
     min-height: 100vh;
-    background: var(--admin-bg);
+    background: var(--color-white);
     display: flex;
     flex-direction: column;
 }
@@ -216,7 +193,7 @@
 
 .admin-topbar {
     min-height: 5.125rem;
-    background: var(--admin-primary);
+    background: var(--color-primary);
     color: var(--color-white);
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     display: flex;
@@ -271,7 +248,7 @@
 
 .admin-content-wrap {
     flex: 1;
-    background: var(--admin-bg);
+    background: var(--color-white);
 }
 
 .admin-mobile-nav-toggle,
@@ -379,6 +356,7 @@
         width: 92vw;
     }
 }
+
 
 
 

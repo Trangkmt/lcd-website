@@ -429,7 +429,7 @@
     width: 1rem;
     height: 1rem;
     border-radius: 50%;
-    background: var(--admin-secondary-chart);
+    background: var(--color-info-light);
     flex-shrink: 0;
     margin-top: 0.25rem;
 }
@@ -604,6 +604,7 @@
         font-size: 1.4rem;
     }
 }
+
 
 
 
