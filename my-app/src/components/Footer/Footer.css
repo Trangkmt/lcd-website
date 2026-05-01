@@ -30,7 +30,7 @@
     flex-wrap: wrap;
     align-items: flex-start;
     flex: 0 0 auto;
-    /* ? kh�ng co gi�n */
+    /* Không co giãn */
 }
 
 .footer-logo {
@@ -75,7 +75,7 @@
     font-size: 1rem;
     font-weight: 700;
     margin: 0 0 0.5rem 0;
-    /* ? margin nh?t qu�n */
+    /* Margin nhất quán */
     color: var(--color-white);
 }
 
@@ -117,15 +117,15 @@
     .footer-content {
         flex-direction: column;
         align-items: center;
-        /* ? center khi stack d?c */
+        /* Center khi stack dọc */
         gap: var(--space-5);
         text-align: center;
-        /* ? text center */
+        /* Text center */
     }
 
     .footer-left {
         align-items: center;
-        /* ? center logo, social icons */
+        /* Center logo, social icons */
         width: 100%;
         min-width: 0;
         padding: 0;
@@ -133,7 +133,7 @@
 
     .footer-columns {
         flex-direction: row;
-        /* ? gi? ngang, 2 column c?nh nhau */
+        /* Giữ ngang, 2 column cạnh nhau */
         justify-content: center;
         gap: var(--space-8);
         width: 100%;
@@ -144,7 +144,7 @@
         max-width: none;
         padding: 0;
         align-items: center;
-        /* ? center links */
+        /* Center links */
         flex: 1;
         max-width: 12.5rem;
     }
@@ -155,7 +155,7 @@
 
     .footer-column a:hover {
         transform: none;
-        /* ? b? translateX khi center */
+        /* Bỏ translateX khi center */
     }
 }
 
@@ -188,7 +188,7 @@
 
     .footer-columns {
         flex-direction: column;
-        /* ? stack d?c tr�n mobile nh? */
+        /* Stack dọc trên mobile nhỏ */
         align-items: center;
         gap: var(--space-5);
     }
@@ -198,6 +198,3 @@
         width: 100%;
     }
 }
-
-
-
