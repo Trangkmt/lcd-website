@@ -73,7 +73,7 @@ export default function TimelineManagement() {
     async function fetchAnnualEventOptions() {
         setLoadingEventOptions(true);
         try {
-            const categories = await categoriesAPI.getAll({ page_type: 'activity_annual' });
+            const categories = await categoriesAPI.getAll({ page_type: 'event_annual' });
             const mappedOptions = Array.isArray(categories)
                 ? categories
                     .map((item) => (item?.name ? String(item.name).trim() : ''))
@@ -366,7 +366,7 @@ export default function TimelineManagement() {
                                         ))}
                                     </select>
                                     {!loadingEventOptions && annualEventOptions.length === 0 && (
-                                        <small>Chưa có danh mục hoạt động thường niên. Vui lòng tạo ở mục Quản lý danh mục.</small>
+                                        <small>Chưa có danh mục sự kiện thường niên. Vui lòng tạo ở mục Quản lý danh mục.</small>
                                     )}
                                 </label>
 

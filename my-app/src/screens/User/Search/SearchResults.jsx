@@ -1,10 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { SearchBar } from '../../../components';
-import NewsCard from '../../../components/NewsCard/NewsCard';
-import AchievementCard from '../../../components/AchievementCard/AchievementCard';
-import ActivityCard from '../../../components/ActivityCard/ActivityCard';
-import { activitiesAPI, newsAPI } from '../../../services/api';
+import { SearchBar, PostCard } from '../../../components';
+import { postsAPI } from '../../../services/api';
 import './SearchResults.css';
 
 function normalizeText(value) {
@@ -15,8 +12,8 @@ function normalizeText(value) {
         .trim();
 }
 
-function getAnnualPostRoute(item) {
-    return `/activity/${item.category_slug}/post/${item.id}`;
+function getAnnualEventRoute(item) {
+    return `/event/${item.category_slug}/post/${item.id}`;
 }
 
 function matchesQuery(item, normalizedQuery, fields) {
@@ -35,7 +32,6 @@ export default function SearchResults() {
     const [achievements, setAchievements] = useState([]);
     const [annualPosts, setAnnualPosts] = useState([]);
     const [nonAnnualPosts, setNonAnnualPosts] = useState([]);
-    const [activities, setActivities] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -47,13 +43,12 @@ export default function SearchResults() {
 
         setLoading(true);
         Promise.all([
-            newsAPI.getAll({ page_type: 'news', limit: 200 }),
-            newsAPI.getAll({ page_type: 'achievement', limit: 200 }),
-            newsAPI.getAll({ page_type: 'activity_annual', limit: 200 }),
-            newsAPI.getAll({ page_type: 'activity_non_annual', limit: 200 }),
-            activitiesAPI.getAll({ limit: 200 }),
+            postsAPI.getAll({ page_type: 'news', limit: 200 }),
+            postsAPI.getAll({ page_type: 'achievement', limit: 200 }),
+            postsAPI.getAll({ page_type: 'event_annual', limit: 200 }),
+            postsAPI.getAll({ page_type: 'event_non_annual', limit: 200 }),
         ])
-            .then(([newsData, achievementData, annualData, nonAnnualData, activityData]) => {
+            .then(([newsData, achievementData, annualData, nonAnnualData]) => {
                 if (!isMounted) {
                     return;
                 }
@@ -62,7 +57,6 @@ export default function SearchResults() {
                 setAchievements(Array.isArray(achievementData) ? achievementData : []);
                 setAnnualPosts(Array.isArray(annualData) ? annualData : []);
                 setNonAnnualPosts(Array.isArray(nonAnnualData) ? nonAnnualData : []);
-                setActivities(Array.isArray(activityData) ? activityData : []);
             })
             .catch(() => {
                 if (!isMounted) {
@@ -73,7 +67,6 @@ export default function SearchResults() {
                 setAchievements([]);
                 setAnnualPosts([]);
                 setNonAnnualPosts([]);
-                setActivities([]);
             })
             .finally(() => {
                 if (isMounted) {
@@ -108,16 +101,10 @@ export default function SearchResults() {
         [nonAnnualPosts, normalizedQuery]
     );
 
-    const filteredActivities = useMemo(
-        () => activities.filter((item) => matchesQuery(item, normalizedQuery, ['title', 'description', 'content', 'category_name', 'location', 'organizer'])),
-        [activities, normalizedQuery]
-    );
-
     const totalResults = filteredNews.length
         + filteredAchievements.length
         + filteredAnnualPosts.length
-        + filteredNonAnnualPosts.length
-        + filteredActivities.length;
+        + filteredNonAnnualPosts.length;
 
     const handleSubmit = () => {
         const trimmedValue = inputValue.trim();
@@ -133,7 +120,7 @@ export default function SearchResults() {
                     <p className="search-results-page__summary">
                         {query
                             ? `Đang hiển thị ${totalResults} kết quả cho từ khóa "${query}".`
-                            : 'Nhập từ khóa để tìm tin tức, thành tích và hoạt động.'}
+                            : 'Nhập từ khóa để tìm tin tức, thành tích và sự kiện.'}
                     </p>
                     <div className="search-results-page__searchbar">
                         <SearchBar
@@ -174,15 +161,15 @@ export default function SearchResults() {
                         {filteredAnnualPosts.length > 0 && (
                             <section className="search-results-section">
                                 <div className="search-results-section__header">
-                                    <h2>Hoạt động thường niên</h2>
+                                    <h2>Sự kiện thường niên</h2>
                                     <span>{filteredAnnualPosts.length} kết quả</span>
                                 </div>
-                                <div className="search-results-grid search-results-grid--news">
+                                <div className="search-results-grid search-results-grid--event">
                                     {filteredAnnualPosts.map((item) => (
-                                        <NewsCard
+                                        <PostCard
                                             key={`annual-post-${item.id}`}
-                                            to={getAnnualPostRoute(item)}
-                                            image={item.thumbnail || `https://picsum.photos/400/250?random=${item.id}`}
+                                            to={getAnnualEventRoute(item)}
+                                            image={item.thumbnail}
                                             category={item.category_name || ''}
                                             date={item.published_at || item.created_at}
                                             title={item.title || ''}
@@ -196,15 +183,15 @@ export default function SearchResults() {
                         {filteredNonAnnualPosts.length > 0 && (
                             <section className="search-results-section">
                                 <div className="search-results-section__header">
-                                    <h2>Hoạt động không thường niên</h2>
+                                    <h2>Sự kiện không thường niên</h2>
                                     <span>{filteredNonAnnualPosts.length} kết quả</span>
                                 </div>
-                                <div className="search-results-grid search-results-grid--news">
+                                <div className="search-results-grid search-results-grid--event">
                                     {filteredNonAnnualPosts.map((item) => (
-                                        <NewsCard
+                                        <PostCard
                                             key={`non-annual-post-${item.id}`}
-                                            to={`/activity/non-annual/${item.id}`}
-                                            image={item.thumbnail || `https://picsum.photos/400/250?random=${item.id}`}
+                                            to={`/event/non-annual/${item.id}`}
+                                            image={item.thumbnail}
                                             category={item.category_name || ''}
                                             date={item.published_at || item.created_at}
                                             title={item.title || ''}
@@ -223,10 +210,10 @@ export default function SearchResults() {
                                 </div>
                                 <div className="search-results-grid search-results-grid--news">
                                     {filteredNews.map((item) => (
-                                        <NewsCard
+                                        <PostCard
                                             key={`news-${item.id}`}
                                             to={`/news/${item.id}`}
-                                            image={item.thumbnail || `https://picsum.photos/400/250?random=${item.id}`}
+                                            image={item.thumbnail}
                                             category={item.category_name || ''}
                                             date={item.published_at || item.created_at}
                                             title={item.title || ''}
@@ -245,10 +232,14 @@ export default function SearchResults() {
                                 </div>
                                 <div className="search-results-grid search-results-grid--achievement">
                                     {filteredAchievements.map((item) => (
-                                        <AchievementCard
+                                        <PostCard
                                             key={`achievement-${item.id}`}
-                                            achievement={item}
                                             to={`/achievement/${item.id}`}
+                                            image={item.thumbnail}
+                                            category={item.category_name || ''}
+                                            date={item.published_at || item.created_at}
+                                            title={item.title || ''}
+                                            summary={item.summary || ''}
                                         />
                                     ))}
                                 </div>

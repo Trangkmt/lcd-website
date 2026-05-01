@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import './AnnualActivity.css';
-import { categoriesAPI, newsAPI } from '../../../../services/api';
+import './AnnualEvent.css';
+import { categoriesAPI, postsAPI } from '../../../../services/api';
 import { ArrowRightIcon } from '../../../../SvgIcons';
 
-const AnnualActivity = () => {
+const AnnualEvent = () => {
     const [categories, setCategories] = useState([]);
     const [featuredByCategory, setFeaturedByCategory] = useState({});
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         Promise.all([
-            categoriesAPI.getAll({ page_type: 'activity_annual' }),
-            newsAPI.getAll({ page_type: 'activity_annual', is_featured: true, limit: 500 }),
+            categoriesAPI.getAll({ page_type: 'event_annual' }),
+            postsAPI.getAll({ page_type: 'event_annual', is_featured: true, limit: 500 }),
         ])
             .then(([categoryData, featuredPosts]) => {
                 const annualCategories = (Array.isArray(categoryData) ? categoryData : []).filter(
-                    category => String(category.page_type || '').toLowerCase() === 'activity_annual'
+                    category => String(category.page_type || '').toLowerCase() === 'event_annual'
                 );
                 setCategories(annualCategories);
 
@@ -36,10 +36,10 @@ const AnnualActivity = () => {
     }, []);
 
     return (
-        <div className="annual-activity-page">
-            <div className="annual-activity-content">
+        <div className="annual-event-page">
+            <div className="annual-event-content">
                 <div className="content-wrapper">
-                    <h1 className="annual-title">HOẠT ĐỘNG THƯỜNG NIÊN</h1>
+                    <h1 className="annual-title">SỰ KIỆN THƯỜNG NIÊN</h1>
                     <p className="annual-subtitle">
                         Các sự kiện thường niên nổi bật của Liên Chi Đoàn Khoa Công nghệ Thông tin
                     </p>
@@ -47,7 +47,7 @@ const AnnualActivity = () => {
                     {loading ? (
                         <p className="annual-loading">Đang tải...</p>
                     ) : categories.length === 0 ? (
-                        <p className="annual-loading" style={{ color: '#888' }}>Chưa có hoạt động thường niên nào.</p>
+                        <p className="annual-loading" style={{ color: '#888' }}>Chưa có sự kiện thường niên nào.</p>
                     ) : (
                         <div className="annual-events-grid">
                             {categories.map(cat => {
@@ -57,7 +57,7 @@ const AnnualActivity = () => {
                                 return (
                                     <Link
                                         key={cat.id}
-                                        to={`/activity/${cat.slug}`}
+                                        to={`/event/${cat.slug}`}
                                         className="annual-event-card"
                                     >
                                         <div className="annual-event-image">
@@ -87,4 +87,4 @@ const AnnualActivity = () => {
     );
 };
 
-export default AnnualActivity;
+export default AnnualEvent;

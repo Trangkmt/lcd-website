@@ -9,19 +9,19 @@ const Header = () => {
     const location = useLocation();
     const [searchValue, setSearchValue] = useState('');
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [isMobileActivityOpen, setIsMobileActivityOpen] = useState(false);
+    const [isMobileEventOpen, setIsMobileEventOpen] = useState(false);
 
     const menuItems = [
         { id: 2, label: "Cơ cấu tổ chức", path: "/organization" },
-        { id: 3, label: "Hoạt động", path: "/activity", hasDropdown: true },
+        { id: 3, label: "Sự kiện", path: "/event", hasDropdown: true },
         { id: 4, label: "Tin tức", path: "/news" },
         { id: 5, label: "Thành tích", path: "/achievement" },
         { id: 6, label: "Liên hệ", path: "/contact" },
     ];
 
-    const activityDropdownItems = [
-        { label: "Hoạt động thường niên", path: "/activity/annual" },
-        { label: "Hoạt động không thường niên", path: "/activity/non-annual" },
+    const eventDropdownItems = [
+        { label: "Sự kiện thường niên", path: "/event/annual" },
+        { label: "Sự kiện không thường niên", path: "/event/non-annual" },
     ];
 
     const handleMenuItemClick = useCallback((item) => {
@@ -34,7 +34,7 @@ const Header = () => {
 
     useEffect(() => {
         setIsMobileMenuOpen(false);
-        setIsMobileActivityOpen(false);
+        setIsMobileEventOpen(false);
     }, [location.pathname]);
 
     useEffect(() => {
@@ -118,12 +118,12 @@ const Header = () => {
                                             <img className="menu-item__icon" src={IconRightArrow} alt="" />
                                         </div>
                                     </div>
-                                    <div className="activity-dropdown">
-                                        {activityDropdownItems.map((dropItem, i) => (
+                                    <div className="event-dropdown">
+                                        {eventDropdownItems.map((dropItem, i) => (
                                             <Link
                                                 key={i}
                                                 to={dropItem.path}
-                                                className="activity-dropdown__item"
+                                                className="event-dropdown__item"
                                             >
                                                 {dropItem.label}
                                             </Link>
@@ -202,15 +202,15 @@ const Header = () => {
                     <button
                         type="button"
                         className="header__mobile-link header__mobile-link--toggle"
-                        onClick={() => setIsMobileActivityOpen((prev) => !prev)}
-                        aria-expanded={isMobileActivityOpen}
+                        onClick={() => setIsMobileEventOpen((prev) => !prev)}
+                        aria-expanded={isMobileEventOpen}
                     >
-                        <span>Hoạt động</span>
-                        <span className="header__mobile-toggle-arrow">{isMobileActivityOpen ? '−' : '+'}</span>
+                        <span>Sự kiện</span>
+                        <span className="header__mobile-toggle-arrow">{isMobileEventOpen ? '−' : '+'}</span>
                     </button>
-                    {isMobileActivityOpen && (
+                    {isMobileEventOpen && (
                         <div className="header__mobile-submenu">
-                            {activityDropdownItems.map((dropItem, i) => (
+                            {eventDropdownItems.map((dropItem, i) => (
                                 <Link key={i} to={dropItem.path} className="header__mobile-sublink">
                                     {dropItem.label}
                                 </Link>

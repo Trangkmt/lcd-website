@@ -74,7 +74,7 @@
     --searchbar-radius: 0;
 }
 
-.app-searchbar--activity {
+.app-searchbar--event {
     --searchbar-flex: 1;
     --searchbar-max-width: 720px;
     --searchbar-height: 50px;
@@ -141,14 +141,14 @@
     .app-searchbar--toolbar,
     .app-searchbar--toolbar-wide,
     .app-searchbar--page,
-    .app-searchbar--activity {
+    .app-searchbar--event {
         --searchbar-flex: 1 1 100%;
         --searchbar-width: 100%;
         --searchbar-min-width: 0;
         --searchbar-max-width: none;
     }
 
-    .app-searchbar--activity {
+    .app-searchbar--event {
         --searchbar-height: 46px;
         --searchbar-padding: 0 14px;
     }
@@ -157,7 +157,7 @@
 @media (max-width: 480px) {
 
     .app-searchbar--compact,
-    .app-searchbar--activity,
+    .app-searchbar--event,
     .app-searchbar--page,
     .app-searchbar--toolbar,
     .app-searchbar--toolbar-wide {

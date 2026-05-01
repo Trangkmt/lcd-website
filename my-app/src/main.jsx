@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Layout } from './components';
 import { Homepage } from './screens/User/Homepage';
-import { Activity, AnnualActivity, AnnualActivityDetail, NonAnnualActivity, NonAnnualActivityDetail, PostDetail } from './screens/User/Activity';
+import { Event, AnnualEvent, AnnualEventDetail, NonAnnualEvent, NonAnnualEventDetail, PostDetail } from './screens/User/Event';
 import OrganizationalStructure from './screens/User/OrganizationalStructure';
 import Contact from './screens/User/Contact';
 import { News, NewsDetail } from './screens/User/News';
@@ -16,8 +16,8 @@ import {
   CategoriesManagement,
   MembersManagement,
   ContactsManagement,
-  OtherUtilities,
   TimelineManagement,
+  OtherUtilities,
   AccountInfo
 } from './screens/Admin';
 import { canAccessAdminPath, getDefaultAdminPath, getStoredAdminUser } from './utils/adminPermissions';
@@ -45,12 +45,12 @@ const App = () => {
         {/* Public Routes */}
         <Route path="/" element={<Layout><Homepage /></Layout>} />
         <Route path="/organization" element={<Layout><OrganizationalStructure /></Layout>} />
-        <Route path="/activity" element={<Layout><Activity /></Layout>} />
-        <Route path="/activity/annual" element={<Layout><AnnualActivity /></Layout>} />
-        <Route path="/activity/non-annual" element={<Layout><NonAnnualActivity /></Layout>} />
-        <Route path="/activity/non-annual/:id" element={<Layout><NonAnnualActivityDetail /></Layout>} />
-        <Route path="/activity/:eventName" element={<Layout><AnnualActivityDetail /></Layout>} />
-        <Route path="/activity/:eventName/post/:postId" element={<Layout><PostDetail /></Layout>} />
+        <Route path="/event" element={<Layout><Event /></Layout>} />
+        <Route path="/event/annual" element={<Layout><AnnualEvent /></Layout>} />
+        <Route path="/event/non-annual" element={<Layout><NonAnnualEvent /></Layout>} />
+        <Route path="/event/non-annual/:id" element={<Layout><NonAnnualEventDetail /></Layout>} />
+        <Route path="/event/:eventName" element={<Layout><AnnualEventDetail /></Layout>} />
+        <Route path="/event/:eventName/post/:postId" element={<Layout><PostDetail /></Layout>} />
         <Route path="/news" element={<Layout><News /></Layout>} />
         <Route path="/news/:id" element={<Layout><NewsDetail /></Layout>} />
         <Route path="/achievement" element={<Layout><Achievement /></Layout>} />

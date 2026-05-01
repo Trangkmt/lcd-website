@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './News.css';
-import { newsAPI, categoriesAPI } from '../../../services/api';
-import NewsCard from '../../../components/NewsCard/NewsCard';
-import { SearchBar } from '../../../components';
+import { postsAPI, categoriesAPI } from '../../../services/api';
+import { SearchBar, PostCard } from '../../../components';
 import { SettingsIcon, ChevronLeftIcon, ChevronRightIcon } from '../../../SvgIcons';
 
 const asTimestamp = (item) => {
@@ -23,7 +22,7 @@ const News = () => {
 
     useEffect(() => {
         Promise.all([
-            newsAPI.getAll({ page_type: 'news', limit: 100 }),
+            postsAPI.getAll({ page_type: 'news', limit: 100 }),
             categoriesAPI.getAll({ page_type: 'news' }),
         ])
             .then(([newsData, catsData]) => {
@@ -163,14 +162,14 @@ const News = () => {
                 {/* News Grid */}
                 <div className="news-grid">
                     {filtered.map(item => (
-                        <NewsCard
+                        <PostCard
                             key={item.id}
                             to={`/news/${item.id}`}
-                            image={item.thumbnail || `https://picsum.photos/400/250?random=${item.id}`}
+                            image={item.thumbnail || ''}
                             category={item.category_name || ''}
                             date={item.published_at || item.created_at}
                             title={item.title || ''}
-                            summary={item.summary || ''}
+                            description={item.summary || ''}
                         />
                     ))}
                 </div>

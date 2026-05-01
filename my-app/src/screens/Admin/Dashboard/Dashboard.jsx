@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import './Dashboard.css';
-import { newsAPI, usersAPI, contactAPI, categoriesAPI, timelineAPI } from '../../../services/api';
+import { postsAPI, usersAPI, contactAPI, categoriesAPI, timelineAPI } from '../../../services/api';
 import {
     PostIcon,
     HourglassIcon,
@@ -43,16 +43,20 @@ export default function Dashboard() {
                 setTimelineEvents(Array.isArray(timelineData) ? timelineData : []);
 
                 if (showAdminOverview) {
-                    const [posts, users, contacts, cats] = await Promise.all([
-                        newsAPI.getAll({ limit: 500, include_unpublished: true }),
+                    const [postsRes, usersRes, contactsRes, catsRes] = await Promise.allSettled([
+                        postsAPI.getAll({ limit: 500, include_unpublished: true }),
                         usersAPI.getAll(),
                         contactAPI.getAll({ limit: 100 }),
                         categoriesAPI.getAll(),
                     ]);
-                    setAllPosts(Array.isArray(posts) ? posts : []);
-                    setAllUsers(Array.isArray(users) ? users : []);
-                    setAllContacts(Array.isArray(contacts) ? contacts : []);
-                    setCategories(Array.isArray(cats) ? cats : []);
+                    setAllPosts(postsRes.status === 'fulfilled' && Array.isArray(postsRes.value) ? postsRes.value : []);
+                    setAllUsers(usersRes.status === 'fulfilled' && Array.isArray(usersRes.value) ? usersRes.value : []);
+                    setAllContacts(contactsRes.status === 'fulfilled' && Array.isArray(contactsRes.value) ? contactsRes.value : []);
+                    setCategories(catsRes.status === 'fulfilled' && Array.isArray(catsRes.value) ? catsRes.value : []);
+
+                    if (contactsRes.status === 'rejected') {
+                        console.warn('Không thể tải liên hệ:', contactsRes.reason?.message);
+                    }
                 } else {
                     setAllPosts([]);
                     setAllUsers([]);
@@ -250,13 +254,13 @@ export default function Dashboard() {
                             <div className="card-header">
                                 <h2 className="card-title">Truy cập nhanh</h2>
                             </div>
-                            <div className="activities-list">
+                            <div className="events-list">
                                 {quickLinks.map((item, idx) => (
-                                    <a key={idx} href={item.href} className="activity-item" style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>
-                                        <div className="activity-dot"></div>
-                                        <div className="activity-info">
-                                            <p className="activity-action">
-                                                <span className="activity-icon" aria-hidden="true"><item.icon /></span>
+                                    <a key={idx} href={item.href} className="event-item" style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>
+                                        <div className="event-dot"></div>
+                                        <div className="event-info">
+                                            <p className="event-action">
+                                                <span className="event-icon" aria-hidden="true"><item.icon /></span>
                                                 {item.label}
                                             </p>
                                         </div>

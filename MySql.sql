@@ -16,7 +16,7 @@ DROP TABLE IF EXISTS contact_info;
 DROP TABLE IF EXISTS user_teams;
 DROP TABLE IF EXISTS teams;
 DROP TABLE IF EXISTS timeline_events;
-DROP TABLE IF EXISTS activities;
+
 DROP TABLE IF EXISTS documents;
 DROP TABLE IF EXISTS posts;
 DROP TABLE IF EXISTS post_templates;
@@ -76,28 +76,9 @@ CREATE TABLE users (
 INSERT INTO users (id, username, password, email, full_name, avatar_url, role, member_type, student_code, class_name, is_active, created_at, updated_at) VALUES
 (1, 'admin', '123456', 'admin@myapp.com', 'Nguyễn Văn Admin', NULL, 'admin_full', 'teacher', NULL, NULL, TRUE, '2026-04-24 10:28:01', '2026-04-30 20:28:44'),
 (2, 'bi-thu-fit', '123456', 'bithu.fit@neu.edu.vn', 'TS. Nguyễn Văn A', NULL, 'utility_only', 'teacher', NULL, NULL, TRUE, '2026-04-24 10:28:01', '2026-04-30 20:28:44'),
-(3, 'khanhtran4work-5769', '11236131', 'khanhtran4work@gmail.com', 'Trần Minh Khánh', NULL, 'post_author', 'student', '11236131', 'CTT65A', TRUE, '2026-04-24 10:56:08', '2026-04-25 17:07:19'),
-(4, 'phule.fit-4773', '11236180', 'phule.fit@gmail.com', 'Lê Văn Phú', 'https://res.cloudinary.com/dcny8f58b/image/upload/v1777029120/lcd/member-avatar/hyz5nnuwq6ec7ctn3ntq.jpg', 'post_author', 'student', '11236180', 'CTT65B', TRUE, '2026-04-24 10:56:09', '2026-04-24 11:13:30'),
-(5, 'duongkhanhly411-5110', '11243979', 'duongkhanhly411@gmail.com', 'Dương Khánh Ly', 'https://res.cloudinary.com/dcny8f58b/image/upload/v1777029110/lcd/member-avatar/qzguzzvlpz2rxstnj7zi.webp', 'post_author', 'student', '11243979', 'CNTT66A', TRUE, '2026-04-24 10:56:10', '2026-04-24 11:13:24'),
-(6, 'duynhivu2009-1499', '11247423', 'duynhivu2009@gmail.com', 'Vũ Linh Nhi', 'https://res.cloudinary.com/dcny8f58b/image/upload/v1777028891/lcd/member-avatar/vtylykopccwg33szlu4e.webp', 'post_author', 'student', '11247423', 'KTPM66', TRUE, '2026-04-24 10:56:11', '2026-04-24 11:13:42'),
-(7, 'khuatminhtrang2005-1104', '11236221', 'khuatminhtrang2005@gmail.com', 'Khuất Minh Trang', NULL, 'post_author', 'student', '11236221', 'CNTT65C', TRUE, '2026-04-24 10:56:12', '2026-04-24 10:56:12'),
-(8, 'misfitv9-7594', '11223144', 'misfitv9@gmail.com', 'Bùi Đức Kiên', NULL, 'post_author', 'student', '11223144', 'CNTT64B', TRUE, '2026-04-24 10:56:14', '2026-04-24 10:56:14'),
-(9, 'khanhelsing749-7123', '11223072', 'khanhelsing749@gmail.com', 'Phạm Hà Nam Khánh', NULL, 'post_author', 'student', '11223072', 'CNTT64A', TRUE, '2026-04-24 10:56:15', '2026-04-24 10:56:15'),
-(10, 'minhthu747032-6923', '11244037', 'minhthu747032@gmail.com', 'Nguyễn Thị Minh Thư', NULL, 'post_author', 'student', '11244037', 'CNTT65B', TRUE, '2026-04-24 10:56:16', '2026-04-24 11:02:20'),
-(11, 'phamanh30102006-8900', '11243754', 'phamanh30102006@gmail.com', 'Phạm Phương Anh', NULL, 'post_author', 'student', '11243754', 'KHMT66', TRUE, '2026-04-24 10:56:17', '2026-04-24 10:56:17'),
-(12, 'trananhquan962006-5532', '11244021', 'trananhquan962006@gail.com', 'Trần Anh Quân', NULL, 'post_author', 'student', '11244021', 'CNTT66C', TRUE, '2026-04-24 10:56:18', '2026-04-24 10:56:18'),
-(13, 'phucluana1-8476', '11247407', 'phucluana1@gmail.com', 'Đồng Phúc Luận', NULL, 'post_author', 'student', '11247407', 'KTPM66', TRUE, '2026-04-24 10:56:20', '2026-04-24 10:56:20'),
-(14, 'mailenguyenthao122-4013', '11244031', 'mailenguyenthao122@gmail.com', 'Mai Lê Nguyên Thảo', NULL, 'post_author', 'student', '11244031', 'CNTT66A', TRUE, '2026-04-24 10:56:21', '2026-04-24 10:56:21'),
-(15, 'Hakiirun-7448', '11256242', 'Hakiirun@gmail.com', 'Trần Khánh Ngọc', NULL, 'post_author', 'student', '11256242', 'CNTT67A', TRUE, '2026-04-24 10:56:22', '2026-04-24 10:56:22'),
-(16, 'kth27148-9709', '11253135', 'kth27148@gmail.com', 'Lê Phương Hoa', NULL, 'post_author', 'student', '11253135', 'ATTT67', TRUE, '2026-04-24 10:56:23', '2026-04-24 10:56:23'),
-(17, 'phanhphanh180507-5337', '11250274', 'phanhphanh180507@gmail.com', 'Đồng Phương Anh', NULL, 'post_author', 'student', '11250274', 'KHMT67', TRUE, '2026-04-24 10:56:24', '2026-04-24 10:56:24'),
-(18, 'vnglam07-5214', '11254154', 'vnglam07@gmail.com', 'Vũ Nguyên Lâm', NULL, 'post_author', 'student', '11254154', 'KTPM67A', TRUE, '2026-04-24 10:56:26', '2026-04-24 10:56:26'),
-(19, 'hacnguyet34-3098', '11250341', 'hacnguyet34@gmail.com', 'Khương Nguyệt Anh', NULL, 'utility_only', 'student', '11250341', 'KTPM67A', TRUE, '2026-04-24 10:56:27', '2026-04-25 13:57:21'),
-(20, 'nghamy251007-1932', '11255715', 'nghamy251007@gmail.com', 'Nguyễn Hà My', NULL, 'post_author', 'student', '11255715', 'KTPM67B', TRUE, '2026-04-24 10:56:28', '2026-04-24 10:56:28'),
-(21, 'ngducthinh140507-4394', '11257819', 'ngducthinh140507@gmail.com', 'Nguyễn Đức Thịnh', NULL, 'utility_only', 'student', '11257819', 'CNTT67B', TRUE, '2026-04-24 10:56:29', '2026-04-25 13:43:56'),
-(22, 'nhatanh05012007-4875', '11250782', 'nhatanh05012007@gmail.com', 'Nguyễn Thừa Nhật Anh', NULL, 'utility_only', 'student', '11250782', 'KTPM67B', TRUE, '2026-04-24 10:56:30', '2026-04-29 17:05:43'),
-(23, 'thuyvu123456', 'thuyvu', 'thuyvu@gmail.com', 'Vũ Thị Thuỷ', NULL, 'admin_full', 'student', '11235671', 'CNTT65B', TRUE, '2026-04-24 11:15:02', '2026-04-26 13:37:09'),
-(24, 'nth123456', 'nth', 'nth@gmail.com', 'Nguyễn Thanh Hoa', NULL, 'post_author', 'teacher', NULL, NULL, TRUE, '2026-04-25 14:07:06', '2026-04-25 14:07:06');
+(3, 'khuatminhtrang2005', '11236221', 'khuatminhtrang2005@gmail.com', 'Khuất Minh Trang', NULL, 'post_author', 'student', '11236221', 'CNTT65C', TRUE, '2026-04-24 10:56:12', '2026-04-24 10:56:12'),
+(4, 'thuyvu123456', 'thuyvu', 'thuyvu@gmail.com', 'Vũ Thị Thuỷ', NULL, 'admin_full', 'student', '11235671', 'CNTT65B', TRUE, '2026-04-24 11:15:02', '2026-04-26 13:37:09'),
+(5, 'nth123456', 'nth', 'nth@gmail.com', 'Nguyễn Thanh Hoa', NULL, 'post_author', 'teacher', NULL, NULL, TRUE, '2026-04-25 14:07:06', '2026-04-25 14:07:06');
 
 
 -- ================================================
@@ -116,27 +97,9 @@ CREATE TABLE user_teams (
 INSERT INTO user_teams (user_id, team_id, position) VALUES
 (1, 1, 'admin hệ thống'),
 (2, 1, 'bí thư'),
-(3, 1, 'phó bí thư'),
-(4, 4, 'phó ban'), (4, 1, 'thành viên'),
-(5, 4, 'phó ban'), (5, 1, 'thành viên'),
-(6, 4, 'trưởng ban'), (6, 1, 'thành viên'),
-(7, 4, 'thành viên'),
-(8, 4, 'thành viên'),
-(9, 4, 'thành viên'),
-(10, 4, 'thành viên'),
-(11, 4, 'thành viên'),
-(12, 4, 'thành viên'),
-(13, 4, 'thành viên'),
-(14, 4, 'thành viên'),
-(15, 4, 'thành viên'),
-(16, 4, 'thành viên'),
-(17, 4, 'thành viên'),
-(18, 4, 'thành viên'),
-(19, 4, 'thành viên'),
-(20, 4, 'thành viên'),
-(21, 4, 'thành viên'),
-(22, 3, 'phó ban'),
-(23, 5, 'thành viên'), (23, 3, 'trưởng ban');
+(3, 2, 'trường ban'),
+(4, 3, 'phó ban'),
+
 
 
 -- ================================================
@@ -161,19 +124,19 @@ INSERT INTO categories (id,name,slug,page_type,description,intro_image,parent_id
 (1,'Tin tức','tin-tuc','news','Tin tức của Liên Chi đoàn',NULL,NULL),
 (2,'Thông báo','thong-bao','news','Thông báo chính thức',NULL,NULL),
 (3,'Sự kiện','su-kien','news','Các sự kiện',NULL,NULL),
-(4,'Hoạt động học thuật','hoc-thuat','activity_non_annual','Hoạt động học thuật',NULL,NULL),
-(5,'Hoạt động tình nguyện','tinh-nguyen','activity_non_annual','Hoạt động cộng đồng',NULL,NULL),
-(6,'Hoạt động thể thao','the-thao','activity_non_annual','Hoạt động thể thao',NULL,NULL),
+(4,'Hoạt động học thuật','hoc-thuat','event_non_annual','Hoạt động học thuật',NULL,NULL),
+(5,'Hoạt động tình nguyện','tinh-nguyen','event_non_annual','Hoạt động cộng đồng',NULL,NULL),
+(6,'Hoạt động thể thao','the-thao','event_non_annual','Hoạt động thể thao',NULL,NULL),
 (7,'Thành tích','thanh-tich','achievement','Thành tích nổi bật',NULL,NULL),
 (8,'Tài liệu','tai-lieu','document','Tài liệu',NULL,NULL),
-(9,'Chương trình thường niên','thuong-nien','activity_annual','Hoạt động thường niên',NULL,NULL),
+(9,'Chương trình thường niên','thuong-nien','event_annual','Hoạt động thường niên',NULL,NULL),
 (10,'Khác','khac','news','Danh mục khác',NULL,NULL),
-(11,'Chào tân sinh viên','chao-tan-sinh-vien','activity_annual','Lễ chào tân sinh viên khóa mới',NULL,9),
-(12,'Quân sự','quan-su','activity_annual','Quân sự huấn luyện sinh viên',NULL,9),
-(13,'FIT Cup','fit-cup','activity_annual','Giải bóng đá FIT Cup',NULL,9),
-(14,'Prom','prom','activity_annual','Lễ prom sinh viên',NULL,9),
-(15,'Talkshow','talkshow','activity_annual','Talkshow và giao lưu',NULL,9),
-(16,'Cuộc thi','cuoc-thi','activity_annual','Các cuộc thi và hackathon',NULL,9);
+(11,'Chào tân sinh viên','chao-tan-sinh-vien','event_annual','Lễ chào tân sinh viên khóa mới',NULL,9),
+(12,'Quân sự','quan-su','event_annual','Quân sự huấn luyện sinh viên',NULL,9),
+(13,'FIT Cup','fit-cup','event_annual','Giải bóng đá FIT Cup',NULL,9),
+(14,'Prom','prom','event_annual','Lễ prom sinh viên',NULL,9),
+(15,'Talkshow','talkshow','event_annual','Talkshow và giao lưu',NULL,9),
+(16,'Cuộc thi','cuoc-thi','event_annual','Các cuộc thi và hackathon',NULL,9);
 
 
 -- ================================================
@@ -327,38 +290,6 @@ CREATE TABLE documents (
 );
 
 
--- ================================================
--- ACTIVITIES
--- ================================================
-CREATE TABLE activities (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    slug VARCHAR(255) NOT NULL UNIQUE,
-    description TEXT,
-    content LONGTEXT,
-    location VARCHAR(255),
-    start_date DATETIME,
-    end_date DATETIME,
-    thumbnail VARCHAR(255),
-    images TEXT,
-    organizer VARCHAR(255),
-    category_id INT,
-    created_by INT,
-    view_count INT DEFAULT 0,
-    is_featured BOOLEAN DEFAULT FALSE,
-    is_published BOOLEAN DEFAULT TRUE,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (category_id) REFERENCES categories(id),
-    FOREIGN KEY (created_by) REFERENCES users(id)
-);
-
-INSERT INTO activities (title,slug,description,location,start_date,end_date,category_id,created_by) VALUES
-('Lễ chào tân sinh viên','chao-tan','Chương trình chào tân sinh viên khóa 25 được tổ chức nhằm giúp các bạn sinh viên mới làm quen với môi trường đại học.','Hội trường chính','2025-09-01','2025-09-02',11,1),
-('Quân sự','quan-su','Chương trình quân sự huấn luyện sinh viên khóa mới, giúp các bạn nâng cao tinh thần kỷ luật và thể lực.','Sân trường','2025-09-05','2025-09-10',12,1),
-('FIT Cup','fit-cup','Giải bóng đá FIT Cup thường niên, đây là sân chơi lớn nhất của sinh viên khoa CNTT mỗi năm.','Sân bóng đá UTE','2025-10-01','2025-10-20',13,1),
-('Prom sinh viên','prom-2025','Lễ prom sinh viên khoa CNTT - sự kiện lớn nhất của năm học với sự tham gia của hàng trăm bạn sinh viên.','Sân khấu trước hội trường','2025-12-15','2025-12-15',14,1),
-('Talkshow công nghệ','talkshow-tech','Talkshow về xu hướng công nghệ mới, các chuyên gia chia sẻ kinh nghiệm và cơ hội nghề nghiệp.','Phòng hội thảo','2025-05-20','2025-05-20',15,1);
 
 
 -- ================================================
@@ -421,9 +352,7 @@ CREATE INDEX idx_posts_published ON posts(is_published, published_at);
 CREATE INDEX idx_posts_slug ON posts(slug);
 CREATE INDEX idx_documents_category ON documents(category_id);
 CREATE INDEX idx_documents_uploaded_by ON documents(uploaded_by);
-CREATE INDEX idx_activities_category ON activities(category_id);
-CREATE INDEX idx_activities_created_by ON activities(created_by);
-CREATE INDEX idx_activities_dates ON activities(start_date, end_date);
+
 CREATE INDEX idx_timeline_year_month_published ON timeline_events(year, month, is_published);
 CREATE INDEX idx_timeline_year_sort ON timeline_events(year, sort_order, month);
 CREATE INDEX idx_categories_slug ON categories(slug);

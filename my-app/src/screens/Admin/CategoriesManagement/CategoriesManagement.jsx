@@ -12,15 +12,15 @@ function slugify(str) {
 const PAGE_TABS = [
     { key: 'news', label: 'Tin tức', icon: NewsIcon },
     { key: 'achievement', label: 'Thành tích', icon: TrophyIcon },
-    { key: 'activity_annual', label: 'Hoạt động thường niên', icon: CalendarIcon },
-    { key: 'activity_non_annual', label: 'Hoạt động không thường niên', icon: TargetIcon },
+    { key: 'event_annual', label: 'Sự kiện thường niên', icon: CalendarIcon },
+    { key: 'event_non_annual', label: 'Sự kiện không thường niên', icon: TargetIcon },
 ];
 
 const PAGE_TYPE_LABELS = {
     news: 'Tin tức',
     achievement: 'Thành tích',
-    activity_annual: 'Hoạt động thường niên',
-    activity_non_annual: 'Hoạt động không thường niên',
+    event_annual: 'Sự kiện thường niên',
+    event_non_annual: 'Sự kiện không thường niên',
 };
 
 const resolveTabKey = (pageType, fallback = 'news') => {
@@ -29,7 +29,7 @@ const resolveTabKey = (pageType, fallback = 'news') => {
     }
 
     // Legacy value from old data model.
-    if (pageType === 'activity') {
+    if (pageType === 'event') {
         return fallback;
     }
 
@@ -46,7 +46,7 @@ const EMPTY_FORM = (page_type) => ({ name: '', slug: '', description: '', intro_
 export default function CategoriesManagement() {
     const { confirm, confirmModal } = useAdminConfirm();
     const [activeTab, setActiveTab] = useState('news');
-    const [categoriesByTab, setCategoriesByTab] = useState({ news: [], achievement: [], activity_annual: [], activity_non_annual: [] });
+    const [categoriesByTab, setCategoriesByTab] = useState({ news: [], achievement: [], event_annual: [], event_non_annual: [] });
     const [loadingTab, setLoadingTab] = useState({});
     const [showModal, setShowModal] = useState(false);
     const [editingCategory, setEditingCategory] = useState(null);
@@ -56,10 +56,10 @@ export default function CategoriesManagement() {
     useEffect(() => { fetchAllCategories(); }, []);
 
     async function fetchAllCategories() {
-        setLoadingTab({ news: true, achievement: true, activity_annual: true, activity_non_annual: true });
+        setLoadingTab({ news: true, achievement: true, event_annual: true, event_non_annual: true });
         try {
             const data = await categoriesAPI.getAll(); 
-            const newCategoriesByTab = { news: [], achievement: [], activity_annual: [], activity_non_annual: [] };
+            const newCategoriesByTab = { news: [], achievement: [], event_annual: [], event_non_annual: [] };
             
             if (Array.isArray(data)) {
                 data.forEach(item => {

@@ -1,4 +1,4 @@
-import { newsAPI } from '../../services/api';
+import { postsAPI } from '../../services/api';
 import { canMutatePost, isAdminFull } from '../../utils/adminPermissions';
 
 export function slugifyPostTitle(value) {
@@ -90,7 +90,7 @@ export async function deletePostWithGuard({
         return false;
     }
 
-    await newsAPI.delete(id);
+    await postsAPI.delete(id);
     if (onSuccess) {
         await onSuccess(id);
     }

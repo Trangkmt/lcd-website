@@ -95,7 +95,7 @@ function apiFetch(url, options = {}) {
     }).then(handleResponse);
 }
 
-export const newsAPI = {
+export const postsAPI = {
     getAll: (params = {}) => apiFetch(`/posts?${new URLSearchParams(params)}`),
     getById: (id) => apiFetch(`/posts/${id}`),
     create: (data) => apiFetch('/posts', { method: 'POST', body: data }),
@@ -106,15 +106,12 @@ export const newsAPI = {
 export const usersAPI = {
     getPublic: () => apiFetch('/users/public'),
     getAll: () => apiFetch('/users'),
-    getById: (id) => apiFetch(`/users/${id}`),
     create: (data) => apiFetch('/users', { method: 'POST', body: data }),
     update: (id, data) => apiFetch(`/users/${id}`, { method: 'PUT', body: data }),
-    delete: (id) => apiFetch(`/users/${id}`, { method: 'DELETE' }),
 };
 
 export const categoriesAPI = {
     getAll: (params = {}) => apiFetch(`/categories?${new URLSearchParams(params)}`),
-    getById: (id) => apiFetch(`/categories/${id}`),
     getBySlug: (slug) => apiFetch(`/categories/slug/${slug}`),
     create: (data) => apiFetch('/categories', { method: 'POST', body: data }),
     update: (id, data) => apiFetch(`/categories/${id}`, { method: 'PUT', body: data }),
@@ -123,28 +120,17 @@ export const categoriesAPI = {
 
 export const contactAPI = {
     getAll: (params = {}) => apiFetch(`/contact?${new URLSearchParams(params)}`),
-    getById: (id) => apiFetch(`/contact/${id}`),
     create: (data) => apiFetch('/contact', { method: 'POST', body: data }),
     markAsRead: (id) => apiFetch(`/contact/${id}/read`, { method: 'PUT' }),
     markAsReplied: (id) => apiFetch(`/contact/${id}/reply`, { method: 'PUT' }),
     delete: (id) => apiFetch(`/contact/${id}`, { method: 'DELETE' }),
 };
 
-export const activitiesAPI = {
-    getAll: (params = {}) => apiFetch(`/activities?${new URLSearchParams(params)}`),
-    getById: (id) => apiFetch(`/activities/${id}`),
-    getBySlug: (slug) => apiFetch(`/activities/slug/${slug}`),
-    create: (data) => apiFetch('/activities', { method: 'POST', body: data }),
-    update: (id, data) => apiFetch(`/activities/${id}`, { method: 'PUT', body: data }),
-    delete: (id) => apiFetch(`/activities/${id}`, { method: 'DELETE' }),
-};
+
 
 export const teamsAPI = {
     getAll: () => apiFetch('/teams'),
     getById: (id) => apiFetch(`/teams/${id}`),
-    create: (data) => apiFetch('/teams', { method: 'POST', body: data }),
-    update: (id, data) => apiFetch(`/teams/${id}`, { method: 'PUT', body: data }),
-    delete: (id) => apiFetch(`/teams/${id}`, { method: 'DELETE' }),
 };
 
 export const authAPI = {
@@ -161,8 +147,6 @@ export const aiAPI = {
 export const postTemplatesAPI = {
     getAll: (params = {}) => apiFetch(`/post-templates?${new URLSearchParams(params)}`),
     create: (data) => apiFetch('/post-templates', { method: 'POST', body: data }),
-    update: (id, data) => apiFetch(`/post-templates/${id}`, { method: 'PUT', body: data }),
-    delete: (id) => apiFetch(`/post-templates/${id}`, { method: 'DELETE' }),
 };
 
 export const uploadsAPI = {

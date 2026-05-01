@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Achievement.css';
-import { newsAPI } from '../../../services/api';
-import AchievementCard from '../../../components/AchievementCard/AchievementCard';
-import { SearchBar } from '../../../components';
+import { postsAPI } from '../../../services/api';
+import { SearchBar, PostCard } from '../../../components';
 import { ChevronLeftIcon, ChevronRightIcon } from '../../../SvgIcons';
 
 const asTimestamp = (item) => {
@@ -19,7 +18,7 @@ const Achievement = () => {
     const [heroIndex, setHeroIndex] = useState(0);
 
     useEffect(() => {
-        newsAPI.getAll({ page_type: 'achievement', limit: 100 })
+        postsAPI.getAll({ page_type: 'achievement', limit: 100 })
             .then(data => setAchievements(Array.isArray(data) ? data : []))
             .catch(() => { })
             .finally(() => setLoading(false));
@@ -128,10 +127,14 @@ const Achievement = () => {
                 {/* Achievement Grid */}
                 <div className="achievement-grid">
                     {filtered.map(item => (
-                        <AchievementCard
+                        <PostCard
                             key={item.id}
-                            achievement={item}
                             to={`/achievement/${item.id}`}
+                            image={item.thumbnail}
+                            category={item.category_name}
+                            date={item.published_at || item.created_at}
+                            title={item.title}
+                            description={item.summary}
                         />
                     ))}
                 </div>

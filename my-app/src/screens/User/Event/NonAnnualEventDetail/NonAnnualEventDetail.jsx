@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { newsAPI } from '../../../../services/api';
+import { postsAPI } from '../../../../services/api';
 import { PostDetail as PostDetailComponent } from '../../../../components';
 
-const NonAnnualActivityDetail = () => {
+const NonAnnualEventDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [post, setPost] = useState(null);
@@ -13,10 +13,10 @@ const NonAnnualActivityDetail = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
         setLoading(true);
-        newsAPI.getById(id)
+        postsAPI.getById(id)
             .then(data => {
                 setPost(data);
-                return newsAPI.getAll({ page_type: 'activity_non_annual', limit: 4 });
+                return postsAPI.getAll({ page_type: 'event_non_annual', limit: 4 });
             })
             .then(data => {
                 const all = Array.isArray(data) ? data : [];
@@ -31,16 +31,16 @@ const NonAnnualActivityDetail = () => {
             loading={loading}
             post={post}
             relatedPosts={relatedPosts}
-            sectionLabel="Hoạt động"
-            sectionPath="/activity"
-            parentCrumb={{ label: 'Không thường niên', to: '/activity/non-annual' }}
-            relatedTitle="HOẠT ĐỘNG LIÊN QUAN"
-            onBack={() => navigate('/activity/non-annual')}
-            getRelatedTo={(related) => `/activity/non-annual/${related.id}`}
-            notFoundText="Không tìm thấy hoạt động"
+            sectionLabel="Sự kiện"
+            sectionPath="/event"
+            parentCrumb={{ label: 'Không thường niên', to: '/event/non-annual' }}
+            relatedTitle="SỰ KIỆN LIÊN QUAN"
+            onBack={() => navigate('/event/non-annual')}
+            getRelatedTo={(related) => `/event/non-annual/${related.id}`}
+            notFoundText="Không tìm thấy sự kiện"
             loadingText="Đang tải..."
         />
     );
 };
 
-export default NonAnnualActivityDetail;
+export default NonAnnualEventDetail;

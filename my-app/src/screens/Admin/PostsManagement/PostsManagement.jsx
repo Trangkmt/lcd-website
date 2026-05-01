@@ -4,7 +4,7 @@ import mammoth from 'mammoth';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
 import './PostsManagement.css';
 import { SearchBar } from '../../../components';
-import { newsAPI, categoriesAPI, usersAPI, aiAPI, uploadsAPI, postTemplatesAPI } from '../../../services/api';
+import { postsAPI, categoriesAPI, usersAPI, aiAPI, uploadsAPI, postTemplatesAPI } from '../../../services/api';
 import { canMutatePost, canPublishPost, getStoredAdminUser, isAdminFull } from '../../../utils/adminPermissions';
 import {
     buildCreatePostForm,
@@ -39,16 +39,16 @@ const EMPTY_FORM = { title: '', slug: '', summary: '', content: '', thumbnail: '
 const PAGE_TYPE_LABELS = {
     news: 'Tin tức',
     achievement: 'Thành tích',
-    activity_annual: 'Hoạt động thường niên',
-    activity_non_annual: 'Hoạt động không thường niên',
+    event_annual: 'Sự kiện thường niên',
+    event_non_annual: 'Sự kiện không thường niên',
 };
 
 const CLOUDINARY_POST_FOLDER_BY_PAGE_TYPE = {
     news: 'lcd/news-post-images',
     achievement: 'lcd/achievement-images',
-    activity: 'lcd/activity-post-images',
-    activity_annual: 'lcd/activity-post-images',
-    activity_non_annual: 'lcd/activity-post-images',
+    event: 'lcd/event-post-images',
+    event_annual: 'lcd/event-post-images',
+    event_non_annual: 'lcd/event-post-images',
 };
 
 function getPageTypeLabel(pageType) {
@@ -59,8 +59,8 @@ function getPageTypeLabel(pageType) {
 function getPageTypeIcon(pageType) {
     if (pageType === 'news') return NewsIcon;
     if (pageType === 'achievement') return TrophyIcon;
-    if (pageType === 'activity_annual') return CalendarIcon;
-    if (pageType === 'activity_non_annual' || pageType === 'activity') return TargetIcon;
+    if (pageType === 'event_annual') return CalendarIcon;
+    if (pageType === 'event_non_annual' || pageType === 'event') return TargetIcon;
     return FolderIcon;
 }
 
@@ -293,7 +293,7 @@ export default function PostsManagement() {
             if (filters.year) params.year = filters.year;
             if (filters.page_type) params.page_type = filters.page_type;
             if (filters.is_featured !== '' && filters.is_featured !== undefined) params.is_featured = filters.is_featured;
-            const data = await newsAPI.getAll(params);
+            const data = await postsAPI.getAll(params);
             setPosts(Array.isArray(data) ? data : []);
         } catch (err) {
             setError('Không thể tải danh sách bài viết: ' + err.message);
@@ -552,9 +552,9 @@ export default function PostsManagement() {
                 if (!ensureCanMutatePost(currentUser, editingPost, 'Bạn chỉ có thể chỉnh sửa bài viết của mình.')) {
                     return;
                 }
-                await newsAPI.update(editingPost.id, payload);
+                await postsAPI.update(editingPost.id, payload);
             } else {
-                await newsAPI.create({ ...payload, is_published: false });
+                await postsAPI.create({ ...payload, is_published: false });
             }
             closeEditor();
             await fetchPosts(apiFilters);
@@ -580,7 +580,7 @@ export default function PostsManagement() {
         });
         if (!confirmed) return;
         try {
-            await newsAPI.update(post.id, {
+            await postsAPI.update(post.id, {
                 title: post.title,
                 slug: post.slug,
                 summary: post.summary ?? null,

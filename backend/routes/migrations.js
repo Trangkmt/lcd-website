@@ -101,4 +101,59 @@ router.post('/migrate-user-role', async (req, res) => {
     }
 });
 
+// Migration endpoint - Add soft-delete columns to contact_info
+router.post('/migrate-contact-soft-delete', async (req, res) => {
+    try {
+        const pool = await getConnection();
+        console.log('Running migration: Adding soft-delete columns to contact_info...');
+
+        const added = [];
+
+        // Check and add is_deleted
+        try {
+            await pool.request().query('SELECT is_deleted FROM contact_info LIMIT 1');
+            console.log('Column is_deleted already exists');
+        } catch (e) {
+            if (e.code === 'ER_BAD_FIELD_ERROR') {
+                await pool.request().query(`ALTER TABLE contact_info ADD COLUMN is_deleted TINYINT(1) NOT NULL DEFAULT 0`);
+                added.push('is_deleted');
+                console.log('✅ Added column: is_deleted');
+            } else throw e;
+        }
+
+        // Check and add deleted_by
+        try {
+            await pool.request().query('SELECT deleted_by FROM contact_info LIMIT 1');
+            console.log('Column deleted_by already exists');
+        } catch (e) {
+            if (e.code === 'ER_BAD_FIELD_ERROR') {
+                await pool.request().query(`ALTER TABLE contact_info ADD COLUMN deleted_by INT NULL`);
+                added.push('deleted_by');
+                console.log('✅ Added column: deleted_by');
+            } else throw e;
+        }
+
+        // Check and add deleted_at
+        try {
+            await pool.request().query('SELECT deleted_at FROM contact_info LIMIT 1');
+            console.log('Column deleted_at already exists');
+        } catch (e) {
+            if (e.code === 'ER_BAD_FIELD_ERROR') {
+                await pool.request().query(`ALTER TABLE contact_info ADD COLUMN deleted_at DATETIME NULL`);
+                added.push('deleted_at');
+                console.log('✅ Added column: deleted_at');
+            } else throw e;
+        }
+
+        return res.json({
+            success: true,
+            message: added.length > 0 ? `Added columns: ${added.join(', ')}` : 'All columns already exist',
+            added
+        });
+    } catch (error) {
+        console.error('❌ Migration failed:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 module.exports = router;

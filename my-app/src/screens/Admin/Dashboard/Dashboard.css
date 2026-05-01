@@ -1,4 +1,4 @@
-﻿/* Dashboard Page */
+/* Dashboard Page */
 @import url('../Styles/AdminTable.css');
 
 .dashboard-page {
@@ -424,21 +424,21 @@
     font-size: 0.8125rem;
 }
 
-/* Activities List */
-.activities-list {
+/* Events List */
+.events-list {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
-.activity-item {
+.event-item {
     display: flex;
     gap: 16px;
     align-items: flex-start;
     position: relative;
 }
 
-.activity-item:not(:last-child)::after {
+.event-item:not(:last-child)::after {
     content: '';
     position: absolute;
     left: 7px;
@@ -448,7 +448,7 @@
     background: var(--color-border-subtle);
 }
 
-.activity-dot {
+.event-dot {
     width: 16px;
     height: 16px;
     border-radius: 50%;
@@ -457,11 +457,11 @@
     margin-top: 4px;
 }
 
-.activity-info {
+.event-info {
     flex: 1;
 }
 
-.activity-action {
+.event-action {
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -471,7 +471,7 @@
     line-height: 1.5;
 }
 
-.activity-icon {
+.event-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -480,12 +480,12 @@
     color: var(--color-brand-indigo-dark);
 }
 
-.activity-icon svg {
+.event-icon svg {
     width: 1em;
     height: 1em;
 }
 
-.activity-time {
+.event-time {
     font-size: 0.75rem;
     color: var(--color-text-subtle);
     margin: 0;
