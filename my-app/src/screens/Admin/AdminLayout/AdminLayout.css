@@ -31,7 +31,7 @@
 
 /* Sidebar */
 .admin-sidebar {
-    width: 268px;
+    width: 16.75rem;
     background: var(--admin-sidebar);
     color: white;
     position: fixed;
@@ -45,11 +45,11 @@
 }
 
 .admin-sidebar.collapsed {
-    width: 72px;
+    width: 4.5rem;
 }
 
 .sidebar-header {
-    padding: 18px 18px;
+    padding: 1.125rem 1.125rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -75,8 +75,8 @@
     color: white;
     font-size: 1.25rem;
     cursor: pointer;
-    padding: 4px 8px;
-    border-radius: 6px;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.375rem;
     transition: background-color 0.2s ease;
 }
 
@@ -98,7 +98,7 @@
 /* Navigation */
 .sidebar-nav {
     flex: 1;
-    padding: 12px 0;
+    padding: 0.75rem 0;
     overflow-y: auto;
     background-color: var(--admin-primary);
 }
@@ -106,8 +106,8 @@
 .nav-item {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 12px 18px;
+    gap: 0.75rem;
+    padding: 0.75rem 1.125rem;
     color: rgba(255, 255, 255, 0.88);
     text-decoration: none;
     transition: background-color 0.2s ease, color 0.2s ease;
@@ -118,7 +118,7 @@
     font-size: 0.875rem;
     font-weight: 600;
     letter-spacing: 0.01em;
-    border-left: 3px solid transparent;
+    border-left: 0.1875rem solid transparent;
 }
 
 .nav-item:hover {
@@ -129,13 +129,13 @@
 .nav-item.active {
     background: rgba(255, 255, 255, 0.24);
     color: var(--color-white);
-    border-left: 3px solid var(--color-white);
+    border-left: 0.1875rem solid var(--color-white);
 }
 
 .nav-item.nav-item--sub-active {
     background: rgba(255, 255, 255, 0.3);
     color: var(--color-white);
-    border-left: 3px solid var(--color-white);
+    border-left: 0.1875rem solid var(--color-white);
     box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.16);
 }
 
@@ -144,7 +144,7 @@
     align-items: center;
     justify-content: center;
     font-size: 1.125rem;
-    min-width: 20px;
+    min-width: 1.25rem;
     text-align: center;
     color: #FFFFFF;
 }
@@ -161,21 +161,21 @@
 .nav-divider {
     height: 1px;
     background: rgba(255, 255, 255, 0.1);
-    margin: 14px 0;
+    margin: 0.875rem 0;
 }
 
 .nav-submenu {
-    margin: 2px 0 8px;
+    margin: 2px 0 0.5rem;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 0.25rem;
 }
 
 .nav-subitem {
     color: rgba(255, 255, 255, 0.82);
     text-decoration: none;
     font-size: 0.75rem;
-    padding: 12px 60px;
+    padding: 0.75rem 3.75rem;
     transition: all 0.2s ease;
 }
 
@@ -188,7 +188,7 @@
     color: var(--color-white);
     background: rgba(255, 255, 255, 0.26);
     color: var(--color-white);
-    border-left: 3px solid var(--color-white);
+    border-left: 0.1875rem solid var(--color-white);
 }
 
 .logout-btn {
@@ -202,7 +202,7 @@
 /* Main Content */
 .admin-main {
     flex: 1;
-    margin-left: 268px;
+    margin-left: 16.75rem;
     transition: all 0.3s ease;
     min-height: 100vh;
     background: var(--admin-bg);
@@ -211,19 +211,19 @@
 }
 
 .admin-sidebar.collapsed~.admin-main {
-    margin-left: 72px;
+    margin-left: 4.5rem;
 }
 
 .admin-topbar {
-    min-height: 82px;
+    min-height: 5.125rem;
     background: var(--admin-primary);
     color: var(--color-white);
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 24px;
-    padding: 14px 32px;
+    gap: 1.5rem;
+    padding: 0.875rem 2rem;
     position: sticky;
     top: 0;
     z-index: var(--z-sticky);
@@ -242,7 +242,7 @@
 }
 
 .admin-topbar-title {
-    margin: 4px 0 0;
+    margin: 0.25rem 0 0;
     font-size: 1.5rem;
     font-weight: 700;
     letter-spacing: 0.01em;
@@ -309,7 +309,7 @@
     }
 
     .admin-sidebar {
-        width: min(84vw, 300px);
+        width: min(84vw, 18.75rem);
         transform: translateX(-100%);
         transition: transform 0.24s ease;
         z-index: 360;
@@ -326,9 +326,9 @@
     }
 
     .admin-topbar {
-        min-height: 72px;
-        padding: 10px 14px;
-        gap: 12px;
+        min-height: 4.5rem;
+        padding: 0.625rem 0.875rem;
+        gap: 0.75rem;
     }
 
     .admin-topbar-user {
@@ -339,10 +339,10 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 38px;
-        height: 38px;
+        width: 2.375rem;
+        height: 2.375rem;
         border: 1px solid rgba(255, 255, 255, 0.28);
-        border-radius: 10px;
+        border-radius: 0.625rem;
         color: var(--color-white);
         background: transparent;
         flex-shrink: 0;
@@ -368,7 +368,7 @@
     }
 
     .sidebar-header {
-        padding-right: 12px;
+        padding-right: 0.75rem;
     }
 
     .sidebar-toggle {
@@ -382,8 +382,8 @@
 
 @media (max-width: 480px) {
     .admin-topbar {
-        min-height: 64px;
-        padding: 8px 10px;
+        min-height: 4rem;
+        padding: 0.5rem 0.625rem;
     }
 
     .admin-topbar-breadcrumb {
@@ -398,5 +398,6 @@
         width: 92vw;
     }
 }
+
 
 

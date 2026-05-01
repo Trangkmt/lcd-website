@@ -9,12 +9,12 @@
 /* Back Button */
 .back-button {
     position: fixed;
-    top: 100px;
-    left: 30px;
-    padding: 12px 24px;
+    top: 6.25rem;
+    left: 1.875rem;
+    padding: 0.75rem 1.5rem;
     background: var(--color-primary);
     border: 2px solid var(--color-primary);
-    border-radius: 8px;
+    border-radius: 0.5rem;
     cursor: pointer;
     font-size: 1rem;
     font-weight: bold;
@@ -33,7 +33,7 @@
 /* Main Content */
 .post-detail-content {
     width: 100%;
-    padding: 40px 20px;
+    padding: 2.5rem 1.25rem;
 }
 
 .post-detail-content .content-wrapper {
@@ -41,13 +41,13 @@
     margin: 0 auto;
     background: var(--color-white);
     padding: var(--space-10);
-    border-radius: 12px;
+    border-radius: 0.75rem;
 }
 
 .post-detail-layout {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 320px;
-    gap: 32px;
+    grid-template-columns: minmax(0, 1fr) 20rem;
+    gap: 2rem;
     align-items: start;
 }
 
@@ -57,11 +57,11 @@
 
 .post-detail-sidebar {
     position: sticky;
-    top: 24px;
+    top: 1.5rem;
 }
 
 .post-detail-related-title {
-    margin: 0 0 14px;
+    margin: 0 0 0.875rem;
     font-size: 1.0625rem;
     font-weight: 800;
     color: var(--color-brand-blue-deep);
@@ -70,12 +70,12 @@
 .post-detail-related-list {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 0.875rem;
 }
 
 .post-detail-related-card {
     display: flex;
-    gap: 12px;
+    gap: 0.75rem;
     text-decoration: none;
     color: inherit;
     overflow: hidden;
@@ -87,9 +87,9 @@
 }
 
 .post-detail-related-image-wrap {
-    width: 96px;
-    min-width: 96px;
-    height: 72px;
+    width: 6rem;
+    min-width: 6rem;
+    height: 4.5rem;
     overflow: hidden;
     background: var(--color-surface-soft-blue);
     flex-shrink: 0;
@@ -105,7 +105,7 @@
 .post-detail-related-info {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 0.25rem;
 }
 
 .post-detail-related-name {
@@ -135,8 +135,8 @@
 .breadcrumb {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 30px;
+    gap: 0.5rem;
+    margin-bottom: 1.875rem;
     font-size: 0.875rem;
     color: var(--color-text-muted);
 }
@@ -163,14 +163,14 @@
 
 /* Post Header */
 .post-header-section {
-    margin-bottom: 40px;
+    margin-bottom: 2.5rem;
 }
 
 .post-meta {
     display: flex;
     align-items: center;
-    gap: 16px;
-    margin-bottom: 16px;
+    gap: 1rem;
+    margin-bottom: 1rem;
     flex-wrap: wrap;
 }
 
@@ -178,8 +178,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    padding: 4px 10px;
+    gap: 0.375rem;
+    padding: 0.25rem 0.625rem;
     font-size: 0.75rem;
     font-weight: 800;
     color: var(--color-brand-blue-deep);
@@ -200,7 +200,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 16px 0px;
+    padding: 1rem 0px;
     color: var(--color-primary);
     font-size: 0.75rem;
     font-weight: bold;
@@ -225,7 +225,7 @@
     font-size: 2.625rem;
     font-weight: 900;
     color: var(--color-darkslateblue);
-    margin: 0 0 20px 0;
+    margin: 0 0 1.25rem 0;
     line-height: 1.2;
 }
 
@@ -238,7 +238,7 @@
 
 /* Main Image */
 .post-main-image-section {
-    margin-bottom: 40px;
+    margin-bottom: 2.5rem;
     overflow: hidden;
 }
 
@@ -251,7 +251,7 @@
 
 /* Post Content */
 .post-content-section {
-    margin-bottom: 60px;
+    margin-bottom: 3.75rem;
 }
 
 .post-content-text {
@@ -261,24 +261,24 @@
 }
 
 .post-content-text p {
-    margin-bottom: 20px;
+    margin-bottom: 1.25rem;
 }
 
 .post-content-text h3 {
     font-size: 1.75rem;
     font-weight: bold;
     color: var(--color-text-strong);
-    margin: 30px 0 16px 0;
+    margin: 1.875rem 0 1rem 0;
 }
 
 .post-content-text ul,
 .post-content-text ol {
-    margin: 20px 0;
-    padding-left: 30px;
+    margin: 1.25rem 0;
+    padding-left: 1.875rem;
 }
 
 .post-content-text li {
-    margin-bottom: 12px;
+    margin-bottom: 0.75rem;
 }
 
 /* Responsive Design */
@@ -296,9 +296,9 @@
     }
 
     .back-button {
-        top: 80px;
-        left: 15px;
-        padding: 10px 20px;
+        top: 5rem;
+        left: 0.9375rem;
+        padding: 0.625rem 1.25rem;
         font-size: 0.875rem;
     }
 
@@ -314,4 +314,5 @@
         font-size: 1rem;
     }
 }
+
 

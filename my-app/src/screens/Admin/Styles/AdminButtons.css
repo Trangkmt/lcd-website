@@ -3,7 +3,7 @@
 .row-actions {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 0.5rem;
     flex-wrap: wrap;
 }
 
@@ -11,12 +11,12 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    min-height: 34px;
-    padding: 7px 12px;
+    gap: 0.375rem;
+    min-height: 2.125rem;
+    padding: 0.4375rem 0.75rem;
     background: var(--color-white);
     border: 1px solid var(--color-border-subtle);
-    border-radius: 8px;
+    border-radius: 0.5rem;
     font-size: 0.8125rem;
     font-weight: 600;
     color: var(--color-text-primary);
@@ -51,8 +51,8 @@
 }
 
 .btn-action--icon-only {
-    min-width: 34px;
-    padding: 7px 9px;
+    min-width: 2.125rem;
+    padding: 0.4375rem 0.5625rem;
 }
 
 .btn-action--icon-only .btn-action-icon {
@@ -124,14 +124,14 @@
 
 @media (max-width: 768px) {
     .btn-action {
-        min-height: 32px;
-        padding: 6px 10px;
+        min-height: 2rem;
+        padding: 0.375rem 0.625rem;
         font-size: 0.75rem;
     }
 
     .btn-action--icon-only {
-        min-width: 32px;
-        padding: 6px 8px;
+        min-width: 2rem;
+        padding: 0.375rem 0.5rem;
     }
 }
 
@@ -139,13 +139,14 @@
 
     .action-buttons,
     .row-actions {
-        gap: 6px;
+        gap: 0.375rem;
     }
 
     .btn-action {
-        min-height: 30px;
-        padding: 6px 8px;
+        min-height: 1.875rem;
+        padding: 0.375rem 0.5rem;
     }
 }
+
 
 
