@@ -23,7 +23,7 @@ const usersRoutes = require('./routes/users');
 const categoriesRoutes = require('./routes/categories');
 const postsRoutes = require('./routes/posts');
 const documentsRoutes = require('./routes/documents');
-const activitiesRoutes = require('./routes/activities');
+
 const teamsRoutes = require('./routes/teams');
 const contactRoutes = require('./routes/contact');
 const authRoutes = require('./routes/auth');
@@ -58,7 +58,7 @@ app.use('/api/users', usersRoutes);
 app.use('/api/categories', categoriesRoutes);
 app.use('/api/posts', postsRoutes);
 app.use('/api/documents', documentsRoutes);
-app.use('/api/activities', activitiesRoutes);
+
 app.use('/api/teams', teamsRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/auth', authRoutes);
@@ -80,7 +80,7 @@ app.get('/', (req, res) => {
             categories: '/api/categories',
             posts: '/api/posts',
             documents: '/api/documents',
-            activities: '/api/activities',
+            
             organizations: '/api/teams',
             contact: '/api/contact',
             auth: '/api/auth',
@@ -123,7 +123,7 @@ app.listen(PORT, () => {
     console.log(`  GET  http://localhost:${PORT}/api/categories`);
     console.log(`  GET  http://localhost:${PORT}/api/posts`);
     console.log(`  GET  http://localhost:${PORT}/api/documents`);
-    console.log(`  GET  http://localhost:${PORT}/api/activities`);
+    
     console.log(`  GET  http://localhost:${PORT}/api/teams`);
     console.log(`  GET  http://localhost:${PORT}/api/contact`);
     console.log(`  POST http://localhost:${PORT}/api/auth/login`);

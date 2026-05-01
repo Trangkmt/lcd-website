@@ -26,8 +26,8 @@ const Footer = () => {
                         <h3>Thông tin chung</h3>
                         <Link to="/">Trang chủ</Link>
                         <Link to="/news">Tin tức</Link>
-                        <Link to="/activity/annual">Hoạt động thường niên</Link>
-                        <Link to="/activity/non-annual">Hoạt động không thường niên</Link>
+                        <Link to="/event/annual">Sự kiện thường niên</Link>
+                        <Link to="/event/non-annual">Sự kiện không thường niên</Link>
                         <Link to="/achievement">Thành tích</Link>
                         <Link to="/contact">Liên hệ</Link>
                     </div>

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './NewsCard.css';
+import './PostCard.css';
 import { formatVietnameseDate } from '../../utils/date';
 
-const NewsCard = ({
+const PostCard = ({
     category,
     date,
     image,
@@ -17,25 +17,25 @@ const NewsCard = ({
 }) => {
     const displayTitle = title || content || '';
     const displayDescription = description || summary || '';
-    const cardClassName = ['news-card', className].filter(Boolean).join(' ');
+    const cardClassName = ['post-card', className].filter(Boolean).join(' ');
 
     const cardContent = (
         <>
-            <div className="news-card__background" />
+            <div className="post-card__background" />
             <img
-                className="news-card__image"
+                className="post-card__image"
                 src={image || 'https://picsum.photos/300/200?random=1'}
-                alt={displayTitle || 'News'}
+                alt={displayTitle || 'Post'}
             />
-            <div className='news-card__body'>
-                <div className="news-card__meta">
-                    <div className="news-card__badge">
-                        <b className="news-card__badge-text">{category || ''}</b>
+            <div className='post-card__body'>
+                <div className="post-card__meta">
+                    <div className="post-card__badge">
+                        <b className="post-card__badge-text">{category || ''}</b>
                     </div>
-                    <div className="news-card__date">{formatVietnameseDate(date) || date || ''}</div>
+                    <div className="post-card__date">{formatVietnameseDate(date) || date || ''}</div>
                 </div>
-                <b className="news-card__title">{displayTitle}</b>
-                <div className="news-card__description">{displayDescription}</div>
+                <b className="post-card__title">{displayTitle}</b>
+                <div className="post-card__description">{displayDescription}</div>
             </div>
 
         </>
@@ -56,4 +56,4 @@ const NewsCard = ({
     );
 };
 
-export default NewsCard;
+export default PostCard;

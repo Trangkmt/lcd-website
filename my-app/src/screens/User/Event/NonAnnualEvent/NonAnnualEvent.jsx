@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../../News/News.css';
-import { newsAPI, categoriesAPI } from '../../../../services/api';
-import NewsCard from '../../../../components/NewsCard/NewsCard';
-import { SearchBar } from '../../../../components';
+import { postsAPI, categoriesAPI } from '../../../../services/api';
+import { SearchBar, PostCard } from '../../../../components';
 import { SettingsIcon, ChevronLeftIcon, ChevronRightIcon } from '../../../../SvgIcons';
 
 const asTimestamp = (item) => {
@@ -12,7 +11,7 @@ const asTimestamp = (item) => {
     return Number.isFinite(time) ? time : 0;
 };
 
-const NonAnnualActivity = () => {
+const NonAnnualEvent = () => {
     const [posts, setPosts] = useState([]);
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -23,8 +22,8 @@ const NonAnnualActivity = () => {
 
     useEffect(() => {
         Promise.all([
-            newsAPI.getAll({ page_type: 'activity_non_annual', limit: 100 }),
-            categoriesAPI.getAll({ page_type: 'activity_non_annual' }),
+            postsAPI.getAll({ page_type: 'event_non_annual', limit: 100 }),
+            categoriesAPI.getAll({ page_type: 'event_non_annual' }),
         ])
             .then(([postsData, catsData]) => {
                 setPosts(Array.isArray(postsData) ? postsData : []);
@@ -58,11 +57,11 @@ const NonAnnualActivity = () => {
 
     const activeHero = heroSlides[heroIndex] || {
         id: null,
-        title: 'HOẠT ĐỘNG KHÔNG THƯỜNG NIÊN MỚI NHẤT',
-        summary: 'Tổng hợp các hoạt động không thường niên mới nhất của Liên Chi Đoàn khoa.',
+        title: 'SỰ KIỆN KHÔNG THƯỜNG NIÊN MỚI NHẤT',
+        summary: 'Tổng hợp các sự kiện không thường niên mới nhất của Liên Chi Đoàn khoa.',
         published_at: null,
     };
-    const heroLink = activeHero.id ? `/activity/non-annual/${activeHero.id}` : '/activity/non-annual';
+    const heroLink = activeHero.id ? `/event/non-annual/${activeHero.id}` : '/event/non-annual';
 
     return (
         <div className="news-page">
@@ -75,7 +74,7 @@ const NonAnnualActivity = () => {
                     />
                     <div className="news-page__hero-overlay" />
                     <div className="news-page__hero-content">
-                        <span className="news-page__hero-badge">Hoạt động</span>
+                        <span className="news-page__hero-badge">Sự kiện</span>
                         <h1 className="news-page__hero-title">{activeHero.title}</h1>
                         <p className="news-page__hero-summary">{activeHero.summary}</p>
                     </div>
@@ -121,7 +120,7 @@ const NonAnnualActivity = () => {
                         value={searchQuery}
                         onChange={e => setSearchQuery(e.target.value)}
                         onClear={() => setSearchQuery('')}
-                        placeholder="Tìm kiếm hoạt động..."
+                        placeholder="Tìm kiếm sự kiện..."
                         variant="page"
                     />
 
@@ -152,24 +151,24 @@ const NonAnnualActivity = () => {
                     </div>
                 </div>
 
-                <h2 className="news-page__title">HOẠT ĐỘNG KHÔNG THƯỜNG NIÊN</h2>
+                <h2 className="news-page__title">SỰ KIỆN KHÔNG THƯỜNG NIÊN</h2>
 
                 {loading && <p className="news-page__empty">Đang tải...</p>}
                 {!loading && filtered.length === 0 && (
-                    <p className="news-page__empty">Không có hoạt động nào</p>
+                    <p className="news-page__empty">Không có sự kiện nào</p>
                 )}
 
                 {/* Posts Grid */}
                 <div className="news-grid">
                     {filtered.map(item => (
-                        <NewsCard
+                        <PostCard
                             key={item.id}
-                            to={`/activity/non-annual/${item.id}`}
+                            to={`/event/non-annual/${item.id}`}
                             image={item.thumbnail || ''}
                             category={item.category_name || ''}
                             date={item.published_at || item.created_at}
                             title={item.title || ''}
-                            summary={item.summary || ''}
+                            description={item.summary || ''}
                         />
                     ))}
                 </div>
@@ -178,4 +177,4 @@ const NonAnnualActivity = () => {
     );
 };
 
-export default NonAnnualActivity;
+export default NonAnnualEvent;

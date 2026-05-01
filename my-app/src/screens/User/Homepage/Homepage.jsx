@@ -1,26 +1,24 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Homepage.css';
-import { newsAPI, timelineAPI } from '../../../services/api';
-import NewsCard from '../../../components/NewsCard/NewsCard';
-import AchievementCard from '../../../components/AchievementCard/AchievementCard';
-import { Timeline } from '../../../components';
+import { postsAPI, timelineAPI } from '../../../services/api';
+import { PostCard, Timeline } from '../../../components';
 import { formatVietnameseDate } from '../../../utils/date';
 import { ChevronLeftIcon, ChevronRightIcon } from '../../../SvgIcons';
 
 const getSlideRoute = (item) => {
-  if (item.page_type === 'activity_annual' && item.category_slug) {
-    return `/activity/${item.category_slug}/post/${item.id}`;
+  if (item.page_type === 'event_annual' && item.category_slug) {
+    return `/event/${item.category_slug}/post/${item.id}`;
   }
-  if (item.page_type === 'activity_non_annual') {
-    return `/activity/non-annual/${item.id}`;
+  if (item.page_type === 'event_non_annual') {
+    return `/event/non-annual/${item.id}`;
   }
   return `/news/${item.id}`;
 };
 
 const getSlideCategoryLabel = (item) => {
-  if (item.page_type === 'activity_annual') return 'Hoạt động thường niên';
-  if (item.page_type === 'activity_non_annual') return 'Hoạt động không thường niên';
+  if (item.page_type === 'event_annual') return 'Sự kiện thường niên';
+  if (item.page_type === 'event_non_annual') return 'Sự kiện không thường niên';
   return item.category_name || 'Tin tức';
 };
 
@@ -51,25 +49,25 @@ const asTimestamp = (item) => {
 const Homepage = () => {
   const navigate = useNavigate();
   const [newsCards, setNewsCards] = useState([]);
-  const [activityPosts, setActivityPosts] = useState([]);
-  const [featuredActivity, setFeaturedActivity] = useState(null);
+  const [eventPosts, setEventPosts] = useState([]);
+  const [featuredEvent, setFeaturedEvent] = useState(null);
   const [achievements, setAchievements] = useState([]);
   const [heroSlides, setHeroSlides] = useState([]);
   const [timelineEvents, setTimelineEvents] = useState([]);
   const [heroIndex, setHeroIndex] = useState(0);
-  const [hoveredActivityIndex, setHoveredActivityIndex] = useState(null);
-  const [activityImageIndex, setActivityImageIndex] = useState(0);
+  const [hoveredEventIndex, setHoveredEventIndex] = useState(null);
+  const [eventImageIndex, setEventImageIndex] = useState(0);
 
   useEffect(() => {
-    const activityTypes = ['activity_annual', 'activity_non_annual'];
-    const allSectionTypes = ['news', 'achievement', ...activityTypes];
+    const eventTypes = ['event_annual', 'event_non_annual'];
+    const allSectionTypes = ['news', 'achievement', ...eventTypes];
 
     Promise.all([
       ...allSectionTypes.map((pageType) =>
-        newsAPI.getAll({ page_type: pageType, is_featured: true, limit: 4 })
+        postsAPI.getAll({ page_type: pageType, is_featured: true, limit: 4 })
       ),
       ...allSectionTypes.map((pageType) =>
-        newsAPI.getAll({ page_type: pageType, limit: 4 })
+        postsAPI.getAll({ page_type: pageType, limit: 4 })
       ),
     ])
       .then((responses) => {
@@ -95,29 +93,29 @@ const Homepage = () => {
       });
 
     // Tin tức nổi bật
-    newsAPI.getAll({ page_type: 'news', is_featured: true, limit: 4 })
+    postsAPI.getAll({ page_type: 'news', is_featured: true, limit: 4 })
       .then(data => {
         const featuredNews = asArray(data).filter(isFeaturedPost).slice(0, 4);
         setNewsCards(featuredNews);
       })
       .catch(() => { });
 
-    // Hoạt động nổi bật: gom featured từ thường niên + không thường niên
+    // Sự kiện nổi bật: gom featured từ thường niên + không thường niên
     Promise.all([
-      newsAPI.getAll({ page_type: 'activity_annual', is_featured: true, limit: 4 }),
-      newsAPI.getAll({ page_type: 'activity_non_annual', is_featured: true, limit: 4 }),
+      postsAPI.getAll({ page_type: 'event_annual', is_featured: true, limit: 4 }),
+      postsAPI.getAll({ page_type: 'event_non_annual', is_featured: true, limit: 4 }),
     ])
       .then(([annual, nonAnnual]) => {
         const merged = [...asArray(annual), ...asArray(nonAnnual)]
           .filter(isFeaturedPost)
           .sort((a, b) => asTimestamp(b) - asTimestamp(a));
-        setActivityPosts(merged.slice(0, 4));
-        setFeaturedActivity(merged[0] || null);
+        setEventPosts(merged.slice(0, 4));
+        setFeaturedEvent(merged[0] || null);
       })
       .catch(() => { });
 
     // Thành tích nổi bật từ trang Admin (page_type=achievement, is_featured=true)
-    newsAPI.getAll({ page_type: 'achievement', is_featured: true, limit: 4 })
+    postsAPI.getAll({ page_type: 'achievement', is_featured: true, limit: 4 })
       .then(data => {
         const filteredAchievements = asArray(data)
           .filter(isAchievementPost)
@@ -148,25 +146,25 @@ const Homepage = () => {
     setHeroIndex(0);
   }, [heroSlides.length]);
 
-  // Auto-rotate activity images
+  // Auto-rotate event images
   useEffect(() => {
-    if (hoveredActivityIndex !== null || activityPosts.length === 0) return;
+    if (hoveredEventIndex !== null || eventPosts.length === 0) return;
 
     const timer = setInterval(() => {
-      setActivityImageIndex((prev) => (prev + 1) % activityPosts.length);
+      setEventImageIndex((prev) => (prev + 1) % eventPosts.length);
     }, 4000);
     return () => clearInterval(timer);
-  }, [activityPosts.length, hoveredActivityIndex]);
+  }, [eventPosts.length, hoveredEventIndex]);
 
-  // Get the image to display for featured activity
-  const displayedActivity = hoveredActivityIndex !== null
-    ? activityPosts[hoveredActivityIndex]
-    : activityPosts[activityImageIndex];
+  // Get the image to display for featured event
+  const displayedEvent = hoveredEventIndex !== null
+    ? eventPosts[hoveredEventIndex]
+    : eventPosts[eventImageIndex];
 
   const activeHero = heroSlides[heroIndex] || {
     title: 'TIN NỔI BẬT MỚI NHẤT',
     image: '',
-    summary: 'Theo dõi các thông tin nổi bật mới nhất từ Tin tức, Hoạt động thường niên và Hoạt động không thường niên.',
+    summary: 'Theo dõi các thông tin nổi bật mới nhất từ Tin tức, Sự kiện thường niên và Sự kiện không thường niên.',
     categoryLabel: 'Nổi bật',
     date: null,
     link: '/news'
@@ -233,41 +231,41 @@ const Homepage = () => {
 
       <Timeline events={timelineEvents} />
 
-      {/* Activity Section */}
-      <div className="activity-section">
-        <div className="activity-section__featured-box">
+      {/* Event Section */}
+      <div className="event-section">
+        <div className="event-section__featured-box">
           <img
-            className="activity-section__featured-image"
-            src={displayedActivity?.thumbnail}
-            alt={displayedActivity?.title || 'Featured Activity'}
+            className="event-section__featured-image"
+            src={displayedEvent?.thumbnail}
+            alt={displayedEvent?.title || 'Featured Event'}
           />
         </div>
         <div className="section-header">
-          <b className="section-title section-title--activity">HOẠT ĐỘNG NỔI BẬT</b>
-          <div className="section-divider section-divider--activity" aria-hidden="true" />
+          <b className="section-title section-title--event">SỰ KIỆN NỔI BẬT</b>
+          <div className="section-divider section-divider--event" aria-hidden="true" />
         </div>
-        <Link to="/activity" className="btn-view-more" style={{ textDecoration: 'none', color: 'inherit' }}>
+        <Link to="/event" className="btn-view-more" style={{ textDecoration: 'none', color: 'inherit' }}>
           <b className="btn-view-more__text">Xem thêm</b>
         </Link>
-        {activityPosts.map((activity, index) => (
+        {eventPosts.map((event, index) => (
           <Link
-            key={activity.id}
-            to={getSlideRoute(activity)}
-            className={`activity-post activity-post--${index + 1}${hoveredActivityIndex === index ? ' activity-post--hovered' : ''}`}
+            key={event.id}
+            to={getSlideRoute(event)}
+            className={`event-post event-post--${index + 1}${hoveredEventIndex === index ? ' event-post--hovered' : ''}`}
             style={{ textDecoration: 'none', color: 'inherit' }}
-            onMouseEnter={() => setHoveredActivityIndex(index)}
-            onMouseLeave={() => setHoveredActivityIndex(null)}
+            onMouseEnter={() => setHoveredEventIndex(index)}
+            onMouseLeave={() => setHoveredEventIndex(null)}
           >
-            <div className="activity-post__date">
-              {formatVietnameseDate(activity.start_date || activity.published_at || activity.created_at)}
+            <div className="event-post__date">
+              {formatVietnameseDate(event.start_date || event.published_at || event.created_at)}
             </div>
-            <div className="home-category-badge home-category-badge--activity">
-              <b className="home-category-badge__text">{activity.category_name || ''}</b>
+            <div className="home-category-badge home-category-badge--event">
+              <b className="home-category-badge__text">{event.category_name || ''}</b>
             </div>
-            <b className="activity-post__title">{activity.title}</b>
+            <b className="event-post__title">{event.title}</b>
           </Link>
         ))}
-        <div className="activity-section__subtitle">{displayedActivity?.description || featuredActivity?.description || ''}</div>
+        <div className="event-section__subtitle">{displayedEvent?.description || featuredEvent?.description || ''}</div>
       </div>
 
       {/* News Section */}
@@ -280,10 +278,10 @@ const Homepage = () => {
           <b className="btn-view-more__text">Xem thêm</b>
         </Link>
         {newsCards.map((card, index) => (
-          <NewsCard
+          <PostCard
             key={card.id}
             to={`/news/${card.id}`}
-            className={`news-card news-card--${index + 1}`}
+            className={`post-card post-card--${index + 1}`}
             image={card.thumbnail || ''}
             category={card.category_name || ''}
             date={card.published_at || card.created_at}
@@ -305,11 +303,15 @@ const Homepage = () => {
           </Link>
         </div>
         {achievements.map((card, index) => (
-          <AchievementCard
+          <PostCard
             key={card.id}
-            achievement={card}
             to={`/achievement/${card.id}`}
-            className={`achievement-card achievement-card--${index + 1}`}
+            image={card.thumbnail || ''}
+            category={card.category_name || ''}
+            date={card.published_at || card.created_at}
+            title={card.title || ''}
+            summary={card.summary || ''}
+            className={`post-card post-card--${index + 1}`}
           />
         ))}
       </div>

@@ -17,8 +17,8 @@ exports.getAllCategories = withErrorHandling(async (req, res) => {
         const normalizedPageType = String(page_type).trim().toLowerCase();
         request.input('page_type', sql.NVarChar, normalizedPageType);
 
-        if (normalizedPageType === 'activity_annual' || normalizedPageType === 'activity_non_annual') {
-            whereClause += " AND LOWER(c.page_type) IN (@page_type, 'activity')";
+        if (normalizedPageType === 'event_annual' || normalizedPageType === 'event_non_annual') {
+            whereClause += " AND LOWER(c.page_type) IN (@page_type, 'event')";
         } else {
             whereClause += ' AND LOWER(c.page_type) = @page_type';
         }
@@ -156,23 +156,21 @@ exports.deleteCategory = withErrorHandling(async (req, res) => {
         .query(`
             SELECT
                 (SELECT COUNT(*) FROM posts WHERE category_id = @id) AS posts_count,
-                (SELECT COUNT(*) FROM activities WHERE category_id = @id) AS activities_count,
+
                 (SELECT COUNT(*) FROM documents WHERE category_id = @id) AS documents_count,
                 (SELECT COUNT(*) FROM categories WHERE parent_id = @id) AS child_categories_count
         `);
 
     const usage = getRecordOrNull(usageResult) || {};
     const postsCount = Number(usage.posts_count || 0);
-    const activitiesCount = Number(usage.activities_count || 0);
     const documentsCount = Number(usage.documents_count || 0);
     const childCategoriesCount = Number(usage.child_categories_count || 0);
 
-    if (postsCount > 0 || activitiesCount > 0 || documentsCount > 0 || childCategoriesCount > 0) {
+    if (postsCount > 0 || documentsCount > 0 || childCategoriesCount > 0) {
         return res.status(409).json({
             error: 'Không thể xóa danh mục đang được liên kết với bài viết, nội dung hoặc danh mục con. Vui lòng chuyển hoặc xóa dữ liệu liên quan trước.',
             details: {
                 posts: postsCount,
-                activities: activitiesCount,
                 documents: documentsCount,
                 child_categories: childCategoriesCount,
             },

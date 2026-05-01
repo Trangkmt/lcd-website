@@ -211,52 +211,6 @@ Xóa tài liệu
 
 ---
 
-## 🎯 Activities API
-
-### GET `/api/activities`
-Lấy danh sách hoạt động
-**Query params:**
-- `category_id`: number
-- `is_featured`: true | false
-- `year`: number
-- `limit`: number (default: 50)
-- `offset`: number (default: 0)
-
-### GET `/api/activities/:id`
-Lấy hoạt động theo ID (tăng view count)
-
-### GET `/api/activities/slug/:slug`
-Lấy hoạt động theo slug (tăng view count)
-
-### GET `/api/activities/year/:year`
-Lấy hoạt động theo năm
-
-### POST `/api/activities`
-Tạo hoạt động mới
-```json
-{
-  "title": "string (required)",
-  "slug": "string (required)",
-  "description": "string",
-  "content": "string",
-  "location": "string",
-  "start_date": "datetime",
-  "end_date": "datetime",
-  "thumbnail": "string",
-  "images": "string",
-  "organizer": "string",
-  "category_id": number,
-  "created_by": number,
-  "is_featured": true | false,
-  "is_published": true | false
-}
-```
-
-### PUT `/api/activities/:id`
-Cập nhật hoạt động
-
-### DELETE `/api/activities/:id`
-Xóa hoạt động
 
 ---
 
@@ -396,4 +350,4 @@ Import collection hoặc tạo requests theo format trên.
 - Pagination sử dụng `limit` và `offset`
 - Các endpoint GET có thể có query parameters để filter
 - POST/PUT yêu cầu `Content-Type: application/json`
-- Các endpoint có tăng view count: `/posts/:id`, `/posts/slug/:slug`, `/activities/:id`, `/activities/slug/:slug`
+- Các endpoint có tăng view count: `/posts/:id`, `/posts/slug/:slug`

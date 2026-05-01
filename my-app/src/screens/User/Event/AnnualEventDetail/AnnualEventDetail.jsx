@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import './AnnualActivityDetail.css';
+import './AnnualEventDetail.css';
 import { SearchBar } from '../../../../components';
-import { categoriesAPI, newsAPI } from '../../../../services/api';
+import { categoriesAPI, postsAPI } from '../../../../services/api';
 
 function formatEventNameFromSlug(slug) {
     return String(slug || '')
@@ -12,7 +12,7 @@ function formatEventNameFromSlug(slug) {
         .join(' ');
 }
 
-const AnnualActivityDetail = () => {
+const AnnualEventDetail = () => {
     const { eventName } = useParams();
     const [category, setCategory] = useState(null);
     const [posts, setPosts] = useState([]);
@@ -25,7 +25,7 @@ const AnnualActivityDetail = () => {
             .then(data => setCategory(data))
             .catch(() => { });
 
-        newsAPI.getAll({ category_slug: eventName, limit: 500 })
+        postsAPI.getAll({ category_slug: eventName, limit: 500 })
             .then(data => setPosts(Array.isArray(data) ? data : []))
             .catch(() => { })
             .finally(() => setLoading(false));
@@ -39,7 +39,7 @@ const AnnualActivityDetail = () => {
     const displayDescription = category?.description || '';
 
     return (
-        <div className="event-detail-page annual-activity-detail-page">
+        <div className="event-detail-page annual-event-detail-page">
             <div className="event-detail-content">
                 <div className="content-wrapper">
                     <div className="event-info-section">
@@ -81,7 +81,7 @@ const AnnualActivityDetail = () => {
                             {filtered.map(post => (
                                 <Link
                                     key={post.id}
-                                    to={`/activity/${eventName}/post/${post.id}`}
+                                    to={`/event/${eventName}/post/${post.id}`}
                                     className="post-card"
                                     style={{ textDecoration: 'none', color: 'inherit' }}
                                 >
@@ -110,4 +110,4 @@ const AnnualActivityDetail = () => {
     );
 };
 
-export default AnnualActivityDetail;
+export default AnnualEventDetail;

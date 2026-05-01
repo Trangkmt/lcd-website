@@ -1,8 +1,8 @@
-﻿@media (max-width: 640px) {
+@media (max-width: 640px) {
 
     .news-section,
     .achievement-section,
-    .activity-section {
+    .event-section {
         display: flex;
         flex-direction: column;
         gap: 18px;
@@ -142,7 +142,7 @@
     font-size: 0.75rem;
 }
 
-.home-category-badge--activity {
+.home-category-badge--event {
     min-height: 20px;
     height: auto;
     font-size: 0.625rem;
@@ -203,9 +203,9 @@
 }
 
 /* ============================================
-   ACTIVITY SECTION
+   EVENT SECTION
    ============================================ */
-.activity-section {
+.event-section {
     grid-column: 1;
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
@@ -216,12 +216,12 @@
     font-size: 0.75rem;
 }
 
-.activity-section .section-header {
+.event-section .section-header {
     grid-column: 1 / -1;
     grid-row: 1;
 }
 
-.activity-section .btn-view-more {
+.event-section .btn-view-more {
     grid-column: 1;
     grid-row: 2;
     justify-self: start;
@@ -234,19 +234,19 @@
     z-index: 4;
 }
 
-.activity-section .btn-view-more:hover {
+.event-section .btn-view-more:hover {
     background: transparent;
     border: none;
     color: var(--color-brand-hover);
 }
 
-.activity-section .btn-view-more__text {
+.event-section .btn-view-more__text {
     color: var(--color-primary);
     font-size: 1rem;
     font-weight: 600;
 }
 
-.activity-section__featured-box {
+.event-section__featured-box {
     position: relative;
     grid-column: 2;
     grid-row: 2 / span 8;
@@ -255,13 +255,13 @@
     overflow: hidden;
 }
 
-.activity-section__featured-image {
+.event-section__featured-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.activity-section__subtitle {
+.event-section__subtitle {
     position: relative;
     grid-column: 2;
     align-self: end;
@@ -272,8 +272,8 @@
     line-height: 1.5;
 }
 
-/* Activity Posts */
-.activity-post {
+/* Event Posts */
+.event-post {
     position: relative;
     width: 100%;
     min-height: 64px;
@@ -285,15 +285,15 @@
     gap: var(--space-2);
 }
 
-.activity-post:hover {
+.event-post:hover {
     background-color: rgba(44, 107, 204, 0.05);
 }
 
-.activity-post--hovered {
+.event-post--hovered {
     background-color: rgba(44, 107, 204, 0.1);
 }
 
-.activity-post__date {
+.event-post__date {
     position: relative;
     width: auto;
     height: auto;
@@ -309,7 +309,7 @@
     grid-row: 1;
 }
 
-.activity-post .home-category-badge--activity {
+.event-post .home-category-badge--event {
     grid-column: 1;
     grid-row: 1;
     align-self: start;
@@ -317,7 +317,7 @@
     margin-top: 0;
 }
 
-.activity-post__title {
+.event-post__title {
     position: relative;
     width: auto;
     height: auto;
@@ -578,36 +578,36 @@
         grid-template-columns: 1fr !important;
     }
 
-    /* Activity dùng flex để dùng order */
-    .homepage .activity-section {
+    /* Event dùng flex để dùng order */
+    .homepage .event-section {
         display: flex !important;
         flex-direction: column !important;
     }
 
-    .activity-section .section-header {
+    .event-section .section-header {
         order: 1;
     }
 
-    .activity-section .btn-view-more {
+    .event-section .btn-view-more {
         order: 2;
         align-self: flex-start;
     }
 
-    .activity-section__featured-box {
+    .event-section__featured-box {
         order: 3;
         width: 100%;
         aspect-ratio: 16 / 9;
     }
 
-    .activity-section .activity-post {
+    .event-section .event-post {
         order: 4;
     }
 
-    .activity-section__subtitle {
+    .event-section__subtitle {
         order: 5;
     }
 
-    .activity-post__title {
+    .event-post__title {
         padding-right: 0;
     }
 }
@@ -646,11 +646,11 @@
         right: 10px;
     }
 
-    .activity-post {
+    .event-post {
         padding: 8px 10px;
     }
 
-    .activity-post__title {
+    .event-post__title {
         font-size: 0.9375rem;
     }
 }
@@ -673,7 +673,7 @@
     }
 
     .news-section,
-    .activity-section,
+    .event-section,
     .achievement-section {
         padding: 12px;
     }

@@ -2,7 +2,7 @@
 
 ## 🚀 Tổng quan
 
-Hệ thống admin hoàn chỉnh để quản lý tất cả các hoạt động của Liên Chi Đoàn Khoa CNTT, bao gồm:
+Hệ thống admin hoàn chỉnh để quản lý tất cả các hoạt động và sự kiện của Liên Chi Đoàn Khoa CNTT, bao gồm:
 
 - ✅ Quản lý bài viết (tạo thủ công & tích hợp AI)
 - ✅ Quản lý danh mục
@@ -41,16 +41,16 @@ src/screens/Admin/
 
 ### Public Routes (có Header/Footer)
 - `/` - Trang chủ
-- `/activity` - Trang hoạt động
-- `/activity/:eventName` - Chi tiết hoạt động thường niên
-- `/activity/:eventName/post/:postId` - Chi tiết bài viết
+- `/event` - Trang sự kiện
+- `/event/:eventName` - Chi tiết sự kiện thường niên
+- `/event/:eventName/post/:postId` - Chi tiết bài viết
 
 ## 📋 Chức năng chi tiết
 
 ### 1. Dashboard (Trang tổng quan)
 - **Thống kê nhanh**: Số lượng bài viết, bài chờ duyệt, thành viên, liên hệ mới
 - **Bài viết gần đây**: Danh sách 4 bài viết mới nhất
-- **Hoạt động gần đây**: Timeline các hoạt động của admin
+- **Hoạt động gần đây**: Timeline các hành động của admin
 - **Thao tác nhanh**: Shortcut đến các tính năng chính
 
 ### 2. Quản lý bài viết
@@ -76,7 +76,7 @@ src/screens/Admin/
 1. Tin tức trường - khoa
 2. Tin tức đại học
 3. Tin liên chi đoàn
-4. **Hoạt động thường niên**:
+4. **Sự kiện thường niên**:
    - Chào tân
    - FIT Cup
    - THNB (Tháng hành động vì môi trường)

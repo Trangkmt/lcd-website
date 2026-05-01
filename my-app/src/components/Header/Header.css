@@ -238,7 +238,7 @@
 }
 
 .menu-item:focus-visible .menu-item__state-layer,
-.activity-dropdown__item:focus-visible {
+.event-dropdown__item:focus-visible {
     background-color: rgba(255, 255, 255, 0.22);
 }
 
@@ -287,7 +287,7 @@
 }
 
 /* ===========================================
-   ACTIVITY DROPDOWN
+   EVENT DROPDOWN
    =========================================== */
 
 /* Dropdown wrapper needs relative positioning */
@@ -297,7 +297,7 @@
     overflow: visible;
 }
 
-.activity-dropdown {
+.event-dropdown {
     position: absolute;
     top: 100%;
     left: 0;
@@ -315,15 +315,15 @@
     transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s ease;
 }
 
-.menu-item--has-dropdown:hover .activity-dropdown,
-.menu-item--has-dropdown:focus-within .activity-dropdown {
+.menu-item--has-dropdown:hover .event-dropdown,
+.menu-item--has-dropdown:focus-within .event-dropdown {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
     transform: translateY(0);
 }
 
-.activity-dropdown__item {
+.event-dropdown__item {
     display: block;
     padding: 10px 14px;
     color: var(--color-darkslateblue);
@@ -336,11 +336,11 @@
     white-space: nowrap;
 }
 
-.activity-dropdown__item:last-child {
+.event-dropdown__item:last-child {
     border-bottom: none;
 }
 
-.activity-dropdown__item:hover {
+.event-dropdown__item:hover {
     background-color: rgba(44, 107, 204, 0.08);
     color: var(--color-royalblue);
 }

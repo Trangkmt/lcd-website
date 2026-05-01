@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { newsAPI } from '../../../services/api';
+import { postsAPI } from '../../../services/api';
 import { PostDetail as PostDetailComponent } from '../../../components';
 import { StarIcon } from '../../../SvgIcons';
 
@@ -14,10 +14,10 @@ const AchievementDetail = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
         setLoading(true);
-        newsAPI.getById(id)
+        postsAPI.getById(id)
             .then(data => {
                 setItem(data);
-                return newsAPI.getAll({ page_type: 'achievement', limit: 4 });
+                return postsAPI.getAll({ page_type: 'achievement', limit: 4 });
             })
             .then(data => {
                 const all = Array.isArray(data) ? data : [];

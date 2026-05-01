@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { newsAPI } from '../../../../services/api';
+import { postsAPI } from '../../../../services/api';
 import { PostDetail as PostDetailComponent } from '../../../../components';
 
 const PostDetail = () => {
@@ -11,11 +11,11 @@ const PostDetail = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        newsAPI.getById(postId)
+        postsAPI.getById(postId)
             .then(data => {
                 setPost(data);
                 // Fetch related posts from same category
-                return newsAPI.getAll({ category_slug: eventName, limit: 10 });
+                return postsAPI.getAll({ category_slug: eventName, limit: 10 });
             })
             .then(data => {
                 const all = Array.isArray(data) ? data : [];

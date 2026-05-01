@@ -1,36 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import './Activity.css';
-import { activitiesAPI } from '../../../../services/api';
-import { SearchBar } from '../../../../components';
-import ActivityCard from '../../../../components/ActivityCard/ActivityCard';
+import './Event.css';
+import { postsAPI } from '../../../../services/api';
+import { SearchBar, PostCard } from '../../../../components';
 import { SettingsIcon, ChevronLeftIcon, ChevronRightIcon } from '../../../../SvgIcons';
 
-const Activity = () => {
+const Event = () => {
     const [filterOpen, setFilterOpen] = useState(false);
     const [selectedFilter, setSelectedFilter] = useState('Tất cả');
     const [searchQuery, setSearchQuery] = useState('');
-    const [activities, setActivities] = useState([]);
+    const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const filterOptions = ['Tất cả', 'Sự kiện không thường niên', 'Sự kiện thường niên'];
 
     useEffect(() => {
-        activitiesAPI.getAll({ limit: 100 })
-            .then(data => setActivities(Array.isArray(data) ? data : []))
+        // Fetch both annual and non-annual events
+        Promise.all([
+            postsAPI.getAll({ page_type: 'event_annual', limit: 100 }),
+            postsAPI.getAll({ page_type: 'event_non_annual', limit: 100 })
+        ])
+            .then(([annual, nonAnnual]) => {
+                const merged = [...(Array.isArray(annual) ? annual : []), ...(Array.isArray(nonAnnual) ? nonAnnual : [])];
+                setEvents(merged);
+            })
             .catch(() => { })
             .finally(() => setLoading(false));
     }, []);
 
-    const filtered = activities.filter(a =>
-        selectedFilter === 'Tất cả' || a.category_name === selectedFilter
-    ).filter(a =>
-        !searchQuery || (a.title || '').toLowerCase().includes(searchQuery.toLowerCase())
+    const filtered = events.filter(e => {
+        if (selectedFilter === 'Tất cả') return true;
+        if (selectedFilter === 'Sự kiện thường niên') return e.page_type === 'event_annual';
+        if (selectedFilter === 'Sự kiện không thường niên') return e.page_type === 'event_non_annual';
+        return true;
+    }).filter(e =>
+        !searchQuery || (e.title || '').toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     return (
-        <div className="activity-page">
+        <div className="event-page">
             {/* Main Content */}
-            <div className="activity-content">
+            <div className="event-content">
                 <div className="content-wrapper">
                     {/* Search and Filter Section */}
                     <div className="search-section">
@@ -39,7 +48,7 @@ const Activity = () => {
                             onChange={e => setSearchQuery(e.target.value)}
                             onClear={() => setSearchQuery('')}
                             placeholder="Tìm kiếm"
-                            variant="activity"
+                            variant="event"
                         />
                         <div className="filter-wrapper">
                             <div className="filter-icon" aria-hidden="true"><SettingsIcon /></div>
@@ -70,22 +79,32 @@ const Activity = () => {
                         </div>
                     )}
 
-                    {/* Activities Title */}
-                    <h1 className="activities-title">CÁC HOẠT ĐỘNG NỔI BẬT CỦA LIÊN CHI ĐOÀN</h1>
+                    {/* Events Title */}
+                    <h1 className="events-title">CÁC SỰ KIỆN NỔI BẬT CỦA LIÊN CHI ĐOÀN</h1>
 
-                    {/* Activities Grid */}
-                    <div className="activities-grid">
+                    {/* Events Grid */}
+                    <div className="events-grid">
                         {loading && <p style={{ gridColumn: '1/-1', textAlign: 'center', color: '#888' }}>Đang tải...</p>}
                         {!loading && filtered.length === 0 && (
-                            <p style={{ gridColumn: '1/-1', textAlign: 'center', color: '#888' }}>Không có hoạt động nào</p>
+                            <p style={{ gridColumn: '1/-1', textAlign: 'center', color: '#888' }}>Không có sự kiện nào</p>
                         )}
-                        {filtered.map(activity => (
-                            <ActivityCard
-                                key={activity.id}
-                                activity={activity}
-                                to={`/activity/${activity.slug}`}
-                            />
-                        ))}
+                        {filtered.map(event => {
+                            const toPath = event.page_type === 'event_annual' 
+                                ? `/event/${event.category_slug}/post/${event.id}`
+                                : `/event/non-annual/${event.id}`;
+                            
+                            return (
+                                <PostCard
+                                    key={event.id}
+                                    title={event.title}
+                                    description={event.summary}
+                                    image={event.thumbnail}
+                                    date={event.published_at || event.created_at}
+                                    category={event.category_name}
+                                    to={toPath}
+                                />
+                            );
+                        })}
                     </div>
 
                     {/* Pagination */}
@@ -113,4 +132,4 @@ const Activity = () => {
     );
 };
 
-export default Activity;
+export default Event;
