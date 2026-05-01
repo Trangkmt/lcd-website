@@ -65,17 +65,17 @@ Tạo nội dung bài viết tự động bằng AI theo từ khóa.
 - Kiểm tra server và database connection
 - Response: `{ status, database, dbname, timestamp }`
 
----
-
 ## 👥 Users API
 
 ### GET `/api/users`
 Lấy danh sách tất cả users
 
 ### GET `/api/users/:id`
+*(Hiện không sử dụng trên Frontend)*
 Lấy user theo ID
 
 ### POST `/api/users`
+Tạo user mới
 Tạo user mới
 ```json
 {
@@ -99,6 +99,7 @@ Cập nhật user
 ```
 
 ### DELETE `/api/users/:id`
+*(Hiện không sử dụng trên Frontend)*
 Xóa user
 
 ---
@@ -109,6 +110,7 @@ Xóa user
 Lấy danh sách categories (bao gồm trường `subcategories_count`)
 
 ### GET `/api/categories/:id`
+*(Hiện không sử dụng trên Frontend)*
 Lấy category theo ID (bao gồm trường `subcategories_count`)
 
 ### POST `/api/categories`
@@ -213,8 +215,7 @@ Xóa tài liệu
 
 
 ---
-
-## 🏢 Teams API
+## 🏢 Teams API (Read-only)
 
 ### GET `/api/teams`
 Lấy danh sách tổ chức
@@ -222,33 +223,8 @@ Lấy danh sách tổ chức
 ### GET `/api/teams/:id`
 Lấy tổ chức theo ID
 
-### GET `/api/teams/:id/children`
-Lấy các tổ chức con
-
-### POST `/api/teams`
-Tạo tổ chức mới
-```json
-{
-  "name": "string (required)",
-  "name_abbr": "string",
-  "description": "string",
-  "logo": "string",
-  "website": "string",
-  "email": "string",
-  "phone": "string",
-  "address": "string",
-  "parent_id": number,
-  "display_order": number
-}
-```
-
-### PUT `/api/teams/:id`
-Cập nhật tổ chức
-
-### DELETE `/api/teams/:id`
-Xóa tổ chức
-
 ---
+
 
 ## 📧 Contact API
 
@@ -273,7 +249,12 @@ Thống kê liên hệ
 ```
 
 ### GET `/api/contact/:id`
+*(Hiện không sử dụng trên Frontend)*
 Lấy liên hệ theo ID (tự động đánh dấu đã đọc)
+**Response includes:**
+- `read_by`, `read_by_name`
+- `replied_by`, `replied_by_name`
+- `is_deleted`, `deleted_by`, `deleted_by_name`, `deleted_at`
 
 ### POST `/api/contact`
 Tạo liên hệ mới (Form liên hệ từ frontend)
