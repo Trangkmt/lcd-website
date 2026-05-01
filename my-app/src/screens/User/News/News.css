@@ -2,7 +2,7 @@
 .news-page {
     width: 100%;
     min-height: 100vh;
-    background: var(--color-whitesmoke);
+    background: var(--color-white);
     font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
@@ -394,3 +394,4 @@
         bottom: 18px;
     }
 }
+

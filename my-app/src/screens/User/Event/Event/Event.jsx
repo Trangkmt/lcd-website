@@ -84,9 +84,9 @@ const Event = () => {
 
                     {/* Events Grid */}
                     <div className="events-grid">
-                        {loading && <p style={{ gridColumn: '1/-1', textAlign: 'center', color: '#888' }}>Đang tải...</p>}
+                        {loading && <p style={{ gridColumn: '1/-1', textAlign: 'center', color: 'var(--color-text-soft)' }}>Đang tải...</p>}
                         {!loading && filtered.length === 0 && (
-                            <p style={{ gridColumn: '1/-1', textAlign: 'center', color: '#888' }}>Không có sự kiện nào</p>
+                            <p style={{ gridColumn: '1/-1', textAlign: 'center', color: 'var(--color-text-soft)' }}>Không có sự kiện nào</p>
                         )}
                         {filtered.map(event => {
                             const toPath = event.page_type === 'event_annual' 
@@ -133,3 +133,4 @@ const Event = () => {
 };
 
 export default Event;
+

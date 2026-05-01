@@ -1,4 +1,4 @@
-﻿/* Footer */
+/* Footer */
 .footer {
     width: 100%;
     background: var(--color-primary);
@@ -30,7 +30,7 @@
     flex-wrap: wrap;
     align-items: flex-start;
     flex: 0 0 auto;
-    /* ✅ không co giãn */
+    /* ? kh�ng co gi�n */
 }
 
 .footer-logo {
@@ -75,7 +75,7 @@
     font-size: 1rem;
     font-weight: 700;
     margin: 0 0 8px 0;
-    /* ✅ margin nhất quán */
+    /* ? margin nh?t qu�n */
     color: var(--color-white);
 }
 
@@ -117,15 +117,15 @@
     .footer-content {
         flex-direction: column;
         align-items: center;
-        /* ✅ center khi stack dọc */
+        /* ? center khi stack d?c */
         gap: var(--space-5);
         text-align: center;
-        /* ✅ text center */
+        /* ? text center */
     }
 
     .footer-left {
         align-items: center;
-        /* ✅ center logo, social icons */
+        /* ? center logo, social icons */
         width: 100%;
         min-width: 0;
         padding: 0;
@@ -133,7 +133,7 @@
 
     .footer-columns {
         flex-direction: row;
-        /* ✅ giữ ngang, 2 column cạnh nhau */
+        /* ? gi? ngang, 2 column c?nh nhau */
         justify-content: center;
         gap: var(--space-8);
         width: 100%;
@@ -144,7 +144,7 @@
         max-width: none;
         padding: 0;
         align-items: center;
-        /* ✅ center links */
+        /* ? center links */
         flex: 1;
         max-width: 200px;
     }
@@ -155,7 +155,7 @@
 
     .footer-column a:hover {
         transform: none;
-        /* ✅ bỏ translateX khi center */
+        /* ? b? translateX khi center */
     }
 }
 
@@ -188,7 +188,7 @@
 
     .footer-columns {
         flex-direction: column;
-        /* ✅ stack dọc trên mobile nhỏ */
+        /* ? stack d?c tr�n mobile nh? */
         align-items: center;
         gap: var(--space-5);
     }
@@ -198,3 +198,4 @@
         width: 100%;
     }
 }
+

@@ -1,4 +1,4 @@
-﻿@import url('../Styles/AdminButtons.css');
+@import url('../Styles/AdminButtons.css');
 @import url('../Styles/AdminForm.css');
 @import url('../Styles/AdminModal.css');
 
@@ -221,9 +221,9 @@
 }
 
 .timeline-alert--error {
-    background: #fff4f4;
-    color: #c43232;
-    border: 1px solid #ffd8d8;
+    background: var(--color-state-danger-surface);
+    color: var(--color-state-danger-strong);
+    border: 1px solid var(--color-state-danger-surface);
 }
 
 .timeline-vertical {
@@ -253,7 +253,7 @@
     top: -24px;
     bottom: -24px;
     width: 2px;
-    background: linear-gradient(180deg, #d9e8ff 0%, #bfd8ff 100%);
+    background: linear-gradient(180deg, var(--color-info-tint-soft) 0%, var(--color-info-tint-medium) 100%);
 }
 
 .timeline-vertical-axis__dot {
@@ -263,8 +263,8 @@
     width: 14px;
     height: 14px;
     border-radius: 999px;
-    border: 3px solid #f8fbff;
-    background: #2f80ed;
+    border: 3px solid var(--color-info-tint-light);
+    background: var(--color-info-vivid);
 }
 
 .timeline-vertical-item__empty {
@@ -273,15 +273,15 @@
 
 .timeline-vertical-card {
     position: relative;
-    background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
-    border: 1px solid #dfe9f8;
+    background: linear-gradient(180deg, #ffffff 0%, var(--color-info-tint-light) 100%);
+    border: 1px solid var(--color-surface-timeline);
     border-radius: 0;
     padding: 14px;
 }
 
 .timeline-vertical-card--active {
     border-color: var(--color-primary);
-    background: linear-gradient(180deg, #f6faff 0%, #ffffff 100%);
+    background: linear-gradient(180deg, var(--color-info-tint-light) 0%, #ffffff 100%);
 }
 
 .timeline-vertical-item>.timeline-vertical-card:first-child {
@@ -299,8 +299,8 @@
     width: 10px;
     height: 10px;
     background: #ffffff;
-    border-top: 1px solid #dfe9f8;
-    border-right: 1px solid #dfe9f8;
+    border-top: 1px solid var(--color-surface-timeline);
+    border-right: 1px solid var(--color-surface-timeline);
     transform: rotate(45deg);
 }
 
@@ -326,7 +326,7 @@
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: #3f6da7;
+    color: var(--color-primary-dark);
 }
 
 .timeline-vertical-card--active .timeline-vertical-card__month {
@@ -360,7 +360,7 @@
     padding: 22px 10px;
     border: 1px dashed var(--color-border-subtle);
     border-radius: 10px;
-    background: #fcfdff;
+    background: var(--color-info-tint-light);
 }
 
 .timeline-table__actions {
@@ -378,8 +378,8 @@
 }
 
 .timeline-status--published {
-    background: #edf9f1;
-    color: #207d45;
+    background: var(--color-state-success-soft);
+    color: var(--color-state-success-strong);
 }
 
 .timeline-status--active {
@@ -388,8 +388,8 @@
 }
 
 .timeline-status--draft {
-    background: #fff7ec;
-    color: #a96513;
+    background: var(--color-state-warning-soft);
+    color: var(--color-state-warning-strong);
 }
 
 @media (max-width: 860px) {
@@ -433,3 +433,5 @@
     }
 
 }
+
+

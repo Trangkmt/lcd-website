@@ -44,3 +44,4 @@ const NonAnnualEventDetail = () => {
 };
 
 export default NonAnnualEventDetail;
+

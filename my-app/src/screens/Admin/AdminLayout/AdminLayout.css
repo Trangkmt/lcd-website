@@ -9,7 +9,7 @@
     --admin-text-sub: var(--color-text-muted);
     --admin-text-sub-alt: var(--color-text-subtle);
     --admin-border: var(--color-border-subtle);
-    --admin-secondary-chart: #8CB5F2;
+    --admin-secondary-chart: var(--color-info-tint-medium);
     --color-brand-indigo: var(--admin-primary);
     --color-brand-action: var(--admin-primary);
     --color-brand-indigo-dark: var(--admin-sidebar);
@@ -21,8 +21,8 @@
     --color-border-soft: var(--admin-border);
     --color-border-muted: var(--admin-border);
     --color-surface-panel: #FFFFFF;
-    --color-surface-accent: #EEF4FD;
-    --color-surface-soft-blue: #F5F8FD;
+    --color-surface-accent: var(--color-surface-soft-blue);
+    --color-surface-soft-blue: var(--color-surface-lightest);
     display: flex;
     min-height: 100vh;
     background: var(--admin-bg);
@@ -292,14 +292,14 @@
 .admin-layout .admin-content-wrap form input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
 .admin-layout .admin-content-wrap form select,
 .admin-layout .admin-content-wrap form textarea {
-    border: 1px solid #bfbfbf;
+    border: 1px solid var(--color-gray-400);
 }
 
 .admin-layout .admin-content-wrap form .form-control:focus,
 .admin-layout .admin-content-wrap form input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]):focus,
 .admin-layout .admin-content-wrap form select:focus,
 .admin-layout .admin-content-wrap form textarea:focus {
-    border-color: #9ca3af;
+    border-color: var(--color-darkgray);
 }
 
 /* Responsive */
@@ -398,3 +398,5 @@
         width: 92vw;
     }
 }
+
+

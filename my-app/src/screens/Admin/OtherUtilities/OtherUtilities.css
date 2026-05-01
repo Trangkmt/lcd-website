@@ -1,4 +1,4 @@
-﻿.other-utilities {
+.other-utilities {
     padding: var(--space-10);
     font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 }
@@ -679,3 +679,4 @@
         grid-template-columns: 1fr;
     }
 }
+

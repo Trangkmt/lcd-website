@@ -1,7 +1,7 @@
-﻿.post-detail-page {
+.post-detail-page {
     width: 100%;
     min-height: 100vh;
-    background-color: var(--color-whitesmoke);
+    background-color: var(--color-white);
     position: relative;
     font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 }
@@ -314,3 +314,4 @@
         font-size: 1rem;
     }
 }
+

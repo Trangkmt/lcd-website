@@ -1,6 +1,6 @@
-﻿.na-detail-page {
+.na-detail-page {
     min-height: 100vh;
-    background: var(--color-whitesmoke);
+    background: var(--color-white);
 }
 
 /* Banner */
@@ -362,6 +362,7 @@
         font-size: 1.4rem;
     }
 }
+
 
 
 

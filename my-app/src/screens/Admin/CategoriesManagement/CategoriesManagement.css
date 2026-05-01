@@ -94,7 +94,7 @@
 }
 
 .category-card {
-    background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+    background: linear-gradient(180deg, #ffffff 0%, var(--color-surface-lightest) 100%);
     border-radius: 0;
     padding: var(--space-6);
     border: 1px solid var(--color-border-subtle);
@@ -192,3 +192,4 @@
         padding-inline: 0;
     }
 }
+

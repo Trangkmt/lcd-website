@@ -47,7 +47,7 @@ export default function OtherUtilities() {
     const [nameXPercent, setNameXPercent] = useState(50);
     const [nameYPercent, setNameYPercent] = useState(62);
     const [fontSize, setFontSize] = useState(48);
-    const [fontColor, setFontColor] = useState('#1a1a1a');
+    const [fontColor, setFontColor] = useState('var(--color-text-strong)');
     const [fontFamily, setFontFamily] = useState('Times New Roman');
     const [fontWeight, setFontWeight] = useState('700');
     const [parsingExcel, setParsingExcel] = useState(false);
@@ -423,3 +423,4 @@ export default function OtherUtilities() {
         </div>
     );
 }
+

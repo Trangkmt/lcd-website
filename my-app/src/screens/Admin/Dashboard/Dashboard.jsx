@@ -190,10 +190,10 @@ export default function Dashboard() {
                     </div>
                     <div className="stats-grid">
                         {[
-                            { label: 'Tổng bài viết', value: statsData.totalPosts, icon: PostIcon, color: '#2C6BCC' },
-                            { label: 'Bài viết chờ duyệt', value: statsData.pendingPosts, icon: HourglassIcon, color: '#8CB5F2' },
-                            { label: 'Thành viên', value: statsData.totalMembers, icon: UsersIcon, color: '#1A4B8F' },
-                            { label: 'Liên hệ mới', value: statsData.newContacts, icon: MailIcon, color: '#2C6BCC' },
+                            { label: 'Tổng bài viết', value: statsData.totalPosts, icon: PostIcon, color: 'var(--color-primary)' },
+                            { label: 'Bài viết chờ duyệt', value: statsData.pendingPosts, icon: HourglassIcon, color: 'var(--color-info-tint-medium)' },
+                            { label: 'Thành viên', value: statsData.totalMembers, icon: UsersIcon, color: 'var(--color-primary-dark)' },
+                            { label: 'Liên hệ mới', value: statsData.newContacts, icon: MailIcon, color: 'var(--color-primary)' },
                         ].map((stat, index) => (
                             <div key={index} className="stat-card" style={{ borderLeftColor: stat.color }}>
                                 <div className="stat-icon" style={{ background: stat.color }}>
@@ -215,7 +215,7 @@ export default function Dashboard() {
                             </div>
                             <div className="posts-table">
                                 {loading ? (
-                                    <p style={{ textAlign: 'center', color: '#888', padding: '20px' }}>Đang tải...</p>
+                                    <p style={{ textAlign: 'center', color: 'var(--color-text-soft)', padding: '20px' }}>Đang tải...</p>
                                 ) : (
                                     <table>
                                         <thead>
@@ -228,7 +228,7 @@ export default function Dashboard() {
                                         </thead>
                                         <tbody>
                                             {recentPosts.length === 0 && (
-                                                <tr><td colSpan="4" style={{ textAlign: 'center', color: '#888' }}>Chưa có bài viết</td></tr>
+                                                <tr><td colSpan="4" style={{ textAlign: 'center', color: 'var(--color-text-soft)' }}>Chưa có bài viết</td></tr>
                                             )}
                                             {recentPosts.map(post => (
                                                 <tr key={post.id}>
@@ -362,3 +362,5 @@ export default function Dashboard() {
         </div>
     );
 }
+
+

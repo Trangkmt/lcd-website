@@ -1,4 +1,4 @@
-﻿@import url('../Styles/AdminForm.css');
+@import url('../Styles/AdminForm.css');
 
 .admin-login-page {
     min-height: 100vh;
@@ -15,7 +15,7 @@
     background: white;
     border-radius: 0;
     padding: var(--space-7);
-    border: 1px solid #E9EDF2;
+    border: 1px solid var(--color-surface-soft-blue);
 }
 
 .admin-login-title {
@@ -26,7 +26,7 @@
 
 .admin-login-subtitle {
     margin: 8px 0 22px;
-    color: #99A3BA;
+    color: var(--color-text-meta);
     font-size: 0.875rem;
 }
 
@@ -62,7 +62,7 @@
 
 .admin-login-form .btn-primary {
     margin-top: 6px;
-    background: #2C6BCC;
+    background: var(--color-primary);
     color: white;
     border: none;
     border-radius: 8px;
@@ -73,7 +73,7 @@
 }
 
 .admin-login-form .btn-primary:hover:not(:disabled) {
-    background: #1A4B8F;
+    background: var(--color-primary-dark);
 }
 
 .admin-login-form .btn-primary:disabled {
@@ -86,3 +86,5 @@
     color: var(--color-state-danger);
     font-size: 0.8125rem;
 }
+
+

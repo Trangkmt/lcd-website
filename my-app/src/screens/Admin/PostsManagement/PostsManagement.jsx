@@ -924,7 +924,7 @@ export default function PostsManagement() {
                 </div>
             </div>
 
-            {error && <div style={{ background: '#fee', color: '#c00', padding: '12px', borderRadius: '8px', marginBottom: '16px' }}>{error}</div>}
+            {error && <div style={{ background: 'var(--color-state-danger-soft)', color: 'var(--color-state-danger)', padding: '12px', borderRadius: '8px', marginBottom: '16px' }}>{error}</div>}
 
             {viewTab === 'list' ? (
                 <>
@@ -990,7 +990,7 @@ export default function PostsManagement() {
                     {/* Posts Table */}
                     <div className="posts-table-container">
                         {loading ? (
-                            <p style={{ textAlign: 'center', padding: '40px', color: '#888' }}>Đang tải...</p>
+                            <p style={{ textAlign: 'center', padding: '40px', color: 'var(--color-text-soft)' }}>Đang tải...</p>
                         ) : (
                             <table className="posts-table">
                                 <thead>
@@ -1006,7 +1006,7 @@ export default function PostsManagement() {
                                 </thead>
                                 <tbody>
                                     {filteredPosts.length === 0 && (
-                                        <tr><td colSpan="7" style={{ textAlign: 'center', color: '#888', padding: '24px' }}>Không có bài viết nào</td></tr>
+                                        <tr><td colSpan="7" style={{ textAlign: 'center', color: 'var(--color-text-soft)', padding: '24px' }}>Không có bài viết nào</td></tr>
                                     )}
                                     {filteredPosts.map(post => (
                                         <tr key={post.id}>
@@ -1118,7 +1118,7 @@ export default function PostsManagement() {
                                     {showCatDropdown && (
                                         <div className="cat-dropdown-menu">
                                             {pageTypeOrder.length === 0 && (
-                                                <div style={{ padding: '12px 16px', color: '#888', fontSize: '14px' }}>Chưa có danh mục</div>
+                                                <div style={{ padding: '12px 16px', color: 'var(--color-text-soft)', fontSize: '14px' }}>Chưa có danh mục</div>
                                             )}
                                             {pageTypeOrder.map(pt => (
                                                 <div
@@ -1329,3 +1329,4 @@ export default function PostsManagement() {
         </div>
     );
 }
+
