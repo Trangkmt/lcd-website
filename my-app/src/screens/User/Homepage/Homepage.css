@@ -18,7 +18,7 @@
     text-align: left;
     font-size: 1rem;
     color: var(--color-black);
-    font-family: var(--font-work-sans);
+    font-family: var(--font-primary);
     display: grid;
     grid-template-columns: minmax(0, 1fr) var(--timeline-sidebar-width);
     grid-template-rows: auto auto auto auto;
@@ -78,7 +78,7 @@
     width: auto;
     height: auto;
     text-align: center;
-    color: var(--color-whitesmoke);
+    color: var(--color-white);
 }
 
 .btn-view-more-wrapper .btn-view-more {
@@ -146,7 +146,7 @@
     min-height: 20px;
     height: auto;
     font-size: 0.625rem;
-    font-family: var(--font-open-sans);
+    font-family: var(--font-primary);
     text-transform: uppercase;
 }
 
@@ -169,7 +169,7 @@
     gap: var(--space-4);
     padding: var(--space-5);
     background: transparent;
-    font-family: var(--font-open-sans);
+    font-family: var(--font-primary);
 }
 
 .news-section .section-header {
@@ -349,7 +349,7 @@
     padding: var(--space-5);
     background: transparent;
     color: var(--color-darkslateblue);
-    font-family: var(--font-open-sans);
+    font-family: var(--font-primary);
 }
 
 .achievement-section .section-header {
