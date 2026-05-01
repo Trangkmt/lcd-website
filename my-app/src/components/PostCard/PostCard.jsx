@@ -12,12 +12,21 @@ const PostCard = ({
     description,
     summary,
     to,
+    variant = '', // 'news', 'activity', 'achievement'
     className = '',
     style,
 }) => {
     const displayTitle = title || content || '';
     const displayDescription = description || summary || '';
-    const cardClassName = ['post-card', className].filter(Boolean).join(' ');
+    
+    // Automatically determine variant from category if not provided
+    const effectiveVariant = variant || (category ? category.toLowerCase() : '');
+    
+    const cardClassName = [
+        'post-card',
+        effectiveVariant ? `post-card--${effectiveVariant}` : '',
+        className
+    ].filter(Boolean).join(' ');
 
     const cardContent = (
         <>
