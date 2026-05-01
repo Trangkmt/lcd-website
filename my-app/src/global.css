@@ -3,8 +3,6 @@
    LCD - Liên Chi Đoàn Khoa CNTT
    =========================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900&display=swap');
 
@@ -135,24 +133,17 @@ p {
        FIGMA DESIGN TOKENS
        ======================================= */
 
-   /* Figma Colors */
-   --color-darkslateblue: #183563;
-   --color-darkslategray: #49454F;
-   --color-gainsboro: #D9D9D9;
-   --color-gray: rgba(0, 0, 0, 0.46);
-   --color-royalblue: #2C6BCC;
-   --color-whitesmoke: #FFFFFF;
-   --color-darkgray: #9CA3AF;
+    /* Figma Colors */
+    --color-darkslateblue: #183563;
+    --color-darkslategray: #49454F;
+    --color-gainsboro: #D9D9D9;
+    --color-gray: rgba(0, 0, 0, 0.46);
+    --color-darkgray: #9CA3AF;
 
    /* Extended Project Colors */
    --color-text-strong: #1A1A1A;
    --color-text-primary: #333333;
    --color-text-muted: #666666;
-   --color-text-soft: #888888;
-   --color-text-subtle: #999999;
-   --color-text-placeholder: #AAAAAA;
-   --color-text-deep: #1A2A40;
-   --color-text-cool-muted: #7A8899;
 
    --color-brand-indigo: #667EEA;
    --color-brand-indigo-dark: #1A4D99;
@@ -196,40 +187,13 @@ p {
    --color-state-warning: #B8860B;
    --color-state-warning-soft: #FEF3C7;
 
-   /* Color Primitives */
-   --color-primitives-brand-100: rgba(245, 245, 245, 1);
-   --color-primitives-brand-300: rgba(217, 217, 217, 1);
-   --color-primitives-brand-800: rgba(44, 44, 44, 1);
-   --color-primitives-brand-900: rgba(30, 30, 30, 1);
-   --color-primitives-gray-900: rgba(30, 30, 30, 1);
-   --color-primitives-white-1000: rgba(255, 255, 255, 1);
-
-   /* LCD Brand Color */
-   --LCD-color: rgba(44, 107, 204, 1);
-
-   /* Fuschia Palette */
-   --fuschia-100: rgba(239, 93, 168, 1);
-   --fuschia-80: rgba(241, 120, 182, 1);
-   --fuschia-60: rgba(252, 221, 236, 1);
-
-   /* Iris Palette */
-   --iris-100: rgba(93, 95, 239, 1);
-   --iris-80: rgba(120, 121, 241, 1);
-   --iris-60: rgba(165, 166, 246, 1);
 
    /* =======================================
        TYPOGRAPHY
        ======================================= */
 
-   /* Font Families - Unified System */
-   --font-primary: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-   --font-secondary: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-   --font-body: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-
-   /* Figma Font Families - Updated to Inter */
-   --font-work-sans: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-   --font-open-sans: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-   --font-inter: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    /* Font Family */
+    --font-primary: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 
    /* Font Weights */
    --fw-light: 300;
@@ -244,96 +208,59 @@ p {
    --lh-normal: 1.5;
    --lh-relaxed: 1.75;
 
-   /* Letter Spacings */
-   --ls-tight: -0.02em;
-   --ls-normal: 0;
-   --ls-wide: 0.02em;
-   --ls--0_02: -0.02em;
-   --ls-0_5: 0.5px;
+    /* Letter Spacings */
+    --ls-tight: -0.02em;
+    --ls-normal: 0;
+    --ls-wide: 0.02em;
 
    /* =======================================
        SPACING
        ======================================= */
 
-   --space-0: 0;
-   --space-1: 4px;
-   --space-2: 8px;
-   --space-10px: 10px;
-   --space-3: 12px;
-   --space-14px: 14px;
-   --space-4: 16px;
-   --space-5: 20px;
-   --space-6: 24px;
-   --space-7: 28px;
-   --space-8: 32px;
-   --space-9: 36px;
-   --space-10: 40px;
-   --space-12: 48px;
-   --space-16: 64px;
-   --space-70px: 70px;
-   --space-20: 80px;
-   --space-24: 96px;
-
-   /* Figma Spacing */
-   --padding-0: 0px;
-   --padding-4: 4px;
-   --padding-8: 8px;
-   --padding-12: 12px;
-   --padding-16: 16px;
-   --padding-20: 20px;
-   --padding-24: 24px;
-
-   --gap-4: 4px;
-   --gap-8: 8px;
-   --gap-12: 12px;
-   --gap-16: 16px;
-   --gap-20: 20px;
-   --gap-24: 24px;
+    --space-0: 0;
+    --space-1: 0.25rem;   /* 4px */
+    --space-2: 0.5rem;    /* 8px */
+    --space-3: 0.75rem;   /* 12px */
+    --space-4: 1rem;      /* 16px */
+    --space-5: 1.25rem;   /* 20px */
+    --space-6: 1.5rem;    /* 24px */
+    --space-7: 1.75rem;   /* 28px */
+    --space-8: 2rem;      /* 32px */
+    --space-9: 2.25rem;   /* 36px */
+    --space-10: 2.5rem;   /* 40px */
+    --space-12: 3rem;     /* 48px */
+    --space-16: 4rem;     /* 64px */
+    --space-20: 5rem;     /* 80px */
+    --space-24: 6rem;     /* 96px */
 
    /* =======================================
        SIZES
        ======================================= */
 
-   /* Width */
-   --width-24: 24px;
-   --width-1440: 1440px;
-   --width-container: 1440px;
-   --width-content: 1200px;
+    /* Width */
+    --width-1440: 1440px;
+    --width-container: 1440px;
+    --width-content: 1200px;
 
-   /* Height */
-   --height-24: 24px;
-   --height-28: 28px;
-   --height-40: 40px;
-   --height-48: 48px;
-   --height-57: 57px;
-   --height-60: 60px;
+    /* Height */
+    --height-40: 40px;
+    --height-48: 48px;
+    --height-60: 60px;
 
    /* Border Radius */
-   --radius-none: 0;
-   --radius-sm: 4px;
-   --radius-md: 8px;
-   --radius-lg: 12px;
-   --radius-xl: 16px;
-   --radius-2xl: 24px;
-   --radius-full: 9999px;
-
-   --size-radius-200: 8px;
-   --size-space-200: 8px;
-   --size-space-300: 12px;
-   --size-space-400: 16px;
+    --radius-none: 0;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-2xl: 24px;
+    --radius-full: 9999px;
 
    /* =======================================
        SHADOWS
        ======================================= */
 
-   --shadow-none: none;
-   --shadow-sm: none;
-   --shadow-md: none;
-   --shadow-lg: none;
-   --shadow-xl: none;
-   --shadow-2xl: none;
-
-   --text-shadow-1: none;
+    --shadow-none: none;
 
    /* =======================================
        BORDERS
@@ -376,48 +303,10 @@ p {
    --bp-xl: 1280px;
 
    /* Layout helpers */
-   --container-max: 1200px;
-   --container-gutter: 24px;
+   --container-max: 75rem;
+   --container-gutter: 1.5rem;
 }
 
-/* ===========================================
-   LCD COLOR MODES
-   =========================================== */
-
-[data-LCD-mode="mode-1"] {
-   --LCD-color: rgba(44, 107, 204, 1);
-   /* Blue */
-}
-
-[data-LCD-mode="mode-2"] {
-   --LCD-color: rgba(255, 255, 255, 1);
-   /* White */
-}
-
-[data-LCD-mode="mode-3"] {
-   --LCD-color: rgba(234, 196, 0, 1);
-   /* Yellow */
-}
-
-/* ===========================================
-   SDS COLOR MODES (Light/Dark Theme)
-   =========================================== */
-
-[data-color-mode="SDS-light"] {
-   --color-background-brand-default: var(--color-primitives-brand-800);
-   --color-background-brand-hover: var(--color-primitives-brand-900);
-   --color-border-brand-default: var(--color-primitives-brand-800);
-   --color-text-brand-on-brand: var(--color-primitives-brand-100);
-   --color-text-default-default: var(--color-primitives-gray-900);
-}
-
-[data-color-mode="SDS-dark"] {
-   --color-background-brand-default: var(--color-primitives-brand-100);
-   --color-background-brand-hover: var(--color-primitives-brand-300);
-   --color-border-brand-default: var(--color-primitives-brand-100);
-   --color-text-brand-on-brand: var(--color-primitives-brand-900);
-   --color-text-default-default: var(--color-primitives-white-1000);
-}
 
 /* Root Container */
 #root {
@@ -436,22 +325,22 @@ p {
 
 @media (max-width: 1024px) {
    :root {
-      --container-gutter: 20px;
+      --container-gutter: 1.25rem;
    }
 }
 
 @media (max-width: 640px) {
    :root {
-      --container-gutter: 16px;
+      --container-gutter: 1rem;
    }
 }
 
 @media (max-width: 480px) {
    :root {
-      --space-10: 28px;
-      --space-8: 24px;
-      --space-6: 20px;
-      --space-5: 16px;
-      --space-4: 14px;
+      --space-10: 1.75rem;
+      --space-8: 1.5rem;
+      --space-6: 1.25rem;
+      --space-5: 1rem;
+      --space-4: 0.875rem;
    }
 }
