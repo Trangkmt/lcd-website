@@ -1257,3 +1257,4 @@ const team_id = matchedTeam ? matchedTeam.id : null;
         </div>
     );
 }
+

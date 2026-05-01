@@ -1,7 +1,7 @@
 .contact-page {
     width: 100%;
     min-height: 100vh;
-    background: var(--color-whitesmoke);
+    background: var(--color-white);
     padding: 40px 20px;
 }
 
@@ -14,7 +14,7 @@
 .contact-wrapper {
     max-width: 1000px;
     margin: 0 auto;
-    background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+    background: linear-gradient(180deg, #ffffff 0%, var(--color-surface-lightest) 100%);
     border-radius: 16px;
     padding: var(--space-10);
     border: 1px solid var(--color-border-soft);
@@ -151,3 +151,4 @@
         padding-inline: 0;
     }
 }
+

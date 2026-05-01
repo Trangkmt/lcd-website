@@ -312,7 +312,7 @@
     height: 10px;
     margin-top: 18px;
     border-radius: 999px;
-    background: #2f80ed;
+    background: var(--color-info-vivid);
     border: 2px solid #ffffff;
     z-index: 2;
 }
@@ -322,7 +322,7 @@
     top: 30px;
     bottom: -18px;
     width: 2px;
-    background: linear-gradient(180deg, #c8dcfa 0%, #e2ecfb 100%);
+    background: linear-gradient(180deg, var(--color-info-tint-medium) 0%, var(--color-surface-timeline) 100%);
 }
 
 .dashboard-timeline__item--active .dashboard-timeline__dot {
@@ -340,7 +340,7 @@
 }
 
 .dashboard-timeline__item--active .dashboard-timeline__content {
-    background: linear-gradient(180deg, #f6faff 0%, #ffffff 100%);
+    background: linear-gradient(180deg, var(--color-info-tint-light) 0%, #ffffff 100%);
 }
 
 .dashboard-timeline__meta {
@@ -633,3 +633,5 @@
         font-size: 1.4rem;
     }
 }
+
+

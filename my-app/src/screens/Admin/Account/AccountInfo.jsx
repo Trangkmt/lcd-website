@@ -243,24 +243,24 @@ export default function AccountInfo({ user }) {
           </label>
 
           <div className="team-info-section" style={{ marginTop: '15px' }}>
-            <p className="team-info-label" style={{ fontWeight: '600', marginBottom: '8px', color: '#666' }}>Các ban tham gia:</p>
+            <p className="team-info-label" style={{ fontWeight: '600', marginBottom: '8px', color: 'var(--color-text-muted)' }}>Các ban tham gia:</p>
             {activeProfile?.teams && activeProfile.teams.length > 0 ? (
               <div className="team-list" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {activeProfile.teams.map((t, idx) => (
-                  <div key={idx} className="team-item" style={{ background: '#f8f9fa', padding: '10px 15px', borderRadius: '8px', border: '1px solid #eee' }}>
-                    <span className="team-name" style={{ fontWeight: 'bold', color: '#333' }}>{t.team_name}</span>
-                    <span className="team-position" style={{ marginLeft: '10px', color: '#007bff' }}>({t.team_position})</span>
+                  <div key={idx} className="team-item" style={{ background: 'var(--color-gray-50)', padding: '10px 15px', borderRadius: '8px', border: '1px solid var(--color-gray-200)' }}>
+                    <span className="team-name" style={{ fontWeight: 'bold', color: 'var(--color-text-primary)' }}>{t.team_name}</span>
+                    <span className="team-position" style={{ marginLeft: '10px', color: 'var(--color-primary)' }}>({t.team_position})</span>
                   </div>
                 ))}
               </div>
             ) : (
-              <span className="no-team" style={{ color: '#999', fontStyle: 'italic' }}>Chưa tham gia ban nào</span>
+              <span className="no-team" style={{ color: 'var(--color-text-subtle)', fontStyle: 'italic' }}>Chưa tham gia ban nào</span>
             )}
           </div>
 
           {editMode && (
-            <div className="password-change-section" style={{ marginTop: '20px', paddingTop: '15px', borderTop: '1px dashed #ddd' }}>
-              <p style={{ fontWeight: '600', marginBottom: '10px', color: '#444' }}>Đổi mật khẩu (nếu cần):</p>
+            <div className="password-change-section" style={{ marginTop: '20px', paddingTop: '15px', borderTop: '1px dashed var(--color-gray-300)' }}>
+              <p style={{ fontWeight: '600', marginBottom: '10px', color: 'var(--color-text-primary)' }}>Đổi mật khẩu (nếu cần):</p>
               <label>
                 Mật khẩu hiện tại:
                 <input
@@ -302,3 +302,5 @@ export default function AccountInfo({ user }) {
     </div>
   );
 }
+
+

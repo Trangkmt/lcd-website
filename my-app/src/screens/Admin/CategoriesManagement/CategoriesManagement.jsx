@@ -171,11 +171,11 @@ export default function CategoriesManagement() {
 
             {/* Content */}
             {isLoading ? (
-                <p style={{ textAlign: 'center', padding: '40px', color: '#888' }}>Đang tải...</p>
+                <p style={{ textAlign: 'center', padding: '40px', color: 'var(--color-text-soft)' }}>Đang tải...</p>
             ) : (
                 <div className="categories-grid">
                     {currentList.length === 0 && (
-                        <p style={{ color: '#888', gridColumn: '1/-1' }}>
+                        <p style={{ color: 'var(--color-text-soft)', gridColumn: '1/-1' }}>
                             Chưa có danh mục nào cho trang <b>{PAGE_TYPE_LABELS[activeTab]}</b>.
                         </p>
                     )}
@@ -274,5 +274,6 @@ export default function CategoriesManagement() {
         </div>
     );
 }
+
 
 

@@ -46,7 +46,7 @@
     margin-bottom: 14px;
     border: 1px solid var(--color-border-soft);
     padding: 10px;
-    background-color: #e1edff;
+    background-color: var(--color-surface-accent);
 }
 
 .members-bulk-toolbar__select {
@@ -256,13 +256,13 @@
     font-size: 0.9375rem;
     color: var(--color-text-primary);
     background: var(--color-white);
-    border: 1px solid #bfbfbf;
+    border: 1px solid var(--color-gray-400);
     border-radius: 10px;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .members-management .form-control:focus {
-    border-color: #9ca3af;
+    border-color: var(--color-darkgray);
     box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.2);
 }
 
@@ -330,7 +330,7 @@
     border: 1px solid var(--color-border-soft);
     border-radius: 10px;
     padding: 10px;
-    background: #fafcff;
+    background: var(--color-surface-lightest);
 }
 
 .department-position-group__title {
@@ -469,3 +469,5 @@
         width: 100%;
     }
 }
+
+

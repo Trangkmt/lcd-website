@@ -62,7 +62,7 @@
 }
 
 .admin-modal__close:hover {
-    background: var(--color-whitesmoke);
+    background: var(--color-white);
     color: var(--color-text-primary);
 }
 
@@ -125,3 +125,4 @@
         flex: 1 1 100%;
     }
 }
+

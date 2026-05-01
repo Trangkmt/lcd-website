@@ -14,7 +14,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px 14px;
-    border: 1px solid #bfbfbf;
+    border: 1px solid var(--color-gray-400);
     border-radius: 8px;
     background: var(--color-white);
     font-size: 0.9375rem;
@@ -25,11 +25,11 @@
 }
 
 .cat-dropdown-trigger:hover {
-    border-color: #bfbfbf;
+    border-color: var(--color-gray-400);
 }
 
 .cat-dropdown-trigger.open {
-    border-color: #bfbfbf;
+    border-color: var(--color-gray-400);
 }
 
 .cat-dropdown-value {
@@ -61,7 +61,7 @@
     left: 0;
     right: 0;
     background: var(--color-white);
-    border: 1px solid #bfbfbf;
+    border: 1px solid var(--color-gray-400);
     border-radius: 8px;
     z-index: var(--z-dropdown);
     overflow: visible;
@@ -157,7 +157,7 @@
     justify-content: space-between;
     align-items: center;
     transition: background 0.15s, color 0.15s;
-    border-bottom: 1px solid var(--color-whitesmoke);
+    border-bottom: 1px solid var(--color-white);
 }
 
 .cat-submenu-item:last-child {
@@ -237,7 +237,7 @@
 
 .btn-secondary {
     padding: 12px 24px;
-    background: var(--color-whitesmoke);
+    background: var(--color-white);
     color: var(--color-text-primary);
     border: 1px solid var(--color-gray-300);
     border-radius: 8px;
@@ -539,7 +539,7 @@
 }
 
 .pagination-btn:hover {
-    background: var(--color-whitesmoke);
+    background: var(--color-white);
     border-color: var(--color-brand-indigo);
 }
 
@@ -560,7 +560,7 @@
 }
 
 .pagination-number:hover {
-    background: var(--color-whitesmoke);
+    background: var(--color-white);
 }
 
 .pagination-number.active {
@@ -626,7 +626,7 @@
 }
 
 .modal-close:hover {
-    background: var(--color-whitesmoke);
+    background: var(--color-white);
     color: var(--color-text-primary);
 }
 
@@ -1111,3 +1111,4 @@
         font-size: 0.875rem;
     }
 }
+

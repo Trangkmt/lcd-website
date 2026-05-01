@@ -47,7 +47,7 @@ const AnnualEvent = () => {
                     {loading ? (
                         <p className="annual-loading">Đang tải...</p>
                     ) : categories.length === 0 ? (
-                        <p className="annual-loading" style={{ color: '#888' }}>Chưa có sự kiện thường niên nào.</p>
+                        <p className="annual-loading" style={{ color: 'var(--color-text-soft)' }}>Chưa có sự kiện thường niên nào.</p>
                     ) : (
                         <div className="annual-events-grid">
                             {categories.map(cat => {
@@ -88,3 +88,4 @@ const AnnualEvent = () => {
 };
 
 export default AnnualEvent;
+

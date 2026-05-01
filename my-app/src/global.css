@@ -142,8 +142,8 @@ p {
 
    /* Extended Project Colors */
    --color-text-strong: #1A1A1A;
-   --color-text-primary: #333333;
-   --color-text-muted: #666666;
+   --color-text-primary: var(--color-text-primary);
+   --color-text-muted: var(--color-text-muted);
 
    --color-brand-indigo: #667EEA;
    --color-brand-indigo-dark: #1A4D99;
@@ -153,6 +153,21 @@ p {
    --color-surface-muted: #F9F9F9;
    --color-surface-soft-blue: #E8EDF5;
    --color-border-soft: #DDE3ED;
+
+   /* Extended Project Colors */
+   --color-info-vivid: #2F80ED;
+   --color-info-tint-light: #F6FAFF;
+   --color-info-tint-soft: #E2ECFB;
+   --color-info-tint-medium: #C8DCFA;
+
+   /* Surface Colors - Extended */
+   --color-surface-lightest: #FAFCFF;
+   --color-surface-timeline: #DFE9F8;
+
+   /* State Colors - Extended */
+   --color-state-success-tint: #D2F7DF;
+   --color-state-danger-tint: #FFD7D9;
+   --color-state-warning-tint: #FFE4BF;
 
    /* Consolidated Semantic Colors */
    --color-text-secondary: #555555;
@@ -344,3 +359,4 @@ p {
       --space-4: 0.875rem;
    }
 }
+

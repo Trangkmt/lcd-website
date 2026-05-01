@@ -73,9 +73,9 @@ const AnnualEventDetail = () => {
                             />
                         </div>
 
-                        {loading && <p style={{ textAlign: 'center', color: '#888' }}>Đang tải...</p>}
+                        {loading && <p style={{ textAlign: 'center', color: 'var(--color-text-soft)' }}>Đang tải...</p>}
                         {!loading && filtered.length === 0 && (
-                            <p style={{ textAlign: 'center', color: '#888' }}>Không có bài đăng nào</p>
+                            <p style={{ textAlign: 'center', color: 'var(--color-text-soft)' }}>Không có bài đăng nào</p>
                         )}
                         <div className="posts-list">
                             {filtered.map(post => (
@@ -111,3 +111,4 @@ const AnnualEventDetail = () => {
 };
 
 export default AnnualEventDetail;
+

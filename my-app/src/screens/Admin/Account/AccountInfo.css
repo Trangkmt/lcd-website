@@ -19,13 +19,13 @@
 }
 
 .account-message.error {
-    background: #fdeaea;
-    color: #b42318;
+    background: var(--color-state-danger-soft);
+    color: var(--color-state-danger-strong);
 }
 
 .account-message.success {
-    background: #eaf7ef;
-    color: #067647;
+    background: var(--color-state-success-soft);
+    color: var(--color-state-success-strong);
 }
 
 .avatar-section {
@@ -41,13 +41,13 @@
     border-radius: 50%;
     object-fit: cover;
     margin-bottom: 8px;
-    border: 2px solid #eee;
-    background-color: #e8edf5;
+    border: 2px solid var(--color-gray-200);
+    background-color: var(--color-surface-soft-blue);
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    color: #052035;
+    color: var(--color-brand-blue-deep);
 }
 
 .avatar-img__photo {
@@ -67,7 +67,7 @@
     margin-top: 4px;
     padding: 8px;
     border-radius: 4px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-gray-300);
     font-size: 1rem;
 }
 
@@ -111,7 +111,7 @@
 }
 
 .account-info-container .btn-secondary {
-    background: var(--color-whitesmoke);
+    background: var(--color-white);
     color: var(--color-text-primary);
     border-color: var(--color-gray-300);
 }
@@ -126,3 +126,5 @@
     cursor: not-allowed;
     transform: none;
 }
+
+

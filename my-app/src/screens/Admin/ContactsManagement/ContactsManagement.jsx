@@ -113,7 +113,7 @@ export default function ContactsManagement() {
 
             {loading ? (
                 <div className="posts-table-container">
-                    <p style={{ textAlign: 'center', padding: '40px', color: '#888' }}>Đang tải...</p>
+                    <p style={{ textAlign: 'center', padding: '40px', color: 'var(--color-text-soft)' }}>Đang tải...</p>
                 </div>
             ) : (
                 <div className="posts-table-container">
@@ -131,7 +131,7 @@ export default function ContactsManagement() {
                         <tbody>
                             {filteredContacts.length === 0 && (
                                 <tr>
-                                    <td colSpan="6" style={{ textAlign: 'center', color: '#888', padding: '24px' }}>
+                                    <td colSpan="6" style={{ textAlign: 'center', color: 'var(--color-text-soft)', padding: '24px' }}>
                                         Chưa có liên hệ nào
                                     </td>
                                 </tr>
@@ -212,3 +212,4 @@ export default function ContactsManagement() {
         </div>
     );
 }
+

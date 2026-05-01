@@ -81,7 +81,7 @@
 .btn-view:hover:not(:disabled) {
     color: var(--color-brand-indigo-dark);
     border-color: rgba(44, 107, 204, 0.45);
-    background: #dbe8ff;
+    background: var(--color-surface-accent);
 }
 
 .btn-delete,
@@ -94,7 +94,7 @@
 .btn-delete:hover:not(:disabled),
 .btn-hide:hover:not(:disabled) {
     border-color: var(--color-state-danger-strong);
-    background: #ffd7d9;
+    background: var(--color-state-danger-tint);
 }
 
 .btn-show,
@@ -107,19 +107,19 @@
 .btn-show:hover:not(:disabled),
 .btn-publish:hover:not(:disabled) {
     border-color: var(--color-state-success-strong);
-    background: #d2f7df;
+    background: var(--color-state-success-tint);
 }
 
 .btn-export {
     color: var(--color-brand-indigo);
     border-color: rgba(71, 85, 182, 0.28);
-    background: #eef1ff;
+    background: var(--color-surface-accent);
     font-weight: 700;
 }
 
 .btn-export:hover:not(:disabled) {
     border-color: rgba(71, 85, 182, 0.45);
-    background: #e2e7ff;
+    background: var(--color-surface-accent);
 }
 
 @media (max-width: 768px) {
@@ -147,3 +147,5 @@
         padding: 6px 8px;
     }
 }
+
+

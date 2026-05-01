@@ -19,11 +19,11 @@ export default function PostDetail({
     notFoundText = 'Không tìm thấy bài viết',
 }) {
     if (loading) {
-        return <div style={{ padding: '60px', textAlign: 'center', color: '#888' }}>{loadingText}</div>;
+        return <div style={{ padding: '60px', textAlign: 'center', color: 'var(--color-text-soft)' }}>{loadingText}</div>;
     }
 
     if (!post) {
-        return <div style={{ padding: '60px', textAlign: 'center', color: '#888' }}>{notFoundText}</div>;
+        return <div style={{ padding: '60px', textAlign: 'center', color: 'var(--color-text-soft)' }}>{notFoundText}</div>;
     }
 
     const fallbackRelatedTo = (related) => `${sectionPath}/${related.id}`;
@@ -113,3 +113,4 @@ export default function PostDetail({
         </div>
     );
 }
+
