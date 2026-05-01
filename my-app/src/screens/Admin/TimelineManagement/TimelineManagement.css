@@ -1,6 +1,6 @@
-@import url('../Styles/AdminButtons.css');
-@import url('../Styles/AdminForm.css');
-@import url('../Styles/AdminModal.css');
+
+
+
 
 .timeline-management-page {
     padding: var(--space-10);
@@ -433,6 +433,7 @@
     }
 
 }
+
 
 
 

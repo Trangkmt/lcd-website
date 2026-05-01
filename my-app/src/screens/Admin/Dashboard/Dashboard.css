@@ -1,5 +1,5 @@
 /* Dashboard Page */
-@import url('../Styles/AdminTable.css');
+
 
 .dashboard-page {
     padding: var(--space-10);
@@ -12,12 +12,6 @@
     margin-bottom: 2.5rem;
 }
 
-.dashboard-title {
-    font-size: clamp(1.4rem, 3.2vw, 2.25rem);
-    font-weight: 700;
-    color: var(--color-text-strong);
-    margin: 0;
-}
 
 /* Dashboard Filters */
 .dashboard-filters {
@@ -47,23 +41,6 @@
     letter-spacing: 0.0313rem;
 }
 
-.filter-select {
-    padding: 0.5rem 0.75rem;
-    border: 1px solid var(--color-border-subtle);
-    border-radius: 0.5rem;
-    font-size: 0.875rem;
-    color: var(--color-text-primary);
-    background: var(--color-white);
-    outline: none;
-    cursor: pointer;
-    transition: border-color 0.2s, background 0.2s;
-    font-family: inherit;
-}
-
-.filter-select:focus {
-    border-color: var(--color-brand-indigo);
-    background: white;
-}
 
 .filter-reset {
     display: inline-flex;
@@ -499,12 +476,6 @@
     border: 1px solid var(--color-border-subtle);
 }
 
-.quick-actions .section-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--color-text-strong);
-    margin: 0 0 1.25rem 0;
-}
 
 .actions-grid {
     display: grid;

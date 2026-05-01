@@ -1,6 +1,6 @@
 .other-utilities {
     padding: var(--space-10);
-    font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    
 }
 
 .other-utilities .page-header {
@@ -14,14 +14,7 @@
     max-width: 57.5rem;
 }
 
-.other-utilities .page-title {
-    margin: 0 0 0.75rem;
-    font-size: 2rem;
-    letter-spacing: var(--ls--0_02);
-    color: var(--color-darkslateblue);
-    font-weight: 800;
-    text-transform: uppercase;
-}
+.other-utilities 
 
 .utility-hint {
     margin-bottom: 1.125rem;
@@ -30,16 +23,7 @@
     line-height: 1.5;
 }
 
-.btn-secondary {
-    border: 1px solid var(--color-brand-indigo);
-    background: var(--color-white);
-    color: var(--color-brand-indigo);
-    border-radius: 0.5rem;
-    padding: 0.625rem 0.875rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-    cursor: pointer;
-}
+
 
 .btn-secondary:disabled {
     opacity: 0.6;
@@ -172,11 +156,7 @@
     margin-bottom: 1rem;
 }
 
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
+
 
 .excel-template-row {
     display: flex;
@@ -190,20 +170,9 @@
     color: var(--color-text-muted);
 }
 
-.form-label {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--color-text-strong);
-}
 
-.form-control {
-    width: 100%;
-    border: 1px solid var(--color-gainsboro);
-    border-radius: 0.5rem;
-    padding: 0.625rem 0.75rem;
-    font-size: 0.875rem;
-    background: var(--color-white);
-}
+
+
 
 .file-name {
     margin: 0;
@@ -265,17 +234,7 @@
     color: var(--color-text-secondary);
 }
 
-.btn-primary {
-    background: var(--color-primary);
-    color: white;
-    border: none;
-    border-radius: 0.5rem;
-    padding: 0.75rem 1.25rem;
-    font-size: 0.9375rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
+
 
 .btn-primary:hover:not(:disabled) {
     transform: translateY(-2px);
@@ -679,5 +638,7 @@
         grid-template-columns: 1fr;
     }
 }
+
+
 
 
