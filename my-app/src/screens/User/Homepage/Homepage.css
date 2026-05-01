@@ -47,19 +47,7 @@
 /* ============================================
    SECTION TITLES
    ============================================ */
-.section-title {
-    position: relative;
-    display: block;
-    margin: 0;
-    font-size: 1.5rem;
-    line-height: 1.2;
-    letter-spacing: var(--ls--0_02);
-    color: var(--color-darkslateblue);
-    font-weight: 900;
-    white-space: nowrap;
-    flex-shrink: 0;
-    z-index: 2;
-}
+.section-title { position: relative; display: block; margin: 0; white-space: nowrap; flex-shrink: 0; z-index: 2; }
 
 .section-divider {
     position: relative;
@@ -463,14 +451,7 @@
     color: rgba(255, 255, 255, 0.9);
 }
 
-.hero-section__title {
-    position: relative;
-    letter-spacing: -0.02em;
-    font-weight: 800;
-    margin: 0;
-    font-size: clamp(1.5rem, 3.2vw, 2.375rem);
-    line-height: 1.2;
-}
+.hero-section__title { position: relative; letter-spacing: -0.02em; font-weight: 900; margin: 0; font-size: clamp(1.5rem, 3.2vw, 2.375rem); line-height: 1.2; color: var(--color-white); }
 
 .hero-section__summary {
     margin: 0.75rem 0 0;
@@ -564,9 +545,7 @@
         max-width: none;
     }
 
-    .hero-section__title {
-        font-size: 1.875rem;
-    }
+    .hero-section__title { position: relative; letter-spacing: -0.02em; font-weight: 900; margin: 0; font-size: clamp(1.5rem, 3.2vw, 2.375rem); line-height: 1.2; color: var(--color-white); }
 
     .hero-section__summary {
         font-size: 0.9375rem;
@@ -664,9 +643,7 @@
         height: 16.25rem;
     }
 
-    .hero-section__title {
-        font-size: 1.2rem;
-    }
+    .hero-section__title { position: relative; letter-spacing: -0.02em; font-weight: 900; margin: 0; font-size: clamp(1.5rem, 3.2vw, 2.375rem); line-height: 1.2; color: var(--color-white); }
 
     .hero-section__summary {
         display: none;
@@ -678,9 +655,9 @@
         padding: 0.75rem;
     }
 
-    .section-title {
-        font-size: 1.125rem;
-    }
+    .section-title { position: relative; display: block; margin: 0; white-space: nowrap; flex-shrink: 0; z-index: 2; }
 }
+
+
 
 

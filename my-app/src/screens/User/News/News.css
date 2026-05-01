@@ -3,7 +3,7 @@
     width: 100%;
     min-height: 100vh;
     background: var(--color-white);
-    font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: var(--font-primary);
 }
 
 .news-page button:focus-visible,
@@ -35,11 +35,11 @@
     position: relative;
     z-index: 1;
     font-size: clamp(1.6rem, 5.2vw, 3rem);
-    font-weight: 800;
+    font-weight: 900;
     color: var(--color-white);
     letter-spacing: 0.05em;
     margin: 0;
-    font-family: 'Work Sans', sans-serif;
+    font-family: var(--font-primary);
 }
 
 /* Content Wrapper */
@@ -110,14 +110,7 @@
     line-height: 1.3;
 }
 
-.news-page__hero-title {
-    margin: 0;
-    color: var(--color-white);
-    font-size: clamp(1.35rem, 3.5vw, 2.25rem);
-    line-height: 1.2;
-    font-weight: 800;
-    max-width: 56.25rem;
-}
+.news-page__hero-title { margin: 0; color: var(--color-white); font-size: clamp(1.35rem, 3.5vw, 2.25rem); line-height: 1.2; font-weight: 900; max-width: 56.25rem; }
 
 .news-page__hero-summary {
     margin: 0.75rem 0 0;
@@ -272,14 +265,7 @@
 }
 
 /* Section Title */
-.news-page__title {
-    font-size: 1.75rem;
-    font-weight: 800;
-    color: var(--color-brand-blue-deep);
-    margin-bottom: 1.75rem;
-    letter-spacing: -0.01em;
-    font-family: 'Work Sans', sans-serif;
-}
+.news-page__title { margin-bottom: 1.75rem; }
 
 /* Empty / Loading */
 .news-page__empty {
@@ -326,9 +312,7 @@
         bottom: 1.5rem;
     }
 
-    .news-page__hero-title {
-        font-size: 1.75rem;
-    }
+    .news-page__hero-title { margin: 0; color: var(--color-white); font-size: clamp(1.35rem, 3.5vw, 2.25rem); line-height: 1.2; font-weight: 900; max-width: 56.25rem; }
 }
 
 @media (max-width: 640px) {
@@ -351,9 +335,7 @@
         border-radius: 0.875rem;
     }
 
-    .news-page__hero-title {
-        font-size: 1.375rem;
-    }
+    .news-page__hero-title { margin: 0; color: var(--color-white); font-size: clamp(1.35rem, 3.5vw, 2.25rem); line-height: 1.2; font-weight: 900; max-width: 56.25rem; }
 
     .news-page__hero-summary {
         font-size: 0.8125rem;
@@ -394,5 +376,7 @@
         bottom: 1.125rem;
     }
 }
+
+
 
 

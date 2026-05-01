@@ -187,7 +187,7 @@
 /* ===== Posts Management Page ===== */
 .posts-management {
     padding: var(--space-10);
-    font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    font-family: var(--font-primary);
 }
 
 /* Page Header */
@@ -1039,5 +1039,6 @@
         font-size: 0.875rem;
     }
 }
+
 
 
