@@ -12,7 +12,7 @@
 .posts-table-shell {
     background: var(--color-white);
     border: 1px solid var(--color-border-subtle);
-    border-radius: 12px;
+    border-radius: 0.75rem;
 }
 
 table.posts-table,
@@ -31,7 +31,7 @@ table.posts-table thead,
 table.posts-table th,
 .members-table th,
 .posts-table table th {
-    padding: 14px 12px;
+    padding: 0.875rem 0.75rem;
     text-align: left;
     font-size: 0.8125rem;
     font-weight: 700;
@@ -45,7 +45,7 @@ table.posts-table th,
 table.posts-table td,
 .members-table td,
 .posts-table table td {
-    padding: 14px 12px;
+    padding: 0.875rem 0.75rem;
     border-bottom: 1px solid var(--color-surface-soft-blue);
     font-size: 0.875rem;
     color: var(--color-text-primary);
@@ -66,7 +66,7 @@ table.posts-table tbody tr:hover,
     table.posts-table td,
     .members-table td,
     .posts-table table td {
-        padding: 12px 10px;
+        padding: 0.75rem 0.625rem;
     }
 
     table.posts-table th,
@@ -87,7 +87,7 @@ table.posts-table tbody tr:hover,
     .posts-table-container,
     .table-wrapper,
     .posts-table {
-        border-radius: 10px;
+        border-radius: 0.625rem;
     }
 
     table.posts-table th,
@@ -96,7 +96,8 @@ table.posts-table tbody tr:hover,
     table.posts-table td,
     .members-table td,
     .posts-table table td {
-        padding: 10px 8px;
+        padding: 0.625rem 0.5rem;
     }
 }
+
 

@@ -1,7 +1,7 @@
 .app-searchbar {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 0.5rem;
     box-sizing: border-box;
 }
 
@@ -14,11 +14,11 @@
     min-width: var(--searchbar-min-width, 0);
     max-width: var(--searchbar-max-width, none);
     height: var(--searchbar-height, auto);
-    gap: var(--searchbar-gap, 10px);
-    padding: var(--searchbar-padding, 8px 12px);
+    gap: var(--searchbar-gap, 0.625rem);
+    padding: var(--searchbar-padding, 0.5rem 0.75rem);
     background: var(--searchbar-bg, var(--color-white));
     border: var(--searchbar-border-width, 1px) solid var(--searchbar-border-color, var(--color-gray-300));
-    border-radius: 10px;
+    border-radius: 0.625rem;
     transition:
         border-color 0.2s ease,
         box-shadow 0.2s ease,
@@ -31,58 +31,58 @@
 }
 
 .app-searchbar--toolbar {
-    --searchbar-flex: 1 1 320px;
+    --searchbar-flex: 1 1 20rem;
     --searchbar-width: auto;
-    --searchbar-min-width: 320px;
-    --searchbar-max-width: 560px;
+    --searchbar-min-width: 20rem;
+    --searchbar-max-width: 35rem;
     --searchbar-border-color: var(--color-gray-300);
-    --searchbar-padding: 10px 16px;
-    --searchbar-gap: 12px;
+    --searchbar-padding: 0.625rem 1rem;
+    --searchbar-gap: 0.75rem;
 }
 
 .app-searchbar--toolbar-wide {
-    --searchbar-flex: 1 1 320px;
+    --searchbar-flex: 1 1 20rem;
     --searchbar-width: auto;
-    --searchbar-min-width: 320px;
+    --searchbar-min-width: 20rem;
     --searchbar-max-width: none;
     --searchbar-border-color: var(--color-gray-300);
-    --searchbar-padding: 10px 16px;
-    --searchbar-gap: 12px;
+    --searchbar-padding: 0.625rem 1rem;
+    --searchbar-gap: 0.75rem;
 }
 
 .app-searchbar--compact {
     --searchbar-flex: 1 1 100%;
     --searchbar-width: 100%;
-    --searchbar-max-width: 420px;
-    --searchbar-height: 50px;
+    --searchbar-max-width: 26.25rem;
+    --searchbar-height: 3.125rem;
     --searchbar-bg: var(--color-surface-muted);
     --searchbar-border-width: 1px;
     --searchbar-border-color: var(--color-gray-300);
     --searchbar-radius: 0;
-    --searchbar-padding: 0 16px;
-    --searchbar-gap: 10px;
+    --searchbar-padding: 0 1rem;
+    --searchbar-gap: 0.625rem;
 }
 
 .app-searchbar--page {
     --searchbar-flex: 1 1 100%;
     --searchbar-width: 100%;
-    --searchbar-min-width: 250px;
-    --searchbar-max-width: 520px;
+    --searchbar-min-width: 15.625rem;
+    --searchbar-max-width: 32.5rem;
     --searchbar-border-color: var(--color-gray-300);
-    --searchbar-padding: 10px 16px;
-    --searchbar-gap: 10px;
+    --searchbar-padding: 0.625rem 1rem;
+    --searchbar-gap: 0.625rem;
     --searchbar-radius: 0;
 }
 
 .app-searchbar--event {
     --searchbar-flex: 1;
-    --searchbar-max-width: 720px;
-    --searchbar-height: 50px;
+    --searchbar-max-width: 45rem;
+    --searchbar-height: 3.125rem;
     --searchbar-bg: var(--color-surface-muted);
     --searchbar-border-color: var(--color-gray-300);
     --searchbar-radius: 0;
-    --searchbar-padding: 0 20px;
-    --searchbar-gap: 10px;
+    --searchbar-padding: 0 1.25rem;
+    --searchbar-gap: 0.625rem;
     --searchbar-focus-bg: var(--color-white);
     --searchbar-focus-border-color: var(--color-text-primary);
 }
@@ -117,10 +117,10 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
+    width: 1.5rem;
+    height: 1.5rem;
     border: none;
-    border-radius: 6px;
+    border-radius: 0.375rem;
     background: transparent;
     color: var(--color-text-subtle);
     cursor: pointer;
@@ -149,8 +149,8 @@
     }
 
     .app-searchbar--event {
-        --searchbar-height: 46px;
-        --searchbar-padding: 0 14px;
+        --searchbar-height: 2.875rem;
+        --searchbar-padding: 0 0.875rem;
     }
 }
 
@@ -161,13 +161,14 @@
     .app-searchbar--page,
     .app-searchbar--toolbar,
     .app-searchbar--toolbar-wide {
-        --searchbar-height: 44px;
-        --searchbar-padding: 0 12px;
-        --searchbar-gap: 8px;
+        --searchbar-height: 2.75rem;
+        --searchbar-padding: 0 0.75rem;
+        --searchbar-gap: 0.5rem;
     }
 
     .app-searchbar__input {
         font-size: 0.8125rem;
     }
 }
+
 
