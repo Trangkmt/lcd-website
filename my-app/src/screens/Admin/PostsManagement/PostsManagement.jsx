@@ -32,6 +32,7 @@ import {
     CheckIcon,
 } from '../../../SvgIcons';
 import useAdminConfirm from '../useAdminConfirm';
+import { sanitizeHtmlForPaste } from '../../../utils/htmlSanitizer';
 
 const EMPTY_FORM = { title: '', slug: '', summary: '', content: '', thumbnail: '', category_id: '', author_id: '', is_featured: false, is_published: false };
 
@@ -626,6 +627,30 @@ export default function PostsManagement() {
         if (!editorRef.current) return;
         const html = editorRef.current.innerHTML;
         setForm(prev => ({ ...prev, content: html }));
+    }
+
+    function handleEditorPaste(e) {
+        e.preventDefault();
+
+        const html = e.clipboardData.getData('text/html');
+        const text = e.clipboardData.getData('text/plain');
+
+        let contentToInsert = '';
+
+        if (html) {
+            contentToInsert = sanitizeHtmlForPaste(html);
+        } else if (text) {
+            // Convert plain text newlines to <p> tags or <br>
+            contentToInsert = text
+                .split(/\r?\n/)
+                .map(line => line.trim() ? `<p>${line}</p>` : '<p><br/></p>')
+                .join('');
+        }
+
+        if (contentToInsert) {
+            document.execCommand('insertHTML', false, contentToInsert);
+            syncContentFromEditor();
+        }
     }
 
     function applyEditorCommand(command, value = null) {
@@ -1254,6 +1279,7 @@ export default function PostsManagement() {
                                 contentEditable
                                 suppressContentEditableWarning
                                 onInput={syncContentFromEditor}
+                                onPaste={handleEditorPaste}
                                 onDrop={handleEditorDrop}
                                 onDragOver={event => event.preventDefault()}
                             />
