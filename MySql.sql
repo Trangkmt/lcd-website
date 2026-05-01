@@ -21,8 +21,6 @@ DROP TABLE IF EXISTS documents;
 DROP TABLE IF EXISTS posts;
 DROP TABLE IF EXISTS post_templates;
 DROP TABLE IF EXISTS categories;
-DROP TABLE IF EXISTS categories;
-DROP TABLE IF EXISTS user_teams;
 DROP TABLE IF EXISTS users;
 
 SET FOREIGN_KEY_CHECKS = 1;
@@ -35,6 +33,12 @@ CREATE TABLE teams (
     name VARCHAR(255) NOT NULL,
     name_abbr VARCHAR(50),
     description TEXT,
+    logo VARCHAR(255),
+    website VARCHAR(255),
+    email VARCHAR(100),
+    phone VARCHAR(20),
+    address TEXT,
+    parent_id INT,
     display_order INT DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -318,18 +322,10 @@ CREATE TABLE contact_info (
     subject VARCHAR(255),
     message TEXT,
     is_read BOOLEAN DEFAULT FALSE,
-    read_by INT,
     is_replied BOOLEAN DEFAULT FALSE,
-    replied_by INT,
     replied_at DATETIME,
-    is_deleted BOOLEAN DEFAULT FALSE,
-    deleted_by INT,
-    deleted_at DATETIME,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (read_by) REFERENCES users(id) ON DELETE SET NULL,
-    FOREIGN KEY (replied_by) REFERENCES users(id) ON DELETE SET NULL,
-    FOREIGN KEY (deleted_by) REFERENCES users(id) ON DELETE SET NULL
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 INSERT INTO contact_info (name,email,phone,subject,message) VALUES
@@ -360,7 +356,7 @@ CREATE INDEX idx_timeline_year_sort ON timeline_events(year, sort_order, month);
 CREATE INDEX idx_categories_slug ON categories(slug);
 CREATE INDEX idx_categories_parent ON categories(parent_id);
 CREATE INDEX idx_categories_page_type ON categories(page_type);
-CREATE INDEX idx_teams_id ON teams(id);
+CREATE INDEX idx_teams_parent ON teams(parent_id);
 CREATE INDEX idx_contact_read ON contact_info(is_read);
 CREATE INDEX idx_contact_replied ON contact_info(is_replied);
 CREATE INDEX idx_contact_deleted ON contact_info(is_deleted);
