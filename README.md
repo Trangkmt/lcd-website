@@ -1,19 +1,19 @@
 # LCD Website - Hệ thống quản trị Liên Chi Đoàn Khoa CNTT
 
-Hệ thống quản lý thông tin, sự kiện và tài liệu học thuật cho Liên Chi Đoàn khoa Công nghệ thông tin (FIT) - Trường Đại học Kinh tế Quốc dân (NEU). Nền tảng tích hợp Trí tuệ nhân tạo (AI) giúp tối ưu hóa quy trình truyền thông và quản trị nội dung.
+Hệ thống quản lý thông tin, sự kiện và tài liệu học thuật cho Liên Chi Đoàn khoa Công nghệ thông tin - Trường Đại học Kinh tế Quốc dân. Nền tảng tích hợp AI giúp tối ưu hóa quy trình truyền thông và quản trị nội dung.
 
-## Các tính năng chính (Key Features)
+## Các tính năng chính
 
-- **Tạo bài viết bằng AI (AI-Powered Content)**: Tích hợp Gemini API (Giao diện lập trình AI) giúp tự động tạo nội dung bài viết từ các từ khóa và chủ đề.
-- **Quản lý Tin tức và Sự kiện (CMS - Content Management System)**: Hệ thống quản trị nội dung chuyên nghiệp cho phép đăng tải, phân loại và quản lý trạng thái bài viết (Tin tức, Sự kiện thường niên, Thành tích...).
-- **Quản lý Tài liệu (Document Management)**: Hỗ trợ lưu trữ, chia sẻ và thống kê lượt tải các tài liệu học thuật (docx, pdf, xlsx). Hỗ trợ xem trước tài liệu trực tuyến.
-- **Dòng thời gian sự kiện (Timeline Events)**: Theo dõi và hiển thị các mốc hoạt động quan trọng của Liên Chi Đoàn theo từng năm.
-- **Quản lý Thành viên và Ban ngành (Teams and Members)**: Phân quyền người dùng theo vai trò (Admin, Author, Manager) và tổ chức theo sơ đồ các ban chuyên môn.
-- **Hệ thống Liên hệ (Contact System)**: Tiếp nhận, quản lý và phản hồi các yêu cầu hỗ trợ từ sinh viên.
+- **Tạo bài viết bằng AI**: Tích hợp Gemini API giúp tự động tạo nội dung bài viết từ các từ khóa và chủ đề.
+- **Quản lý Tin tức và Sự kiện**: Hệ thống quản trị nội dung chuyên nghiệp cho phép đăng tải, phân loại và quản lý trạng thái bài viết (Tin tức, Sự kiện thường niên, Thành tích...).
+- **Quản lý Tài liệu**: Hỗ trợ lưu trữ, chia sẻ và thống kê lượt tải các tài liệu học thuật (docx, pdf, xlsx). Hỗ trợ xem trước tài liệu trực tuyến.
+- **Dòng thời gian sự kiện**: Theo dõi và hiển thị các mốc hoạt động quan trọng của Liên Chi Đoàn theo từng năm.
+- **Quản lý Thành viên**: Phân quyền người dùng theo vai trò (Admin,Post Author,Contact manager,Utility manager) và tổ chức theo sơ đồ các ban chuyên môn.
+- **Hệ thống Liên hệ**: Tiếp nhận, quản lý và phản hồi các yêu cầu hỗ trợ từ sinh viên.
 
-## Hướng dẫn cài đặt (Installation)
+## Hướng dẫn cài đặt
 
-### Yêu cầu hệ thống (Prerequisites)
+### Yêu cầu hệ thống
 - Node.js (Phiên bản 18 trở lên)
 - MySQL (Cơ sở dữ liệu)
 
@@ -32,7 +32,7 @@ Hệ thống quản lý thông tin, sự kiện và tài liệu học thuật ch
    - Cấu hình địa chỉ API (VITE_API_URL) trong file `.env`.
    - Khởi chạy ứng dụng: `npm run dev`
 
-## Hướng dẫn sử dụng (Usage)
+## Hướng dẫn sử dụng
 
 - **Giao diện người dùng**: Truy cập tại địa chỉ mặc định `http://localhost:5173` để xem tin tức và tải tài liệu.
 - **Trang quản trị (Admin Dashboard)**: 
