@@ -127,7 +127,7 @@ INSERT INTO categories (id,name,slug,page_type,description,intro_image,parent_id
 (6,'Hoạt động thể thao','the-thao','event_non_annual','Hoạt động thể thao',NULL,NULL),
 (7,'Thành tích','thanh-tich','achievement','Thành tích nổi bật',NULL,NULL),
 (8,'Tài liệu','tai-lieu','document','Tài liệu',NULL,NULL),
-(9,'Chương trình thường niên','thuong-nien','event_annual','Hoạt động thường niên',NULL,NULL),
+(9,'Chương trình thường niên','thuong-nien','event_annual','Sự kiện thường niên',NULL,NULL),
 (10,'Khác','khac','news','Danh mục khác',NULL,NULL),
 (11,'Chào tân sinh viên','chao-tan-sinh-vien','event_annual','Lễ chào tân sinh viên khóa mới',NULL,9),
 (12,'Quân sự','quan-su','event_annual','Quân sự huấn luyện sinh viên',NULL,9),

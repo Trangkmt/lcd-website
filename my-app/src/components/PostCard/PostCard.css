@@ -12,6 +12,14 @@
     border-radius: 0;
 }
 
+.post-card--horizontal {
+    flex-direction: row;
+    min-height: auto;
+    gap: 1.5rem;
+    padding: 0;
+    align-items: stretch;
+}
+
 .post-card:hover {
     transform: translateY(-3px);
 }
@@ -34,6 +42,13 @@
     background-color: var(--color-gainsboro);
     object-fit: cover;
     transition: transform 0.35s ease;
+    flex-shrink: 0;
+}
+
+.post-card--horizontal .post-card__image {
+    width: 300px;
+    height: 200px;
+    aspect-ratio: auto;
 }
 
 .post-card--activity .post-card__image {
@@ -119,6 +134,16 @@
     line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+
+.post-card--horizontal .post-card__title {
+    font-size: 1.25rem;
+    text-transform: uppercase;
+}
+
+.post-card--horizontal .post-card__description {
+    line-clamp: 4;
+    -webkit-line-clamp: 4;
 }
 
 /* Responsive */

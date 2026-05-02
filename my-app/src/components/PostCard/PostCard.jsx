@@ -25,6 +25,7 @@ const PostCard = ({
     const cardClassName = [
         'post-card',
         effectiveVariant ? `post-card--${effectiveVariant}` : '',
+        variant === 'horizontal' ? 'post-card--horizontal' : '',
         className
     ].filter(Boolean).join(' ');
 

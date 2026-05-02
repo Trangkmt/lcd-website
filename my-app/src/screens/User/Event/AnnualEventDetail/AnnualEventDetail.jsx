@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import './AnnualEventDetail.css';
-import { SearchBar } from '../../../../components';
+import { SearchBar, PostCard } from '../../../../components';
 import { categoriesAPI, postsAPI } from '../../../../services/api';
 
 function formatEventNameFromSlug(slug) {
@@ -52,7 +52,7 @@ const AnnualEventDetail = () => {
                             </div>
                         </div>
                         <div className="event-details">
-                            <h2 className="event-details-title">
+                            <h2>
                                 {`GIỚI THIỆU VỀ ${displayTitle.toUpperCase()}`}
                             </h2>
                             <p className="event-details-description">
@@ -63,7 +63,7 @@ const AnnualEventDetail = () => {
 
                     <div className="posts-section">
                         <div className="posts-header">
-                            <h2 className="posts-title">TẤT CẢ BÀI ĐĂNG</h2>
+                            <h2>TẤT CẢ BÀI ĐĂNG</h2>
                             <SearchBar
                                 value={searchQuery}
                                 onChange={e => setSearchQuery(e.target.value)}
@@ -79,28 +79,16 @@ const AnnualEventDetail = () => {
                         )}
                         <div className="posts-list">
                             {filtered.map(post => (
-                                <Link
+                                <PostCard
                                     key={post.id}
                                     to={`/event/${eventName}/post/${post.id}`}
-                                    className="post-card"
-                                    style={{ textDecoration: 'none', color: 'inherit' }}
-                                >
-                                    <div className="post-image">
-                                        {post.thumbnail && (
-                                            <img src={post.thumbnail} alt={post.title} style={{ width: '100%', height: '100%', objectFit: 'cover', minHeight: '300px' }} />
-                                        )}
-                                    </div>
-                                    <div className="post-content">
-                                        <div className="post-header">
-                                            <h3 className="post-title">{post.title}</h3>
-                                            <span className="post-date">
-                                                {post.created_at ? new Date(post.created_at).toLocaleDateString('vi-VN') : ''}
-                                            </span>
-                                            <span className="post-category">{post.category_name || ''}</span>
-                                        </div>
-                                        <p className="post-description">{post.summary || ''}</p>
-                                    </div>
-                                </Link>
+                                    title={post.title}
+                                    summary={post.summary}
+                                    date={post.created_at}
+                                    image={post.thumbnail}
+                                    category={post.category_name}
+                                    variant="horizontal"
+                                />
                             ))}
                         </div>
                     </div>

@@ -164,7 +164,9 @@ export default function CategoriesManagement() {
                     >
                         <span className="cat-tab-icon" aria-hidden="true"><tab.icon /></span>
                         {tab.label}
-                        <span className="cat-tab-count">{categoriesByTab[tab.key]?.length ?? 0}</span>
+                        <span className="cat-tab-count">
+                            {(categoriesByTab[tab.key] || []).filter(c => (c.subcategories_count || 0) === 0).length}
+                        </span>
                     </button>
                 ))}
             </div>
@@ -179,7 +181,9 @@ export default function CategoriesManagement() {
                             Chưa có danh mục nào cho trang <b>{PAGE_TYPE_LABELS[activeTab]}</b>.
                         </p>
                     )}
-                    {currentList.map(category => (
+                    {currentList
+                        .filter(cat => (cat.subcategories_count || 0) === 0)
+                        .map(category => (
                         <div key={category.id} className="category-card">
                             {category.intro_image && (
                                 <div className="category-intro-image-wrap">

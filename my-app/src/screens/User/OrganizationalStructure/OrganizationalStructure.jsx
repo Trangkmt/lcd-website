@@ -197,7 +197,7 @@ function getBchRole(member) {
 const BCH_KEY = 'ban chap hanh';
 const LEADER_ROLES = new Set(['Trưởng ban', 'Phó ban', 'Bí thư', 'Phó bí thư']);
 
-const TeamalStructure = () => {
+const OrganizationalStructure = () => {
     const [boardNodes, setBoardNodes] = useState([]);
     const [selectedBoardKey, setSelectedBoardKey] = useState(null);
     const [secretary, setSecretary] = useState(null);
@@ -270,7 +270,7 @@ const TeamalStructure = () => {
 
     if (loading) {
         return (
-            <div className="teamal-structure">
+            <div className="organizational-structure">
                 <div className="org-header">
                     <h1 className="org-title">Cơ Cấu Tổ Chức</h1>
                     <p className="org-subtitle">Liên Chi Đoàn Khoa Công Nghệ Thông Tin</p>
@@ -365,7 +365,7 @@ const TeamalStructure = () => {
     };
 
     return (
-        <div className="teamal-structure">
+        <div className="organizational-structure">
             <div className="org-header">
                 <h1 className="org-title">Cơ Cấu Tổ Chức</h1>
                 <p className="org-subtitle">Liên Chi Đoàn Khoa Công Nghệ Thông Tin</p>
@@ -453,5 +453,6 @@ const TeamalStructure = () => {
     );
 };
 
-export default TeamalStructure;
+export default OrganizationalStructure;
+
 
