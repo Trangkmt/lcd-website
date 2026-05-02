@@ -1,0 +1,3 @@
+Opening: d:/web-lcd/Bao cao KLTN - Final.docx
+Found Hình 4.16 at index 516
+Successfully added description after Hình 4.16 and saved to d:/web-lcd/Bao cao KLTN - Final Updated.docx
