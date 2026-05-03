@@ -62,7 +62,7 @@ export default function CategoriesManagement() {
             const newCategoriesByTab = { news: [], achievement: [], event_annual: [], event_non_annual: [] };
             
             if (Array.isArray(data)) {
-                data.forEach(item => {
+                data.filter(item => item.page_type !== 'document').forEach(item => {
                     const tabKey = resolveTabKey(item.page_type, 'news');
                     if (newCategoriesByTab[tabKey]) {
                         newCategoriesByTab[tabKey].push(normalizeCategoryForTab(item, tabKey));

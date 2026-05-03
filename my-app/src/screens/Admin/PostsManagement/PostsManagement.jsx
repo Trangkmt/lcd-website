@@ -229,7 +229,10 @@ export default function PostsManagement() {
     const docInputRef = useRef(null);
 
     useEffect(() => {
-        categoriesAPI.getAll().then(data => setCategories(Array.isArray(data) ? data : [])).catch(() => { });
+        categoriesAPI.getAll().then(data => {
+            const filteredData = Array.isArray(data) ? data.filter(cat => cat.page_type !== 'document') : [];
+            setCategories(filteredData);
+        }).catch(() => { });
         if (isAdminFull(currentUser)) {
             usersAPI.getAll().then(data => setUsers(Array.isArray(data) ? data : [])).catch(() => { });
         }
@@ -898,7 +901,7 @@ export default function PostsManagement() {
     const filterPageTypeOptions = Array.from(
         new Set([
             ...Object.keys(PAGE_TYPE_LABELS),
-            ...categories.map(cat => cat.page_type).filter(Boolean),
+            ...categories.map(cat => cat.page_type).filter(pt => pt && pt !== 'document'),
         ])
     );
     const selectedCatName = categories.find(c => String(c.id) === String(form.category_id))?.name || '';
