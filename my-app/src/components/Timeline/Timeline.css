@@ -1,18 +1,105 @@
 .timeline-section {
     grid-column: 2;
-    grid-row: 2 / span 3;
+    grid-row: 2 / span 10;
     align-self: start;
-    position: sticky;
-    top: 6.75rem;
+    position: relative;
     width: 100%;
     height: fit-content;
-    padding: 0.75rem 0.875rem 0.875rem;
-    border: 1px solid var(--color-border-soft);
+    padding: 0; /* Changed to 0 as padding is now in container */
+    border: none; /* Border moved to container */
     background: transparent;
-    z-index: 12;
+    z-index: 1000; /* Higher z-index for mobile drawer */
     font-family: var(--font-primary);
     display: flex;
     flex-direction: column;
+}
+
+.timeline-container {
+    width: 100%;
+    padding: 0.75rem 0.875rem 0.875rem;
+    border: 1px solid var(--color-border-soft);
+    background: var(--color-white);
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+}
+
+.timeline-header {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
+}
+
+.timeline-header__main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.timeline-close-btn {
+    display: none; /* Only visible on mobile drawer */
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text-soft);
+    padding: 4px;
+}
+
+.timeline-mobile-toggle {
+    display: none; /* Only visible on mobile */
+    position: relative;
+    width: 100%;
+    padding: 1rem 1.25rem;
+    background: var(--color-white);
+    color: var(--color-darkslateblue);
+    border: 1px solid var(--color-border-soft);
+    border-radius: 0;
+    cursor: pointer;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.2s ease;
+    margin-bottom: 0.5rem;
+}
+
+.timeline-mobile-toggle:hover {
+    background: var(--color-surface-soft-blue);
+    border-color: var(--color-primary);
+}
+
+.timeline-mobile-toggle__content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.timeline-mobile-toggle svg {
+    width: 20px;
+    height: 20px;
+    color: var(--color-primary);
+}
+
+.timeline-mobile-toggle__text {
+    font-family: var(--font-primary);
+    font-size: 0.9375rem;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.timeline-mobile-toggle__badge {
+    background: var(--color-info-tint-light);
+    color: var(--color-primary);
+    font-size: 0.75rem;
+    font-weight: 700;
+    min-width: 24px;
+    height: 24px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6px;
 }
 
 .timeline-section .section-title--timeline {
@@ -204,13 +291,56 @@
     background: var(--color-white);
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
     .timeline-section {
-        grid-column: 1;
-        grid-row: auto;
+        grid-column: 1 / -1 !important;
+        grid-row: unset !important;
         position: relative;
         top: auto;
         max-height: none;
+        margin-bottom: 2rem;
+    }
+
+    .timeline-container {
+        display: none; /* Hide on mobile by default */
+        position: relative; /* Push layout instead of fixed overlay */
+        width: 100%;
+        background: var(--color-white);
+        padding: 1.5rem 0.875rem;
+        overflow: visible;
+        border: 1px solid var(--color-border-soft);
+        border-top: none;
+    }
+
+    .timeline-header {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--color-border-soft);
+    }
+
+    .timeline-section--expanded .timeline-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .timeline-mobile-toggle {
+        display: flex;
+        margin-bottom: 0; /* Align with container if open */
+    }
+
+    .timeline-section--expanded .timeline-mobile-toggle {
+        border-bottom: none;
+    }
+
+    .timeline-close-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--color-surface-soft-blue);
+        color: var(--color-text-primary);
     }
 
     .timeline-track {
@@ -246,9 +376,9 @@
     }
 }
 
-@media (max-width: 42.5rem) {
+@media (max-width: 480px) {
     .timeline-section {
-        padding: var(--space-4);
+        margin-bottom: 1.5rem;
     }
 }
 

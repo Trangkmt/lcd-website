@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Timeline.css';
 import {
     toMonthNumber,
@@ -6,6 +6,7 @@ import {
     sortTimelineEvents,
     pickActiveTimelineEvent,
 } from '../../utils/timeline';
+import { TimelineIcon, CloseIcon } from '../../SvgIcons';
 
 const Timeline = ({
     events = [],
@@ -18,6 +19,7 @@ const Timeline = ({
     showSectionHeader = true,
     className = '',
 }) => {
+    const [isExpanded, setIsExpanded] = useState(false);
     const referenceDate = new Date();
     const currentMonth = referenceDate.getMonth() + 1;
     const sortedEvents = sortTimelineEvents(
@@ -29,7 +31,11 @@ const Timeline = ({
         : sortedEvents;
     const activeTimelineEvent = pickActiveTimelineEvent(sortedEvents, currentMonth, referenceDate);
 
+    const toggleTimeline = () => setIsExpanded(!isExpanded);
+
     if (layout === 'dashboard') {
+        // ... (dashboard logic remains same, but I'll skip it for brevity or just include it if needed)
+        // Actually, better to include it to keep the file valid
         return (
             <div className={`dashboard-timeline ${className}`.trim()}>
                 {loading ? (
@@ -76,59 +82,79 @@ const Timeline = ({
     }
 
     return (
-        <div className={`timeline-section ${className}`.trim()}>
-            {showSectionHeader && (
-                <>
-                    <b className="section-title section-title--timeline">{title}</b>
-                    <div className="section-divider section-divider--timeline" aria-hidden="true" />
-                </>
-            )}
+        <div className={`timeline-section ${className} ${isExpanded ? 'timeline-section--expanded' : ''}`.trim()}>
+            {/* Mobile Toggle Button - now static above event section */}
+            <button 
+                className="timeline-mobile-toggle" 
+                onClick={toggleTimeline}
+                aria-label={isExpanded ? "Đóng lịch trình" : "Xem lịch trình thường niên"}
+            >
+                <div className="timeline-mobile-toggle__content">
+                    <TimelineIcon />
+                    <span className="timeline-mobile-toggle__text">LỊCH TRÌNH THƯỜNG NIÊN</span>
+                </div>
+                <span className="timeline-mobile-toggle__badge">{timelineDisplayEvents.length}</span>
+            </button>
 
-            <div className="timeline-track" role="list" aria-label={title}>
-                {loading && (
-                    <div className="timeline-empty">{loadingText}</div>
-                )}
-
-                {!loading && timelineDisplayEvents.length === 0 && (
-                    <div className="timeline-empty">{emptyText}</div>
-                )}
-
-                {!loading && timelineDisplayEvents.map((event, index) => {
-                    const eventMonth = toMonthNumber(event.month);
-                    const eventYear = getTimelineYear(event, referenceDate);
-                    const isActive = Number(event.id) === Number(activeTimelineEvent?.id);
-                    const isLeft = index % 2 === 0;
-                    const statusLabel = isActive
-                        ? eventMonth === currentMonth
-                            ? 'Đang diễn ra'
-                            : 'Sắp diễn ra'
-                        : '';
-
-                    const timelineCard = (
-                        <div className="timeline-item__card">
-                            <div className="timeline-item__month">Năm {eventYear} • Tháng {eventMonth}</div>
-                            <h3 className="timeline-item__title">{event.event_name || event.title || ''}</h3>
-                            <p className="timeline-item__summary">{event.summary || ''}</p>
-                            {statusLabel && <span className="timeline-item__status">{statusLabel}</span>}
+            <div className="timeline-container">
+                {showSectionHeader && (
+                    <div className="timeline-header">
+                        <div className="timeline-header__main">
+                            <b className="section-title section-title--timeline">{title}</b>
+                            <button className="timeline-close-btn" onClick={() => setIsExpanded(false)} aria-label="Đóng">
+                                <CloseIcon />
+                            </button>
                         </div>
-                    );
+                        <div className="section-divider section-divider--timeline" aria-hidden="true" />
+                    </div>
+                )}
 
-                    return (
-                        <article
-                            key={event.id}
-                            role="listitem"
-                            className={`timeline-item ${isActive ? 'timeline-item--active' : 'timeline-item--muted'}`}
-                            aria-label={`Năm ${eventYear}, tháng ${eventMonth}: ${event.event_name || event.title || ''}`}
-                        >
-                            {isLeft ? timelineCard : <div className="timeline-item__spacer" aria-hidden="true" />}
-                            <div className="timeline-item__axis" aria-hidden="true">
-                                <span className="timeline-item__dot" />
-                                {index < timelineDisplayEvents.length - 1 && <span className="timeline-item__line" />}
+                <div className="timeline-track" role="list" aria-label={title}>
+                    {loading && (
+                        <div className="timeline-empty">{loadingText}</div>
+                    )}
+
+                    {!loading && timelineDisplayEvents.length === 0 && (
+                        <div className="timeline-empty">{emptyText}</div>
+                    )}
+
+                    {!loading && timelineDisplayEvents.map((event, index) => {
+                        const eventMonth = toMonthNumber(event.month);
+                        const eventYear = getTimelineYear(event, referenceDate);
+                        const isActive = Number(event.id) === Number(activeTimelineEvent?.id);
+                        const isLeft = index % 2 === 0;
+                        const statusLabel = isActive
+                            ? eventMonth === currentMonth
+                                ? 'Đang diễn ra'
+                                : 'Sắp diễn ra'
+                            : '';
+
+                        const timelineCard = (
+                            <div className="timeline-item__card">
+                                <div className="timeline-item__month">Năm {eventYear} • Tháng {eventMonth}</div>
+                                <h3 className="timeline-item__title">{event.event_name || event.title || ''}</h3>
+                                <p className="timeline-item__summary">{event.summary || ''}</p>
+                                {statusLabel && <span className="timeline-item__status">{statusLabel}</span>}
                             </div>
-                            {!isLeft ? timelineCard : <div className="timeline-item__spacer" aria-hidden="true" />}
-                        </article>
-                    );
-                })}
+                        );
+
+                        return (
+                            <article
+                                key={event.id}
+                                role="listitem"
+                                className={`timeline-item ${isActive ? 'timeline-item--active' : 'timeline-item--muted'}`}
+                                aria-label={`Năm ${eventYear}, tháng ${eventMonth}: ${event.event_name || event.title || ''}`}
+                            >
+                                {isLeft ? timelineCard : <div className="timeline-item__spacer" aria-hidden="true" />}
+                                <div className="timeline-item__axis" aria-hidden="true">
+                                    <span className="timeline-item__dot" />
+                                    {index < timelineDisplayEvents.length - 1 && <span className="timeline-item__line" />}
+                                </div>
+                                {!isLeft ? timelineCard : <div className="timeline-item__spacer" aria-hidden="true" />}
+                            </article>
+                        );
+                    })}
+                </div>
             </div>
         </div>
     );

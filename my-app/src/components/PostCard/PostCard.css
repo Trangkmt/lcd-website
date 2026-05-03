@@ -194,7 +194,7 @@
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 1200px) {
     .post-card {
         flex-direction: row;
         max-width: none !important;
@@ -202,13 +202,14 @@
         min-height: unset !important;
         padding: 0 !important;
         gap: 0 !important;
-        border-radius: 8px;
-        border: 1px solid var(--color-gray-200);
+        border-radius: 0;
+        border: none !important; /* Remove border as requested */
         background: var(--color-white);
+        box-shadow: none !important; /* Remove shadow to keep it clean */
     }
 
     .post-card--activity {
-        border-left: 4px solid var(--color-primary);
+        border-left: none !important; /* Remove color border as requested */
     }
 
     .post-card__image-container {
@@ -247,8 +248,9 @@
 
 @media (max-width: 480px) {
     .post-card__image-container {
-        width: 100px !important;
-        min-width: 100px !important;
+        width: 120px !important; /* Slightly larger for better visibility */
+        min-width: 120px !important;
+        max-width: 120px !important;
     }
 
     .post-card__description {
@@ -256,7 +258,7 @@
     }
 
     .post-card__body {
-        padding: 8px 10px !important;
+        padding: 8px 12px !important;
     }
 
     .post-card__title {
