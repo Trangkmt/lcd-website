@@ -1,0 +1,25 @@
+.image-upload-field {
+    width: 100%;
+}
+
+.image-upload-field__container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.image-upload-field__container .form-control {
+    flex: 1;
+}
+
+.image-upload-field__container .btn-upload {
+    white-space: nowrap;
+    min-width: 100px;
+    margin: 0;
+}
+
+.image-upload-field .form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+}

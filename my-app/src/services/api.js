@@ -151,6 +151,7 @@ export const postTemplatesAPI = {
 
 export const uploadsAPI = {
     uploadImage: (fileData, folder) => apiFetch('/uploads/image', { method: 'POST', body: { fileData, folder } }),
+    deleteImage: (publicId) => apiFetch('/uploads/image', { method: 'DELETE', body: { publicId } }),
 };
 
 export const sharedFoldersAPI = {

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Layout } from './components';
 import { Homepage } from './screens/User/Homepage';
-import { Event, AnnualEvent, AnnualEventDetail, NonAnnualEvent, NonAnnualEventDetail, PostDetail } from './screens/User/Event';
+import { Event, AnnualEvent, AnnualEventDetail, NonAnnualEvent, PostDetail } from './screens/User/Event';
 import OrganizationalStructure from './screens/User/OrganizationalStructure';
 import Contact from './screens/User/Contact';
 import { News, NewsDetail } from './screens/User/News';
@@ -48,7 +48,7 @@ const App = () => {
         <Route path="/event" element={<Layout><Event /></Layout>} />
         <Route path="/event/annual" element={<Layout><AnnualEvent /></Layout>} />
         <Route path="/event/non-annual" element={<Layout><NonAnnualEvent /></Layout>} />
-        <Route path="/event/non-annual/:id" element={<Layout><NonAnnualEventDetail /></Layout>} />
+        <Route path="/event/non-annual/:id" element={<Layout><PostDetail /></Layout>} />
         <Route path="/event/:eventName" element={<Layout><AnnualEventDetail /></Layout>} />
         <Route path="/event/:eventName/post/:postId" element={<Layout><PostDetail /></Layout>} />
         <Route path="/news" element={<Layout><News /></Layout>} />

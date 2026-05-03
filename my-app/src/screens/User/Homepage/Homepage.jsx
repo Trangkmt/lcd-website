@@ -2,9 +2,8 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Homepage.css';
 import { postsAPI, timelineAPI } from '../../../services/api';
-import { PostCard, Timeline } from '../../../components';
+import { PostCard, Timeline, LazyImage, HeroSection } from '../../../components';
 import { formatVietnameseDate } from '../../../utils/date';
-import { ChevronLeftIcon, ChevronRightIcon } from '../../../SvgIcons';
 
 const getSlideRoute = (item) => {
   if (item.page_type === 'event_annual' && item.category_slug) {
@@ -161,80 +160,23 @@ const Homepage = () => {
     ? eventPosts[hoveredEventIndex]
     : eventPosts[eventImageIndex];
 
-  const activeHero = heroSlides[heroIndex] || {
-    title: 'TIN NỔI BẬT MỚI NHẤT',
-    image: '',
-    summary: 'Theo dõi các thông tin nổi bật mới nhất từ Tin tức, Sự kiện thường niên và Sự kiện không thường niên.',
-    categoryLabel: 'Nổi bật',
-    date: null,
-    link: '/news'
-  };
 
   return (
     <div className="homepage">
-      {/* Hero Section */}
-      <div className="hero-section" onClick={() => navigate(activeHero.link)}>
-        <img className="hero-section__image" src={activeHero.image} alt={activeHero.title} />
-        <div className="hero-section__overlay" />
-        <div className="hero-section__content">
-          <div className="hero-section__meta">
-            <span className="hero-section__badge">{activeHero.categoryLabel}</span>
-            <span className="hero-section__date">
-              {formatVietnameseDate(activeHero.date)}
-            </span>
-          </div>
-          <h2 className="hero-section__title">{activeHero.title}</h2>
-          <p className="hero-section__summary">{activeHero.summary}</p>
-        </div>
-
-        {heroSlides.length > 1 && (
-          <>
-            <button
-              type="button"
-              className="hero-section__control hero-section__control--prev"
-              onClick={(event) => {
-                event.stopPropagation();
-                setHeroIndex((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
-              }}
-              aria-label="Slide trước"
-            >
-              <ChevronLeftIcon />
-            </button>
-            <button
-              type="button"
-              className="hero-section__control hero-section__control--next"
-              onClick={(event) => {
-                event.stopPropagation();
-                setHeroIndex((prev) => (prev + 1) % heroSlides.length);
-              }}
-              aria-label="Slide kế tiếp"
-            >
-              <ChevronRightIcon />
-            </button>
-            <div className="hero-section__dots">
-              {heroSlides.map((slide, idx) => (
-                <button
-                  key={slide.id}
-                  type="button"
-                  className={`hero-section__dot ${idx === heroIndex ? 'hero-section__dot--active' : ''}`}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    setHeroIndex(idx);
-                  }}
-                  aria-label={`Đi tới slide ${idx + 1}`}
-                />
-              ))}
-            </div>
-          </>
-        )}
-      </div>
+      <HeroSection
+        slides={heroSlides}
+        currentIndex={heroIndex}
+        onPrev={() => setHeroIndex((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)}
+        onNext={() => setHeroIndex((prev) => (prev + 1) % heroSlides.length)}
+        onDotClick={(idx) => setHeroIndex(idx)}
+      />
 
       <Timeline events={timelineEvents} />
 
       {/* Event Section */}
       <div className="event-section">
         <div className="event-section__featured-box">
-          <img
+          <LazyImage
             className="event-section__featured-image"
             src={displayedEvent?.thumbnail}
             alt={displayedEvent?.title || 'Featured Event'}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { LazyImage } from '../LazyImage';
 import './PostCard.css';
 import { formatVietnameseDate } from '../../utils/date';
 
@@ -26,17 +27,20 @@ const PostCard = ({
         'post-card',
         effectiveVariant ? `post-card--${effectiveVariant}` : '',
         variant === 'horizontal' ? 'post-card--horizontal' : '',
+        variant === 'sidebar' ? 'post-card--sidebar' : '',
         className
     ].filter(Boolean).join(' ');
 
     const cardContent = (
         <>
             <div className="post-card__background" />
-            <img
-                className="post-card__image"
-                src={image || 'https://picsum.photos/300/200?random=1'}
-                alt={displayTitle || 'Post'}
-            />
+            <div className="post-card__image-container">
+                <LazyImage
+                    className="post-card__image"
+                    src={image}
+                    alt={displayTitle || 'Post'}
+                />
+            </div>
             <div className='post-card__body'>
                 <div className="post-card__meta">
                     <div className="post-card__badge">

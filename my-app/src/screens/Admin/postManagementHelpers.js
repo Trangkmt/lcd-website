@@ -1,5 +1,6 @@
-import { postsAPI } from '../../services/api';
+import { postsAPI, uploadsAPI } from '../../services/api';
 import { canMutatePost, isAdminFull } from '../../utils/adminPermissions';
+import { getCloudinaryPublicId } from '../../utils/cloudinary';
 
 export function slugifyPostTitle(value) {
     return String(value || '')
@@ -51,8 +52,12 @@ export function buildPostSavePayload({ form, currentUser, editingPost, defaultCa
         category_id: form.category_id || defaultCategoryId || null,
     };
 
-    if (!isAdminFull(currentUser)) {
+    // Fix author_id to current user when creating
+    if (!editingPost) {
         payload.author_id = currentUser?.id || payload.author_id;
+    }
+
+    if (!isAdminFull(currentUser)) {
         payload.is_published = editingPost ? !!editingPost.is_published : false;
     }
 
@@ -91,6 +96,17 @@ export async function deletePostWithGuard({
     }
 
     await postsAPI.delete(id);
+
+    // Delete thumbnail from Cloudinary if it exists
+    const thumbnailPublicId = getCloudinaryPublicId(targetPost?.thumbnail);
+    if (thumbnailPublicId) {
+        try {
+            await uploadsAPI.deleteImage(thumbnailPublicId);
+        } catch (delErr) {
+            console.warn('Could not delete thumbnail from Cloudinary on post deletion:', delErr);
+        }
+    }
+
     if (onSuccess) {
         await onSuccess(id);
     }

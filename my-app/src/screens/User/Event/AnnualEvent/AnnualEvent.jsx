@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import './AnnualEvent.css';
 import { categoriesAPI, postsAPI } from '../../../../services/api';
 import { ArrowRightIcon } from '../../../../SvgIcons';
+import { LazyImage } from '../../../../components';
 
 const AnnualEvent = () => {
     const [categories, setCategories] = useState([]);
@@ -62,7 +63,7 @@ const AnnualEvent = () => {
                                     >
                                         <div className="annual-event-image">
                                             {displayImage ? (
-                                                <img src={displayImage} alt={cat.name} />
+                                                <LazyImage src={displayImage} alt={cat.name} />
                                             ) : (
                                                 <div className="annual-event-image-placeholder">
                                                     <span>{cat.name.charAt(0)}</span>
@@ -88,4 +89,3 @@ const AnnualEvent = () => {
 };
 
 export default AnnualEvent;
-

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import '../../News/News.css';
 import { postsAPI, categoriesAPI } from '../../../../services/api';
-import { SearchBar, PostCard } from '../../../../components';
-import { SettingsIcon, ChevronLeftIcon, ChevronRightIcon } from '../../../../SvgIcons';
+import { SearchBar, PostCard, HeroSection } from '../../../../components';
+import { SettingsIcon } from '../../../../SvgIcons';
+import '../../News/News.css';
 
 const asTimestamp = (item) => {
     const value = item?.published_at || item?.created_at;
@@ -65,56 +65,23 @@ const NonAnnualEvent = () => {
 
     return (
         <div className="news-page">
-            <div className="news-page__hero news-page__hero--banner">
-                <Link to={heroLink} className="news-page__hero-link">
-                    <img
-                        className="news-page__hero-image"
-                        src={activeHero.thumbnail || ''}
-                        alt={activeHero.title}
-                    />
-                    <div className="news-page__hero-overlay" />
-                    <div className="news-page__hero-content">
-                        <span className="news-page__hero-badge">Sự kiện</span>
-                        <h1 className="news-page__hero-title">{activeHero.title}</h1>
-                        <p className="news-page__hero-summary">{activeHero.summary}</p>
-                    </div>
-                </Link>
-
-                {heroSlides.length > 1 && (
-                    <>
-                        <button
-                            type="button"
-                            className="news-page__hero-control news-page__hero-control--prev"
-                            onClick={() => setHeroIndex((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)}
-                            aria-label="Slide trước"
-                        >
-                            <ChevronLeftIcon />
-                        </button>
-                        <button
-                            type="button"
-                            className="news-page__hero-control news-page__hero-control--next"
-                            onClick={() => setHeroIndex((prev) => (prev + 1) % heroSlides.length)}
-                            aria-label="Slide kế tiếp"
-                        >
-                            <ChevronRightIcon />
-                        </button>
-                        <div className="news-page__hero-dots">
-                            {heroSlides.map((slide, idx) => (
-                                <button
-                                    key={slide.id}
-                                    type="button"
-                                    className={`news-page__hero-dot${idx === heroIndex ? ' news-page__hero-dot--active' : ''}`}
-                                    onClick={() => setHeroIndex(idx)}
-                                    aria-label={`Đi tới slide ${idx + 1}`}
-                                />
-                            ))}
-                        </div>
-                    </>
-                )}
-            </div>
+            <HeroSection
+                slides={heroSlides.map(slide => ({
+                    id: slide.id,
+                    title: slide.title,
+                    summary: slide.summary,
+                    image: slide.thumbnail,
+                    date: slide.published_at || slide.created_at,
+                    categoryLabel: 'Sự kiện',
+                    link: `/event/non-annual/${slide.id}`
+                }))}
+                currentIndex={heroIndex}
+                onPrev={() => setHeroIndex((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)}
+                onNext={() => setHeroIndex((prev) => (prev + 1) % heroSlides.length)}
+                onDotClick={(idx) => setHeroIndex(idx)}
+            />
 
             <div className="news-page__content">
-                {/* Controls */}
                 <div className="news-page__controls">
                     <SearchBar
                         value={searchQuery}
@@ -158,7 +125,6 @@ const NonAnnualEvent = () => {
                     <p className="news-page__empty">Không có sự kiện nào</p>
                 )}
 
-                {/* Posts Grid */}
                 <div className="news-grid">
                     {filtered.map(item => (
                         <PostCard
@@ -168,7 +134,7 @@ const NonAnnualEvent = () => {
                             category={item.category_name || ''}
                             date={item.published_at || item.created_at}
                             title={item.title || ''}
-                            description={item.summary || ''}
+                            summary={item.summary || ''}
                         />
                     ))}
                 </div>
@@ -178,4 +144,3 @@ const NonAnnualEvent = () => {
 };
 
 export default NonAnnualEvent;
-

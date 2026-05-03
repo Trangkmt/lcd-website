@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import './Event.css';
 import { postsAPI } from '../../../../services/api';
 import { SearchBar, PostCard } from '../../../../components';
 import { SettingsIcon, ChevronLeftIcon, ChevronRightIcon } from '../../../../SvgIcons';
 
 const Event = () => {
+    const [searchParams, setSearchParams] = useSearchParams();
+    const typeParam = searchParams.get('type');
+
     const [filterOpen, setFilterOpen] = useState(false);
     const [selectedFilter, setSelectedFilter] = useState('Tất cả');
     const [searchQuery, setSearchQuery] = useState('');
@@ -12,6 +16,12 @@ const Event = () => {
     const [loading, setLoading] = useState(true);
 
     const filterOptions = ['Tất cả', 'Sự kiện không thường niên', 'Sự kiện thường niên'];
+
+    useEffect(() => {
+        if (typeParam === 'annual') setSelectedFilter('Sự kiện thường niên');
+        else if (typeParam === 'non-annual') setSelectedFilter('Sự kiện không thường niên');
+        else setSelectedFilter('Tất cả');
+    }, [typeParam]);
 
     useEffect(() => {
         // Fetch both annual and non-annual events
@@ -89,10 +99,10 @@ const Event = () => {
                             <p style={{ gridColumn: '1/-1', textAlign: 'center', color: 'var(--color-text-soft)' }}>Không có sự kiện nào</p>
                         )}
                         {filtered.map(event => {
-                            const toPath = event.page_type === 'event_annual' 
+                            const toPath = event.page_type === 'event_annual'
                                 ? `/event/${event.category_slug}/post/${event.id}`
                                 : `/event/non-annual/${event.id}`;
-                            
+
                             return (
                                 <PostCard
                                     key={event.id}

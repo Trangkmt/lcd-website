@@ -49,138 +49,6 @@
     padding: 2.5rem 1.5rem 3.75rem;
 }
 
-/* Latest Hero Slider */
-.news-page__hero {
-    position: relative;
-    height: 26.25rem;
-    border-radius: 0;
-    overflow: hidden;
-    margin-bottom: 1.75rem;
-}
-
-.news-page__hero--banner {
-    height: 480px;
-    margin-bottom: 0;
-}
-
-.news-page__hero-link {
-    display: block;
-    width: 100%;
-    height: 100%;
-    text-decoration: none;
-    color: inherit;
-    position: relative;
-}
-
-.news-page__hero-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-.news-page__hero-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(11, 31, 61, 0.1) 0%, rgba(11, 31, 61, 0.8) 76%);
-}
-
-.news-page__hero-content {
-    position: absolute;
-    left: 2rem;
-    right: 2rem;
-    bottom: 1.875rem;
-    z-index: 2;
-}
-
-.news-page__hero-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 62.4375rem;
-    padding: 0.25rem 0.75rem;
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--color-white);
-    background: rgba(44, 107, 204, 0.95);
-    margin-bottom: 0.625rem;
-    white-space: normal;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    line-height: 1.3;
-}
-
-.news-page__hero-title { margin: 0; color: var(--color-white); font-size: clamp(1.35rem, 3.5vw, 2.25rem); line-height: 1.2; font-weight: 900; max-width: 56.25rem; }
-
-.news-page__hero-summary {
-    margin: 0.75rem 0 0;
-    color: rgba(255, 255, 255, 0.95);
-    font-size: 0.9375rem;
-    line-height: 1.6;
-    max-width: 48.75rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.news-page__hero-control {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 3;
-    width: 2.625rem;
-    height: 2.625rem;
-    border-radius: 62.4375rem;
-    border: 1px solid rgba(255, 255, 255, 0.65);
-    background: rgba(0, 0, 0, 0.35);
-    color: var(--color-white);
-    font-size: 1.75rem;
-    line-height: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
-
-.news-page__hero-control svg {
-    width: 1em;
-    height: 1em;
-}
-
-.news-page__hero-control--prev {
-    left: 1rem;
-}
-
-.news-page__hero-control--next {
-    right: 1rem;
-}
-
-.news-page__hero-dots {
-    position: absolute;
-    left: 50%;
-    bottom: 0.875rem;
-    transform: translateX(-50%);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    z-index: 3;
-}
-
-.news-page__hero-dot {
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 62.4375rem;
-    border: none;
-    background: rgba(255, 255, 255, 0.5);
-    cursor: pointer;
-    padding: 0;
-}
-
-.news-page__hero-dot--active {
-    background: rgba(255, 255, 255, 1);
-}
 
 /* Controls Row */
 .news-page__controls {
@@ -278,25 +146,22 @@
 /* News Grid */
 .news-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(21.25rem, 1fr));
-    gap: 1.75rem;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
 }
 
-@media (max-width: 1024px) {
-    .news-page__content {
-        padding: 2rem 1.125rem 3.25rem;
-    }
-
+@media (max-width: 768px) {
     .news-grid {
-        grid-template-columns: repeat(auto-fill, minmax(17.5rem, 1fr));
-        gap: 1.125rem;
+        grid-template-columns: 1fr;
+        gap: 1rem;
     }
+}
 
+@media (max-width: 1200px) {
     .news-page__controls {
         gap: 0.625rem;
     }
 }
-
 @media (max-width: 56.25rem) {
     .news-page__hero--banner {
         height: 23.75rem;
@@ -315,10 +180,9 @@
     .news-page__hero-title { margin: 0; color: var(--color-white); font-size: clamp(1.35rem, 3.5vw, 2.25rem); line-height: 1.2; font-weight: 900; max-width: 56.25rem; }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
     .news-grid {
-        display: flex;
-        flex-direction: column;
+        grid-template-columns: 1fr;
         gap: 1.125rem;
     }
 

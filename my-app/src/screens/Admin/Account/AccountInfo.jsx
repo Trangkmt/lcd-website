@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { authAPI, uploadsAPI } from '../../../services/api';
+import { ImageUploadField } from '../../../components';
 import { ADMIN_AUTH_KEY } from '../../../utils/adminPermissions';
 import { AvatarIcon } from '../../../SvgIcons';
 import './AccountInfo.css';
@@ -8,8 +9,8 @@ export default function AccountInfo({ user }) {
   const [profile, setProfile] = useState(null);
   const [loadingProfile, setLoadingProfile] = useState(true);
   const [editMode, setEditMode] = useState(false);
+  const [passwordMode, setPasswordMode] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [form, setForm] = useState({
@@ -18,8 +19,6 @@ export default function AccountInfo({ user }) {
     password: '',
     newPassword: '',
   });
-  const [avatarFile, setAvatarFile] = useState(null);
-  const [avatarPreview, setAvatarPreview] = useState('');
 
   const activeProfile = useMemo(() => profile || user || null, [profile, user]);
 
@@ -58,37 +57,31 @@ export default function AccountInfo({ user }) {
       password: '',
       newPassword: '',
     }));
-    setAvatarPreview(activeProfile?.avatar_url || '');
-    setAvatarFile(null);
   }, [activeProfile]);
 
-  const readFileAsDataUrl = (file) => (
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = () => reject(new Error('Không thể đọc file ảnh'));
-      reader.readAsDataURL(file);
-    })
-  );
-
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    if (name === 'avatar' && files && files[0]) {
-      setAvatarFile(files[0]);
-      setAvatarPreview(URL.createObjectURL(files[0]));
-    } else {
-      setForm({ ...form, [name]: value });
-    }
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
   };
 
   const handleEdit = () => {
     setErrorMessage('');
     setSuccessMessage('');
     setEditMode(true);
+    setPasswordMode(false);
+  };
+
+  const handlePasswordMode = () => {
+    setErrorMessage('');
+    setSuccessMessage('');
+    setEditMode(false);
+    setPasswordMode(true);
+    setForm(p => ({ ...p, password: '', newPassword: '' }));
   };
 
   const handleCancel = () => {
     setEditMode(false);
+    setPasswordMode(false);
     setErrorMessage('');
     setSuccessMessage('');
     setForm({
@@ -97,8 +90,6 @@ export default function AccountInfo({ user }) {
       password: '',
       newPassword: '',
     });
-    setAvatarPreview(activeProfile?.avatar_url || '');
-    setAvatarFile(null);
   };
 
   const handleSave = async (e) => {
@@ -122,8 +113,7 @@ export default function AccountInfo({ user }) {
     const currentAvatar = (form.avatar_url || '').trim();
 
     const hasProfileChanges = Boolean(
-      avatarFile
-      || originalEmail !== currentEmail
+      originalEmail !== currentEmail
       || originalAvatar !== currentAvatar
     );
     const hasPasswordChange = Boolean(form.password && form.newPassword);
@@ -137,13 +127,6 @@ export default function AccountInfo({ user }) {
     try {
       let nextAvatarUrl = form.avatar_url || '';
       let updatedProfile = activeProfile;
-
-      if (avatarFile) {
-        setUploadingAvatar(true);
-        const fileData = await readFileAsDataUrl(avatarFile);
-        const uploadResult = await uploadsAPI.uploadImage(fileData, 'lcd/admin-avatar');
-        nextAvatarUrl = uploadResult?.secure_url || nextAvatarUrl;
-      }
 
       if (hasProfileChanges) {
         updatedProfile = await authAPI.updateMyProfile({
@@ -164,6 +147,7 @@ export default function AccountInfo({ user }) {
         localStorage.setItem(ADMIN_AUTH_KEY, JSON.stringify(updatedProfile));
       }
       setEditMode(false);
+      setPasswordMode(false);
       setSuccessMessage(
         hasProfileChanges && hasPasswordChange
           ? 'Cập nhật thông tin và mật khẩu thành công.'
@@ -175,7 +159,6 @@ export default function AccountInfo({ user }) {
       setErrorMessage(err.message || 'Không thể cập nhật thông tin tài khoản');
     } finally {
       setSaving(false);
-      setUploadingAvatar(false);
     }
   };
 
@@ -193,120 +176,159 @@ export default function AccountInfo({ user }) {
       {errorMessage && <p className="account-message error">{errorMessage}</p>}
       {successMessage && <p className="account-message success">{successMessage}</p>}
       <form className="account-info-form" onSubmit={handleSave}>
-        <div className="avatar-section">
-          <div className="avatar-img">
-            {avatarPreview
-              ? <img src={avatarPreview} alt="Avatar" className="avatar-img__photo" />
-              : <AvatarIcon size={80} />
-            }
-          </div>
-          {editMode && (
-            <input type="file" name="avatar" accept="image/*" onChange={handleChange} disabled={saving} />
-          )}
-        </div>
         <div className="info-section">
-          <label>
-            Họ tên:
-            <span>{activeProfile?.full_name || ''}</span>
-          </label>
+          {passwordMode ? (
+            <div className="password-change-section">
+              <h3 style={{ marginBottom: '20px', fontSize: '1.1rem', fontWeight: '600' }}>Đổi mật khẩu tài khoản</h3>
+              
+              <div className="form-row">
+                <label className="form-label">Mật khẩu hiện tại:</label>
+                <div className="form-value">
+                  <input
+                    type="password"
+                    name="password"
+                    className="form-control"
+                    value={form.password}
+                    onChange={handleChange}
+                    disabled={saving}
+                    placeholder="Nhập mật khẩu hiện tại"
+                    required
+                  />
+                </div>
+              </div>
 
-          {activeProfile?.member_type === 'student' && (
+              <div className="form-row" style={{ marginTop: '15px' }}>
+                <label className="form-label">Mật khẩu mới:</label>
+                <div className="form-value">
+                  <input
+                    type="password"
+                    name="newPassword"
+                    className="form-control"
+                    value={form.newPassword}
+                    onChange={handleChange}
+                    disabled={saving}
+                    placeholder="Nhập mật khẩu mới"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+          ) : (
             <>
-              <label>
-                Mã sinh viên:
-                <span>{activeProfile?.student_code || ''}</span>
-              </label>
-              <label>
-                Lớp:
-                <span>{activeProfile?.class_name || ''}</span>
-              </label>
+              <div className="form-row avatar-row">
+                <div className="form-value">
+                  <div className="avatar-img">
+                    {form.avatar_url
+                      ? <img src={form.avatar_url} alt="Avatar" className="avatar-img__photo" />
+                      : <AvatarIcon size={80} />
+                    }
+                  </div>
+                  {editMode && (
+                    <ImageUploadField 
+                      label=""
+                      value={form.avatar_url}
+                      onChange={(url) => setForm({ ...form, avatar_url: url })}
+                      folder="lcd/admin-avatar"
+                      placeholder="Link ảnh đại diện..."
+                      disabled={saving}
+                    />
+                  )}
+                </div>
+              </div>
+
+              <div className="form-row">
+                <label className="form-label">Họ tên:</label>
+                <div className="form-value">
+                  <span>{activeProfile?.full_name || ''}</span>
+                </div>
+              </div>
+
+              {activeProfile?.member_type === 'student' && (
+                <>
+                  <div className="form-row">
+                    <label className="form-label">Mã sinh viên:</label>
+                    <div className="form-value">
+                      <span>{activeProfile?.student_code || ''}</span>
+                    </div>
+                  </div>
+                  <div className="form-row">
+                    <label className="form-label">Lớp:</label>
+                    <div className="form-value">
+                      <span>{activeProfile?.class_name || ''}</span>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              <div className="form-row">
+                <label className="form-label">Gmail:</label>
+                <div className="form-value">
+                  {editMode ? (
+                    <input
+                      type="email"
+                      name="email"
+                      className="form-control"
+                      value={form.email}
+                      onChange={handleChange}
+                      disabled={saving}
+                      required
+                    />
+                  ) : (
+                    <span>{activeProfile?.email || ''}</span>
+                  )}
+                </div>
+              </div>
+
+              <div className="form-row">
+                <label className="form-label">Quyền hạn:</label>
+                <div className="form-value">
+                  <span style={{ color: 'var(--color-primary)', fontWeight: '500' }}>
+                    {(() => {
+                      const role = activeProfile?.role;
+                      if (role === 'admin_full') return 'Quản trị viên toàn quyền';
+                      if (role === 'utility_only') return 'Quản trị viên tiện ích';
+                      if (role === 'contact_manager') return 'Quản lý liên hệ';
+                      if (role === 'post_author') return 'Người viết bài';
+                      return role || 'N/A';
+                    })()}
+                  </span>
+                </div>
+              </div>
+
+              {!editMode && (
+                <div className="team-info-section" style={{ marginTop: '15px' }}>
+                  <p className="team-info-label" style={{ fontWeight: '600', marginBottom: '8px', color: 'var(--color-text-muted)' }}>Các ban tham gia:</p>
+                  {activeProfile?.teams && activeProfile.teams.length > 0 ? (
+                    <div className="team-list" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      {activeProfile.teams.map((t, idx) => (
+                        <div key={idx} className="team-item" style={{ background: 'var(--color-gray-50)', padding: '10px 15px', borderRadius: '8px', border: '1px solid var(--color-gray-200)' }}>
+                          <span className="team-name" style={{ fontWeight: 'bold', color: 'var(--color-text-primary)' }}>{t.team_name}</span>
+                          <span className="team-position" style={{ marginLeft: '10px', color: 'var(--color-primary)' }}>({t.team_position})</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <span className="no-team" style={{ color: 'var(--color-text-subtle)', fontStyle: 'italic' }}>Chưa tham gia ban nào</span>
+                  )}
+                </div>
+              )}
             </>
           )}
-
-          <label>
-            Gmail:
-            {editMode ? (
-              <input
-                type="email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                disabled={saving}
-                required
-              />
-            ) : (
-              <span>{activeProfile?.email || ''}</span>
-            )}
-          </label>
-
-          <label>
-            Quyền hạn:
-            <span style={{ color: 'var(--color-primary)', fontWeight: '500' }}>
-              {(() => {
-                const role = activeProfile?.role;
-                if (role === 'admin_full') return 'Quản trị viên toàn quyền';
-                if (role === 'utility_only') return 'Quản trị viên tiện ích';
-                if (role === 'contact_manager') return 'Quản lý liên hệ';
-                if (role === 'post_author') return 'Người viết bài';
-                return role || 'N/A';
-              })()}
-            </span>
-          </label>
-
-          <div className="team-info-section" style={{ marginTop: '15px' }}>
-            <p className="team-info-label" style={{ fontWeight: '600', marginBottom: '8px', color: 'var(--color-text-muted)' }}>Các ban tham gia:</p>
-            {activeProfile?.teams && activeProfile.teams.length > 0 ? (
-              <div className="team-list" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                {activeProfile.teams.map((t, idx) => (
-                  <div key={idx} className="team-item" style={{ background: 'var(--color-gray-50)', padding: '10px 15px', borderRadius: '8px', border: '1px solid var(--color-gray-200)' }}>
-                    <span className="team-name" style={{ fontWeight: 'bold', color: 'var(--color-text-primary)' }}>{t.team_name}</span>
-                    <span className="team-position" style={{ marginLeft: '10px', color: 'var(--color-primary)' }}>({t.team_position})</span>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <span className="no-team" style={{ color: 'var(--color-text-subtle)', fontStyle: 'italic' }}>Chưa tham gia ban nào</span>
-            )}
-          </div>
-
-          {editMode && (
-            <div className="password-change-section" style={{ marginTop: '20px', paddingTop: '15px', borderTop: '1px dashed var(--color-gray-300)' }}>
-              <p style={{ fontWeight: '600', marginBottom: '10px', color: 'var(--color-text-primary)' }}>Đổi mật khẩu (nếu cần):</p>
-              <label>
-                Mật khẩu hiện tại:
-                <input
-                  type="password"
-                  name="password"
-                  value={form.password}
-                  onChange={handleChange}
-                  disabled={saving}
-                  placeholder="Nhập mật khẩu hiện tại"
-                />
-              </label>
-              <label style={{ marginTop: '10px' }}>
-                Mật khẩu mới:
-                <input
-                  type="password"
-                  name="newPassword"
-                  value={form.newPassword}
-                  onChange={handleChange}
-                  disabled={saving}
-                  placeholder="Nhập mật khẩu mới"
-                />
-              </label>
-            </div>
-          )}
         </div>
+
         <div className="action-section">
-          {editMode ? (
+          {editMode || passwordMode ? (
             <>
               <button type="submit" className="btn-primary" disabled={saving}>
-                {uploadingAvatar ? 'Đang upload ảnh...' : saving ? 'Đang lưu...' : 'Lưu thay đổi'}
+                {saving ? 'Đang lưu...' : 'Lưu thay đổi'}
               </button>
               <button type="button" className="btn-secondary" onClick={handleCancel} disabled={saving}>Hủy</button>
             </>
           ) : (
-            <button type="button" className="btn-primary" onClick={handleEdit}>Chỉnh sửa</button>
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button type="button" className="btn-primary" onClick={handleEdit}>Chỉnh sửa thông tin</button>
+              <button type="button" className="btn-primary" onClick={handlePasswordMode}>Đổi mật khẩu</button>
+            </div>
           )}
         </div>
       </form>

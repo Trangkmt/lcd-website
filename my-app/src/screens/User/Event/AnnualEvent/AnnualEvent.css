@@ -46,7 +46,7 @@
 .annual-events-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(18.75rem, 1fr));
-    gap: 1.75rem;
+    gap: 2rem;
 }
 
 /* Event Card */

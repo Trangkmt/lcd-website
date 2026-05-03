@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import mammoth from 'mammoth';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
 import './PostsManagement.css';
-import { SearchBar } from '../../../components';
+import { SearchBar, ImageUploadField } from '../../../components';
 import { postsAPI, categoriesAPI, usersAPI, aiAPI, uploadsAPI, postTemplatesAPI } from '../../../services/api';
 import { canMutatePost, canPublishPost, getStoredAdminUser, isAdminFull } from '../../../utils/adminPermissions';
 import {
@@ -209,7 +209,6 @@ export default function PostsManagement() {
     const [aiTopic, setAiTopic] = useState('');
     const [aiGenerating, setAiGenerating] = useState(false);
     const [aiError, setAiError] = useState('');
-    const [thumbnailUploading, setThumbnailUploading] = useState(false);
     const [templates, setTemplates] = useState([]);
     const [selectedTemplateId, setSelectedTemplateId] = useState('');
     const [templateLoading, setTemplateLoading] = useState(false);
@@ -225,7 +224,6 @@ export default function PostsManagement() {
     const catDropdownRef = useRef(null);
     const editorRef = useRef(null);
     const imageInputRef = useRef(null);
-    const thumbnailInputRef = useRef(null);
     const docInputRef = useRef(null);
 
     useEffect(() => {
@@ -543,7 +541,13 @@ export default function PostsManagement() {
         if (editorRef.current) {
             form.content = editorRef.current.innerHTML;
         }
-        if (!form.title || !form.slug) { alert('Tiêu đề và slug là bắt buộc'); return; }
+
+        const isContentEmpty = !form.content || form.content.trim() === '' || form.content.trim() === '<p><br></p>' || form.content.trim() === '<p><br/></p>';
+        
+        if (!form.title || !form.slug || !form.summary || isContentEmpty) { 
+            alert('Tiêu đề, slug, tóm tắt và nội dung là bắt buộc'); 
+            return; 
+        }
         setSaving(true);
         try {
             const payload = buildPostSavePayload({ form, currentUser, editingPost });
@@ -702,41 +706,8 @@ export default function PostsManagement() {
         insertImageFiles(images);
     }
 
-    function pickThumbnailImage() {
-        thumbnailInputRef.current?.click();
-    }
-
-    function readFileAsDataUrl(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = () => reject(new Error('Không đọc được file ảnh'));
-            reader.readAsDataURL(file);
-        });
-    }
-
-    async function handleThumbnailUpload(event) {
-        const file = event.target.files?.[0];
-        event.target.value = '';
-        if (!file) return;
-        if (!file.type.startsWith('image/')) {
-            alert('Vui lòng chọn file ảnh hợp lệ.');
-            return;
-        }
-
-        setThumbnailUploading(true);
-        try {
-            const fileData = await readFileAsDataUrl(file);
-            const selectedCategory = categories.find((item) => String(item.id) === String(form.category_id));
-            const selectedPageType = selectedCategory?.page_type || apiFilters.page_type || 'news';
-            const uploadFolder = resolvePostUploadFolder(selectedPageType);
-            const result = await uploadsAPI.uploadImage(fileData, uploadFolder);
-            handleFormChange('thumbnail', result?.secure_url || '');
-        } catch (err) {
-            alert('Upload ảnh thất bại: ' + err.message);
-        } finally {
-            setThumbnailUploading(false);
-        }
+    function handleThumbnailChange(url) {
+        handleFormChange('thumbnail', url);
     }
 
     function openDocImportPicker() {
@@ -1156,37 +1127,33 @@ export default function PostsManagement() {
 
 
 
-                            {isAdminFull(currentUser) ? (
-                                <div className="form-group">
-                                    <label className="form-label">Tác giả</label>
-                                    <select className="form-control" value={form.author_id} onChange={e => handleFormChange('author_id', e.target.value)}>
-                                        <option value="">-- Chọn tác giả --</option>
-                                        {users.map(u => <option key={u.id} value={u.id}>{u.full_name || u.username}</option>)}
-                                    </select>
-                                </div>
-                            ) : (
-                                <div className="form-group">
-                                    <label className="form-label">Tác giả</label>
-                                    <input type="text" className="form-control" value={currentUser?.full_name || currentUser?.username || ''} disabled />
-                                </div>
-                            )}
-
-                            <div className={`form-group${editingPost ? ' full-row' : ''}`}>
-                                <label className="form-label">URL ảnh bìa</label>
-                                <div className="thumbnail-input-row">
-                                    <input type="text" className="form-control" value={form.thumbnail} onChange={e => handleFormChange('thumbnail', e.target.value)} placeholder="https://..." />
-                                    <button type="button" className="btn-secondary" onClick={pickThumbnailImage} disabled={thumbnailUploading}>
-                                        {thumbnailUploading ? 'Đang upload ảnh...' : 'Upload ảnh bìa lên cloud'}
-                                    </button>
-                                </div>
-                                <input
-                                    ref={thumbnailInputRef}
-                                    type="file"
-                                    accept="image/*"
-                                    style={{ display: 'none' }}
-                                    onChange={handleThumbnailUpload}
+                            <div className="form-group">
+                                <label className="form-label">Tác giả</label>
+                                <input 
+                                    type="text" 
+                                    className="form-control" 
+                                    value={
+                                        editingPost 
+                                            ? (editingPost.author_name || editingPost.author_id) 
+                                            : (currentUser?.full_name || currentUser?.username || '')
+                                    } 
+                                    disabled 
                                 />
                             </div>
+
+                            <ImageUploadField 
+                                label="URL ảnh bìa"
+                                value={form.thumbnail}
+                                onChange={handleThumbnailChange}
+                                folder={(form.category_id && categories.find(c => String(c.id) === String(form.category_id))?.slug) || 'lcd/posts'}
+                                placeholder="https://..."
+                                disabled={saving}
+                            />
+                            {form.thumbnail && (
+                                <div className="thumbnail-preview-wrap" style={{ marginTop: '10px' }}>
+                                    <img src={form.thumbnail} alt="Xem trước ảnh bìa" style={{ maxWidth: '200px', borderRadius: '8px' }} />
+                                </div>
+                            )}
 
                             <div className="form-group">
                                 <label className="form-label">Tiêu đề *</label>
@@ -1199,8 +1166,15 @@ export default function PostsManagement() {
                             </div>
 
                             <div className="form-group full-row">
-                                <label className="form-label">Tóm tắt</label>
-                                <textarea className="form-control" rows="3" value={form.summary} onChange={e => handleFormChange('summary', e.target.value)} placeholder="Tóm tắt nội dung..." />
+                                <label className="form-label">Tóm tắt *</label>
+                                <textarea 
+                                    className="form-control" 
+                                    rows="3" 
+                                    value={form.summary} 
+                                    onChange={e => handleFormChange('summary', e.target.value)} 
+                                    placeholder="Tóm tắt nội dung..." 
+                                    required 
+                                />
                             </div>
 
                             <div className="form-group full-row checkbox-row">
@@ -1251,6 +1225,7 @@ export default function PostsManagement() {
                         </div>
 
                         <div className="wp-editor-shell">
+                            <label className="form-label" style={{ marginBottom: '8px', display: 'block' }}>Nội dung bài viết *</label>
                             <div className="wp-editor-toolbar">
                                 <button type="button" className="toolbar-btn" onClick={() => applyEditorCommand('bold')}><b>B</b></button>
                                 <button type="button" className="toolbar-btn" onClick={() => applyEditorCommand('italic')}><i>I</i></button>

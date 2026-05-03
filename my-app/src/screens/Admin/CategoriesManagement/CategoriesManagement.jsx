@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './CategoriesManagement.css';
-import { categoriesAPI } from '../../../services/api';
+import { categoriesAPI, uploadsAPI } from '../../../services/api';
 import { PlusIcon, EditIcon, DeleteIcon, NewsIcon, TrophyIcon, CalendarIcon, TargetIcon, CloseIcon } from '../../../SvgIcons';
+import { ImageUploadField } from '../../../components';
+import { getCloudinaryPublicId } from '../../../utils/cloudinary';
 import useAdminConfirm from '../useAdminConfirm';
 
 function slugify(str) {
@@ -129,6 +131,16 @@ export default function CategoriesManagement() {
         });
         if (!confirmed) return;
         try {
+            // Delete intro_image from Cloudinary if it exists
+            const imagePublicId = getCloudinaryPublicId(cat.intro_image);
+            if (imagePublicId) {
+                try {
+                    await uploadsAPI.deleteImage(imagePublicId);
+                } catch (delErr) {
+                    console.warn('Could not delete category intro image from Cloudinary:', delErr);
+                }
+            }
+            
             await categoriesAPI.delete(cat.id);
             const tabKey = resolveTabKey(cat.page_type, activeTab);
             setCategoriesByTab(prev => ({
@@ -254,16 +266,19 @@ export default function CategoriesManagement() {
                                     <label className="form-label">Mô tả</label>
                                     <textarea className="form-control" rows="4" value={form.description} onChange={e => handleFormChange('description', e.target.value)} placeholder="Nhập mô tả danh mục..."></textarea>
                                 </div>
-                                <div className="form-group">
-                                    <label className="form-label">Ảnh giới thiệu (URL)</label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        value={form.intro_image}
-                                        onChange={e => handleFormChange('intro_image', e.target.value)}
-                                        placeholder="https://..."
-                                    />
-                                </div>
+                                <ImageUploadField 
+                                    label="Ảnh giới thiệu"
+                                    value={form.intro_image}
+                                    onChange={url => handleFormChange('intro_image', url)}
+                                    folder={`lcd/category-${form.page_type}`}
+                                    placeholder="https://..."
+                                    disabled={saving}
+                                />
+                                {form.intro_image && (
+                                    <div className="category-image-preview-wrap" style={{ marginTop: '10px' }}>
+                                        <img src={form.intro_image} alt="Ảnh giới thiệu" style={{ maxWidth: '100%', maxHeight: '150px', borderRadius: '8px', objectFit: 'cover' }} />
+                                    </div>
+                                )}
                                 <div className="form-actions">
                                     <button type="button" className="btn-secondary" onClick={() => setShowModal(false)}>Hủy</button>
                                     <button type="submit" className="btn-primary" disabled={saving}>{saving ? 'Đang lưu...' : (editingCategory ? 'Cập nhật' : 'Tạo mới')}</button>

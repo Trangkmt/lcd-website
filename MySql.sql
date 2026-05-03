@@ -126,15 +126,14 @@ INSERT INTO categories (id,name,slug,page_type,description,intro_image,parent_id
 (5,'Hoạt động tình nguyện','tinh-nguyen','event_non_annual','Hoạt động cộng đồng',NULL,NULL),
 (6,'Hoạt động thể thao','the-thao','event_non_annual','Hoạt động thể thao',NULL,NULL),
 (7,'Thành tích','thanh-tich','achievement','Thành tích nổi bật',NULL,NULL),
-(8,'Tài liệu','tai-lieu','document','Tài liệu',NULL,NULL),
-(9,'Chương trình thường niên','thuong-nien','event_annual','Sự kiện thường niên',NULL,NULL),
-(10,'Khác','khac','news','Danh mục khác',NULL,NULL),
-(11,'Chào tân sinh viên','chao-tan-sinh-vien','event_annual','Lễ chào tân sinh viên khóa mới',NULL,9),
-(12,'Quân sự','quan-su','event_annual','Quân sự huấn luyện sinh viên',NULL,9),
-(13,'FIT Cup','fit-cup','event_annual','Giải bóng đá FIT Cup',NULL,9),
-(14,'Prom','prom','event_annual','Lễ prom sinh viên',NULL,9),
-(15,'Talkshow','talkshow','event_annual','Talkshow và giao lưu',NULL,9),
-(16,'Cuộc thi','cuoc-thi','event_annual','Các cuộc thi và hackathon',NULL,9);
+(8,'Chương trình thường niên','thuong-nien','event_annual','Sự kiện thường niên',NULL,NULL),
+(9,'Khác','khac','news','Danh mục khác',NULL,NULL),
+(10,'Chào tân sinh viên','chao-tan-sinh-vien','event_annual','Lễ chào tân sinh viên khóa mới',NULL,8),
+(11,'Quân sự','quan-su','event_annual','Quân sự huấn luyện sinh viên',NULL,8),
+(12,'FIT Cup','fit-cup','event_annual','Giải bóng đá FIT Cup',NULL,8),
+(13,'Prom','prom','event_annual','Lễ prom sinh viên',NULL,8),
+(14,'Talkshow','talkshow','event_annual','Talkshow và giao lưu',NULL,8),
+(15,'Cuộc thi','cuoc-thi','event_annual','Các cuộc thi và hackathon',NULL,8);
 
 
 -- ================================================

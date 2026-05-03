@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './OrganizationalStructure.css';
 import { teamsAPI, usersAPI } from '../../../services/api';
+import { LazyImage } from '../../../components';
 
 const BOARD_DEFINITIONS = [
     {
@@ -342,7 +343,7 @@ const OrganizationalStructure = () => {
             <article key={key} className={cardClassName}>
                 <div className="org-member-card__avatar-wrap">
                     {avatar ? (
-                        <img
+                        <LazyImage
                             src={avatar}
                             alt={member?.full_name || 'Thành viên'}
                             className="org-member-card__avatar"

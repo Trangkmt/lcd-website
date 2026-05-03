@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { ImageUploadField } from '../../../components';
 import { useLocation } from 'react-router-dom';
 import './MembersManagement.css';
 import { SearchBar } from '../../../components';
-import { usersAPI, uploadsAPI, teamsAPI } from '../../../services/api';
+import { usersAPI, teamsAPI } from '../../../services/api';
 import { normalizeRole, ROLE_GROUPS } from '../../../utils/adminPermissions';
 import { PlusIcon, EditIcon, HideIcon, ShowIcon, CloseIcon } from '../../../SvgIcons';
 import useAdminConfirm from '../useAdminConfirm';
@@ -36,15 +37,6 @@ function inferMemberType(member) {
 
 function generateUsername(email) {
     return String(email || 'user').split('@')[0] || 'user';
-}
-
-function readFileAsDataUrl(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = () => reject(new Error('Không đọc được file ảnh'));
-        reader.readAsDataURL(file);
-    });
 }
 
 function readFileAsText(file) {
@@ -187,7 +179,6 @@ export default function MembersManagement() {
     const [showModal, setShowModal] = useState(false);
     const [selectedMember, setSelectedMember] = useState(null);
     const [form, setForm] = useState(EMPTY_FORM);
-    const [saving, setSaving] = useState(false);
     const [selectedMemberIds, setSelectedMemberIds] = useState([]);
     const [bulkDepartment, setBulkDepartment] = useState(BULK_NO_CHANGE);
     const [bulkPosition, setBulkPosition] = useState(BULK_NO_CHANGE);
@@ -195,8 +186,7 @@ export default function MembersManagement() {
     const [bulkRole, setBulkRole] = useState(BULK_NO_CHANGE);
     const [bulkUpdating, setBulkUpdating] = useState(false);
     const [csvImporting, setCsvImporting] = useState(false);
-    const [memberImageUploading, setMemberImageUploading] = useState(false);
-    const memberImageInputRef = useRef(null);
+    const [saving, setSaving] = useState(false);
     const csvInputRef = useRef(null);
     const activeTab = (() => {
         const tab = new URLSearchParams(location.search).get('tab');
@@ -520,25 +510,8 @@ const team_id = matchedTeam ? matchedTeam.id : null;
         }
     }
 
-    async function handleMemberImageUpload(event) {
-        const file = event.target.files?.[0];
-        event.target.value = '';
-        if (!file) return;
-        if (!file.type.startsWith('image/')) {
-            alert('Vui lòng chọn file ảnh hợp lệ.');
-            return;
-        }
-
-        setMemberImageUploading(true);
-        try {
-            const fileData = await readFileAsDataUrl(file);
-            const result = await uploadsAPI.uploadImage(fileData, 'lcd/member-avatar');
-            setForm((prev) => ({ ...prev, avatar_url: result?.secure_url || '' }));
-        } catch (err) {
-            alert('Upload ảnh thất bại: ' + err.message);
-        } finally {
-            setMemberImageUploading(false);
-        }
+    function handleAvatarChange(url) {
+        setForm(prev => ({ ...prev, avatar_url: url }));
     }
 
     function toggleMemberSelection(memberId) {
@@ -1151,40 +1124,19 @@ const team_id = matchedTeam ? matchedTeam.id : null;
                                     <label className="form-label">Gmail *</label>
                                     <input type="email" className="form-control" value={form.email} onChange={e => setForm(p => ({ ...p, email: e.target.value }))} placeholder="email@fit.hcmus.edu.vn" required />
                                 </div>
-                                <div className="form-group">
-                                    <label className="form-label">Ảnh thành viên</label>
-                                    <div className="member-image-uploader">
-                                        <button
-                                            type="button"
-                                            className="btn-secondary"
-                                            onClick={pickMemberImage}
-                                            disabled={memberImageUploading}
-                                        >
-                                            {memberImageUploading ? 'Đang upload...' : 'Chọn ảnh'}
-                                        </button>
-                                        <input
-                                            ref={memberImageInputRef}
-                                            type="file"
-                                            accept="image/*"
-                                            onChange={handleMemberImageUpload}
-                                            style={{ display: 'none' }}
-                                        />
-                                        {form.avatar_url && (
-                                            <button
-                                                type="button"
-                                                className="btn-link-danger"
-                                                onClick={() => setForm((p) => ({ ...p, avatar_url: '' }))}
-                                            >
-                                                Xóa ảnh
-                                            </button>
-                                        )}
+                                <ImageUploadField 
+                                    label="Ảnh thành viên"
+                                    value={form.avatar_url}
+                                    onChange={handleAvatarChange}
+                                    folder="lcd/member-avatar"
+                                    placeholder="https://..."
+                                    disabled={saving}
+                                />
+                                {form.avatar_url && (
+                                    <div className="member-image-preview-wrap" style={{ marginTop: '10px' }}>
+                                        <img src={form.avatar_url} alt="Ảnh thành viên" className="member-image-preview" style={{ width: '100px', height: '100px', borderRadius: '50%', objectFit: 'cover' }} />
                                     </div>
-                                    {form.avatar_url && (
-                                        <div className="member-image-preview-wrap">
-                                            <img src={form.avatar_url} alt="Ảnh thành viên" className="member-image-preview" />
-                                        </div>
-                                    )}
-                                </div>
+                                )}
 
                                 {form.member_type === TABS.STUDENT && (
                                     <>

@@ -101,3 +101,18 @@ exports.uploadImage = async (req, res) => {
         return res.status(500).json({ error: err.message || 'Upload ảnh thất bại' });
     }
 };
+
+exports.deleteImage = async (req, res) => {
+    try {
+        ensureCloudinaryConfig();
+        const { publicId } = req.body;
+        if (!publicId) {
+            return res.status(400).json({ error: 'Cần truyền publicId để xóa ảnh.' });
+        }
+        const result = await cloudinary.uploader.destroy(publicId);
+        return res.status(200).json({ result });
+    } catch (err) {
+        console.error('Cloudinary delete error:', err);
+        return res.status(500).json({ error: err.message || 'Xóa ảnh thất bại' });
+    }
+};

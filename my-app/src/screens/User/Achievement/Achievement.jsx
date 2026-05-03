@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Achievement.css';
 import { postsAPI } from '../../../services/api';
-import { SearchBar, PostCard } from '../../../components';
-import { ChevronLeftIcon, ChevronRightIcon } from '../../../SvgIcons';
+import { SearchBar, PostCard, LazyImage, HeroSection } from '../../../components';
 
 const asTimestamp = (item) => {
     const value = item?.published_at || item?.created_at;
@@ -44,64 +43,24 @@ const Achievement = () => {
         setHeroIndex(0);
     }, [heroSlides.length]);
 
-    const activeHero = heroSlides[heroIndex] || {
-        id: null,
-        title: 'THÀNH TÍCH NỔI BẬT MỚI NHẤT',
-        summary: 'Cập nhật những thành tích nổi bật và mới nhất của Liên Chi đoàn khoa.',
-        thumbnail: '',
-        published_at: null,
-    };
-    const heroLink = activeHero.id ? `/achievement/${activeHero.id}` : '/achievement';
 
     return (
         <div className="achievement-page">
-            <div className="achievement-page__hero achievement-page__hero--banner">
-                <Link to={heroLink} className="achievement-page__hero-link">
-                    <img
-                        className="achievement-page__hero-image"
-                        src={activeHero.thumbnail || ''}
-                        alt={activeHero.title}
-                    />
-                    <div className="achievement-page__hero-overlay" />
-                    <div className="achievement-page__hero-content">
-                        <span className="achievement-page__hero-badge">Thành tích</span>
-                        <h1 className="achievement-page__hero-title">{activeHero.title}</h1>
-                        <p className="achievement-page__hero-summary">{activeHero.summary}</p>
-                    </div>
-                </Link>
-
-                {heroSlides.length > 1 && (
-                    <>
-                        <button
-                            type="button"
-                            className="achievement-page__hero-control achievement-page__hero-control--prev"
-                            onClick={() => setHeroIndex((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)}
-                            aria-label="Slide trước"
-                        >
-                            <ChevronLeftIcon />
-                        </button>
-                        <button
-                            type="button"
-                            className="achievement-page__hero-control achievement-page__hero-control--next"
-                            onClick={() => setHeroIndex((prev) => (prev + 1) % heroSlides.length)}
-                            aria-label="Slide kế tiếp"
-                        >
-                            <ChevronRightIcon />
-                        </button>
-                        <div className="achievement-page__hero-dots">
-                            {heroSlides.map((slide, idx) => (
-                                <button
-                                    key={slide.id}
-                                    type="button"
-                                    className={`achievement-page__hero-dot${idx === heroIndex ? ' achievement-page__hero-dot--active' : ''}`}
-                                    onClick={() => setHeroIndex(idx)}
-                                    aria-label={`Đi tới slide ${idx + 1}`}
-                                />
-                            ))}
-                        </div>
-                    </>
-                )}
-            </div>
+            <HeroSection
+                slides={heroSlides.map(slide => ({
+                    id: slide.id,
+                    title: slide.title,
+                    summary: slide.summary,
+                    image: slide.thumbnail,
+                    date: slide.published_at || slide.created_at,
+                    categoryLabel: 'Thành tích',
+                    link: `/achievement/${slide.id}`
+                }))}
+                currentIndex={heroIndex}
+                onPrev={() => setHeroIndex((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)}
+                onNext={() => setHeroIndex((prev) => (prev + 1) % heroSlides.length)}
+                onDotClick={(idx) => setHeroIndex(idx)}
+            />
 
             <div className="achievement-page__content">
                 {/* Search */}

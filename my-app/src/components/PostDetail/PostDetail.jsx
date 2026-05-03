@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './PostDetail.css';
+import { LazyImage } from '../LazyImage';
+import { PostCard } from '../PostCard';
 import { formatVietnameseDate } from '../../utils/date';
 
 export default function PostDetail({
@@ -68,7 +70,7 @@ export default function PostDetail({
 
                             {post.thumbnail && (
                                 <div className="post-main-image-section">
-                                    <img src={post.thumbnail} alt={post.title} className="post-main-image" />
+                                    <LazyImage src={post.thumbnail} alt={post.title} className="post-main-image" />
                                 </div>
                             )}
 
@@ -84,25 +86,16 @@ export default function PostDetail({
                                 <h2 className="post-detail-related-title">{relatedTitle}</h2>
                                 <div className="post-detail-related-list">
                                     {relatedPosts.map((related) => (
-                                        <Link
-                                            key={related.id}
-                                            to={resolveRelatedTo(related)}
-                                            className="post-detail-related-card"
-                                        >
-                                            <div className="post-detail-related-image-wrap">
-                                                {related.thumbnail && (
-                                                    <img
-                                                        src={related.thumbnail}
-                                                        alt={related.title}
-                                                        className="post-detail-related-image"
-                                                    />
-                                                )}
-                                            </div>
-                                            <div className="post-detail-related-info">
-                                                <h3 className="post-detail-related-name">{related.title}</h3>
-                                                <span className="post-detail-related-date">{formatVietnameseDate(related.created_at)}</span>
-                                            </div>
-                                        </Link>
+                                        <div key={related.id} className="post-detail-sidebar-item">
+                                            <PostCard
+                                                to={resolveRelatedTo(related)}
+                                                image={related.thumbnail}
+                                                title={related.title}
+                                                date={related.published_at || related.created_at}
+                                                category={related.category_name}
+                                                variant="sidebar"
+                                            />
+                                        </div>
                                     ))}
                                 </div>
                             </aside>

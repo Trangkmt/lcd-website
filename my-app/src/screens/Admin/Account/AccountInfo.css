@@ -1,54 +1,107 @@
 @import url('../Styles/AdminModal.css');
 
 .account-info-container {
-    margin: 0 auto;
-    padding: 50px 100px;
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 24px;
     font-family: var(--font-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .account-info-form {
+    width: 100%;
+    max-width: 700px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    background: var(--color-white);
+    padding: 48px;
+    border: 1px solid var(--color-gray-100);
+}
+
+.account-message {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 0 16px;
+    padding: 12px 16px;
+    font-size: 0.9375rem;
+    text-align: center;
+}
+
+.account-message.error {
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fee2e2;
+}
+
+.account-message.success {
+    background: #f0fdf4;
+    color: #166534;
+    border: 1px solid #dcfce7;
+}
+
+.info-section {
     display: flex;
     flex-direction: column;
     gap: 24px;
 }
 
-.account-message {
-    margin: 0 0 12px;
-    padding: 10px 12px;
-    border-radius: 6px;
-    font-size: 14px;
-}
-
-.account-message.error {
-    background: #fdeaea;
-    color: #b42318;
-}
-
-.account-message.success {
-    background: #eaf7ef;
-    color: #067647;
-}
-
-.avatar-section {
+.form-row {
     display: flex;
     flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .form-row {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .form-row .form-label {
+        width: 160px;
+        flex-shrink: 0;
+        margin-bottom: 0;
+        color: var(--color-text-muted);
+        font-weight: 500;
+    }
+
+    .form-row .form-value {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        min-height: 40px;
+    }
+}
+
+.form-row.avatar-row {
+    flex-direction: column;
     align-items: center;
-    margin-bottom: 16px;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.form-row.avatar-row .form-value {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
 }
 
 .avatar-img {
-    width: 96px;
-    height: 96px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
     object-fit: cover;
-    margin-bottom: 8px;
-    border: 2px solid #eee;
-    background-color: #e8edf5;
+    border: 4px solid var(--color-white);
+    background-color: #f8fafc;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    color: #052035;
 }
 
 .avatar-img__photo {
@@ -57,20 +110,20 @@
     object-fit: cover;
 }
 
-.info-section label {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 12px;
-    font-weight: 500;
+.info-section .form-control {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px 12px;
+    border: 1px solid var(--color-gray-300);
+    font-size: 0.9375rem;
+    font-family: inherit;
+    transition: border-color 0.2s;
 }
 
-.info-section input {
-    margin-top: 4px;
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    font-size: 1rem;
-    font-family: inherit;
+.info-section .form-control:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
 }
 
 .action-section {
@@ -85,7 +138,6 @@
 .account-info-container .btn-primary,
 .account-info-container .btn-secondary {
     padding: 10px 18px;
-    border-radius: 8px;
     font-size: 0.9375rem;
     font-weight: 600;
     border: 1px solid transparent;

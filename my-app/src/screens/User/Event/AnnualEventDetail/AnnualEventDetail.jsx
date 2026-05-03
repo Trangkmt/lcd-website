@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import './AnnualEventDetail.css';
-import { SearchBar, PostCard } from '../../../../components';
+import { SearchBar, PostCard, LazyImage } from '../../../../components';
 import { categoriesAPI, postsAPI } from '../../../../services/api';
 
 function formatEventNameFromSlug(slug) {
@@ -46,7 +46,7 @@ const AnnualEventDetail = () => {
                         <div className="event-main-image">
                             <div className="event-image-border">
                                 {category?.intro_image
-                                    ? <img src={category.intro_image} alt={displayTitle} style={{ width: '100%', height: '100%', objectFit: 'cover', minHeight: '300px' }} />
+                                    ? <LazyImage src={category.intro_image} alt={displayTitle} />
                                     : <div className="event-image-placeholder"></div>
                                 }
                             </div>

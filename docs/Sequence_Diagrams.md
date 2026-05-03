@@ -1,460 +1,416 @@
 # CÁC BIỂU ĐỒ TRÌNH TỰ (SEQUENCE DIAGRAMS) - CHI TIẾT NGHIỆP VỤ
 
-Tài liệu này mô tả chi tiết các luồng tương tác giữa **Người dùng (Actor)**, **Giao diện**, và **Backend** dựa trên logic thực tế của Codebase và Biểu đồ hoạt động.
+Tài liệu này mô tả chi tiết các luồng tương tác giữa **Người dùng**, **Các màn hình giao diện**, **Bộ điều khiển (Controller)** và **Cơ sở dữ liệu** dựa trên kiến trúc thực tế của hệ thống.
 
 ---
 
-### 1. **TẠO THÀNH VIÊN MỚI**
+## I. PHÂN HỆ QUẢN TRỊ (WEB ADMIN)
 
+### 1. Đăng nhập hệ thống (Chi tiết nghiệp vụ)
 ```mermaid
 sequenceDiagram
-    actor A as "Quản trị viên"
-    participant B as Giao diện Thành viên
-    participant BE as Backend
+    actor A as Quản trị viên
+    participant G as Màn hình Đăng nhập
+    participant C as Controller Xác thực
+    participant D as Cơ sở dữ liệu
     
-    A->>B: 1: Mở form tạo thành viên
-    B->>BE: 1.1: Lấy danh sách Vai trò & Ban/Phòng/Khoa
-    activate BE
-    BE-->B: 1.2: Trả về danh sách dữ liệu
-    deactivate BE
+    A->>G: 1: Mở trang đăng nhập
+    A->>G: 2: Nhập tài khoản / mật khẩu
     
-    A->>B: 2: Nhập thông tin thành viên & Gán vai trò, đơn vị
-    A->>B: 3: Nhấn "Lưu thành viên"
+    G->>G: 3: Kiểm tra dữ liệu trống (Validate)
     
-    B->>B: 3.1: Kiểm tra tính hợp lệ dữ liệu (Validate)
-    activate B
-    deactivate B
+    alt Dữ liệu thiếu
+        G-->>A: 3.1: Báo lỗi điền thiếu thông tin
+    else Dữ liệu đủ
+        G->>C: 4: Gửi yêu cầu đăng nhập
+        activate C
+        C->>D: 4.1: Truy vấn thông tin tài khoản
+        activate D
+        D-->>C: 4.2: Trả về kết quả truy vấn
+        deactivate D
+        
+        alt Sai Username / Password
+            C-->>G: 4.3: Trả về lỗi không hợp lệ
+            G-->>A: 4.4: Báo sai username/mật khẩu
+        else Tài khoản bị ẩn (is_active = 0)
+            C-->>G: 4.5: Trả về lỗi tài khoản vô hiệu hoá
+            G-->>A: 4.6: Thông báo tài khoản bị ẩn
+        else Thông tin hợp lệ
+            C-->>G: 4.7: Trả kết quả xác thực + Role
+            G->>G: 4.8: Lưu phiên đăng nhập
+            G->>G: 4.9: Điều hướng màn hình theo Role
+            G-->>A: 4.10: Hiển thị trang Dashboard quản trị
+        end
+        deactivate C
+    end
+```
+
+### 2. Tạo bài viết mới (Hỗ trợ AI & Template)
+```mermaid
+sequenceDiagram
+    actor A as Quản trị viên
+    participant G as Giao diện Tạo bài viết
+    participant C as Controller Bài viết
+    participant AI as Dịch vụ AI (Gemini)
+    participant D as Cơ sở dữ liệu
+    
+    A->>G: 1: Chọn nút "Tạo bài viết"
+    G->>C: 1.1: Lấy danh sách Danh mục (Categories)
+    activate C
+    C->>D: 1.2: Truy vấn bảng categories
+    activate D
+    D-->>C: 1.3: Trả về danh sách danh mục
+    deactivate D
+    C-->>G: 1.4: Hiển thị form với các danh mục
+    deactivate C
+    
+    A->>G: 2: Nhập Tiêu đề, chọn Danh mục, Upload ảnh bìa
+    
+    opt Có sử dụng Template mẫu
+        A->>G: 3.1: Chọn Template mẫu
+        G->>C: 3.2: Truy vấn nội dung Template
+        activate C
+        C->>D: 3.3: Lấy dữ liệu từ bảng post_templates
+        D-->>C: 3.4: Trả về nội dung mẫu
+        C-->>G: 3.5: Trả về nội dung mẫu cho giao diện
+        deactivate C
+        G-->>A: 3.6: Hiển thị thông tin theo template
+        A->>G: 3.7: Chỉnh sửa nội dung dựa trên mẫu
+    end
+    
+    opt Có sử dụng AI tạo nội dung
+        A->>G: 4.1: Nhập gợi ý nội dung (Prompt) cho AI
+        G->>C: 4.2: Gửi yêu cầu sinh nội dung AI
+        activate C
+        C->>AI: 4.3: Gửi yêu cầu sinh nội dung
+        AI-->>C: 4.4: Trả kết quả nội dung sinh ra
+        C-->>G: 4.5: Trả kết quả nội dung cho giao diện
+        deactivate C
+        G-->>A: 4.6: Hiển thị nội dung AI để xem trước
+        A->>G: 4.7: Chỉnh sửa nội dung AI cung cấp
+    end
+    
+    A->>G: 5: Nhấn nút "Lưu bài viết" (Lưu nháp hoặc Đăng)
+    G->>C: 5.1: Gửi toàn bộ dữ liệu bài viết
+    activate C
+    C->>C: 5.2: Kiểm tra quyền (Admin/Author)
+    C->>D: 5.3: Khởi tạo & Lưu dữ liệu vào CSDL
+    activate D
+    D-->>C: 5.4: Xác nhận lưu bài viết thành công
+    deactivate D
+    C-->>G: 5.5: Thông báo lưu thành công
+    deactivate C
+    G-->>A: 5.6: Hiển thị kết quả thành công cho quản trị viên
+```
+
+### 3. Cập nhật bài viết
+```mermaid
+sequenceDiagram
+    actor A as Quản trị viên
+    participant G as Giao diện Chỉnh sửa bài viết
+    participant C as Controller Bài viết
+    participant D as Cơ sở dữ liệu
+    
+    A->>G: 1: Chọn bài viết cần sửa
+    G->>C: 1.1: Lấy dữ liệu chi tiết bài viết (ID)
+    activate C
+    C->>D: 1.2: SELECT * FROM posts WHERE id = ID
+    activate D
+    D-->>C: 1.3: Trả về dữ liệu bài viết hiện tại
+    deactivate D
+    C-->>G: 1.4: Hiển thị dữ liệu lên form
+    deactivate C
+    
+    A->>G: 2: Chỉnh sửa thông tin bài viết
+    A->>G: 3: Nhấn "Lưu cập nhật"
+    
+    G->>C: 4: Gửi thông tin cập nhật (ID, data)
+    activate C
+    C->>C: 4.1: Kiểm tra quyền chỉnh sửa
+    
+    alt Có quyền (Admin hoặc Chính tác giả)
+        C->>D: 4.2: Cập nhật thông tin vào CSDL
+        activate D
+        D-->>C: 4.3: Xác nhận cập nhật thành công
+        deactivate D
+        C-->>G: 4.4: Trả về kết quả thành công
+    else Không có quyền hoặc Lỗi
+        C-->>G: 4.5: Trả về thông báo lỗi
+    end
+    deactivate C
+    
+    G-->>A: 5: Thông báo kết quả cập nhật cho quản trị viên
+```
+
+### 4. Xoá bài viết
+```mermaid
+sequenceDiagram
+    actor A as Quản trị viên
+    participant G as Giao diện Quản lý bài viết
+    participant C as Controller Bài viết
+    participant D as Cơ sở dữ liệu
+    
+    A->>G: 1: Chọn bài viết cần xoá
+    A->>G: 2: Xác nhận xoá (Confirm dialog)
+    
+    G->>C: 3: Gửi yêu cầu xoá (ID)
+    activate C
+    C->>C: 3.1: Kiểm tra quyền xoá
+    
+    alt Hợp lệ
+        C->>D: 3.2: Xoá bài viết khỏi hệ thống
+        activate D
+        D-->>C: 3.3: Xác nhận xoá thành công
+        deactivate D
+        C-->>G: 3.4: Thông báo xoá thành công
+    else Thất bại
+        C-->>G: 3.5: Báo lỗi không tìm thấy hoặc không có quyền
+    end
+    deactivate C
+    
+    G-->>A: 4: Hiển thị thông báo kết quả cho quản trị viên
+```
+
+### 5. Duyệt và xuất bản bài viết
+```mermaid
+sequenceDiagram
+    actor A as Quản trị viên toàn quyền
+    participant G as Giao diện Danh sách duyệt
+    participant C as Controller Quản trị
+    participant D as Cơ sở dữ liệu
+    
+    A->>G: 1: Chọn bài viết đang chờ duyệt
+    G->>G: 2: Chuyển trạng thái sang 'Đã xuất bản'
+    
+    G->>C: 3: Gửi yêu cầu cập nhật trạng thái
+    activate C
+    C->>C: 3.1: Kiểm tra quyền Admin
+    C->>D: 3.2: Lưu trạng thái mới vào CSDL
+    activate D
+    D-->>C: 3.3: Xác nhận cập nhật thành công
+    deactivate D
+    C-->>G: 3.4: Trả về kết quả phê duyệt
+    deactivate C
+    
+    G-->>A: 4: Hiển thị bài viết đã xuất bản công khai
+```
+
+### 6. Tạo danh mục mới
+```mermaid
+sequenceDiagram
+    actor A as Quản trị viên
+    participant G as Giao diện Danh mục
+    participant C as Controller Danh mục
+    participant D as Cơ sở dữ liệu
+    
+    A->>G: 1: Chọn tạo danh mục mới & Nhập thông tin
+    A->>G: 2: Nhấn "Lưu danh mục"
+    
+    G->>C: 3: Gửi yêu cầu lưu danh mục
+    activate C
+    C->>D: 3.1: Kiểm tra Tên/Slug có trùng hay không
+    activate D
+    D-->>C: 3.2: Kết quả kiểm tra
+    deactivate D
+    
+    alt Có trùng dữ liệu
+        C-->>G: 3.3: Trả về lỗi trùng dữ liệu
+        G-->>A: 3.4: Thông báo trùng tên/slug danh mục
+    else Không trùng dữ liệu
+        C->>D: 3.5: Lưu danh mục mới vào CSDL
+        activate D
+        D-->>C: 3.6: Xác nhận tạo thành công
+        deactivate D
+        C-->>G: 3.7: Trả về thông tin danh mục vừa tạo
+        G-->>A: 3.8: Thông báo tạo danh mục thành công
+    end
+    deactivate C
+```
+
+### 7. Tạo thành viên mới
+```mermaid
+sequenceDiagram
+    actor A as Quản trị viên
+    participant G as Giao diện Thành viên
+    participant C as Controller Thành viên
+    participant D as Cơ sở dữ liệu
+    
+    A->>G: 1: Mở form tạo & Nhập thông tin thành viên
+    G->>C: 1.1: Lấy danh sách Vai trò & Ban chuyên môn
+    activate C
+    C->>D: 1.2: Truy vấn bảng roles & teams
+    activate D
+    D-->>C: 1.3: Trả về danh sách dữ liệu
+    deactivate D
+    C-->>G: 1.4: Hiển thị lên form nhập liệu
+    deactivate C
+    
+    A->>G: 2: Nhấn "Lưu thành viên"
+    G->>G: 3: Kiểm tra tính hợp lệ (Validate)
     
     opt Dữ liệu đủ & Hợp lệ
-        B->>BE: 4: Gửi yêu cầu tạo tài khoản mới
-        activate BE
-        BE->>BE: 4.1: Kiểm tra Username/Email đã tồn tại chưa
-        activate BE
-        deactivate BE
+        G->>C: 4: Gửi yêu cầu tạo tài khoản mới
+        activate C
+        C->>D: 4.1: Kiểm tra Username/Email đã tồn tại chưa
+        activate D
+        D-->>C: 4.2: Kết quả kiểm tra
+        deactivate D
         
-        opt Chưa tồn tại
-            BE->>BE: 4.2: Lưu thông tin User & Vai trò & Đơn vị
-            activate BE
-            deactivate BE
-            BE-->B: 4.3: Xác nhận tạo thành công
+        alt Chưa tồn tại
+            C->>D: 4.3: Lưu thông tin User & Vai trò & Đơn vị
+            activate D
+            D-->>C: 4.4: Xác nhận tạo thành công
+            deactivate D
+            C-->>G: 4.5: Thông báo tạo thành công
+        else Đã tồn tại
+            C-->>G: 4.6: Trả về lỗi trùng lặp dữ liệu
         end
-        
-        opt Đã tồn tại
-            BE-->B: 4.4: Trả về lỗi trùng lặp dữ liệu
-        end
-        deactivate BE
+        deactivate C
     end
     
-    B-->A: 5: Hiển thị thông báo kết quả tương ứng
+    G-->>A: 5: Hiển thị kết quả tương ứng cho người quản trị
 ```
 
----
-
-### 2. **CẬP NHẬT 1 BÀI VIẾT**
-
+### 8. Xuất Giấy mời/Chứng chỉ hàng loạt
 ```mermaid
 sequenceDiagram
-    actor A as "Quản trị viên"
-    participant B as Giao diện Chỉnh sửa Bài viết
-    participant BE as Backend
+    actor A as Quản trị viên
+    participant G as Giao diện Xuất file
+    participant C as Controller Tiện ích
+    participant D as Cơ sở dữ liệu
     
-    A->>B: 1: Chọn bài viết cần sửa
-    B->>BE: 1.1: Lấy dữ liệu chi tiết bài viết (ID)
-    activate BE
-    BE-->B: 1.2: Trả về dữ liệu bài viết hiện tại
-    deactivate BE
+    A->>G: 1: Chọn danh sách thành viên & Loại mẫu giấy
+    A->>G: 2: Nhấn nút "Xuất giấy"
     
-    A->>B: 2: Chỉnh sửa tiêu đề, nội dung, ảnh...
-    A->>B: 3: Nhấn "Lưu cập nhật"
+    G->>C: 3: Gửi yêu cầu tạo file hàng loạt
+    activate C
+    C->>D: 3.1: Truy vấn thông tin chi tiết các thành viên
+    activate D
+    D-->>C: 3.2: Trả về dữ liệu (Họ tên, Lớp, Chức vụ...)
+    deactivate D
     
-    B->>BE: 4: Gửi thông tin cập nhật (ID, data)
-    activate BE
-    BE->>BE: 4.1: Kiểm tra quyền chỉnh sửa
-    activate BE
-    deactivate BE
+    C->>C: 3.3: Ghép dữ liệu vào Template & Render file
+    C->>C: 3.4: Đóng gói các file vào tệp nén ZIP
     
-    opt Có quyền chỉnh sửa (Admin hoặc Chính tác giả)
-        BE->>BE: 4.2: Cập nhật thông tin vào CSDL
-        activate BE
-        deactivate BE
-        BE-->B: 4.3: Xác nhận cập nhật thành công
-    end
+    C-->>G: 3.5: Trả về link tải file kết quả
+    deactivate C
     
-    opt Không có quyền hoặc Lỗi
-        BE-->B: 4.4: Trả về thông báo lỗi
-    end
-    deactivate BE
-    
-    B-->A: 5: Thông báo kết quả cập nhật cho quản trị viên
+    G-->>A: 4: Hiển thị thông báo hoàn thành & nút Tải về
+    A->>G: 5: Click tải tệp tin về máy tính
 ```
 
----
-
-### 3. **XOÁ 1 BÀI VIẾT**
-
+### 9. Upload file lên thư mục chung
 ```mermaid
 sequenceDiagram
-    actor A as "Quản trị viên"
-    participant B as Giao diện Quản lý Bài viết
-    participant BE as Backend
+    actor A as Quản trị viên
+    participant G as Giao diện Tài liệu
+    participant C as Controller Tài liệu
+    participant S as Dịch vụ Lưu trữ Cloudinary
+    participant D as Cơ sở dữ liệu
     
-    A->>B: 1: Chọn bài viết cần xoá
-    A->>B: 2: Xác nhận xoá (Confirm dialog)
+    A->>G: 1: Chọn file từ máy tính & Chọn thư mục đích
+    A->>G: 2: Nhấn nút "Upload"
     
-    B->>BE: 3: Gửi yêu cầu xoá (ID)
-    activate BE
-    BE->>BE: 3.1: Kiểm tra quyền xoá
-    activate BE
-    deactivate BE
+    G->>C: 3: Gửi file yêu cầu tải lên
+    activate C
+    C->>C: 3.1: Kiểm tra định dạng & dung lượng file
     
-    opt Hợp lệ
-        BE->>BE: 3.2: Xoá bài viết khỏi hệ thống
-        activate BE
-        deactivate BE
-        BE-->B: 3.3: Xác nhận xoá thành công
+    alt Hợp lệ
+        C->>S: 3.2: Lưu file vật lý lên hệ thống lưu trữ
+        activate S
+        S-->>C: 3.3: Trả về đường dẫn truy cập (URL)
+        deactivate S
+        C->>D: 3.4: Lưu bản ghi Metadata vào bảng documents
+        activate D
+        D-->>C: 3.5: Xác nhận lưu CSDL thành công
+        deactivate D
+        C-->>G: 3.6: Thông báo tải lên thành công
+    else Không hợp lệ
+        C-->>G: 3.7: Trả về lỗi (File quá lớn/Sai định dạng)
     end
+    deactivate C
     
-    opt Thất bại
-        BE-->B: 3.4: Báo lỗi không tìm thấy hoặc không có quyền
-    end
-    deactivate BE
-    
-    B-->A: 4: Hiển thị thông báo kết quả xoá
+    G-->>A: 4: Thông báo kết quả upload cho người dùng
 ```
 
----
-
-### 4. **XUẤT GIẤY MỜI/GIẤY CHỨNG NHẬN HÀNG LOẠT**
-
+### 10. Tạo sự kiện mới cho Timeline
 ```mermaid
 sequenceDiagram
-    actor A as "Quản trị viên"
-    participant B as Giao diện Xuất file
-    participant BE as Backend
+    actor A as Quản trị viên
+    participant G as Giao diện Timeline
+    participant C as Controller Timeline
+    participant D as Cơ sở dữ liệu
     
-    A->>B: 1: Chọn danh sách thành viên & Loại giấy & Thông tin bổ sung
-    A->>B: 2: Nhấn nút "Xuất giấy"
+    A->>G: 1: Chọn tạo sự kiện timeline mới
+    G-->>A: 1.1: Hiển thị biểu mẫu nhập liệu
     
-    B->>BE: 3: Gửi yêu cầu tạo file hàng loạt (TemplateID, MemberIDs)
-    activate BE
-    BE->>BE: 3.1: Lấy dữ liệu thành viên & Mapping vào Template
-    activate BE
-    deactivate BE
-    BE->>BE: 3.2: Render file (Docx/PDF)
-    activate BE
-    deactivate BE
-    BE-->B: 3.3: Trả về link tải file đã nén (zip) hoặc file đơn
-    deactivate BE
+    A->>G: 2: Nhập thông tin (Tháng, Năm, Tên sự kiện...)
+    A->>G: 3: Nhấn nút "Lưu sự kiện"
     
-    B-->A: 4: Thông báo hoàn thành & Hiển thị nút Tải file
-    A->>B: 5: Click tải file về máy
+    G->>C: 4: Gửi yêu cầu lưu sự kiện
+    activate C
+    C->>C: 4.1: Kiểm tra tính hợp lệ dữ liệu
+    
+    alt Dữ liệu sai
+        C-->>G: 4.2: Trả về lỗi yêu cầu (Bad Request)
+        G-->>A: 4.3: Thông báo lỗi nhập liệu cho người dùng
+    else Dữ liệu đúng
+        C->>C: 4.4: Chuẩn hóa Năm timeline (nếu trống)
+        C->>D: 4.5: Ghi bản ghi vào bảng timeline_events
+        activate D
+        D-->>C: 4.6: Xác nhận lưu trữ thành công
+        deactivate D
+        C-->>G: 4.7: Trả về kết quả thành công
+        G-->>A: 4.8: Thông báo tạo sự kiện thành công trên UI
+    end
+    deactivate C
 ```
 
----
+## II. PHÂN HỆ NGƯỜI DÙNG (CLIENT)
 
-### 5. **UPLOAD 1 FILE LÊN FOLDER CHUNG**
-
+### 11. Xem chi tiết bài viết (Người dùng)
 ```mermaid
 sequenceDiagram
-    actor A as "Quản trị viên"
-    participant B as Giao diện Tài liệu
-    participant BE as Backend
+    actor U as Người dùng
+    participant G as Giao diện Chi tiết bài viết
+    participant C as Controller Bài viết
+    participant D as Cơ sở dữ liệu
     
-    A->>B: 1: Chọn file từ máy tính & Chọn folder chung
-    A->>B: 2: Nhấn nút "Upload"
+    U->>G: 1: Click chọn bài viết từ danh sách
+    G->>C: 2: Gọi API lấy chi tiết bài viết (Slug)
+    activate C
+    C->>D: 2.1: Truy vấn nội dung & kiểm tra trạng thái đăng
+    activate D
+    D-->>C: 2.2: Trả về dữ liệu bài viết
+    deactivate D
     
-    B->>BE: 3: Gửi file yêu cầu upload (Multipart form)
-    activate BE
-    BE->>BE: 3.1: Kiểm tra định dạng & dung lượng file
-    activate BE
-    deactivate BE
-    
-    opt Hợp lệ
-        BE->>BE: 3.2: Lưu file vật lý vào Cloud/Storage
-        activate BE
-        deactivate BE
-        BE->>BE: 3.3: Lưu bản ghi Metadata vào CSDL
-        activate BE
-        deactivate BE
-        BE-->B: 3.4: Trả về kết quả thành công
+    alt Bài viết tồn tại & Đã đăng
+        C->>D: 2.3: Cập nhật lượt xem (view_count + 1)
+        C-->>G: 2.4: Trả về đầy đủ nội dung bài viết
+        G-->>U: 2.5: Hiển thị Tiêu đề, Nội dung, Hình ảnh...
+    else Không tìm thấy
+        C-->>G: 2.6: Trả về thông báo lỗi 404
+        G-->>U: 2.7: Hiển thị màn hình báo lỗi
     end
-    
-    opt Không hợp lệ
-        BE-->B: 3.5: Trả về lỗi (File quá lớn/Sai định dạng)
-    end
-    deactivate BE
-    
-    B-->A: 4: Thông báo kết quả upload file
+    deactivate C
 ```
 
----
-
-### 6. **XEM CHI TIẾT 1 BÀI VIẾT TRÊN WEB NGƯỜI DÙNG**
-
+### 12. Tìm kiếm bài viết (Người dùng)
 ```mermaid
 sequenceDiagram
-    actor U as "Người dùng"
-    participant B as Giao diện Chi tiết Bài viết
-    participant BE as Backend
+    actor U as Người dùng
+    participant G as Giao diện Tìm kiếm
+    participant C as Controller Trang chủ
+    participant D as Cơ sở dữ liệu
     
-    U->>B: 1: Click chọn bài viết muốn xem
-    B->>BE: 2: Gọi API lấy thông tin bài viết (Slug/ID)
-    activate BE
-    
-    BE->>BE: 2.1: Truy vấn bài viết & Kiểm tra trạng thái is_published
-    activate BE
-    deactivate BE
-    
-    opt Bài viết tồn tại & Đã đăng
-        BE->>BE: 2.2: Tăng số lượt xem (view_count + 1)
-        activate BE
-        deactivate BE
-        BE-->B: 2.3: Trả về đầy đủ nội dung bài viết
-    end
-    
-    opt Không tìm thấy
-        BE-->B: 2.4: Trả về lỗi 404
-    end
-    deactivate BE
-    
-    B->>B: 3: Hiển thị đầy đủ thông tin (Tiêu đề, Nội dung, Ảnh...)
-```
-
----
-
-### 7. **TÌM KIẾM BÀI VIẾT TRÊN WEB NGƯỜI DÙNG**
-
-```mermaid
-sequenceDiagram
-    actor U as "Người dùng"
-    participant B as Giao diện Tìm kiếm
-    participant BE as Backend
-    
-    U->>B: 1: Nhập từ khoá tìm kiếm & Nhấn Enter/Nút Tìm
-    B->>BE: 2: Gửi yêu cầu tìm kiếm (keyword)
-    activate BE
-    
-    BE->>BE: 2.1: Search trong Database (Tiêu đề/Tóm tắt)
-    activate BE
-    deactivate BE
-    BE-->B: 2.2: Trả về danh sách bài viết phù hợp
-    deactivate BE
-    
-    B->>B: 3: Hiển thị danh sách kết quả (Thumbnail, Title, Date)
-    U->>B: 4: Chọn bài viết từ danh sách kết quả
-```
-
----
-
-### 8. **TẠO BÀI VIẾT MỚI (CHI TIẾT NGHIỆP VỤ)**
-
-```mermaid
-sequenceDiagram
-    actor A as "Quản trị viên"
-    participant B as Giao diện Tạo bài viết
-    participant AI as Dịch vụ AI
-    participant BE as Backend
-    
-    A->>B: 1: Chọn nút "Tạo bài viết"
-    B->>BE: 1.1: Lấy danh sách Danh mục (Categories)
-    activate BE
-    BE-->B: 1.2: Hiển thị form với các danh mục
-    deactivate BE
-    
-    A->>B: 2: Nhập Tiêu đề, chọn Danh mục, Upload ảnh bìa
-    
-    opt Trường hợp: Có sử dụng Template có sẵn
-        A->>B: 3.1: Chọn Template mẫu
-        B->>BE: 3.1.1: Truy vấn nội dung Template
-        activate BE
-        BE-->B: 3.1.2: Trả về nội dung mẫu
-        deactivate BE
-        B-->A: 3.1.3: Hiện thông tin bài viết theo template
-        A->>B: 3.1.4: Chỉnh sửa nội dung dựa trên mẫu
-    end
-    
-    opt Trường hợp: Không sử dụng Template (Tùy chọn AI)
-        opt Có sử dụng AI tạo nội dung
-            A->>B: 3.2.1: Nhập gợi ý nội dung (Prompt) cho AI
-            B->>AI: 3.2.2: Gửi yêu cầu sinh nội dung AI
-            activate AI
-            AI-->B: 3.2.3: Trả kết quả nội dung sinh ra
-            deactivate AI
-            B-->A: 3.2.4: Hiển thị nội dung sinh ra để xem trước
-            A->>B: 3.2.5: Chỉnh sửa nội dung AI cung cấp
-        end
-        opt Không sử dụng AI
-            A->>B: 3.3.1: Nhập thủ công nội dung bài viết
-        end
-    end
-    
-    A->>B: 4: Nhấn nút "Lưu bài viết" (Lưu nháp hoặc Đăng)
-    B->>BE: 4.1: Gửi toàn bộ dữ liệu bài viết
-    activate BE
-    BE->>BE: 4.1.1: Kiểm tra quyền (Admin/Author)
-    activate BE
-    deactivate BE
-    BE->>BE: 4.1.2: Khởi tạo & Lưu dữ liệu vào CSDL
-    activate BE
-    deactivate BE
-    BE-->B: 4.1.3: Xác nhận lưu bài viết thành công
-    deactivate BE
-    
-    B-->A: 5: Thông báo bài viết đã được tạo thành công
-```
-
----
-
-### 9. **ĐĂNG NHẬP (CHI TIẾT NGHIỆP VỤ)**
-
-```mermaid
-sequenceDiagram
-    actor A as "Quản trị viên"
-    participant B as Giao diện Đăng nhập
-    participant BE as Backend
-    
-    A->>B: 1: Mở trang đăng nhập
-    A->>B: 2: Nhập tài khoản / mật khẩu
-    
-    B->>B: 3: Kiểm tra dữ liệu trống (Validate)
-    activate B
-    deactivate B
-    
-    opt Trường hợp: Dữ liệu thiếu
-        B-->A: 3.1: Báo lỗi điền thiếu thông tin
-    end
-    
-    opt Trường hợp: Dữ liệu đủ
-        B->>BE: 4: Gửi yêu cầu đăng nhập (username, password)
-        activate BE
-        BE->>BE: 4.1: Kiểm tra thông tin tài khoản trong CSDL
-        activate BE
-        deactivate BE
-        
-        opt Sai Username / Password
-            BE-->B: 4.2.1: Trả về lỗi xác thực (401)
-            B-->A: 4.2.2: Báo sai username/mật khẩu
-        end
-        
-        opt Tài khoản bị ẩn (is_active = 0)
-            BE-->B: 4.3.1: Trả về lỗi tài khoản vô hiệu hoá (403)
-            B-->A: 4.3.2: Thông báo tài khoản bị ẩn/khoá
-        end
-        
-        opt Thông tin hợp lệ
-            BE->>BE: 4.4.1: Tạo Token (JWT) & Lấy Role người dùng
-            activate BE
-            deactivate BE
-            BE-->B: 4.4.2: Trả kết quả xác thực + Token + Role
-            B->>B: 4.4.3: Lưu phiên đăng nhập (LocalStorage/Cookies)
-            B->>B: 4.4.4: Điều hướng màn hình theo Role (Admin/Author)
-        end
-        deactivate BE
-    end
-```
-
----
-
-### 10. **TẠO DANH MỤC MỚI**
-
-```mermaid
-sequenceDiagram
-    actor A as "Quản trị viên"
-    participant B as Giao diện Danh mục
-    participant BE as Backend
-    
-    A->>B: 1: Chọn tạo 1 danh mục mới
-    A->>B: 2: Nhập thông tin danh mục (Tên, Slug...)
-    A->>B: 3: Nhấn "Lưu danh mục"
-    
-    B->>BE: 4: Gửi yêu cầu lưu danh mục
-    activate BE
-    BE->>BE: 4.1: Kiểm tra Tên/Slug trùng trong CSDL?
-    activate BE
-    deactivate BE
-    
-    opt Trường hợp: Có trùng dữ liệu
-        BE-->B: 4.2: Trả về lỗi trùng dữ liệu
-        B-->A: 4.3: Thông báo trùng slug/tên danh mục
-    end
-    
-    opt Trường hợp: Không trùng dữ liệu
-        BE->>BE: 4.4: Lưu dữ liệu vào CSDL
-        activate BE
-        deactivate BE
-        BE-->B: 4.5: Xác nhận tạo danh mục thành công
-        B-->A: 4.6: Thông báo tạo danh mục thành công
-    end
-    deactivate BE
-```
-
----
-
-### 11. **TẠO CARD SỰ KIỆN HÀNG NĂM TRONG TIMELINE**
-
-```mermaid
-sequenceDiagram
-    actor A as "Quản trị viên"
-    participant B as Giao diện Timeline
-    participant BE as Backend
-    
-    A->>B: 1: Chọn tạo sự kiện timeline mới
-    B->>B: 1.1: Hiển thị form nhập liệu
-    
-    A->>B: 2: Nhập thông tin (Tháng, Năm, Tên sự kiện, Tóm tắt, Thứ tự)
-    A->>B: 3: Nhấn nút "Lưu sự kiện"
-    
-    B->>BE: 4: Gửi yêu cầu lưu sự kiện (month, year, name...)
-    activate BE
-    
-    BE->>BE: 4.1: Kiểm tra tính hợp lệ (Tháng 1-12, Tên sự kiện)
-    activate BE
-    deactivate BE
-    
-    opt Nếu dữ liệu sai
-        BE-->B: 4.2: Trả về lỗi yêu cầu (Bad Request)
-        B-->A: 4.3: Thông báo lỗi nhập liệu cho người dùng
-    end
-    
-    opt Nếu dữ liệu đúng
-        BE->>BE: 4.4: Chuẩn hóa Năm timeline (nếu trống)
-        activate BE
-        deactivate BE
-        
-        BE->>BE: 4.5: Ghi bản ghi vào CSDL (type='annual')
-        activate BE
-        deactivate BE
-        
-        BE-->B: 4.6: Trả về kết quả thành công
-        B-->A: 4.7: Thông báo tạo sự kiện thành công
-    end
-    deactivate BE
-```
-
----
-
-### 12. **DUYỆT 1 BÀI VIẾT**
-
-```mermaid
-sequenceDiagram
-    actor A as "Quản trị viên toàn quyền"
-    participant B as Giao diện Danh sách duyệt bài viết
-    participant BE as Backend Hệ thống
-    
-    A->>B: 1: Chọn bài viết đang chờ duyệt
-    activate B
-    B->>B: 2: Chuyển trạng thái sang 'Đã xuất bản'
-    
-    B->>BE: 3: Gửi yêu cầu cập nhật
-    activate BE
-    
-    BE->>BE: 3.1: Kiểm tra & Lưu trạng thái bản ghi vào CSDL
-    activate BE
-    deactivate BE
-    
-    BE-->B: 3.2: Xác nhận cập nhật thành công
-    deactivate BE
-    
-    B-->A: 4: Hiển thị thông báo kết quả
-    deactivate B
+    U->>G: 1: Nhập từ khóa tìm kiếm & nhấn Tìm
+    G->>C: 2: Gửi yêu cầu tìm kiếm (Keyword)
+    activate C
+    C->>D: 2.1: Truy vấn bài viết theo Tiêu đề/Tóm tắt
+    activate D
+    D-->>C: 2.2: Trả về danh sách bài viết phù hợp
+    deactivate D
+    C-->>G: 2.3: Gửi danh sách kết quả cho giao diện
+    deactivate C
+    G-->>U: 3: Hiển thị kết quả tìm kiếm cho người dùng
 ```
