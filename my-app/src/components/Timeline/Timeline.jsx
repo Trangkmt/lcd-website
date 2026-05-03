@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import './Timeline.css';
 import {
     toMonthNumber,
@@ -132,7 +133,13 @@ const Timeline = ({
                         const timelineCard = (
                             <div className="timeline-item__card">
                                 <div className="timeline-item__month">Năm {eventYear} • Tháng {eventMonth}</div>
-                                <h3 className="timeline-item__title">{event.event_name || event.title || ''}</h3>
+                                {event.category_slug ? (
+                                    <Link to={`/event/${event.category_slug}`} className="timeline-item__title-link">
+                                        <h3 className="timeline-item__title">{event.event_name || event.title || ''}</h3>
+                                    </Link>
+                                ) : (
+                                    <h3 className="timeline-item__title">{event.event_name || event.title || ''}</h3>
+                                )}
                                 <p className="timeline-item__summary">{event.summary || ''}</p>
                                 {statusLabel && <span className="timeline-item__status">{statusLabel}</span>}
                             </div>

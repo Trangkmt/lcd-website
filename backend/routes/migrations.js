@@ -156,4 +156,55 @@ router.post('/migrate-contact-soft-delete', async (req, res) => {
     }
 });
 
+// Migration endpoint - Add category_id to timeline_events and link to categories
+router.post('/migrate-timeline-category-link', async (req, res) => {
+    try {
+        const pool = await getConnection();
+        console.log('Running migration: Linking timeline_events to categories...');
+
+        // Check and add category_id
+        try {
+            await pool.request().query('SELECT category_id FROM timeline_events LIMIT 1');
+            console.log('Column category_id already exists');
+        } catch (e) {
+            if (e.code === 'ER_BAD_FIELD_ERROR') {
+                await pool.request().query(`ALTER TABLE timeline_events ADD COLUMN category_id INT AFTER id`);
+                
+                // Add foreign key constraint
+                try {
+                    await pool.request().query(`
+                        ALTER TABLE timeline_events 
+                        ADD CONSTRAINT fk_timeline_category 
+                        FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
+                    `);
+                    console.log('✅ Added foreign key constraint: fk_timeline_category');
+                } catch (fkError) {
+                    console.warn('⚠️ Could not add foreign key (it might already exist):', fkError.message);
+                }
+                
+                console.log('✅ Added column: category_id');
+            } else {
+                throw e;
+            }
+        }
+
+        // Update data based on event_name mapping to category names
+        // This links existing events like 'Chào tân sinh viên K68' to 'Chào tân sinh viên'
+        await pool.request().query(`
+            UPDATE timeline_events t
+            JOIN categories c ON c.page_type = 'event_annual' AND t.event_name LIKE CONCAT('%', c.name, '%')
+            SET t.category_id = c.id
+            WHERE t.category_id IS NULL
+        `);
+
+        return res.json({
+            success: true,
+            message: 'timeline_events updated with category_id and linked successfully'
+        });
+    } catch (error) {
+        console.error('❌ Migration failed:', error);
+        res.status(500).json({ success: false, error: error.message, sqlMessage: error.sqlMessage });
+    }
+});
+
 module.exports = router;

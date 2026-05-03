@@ -6,13 +6,21 @@ const LazyImage = ({ src, alt, className, ...props }) => {
     const [error, setError] = useState(false);
 
     useEffect(() => {
-        setLoaded(false);
+        if (!src) return;
+        
+        const img = new Image();
+        img.src = src;
+        if (img.complete) {
+            setLoaded(true);
+        } else {
+            setLoaded(false);
+        }
         setError(false);
     }, [src]);
 
     return (
         <div className={`lazy-image-container ${loaded ? 'loaded' : ''} ${error ? 'error' : ''} ${className || ''}`}>
-            {!loaded && !error && <div className="lazy-image-placeholder" />}
+
             <img
                 src={src}
                 alt={alt || ''}

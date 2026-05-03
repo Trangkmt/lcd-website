@@ -55,7 +55,6 @@ const Homepage = () => {
   const [timelineEvents, setTimelineEvents] = useState([]);
   const [heroIndex, setHeroIndex] = useState(0);
   const [hoveredEventIndex, setHoveredEventIndex] = useState(null);
-  const [eventImageIndex, setEventImageIndex] = useState(0);
 
   useEffect(() => {
     const eventTypes = ['event_annual', 'event_non_annual'];
@@ -145,20 +144,10 @@ const Homepage = () => {
     setHeroIndex(0);
   }, [heroSlides.length]);
 
-  // Auto-rotate event images
-  useEffect(() => {
-    if (hoveredEventIndex !== null || eventPosts.length === 0) return;
-
-    const timer = setInterval(() => {
-      setEventImageIndex((prev) => (prev + 1) % eventPosts.length);
-    }, 4000);
-    return () => clearInterval(timer);
-  }, [eventPosts.length, hoveredEventIndex]);
-
-  // Get the image to display for featured event
+  // Get the image to display for featured event (hovered or latest)
   const displayedEvent = hoveredEventIndex !== null
     ? eventPosts[hoveredEventIndex]
-    : eventPosts[eventImageIndex];
+    : eventPosts[0];
 
 
   return (

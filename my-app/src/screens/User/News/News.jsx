@@ -86,9 +86,8 @@ const News = () => {
                     />
 
                     <div className="news-filter-wrapper">
-                        <span className="news-filter-icon" aria-hidden="true"><SettingsIcon /></span>
                         <button
-                            className="news-filter-btn"
+                            className="btn btn-secondary news-filter-btn"
                             onClick={() => setFilterOpen(!filterOpen)}
                         >
                             {selectedCategory === 'Tất cả' ? 'Lọc' : selectedCategory}

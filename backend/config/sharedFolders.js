@@ -49,6 +49,14 @@ const SHARED_FOLDERS = [
         managerPositions: ['trưởng ban', 'phó ban'],
         description: 'Mẫu biểu đoàn vụ, hồ sơ đoàn viên và tài liệu phát triển đảng.',
     },
+    {
+        id: 'general',
+        name: 'Thư mục chung',
+        code: 'CHUNG',
+        teamValues: [],
+        managerPositions: ['bí thư', 'phó bí thư', 'trưởng ban', 'phó ban'],
+        description: 'Tài liệu dùng chung cho toàn bộ các ban và thành viên.',
+    },
 ];
 
 function normalizeText(value) {

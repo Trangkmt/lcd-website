@@ -60,37 +60,40 @@ const Event = () => {
                             placeholder="Tìm kiếm"
                             variant="event"
                         />
-                        <div className="filter-wrapper">
-                            <div className="filter-icon" aria-hidden="true"><SettingsIcon /></div>
+                        <div className="news-filter-wrapper">
                             <button
-                                className="filter-button"
+                                className="btn btn-secondary news-filter-btn"
                                 onClick={() => setFilterOpen(!filterOpen)}
+                                style={{ width: 'auto', whiteSpace: 'nowrap' }}
                             >
-                                Lọc
+                                {selectedFilter === 'Tất cả' ? 'Lọc' : selectedFilter}
                             </button>
+
+                            {/* Filter Menu */}
+                            {filterOpen && (
+                                <div className="filter-menu">
+                                    {filterOptions.map((option, index) => (
+                                        <div
+                                            key={index}
+                                            className={`filter-option ${selectedFilter === option ? 'filter-option--active' : ''}`}
+                                            onClick={() => {
+                                                setSelectedFilter(option);
+                                                setFilterOpen(false);
+                                            }}
+                                        >
+                                            {option}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </div>
 
-                    {/* Filter Menu */}
-                    {filterOpen && (
-                        <div className="filter-menu">
-                            {filterOptions.map((option, index) => (
-                                <div
-                                    key={index}
-                                    className="filter-option"
-                                    onClick={() => {
-                                        setSelectedFilter(option);
-                                        setFilterOpen(false);
-                                    }}
-                                >
-                                    {option}
-                                </div>
-                            ))}
-                        </div>
-                    )}
-
                     {/* Events Title */}
-                    <h1 className="events-title">CÁC SỰ KIỆN NỔI BẬT CỦA LIÊN CHI ĐOÀN</h1>
+                    <div className="section-header" style={{ marginBottom: '2.5rem', textAlign: 'center', justifyContent: 'center' }}>
+                        <b className="section-title section-title--event" style={{ fontSize: '1.75rem' }}>CÁC SỰ KIỆN NỔI BẬT</b>
+                        <div className="section-divider section-divider--event" aria-hidden="true" style={{ width: '100px', margin: '0.5rem auto 0' }} />
+                    </div>
 
                     {/* Events Grid */}
                     <div className="events-grid">

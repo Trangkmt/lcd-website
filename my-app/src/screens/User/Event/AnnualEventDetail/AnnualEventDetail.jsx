@@ -46,7 +46,7 @@ const AnnualEventDetail = () => {
                         <div className="event-main-image">
                             <div className="event-image-border">
                                 {category?.intro_image
-                                    ? <LazyImage src={category.intro_image} alt={displayTitle} />
+                                    ? <img src={category.intro_image} alt={displayTitle} className="event-intro-img" />
                                     : <div className="event-image-placeholder"></div>
                                 }
                             </div>

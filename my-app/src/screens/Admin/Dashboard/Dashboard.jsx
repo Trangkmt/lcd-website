@@ -57,6 +57,16 @@ export default function Dashboard() {
                     if (contactsRes.status === 'rejected') {
                         console.warn('Không thể tải liên hệ:', contactsRes.reason?.message);
                     }
+                } else if (isContactManager(currentUser)) {
+                    try {
+                        const contactsData = await contactAPI.getAll({ limit: 100 });
+                        setAllContacts(Array.isArray(contactsData) ? contactsData : []);
+                    } catch (err) {
+                        console.warn('Không thể tải liên hệ:', err.message);
+                    }
+                    setAllPosts([]);
+                    setAllUsers([]);
+                    setCategories([]);
                 } else {
                     setAllPosts([]);
                     setAllUsers([]);
@@ -189,12 +199,15 @@ export default function Dashboard() {
                         )}
                     </div>
                     <div className="stats-grid">
-                        {[
+                        {(showAdminOverview ? [
                             { label: 'Tổng bài viết', value: statsData.totalPosts, icon: PostIcon, color: 'var(--color-primary)' },
                             { label: 'Bài viết chờ duyệt', value: statsData.pendingPosts, icon: HourglassIcon, color: 'var(--color-info-tint-medium)' },
                             { label: 'Thành viên', value: statsData.totalMembers, icon: UsersIcon, color: 'var(--color-primary-dark)' },
                             { label: 'Liên hệ mới', value: statsData.newContacts, icon: MailIcon, color: 'var(--color-primary)' },
-                        ].map((stat, index) => (
+                        ] : isContactManager(currentUser) ? [
+                            { label: 'Liên hệ mới', value: statsData.newContacts, icon: MailIcon, color: 'var(--color-primary)' },
+                            { label: 'Tổng số liên hệ', value: allContacts.length, icon: MailIcon, color: 'var(--color-info-tint-medium)' },
+                        ] : []).map((stat, index) => (
                             <div key={index} className="stat-card" style={{ borderLeftColor: stat.color }}>
                                 <div className="stat-icon" style={{ background: stat.color }}>
                                     <stat.icon />
@@ -208,47 +221,49 @@ export default function Dashboard() {
                     </div>
 
                     <div className="dashboard-grid">
-                        <div className="dashboard-card">
-                            <div className="card-header">
-                                <h2 className="card-title">Bài viết gần đây</h2>
-                                <a href="/admin/posts" className="card-link">Xem tất cả →</a>
-                            </div>
-                            <div className="posts-table">
-                                {loading ? (
-                                    <p style={{ textAlign: 'center', color: 'var(--color-text-soft)', padding: '20px' }}>Đang tải...</p>
-                                ) : (
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>Tiêu đề</th>
-                                                <th>Danh mục</th>
-                                                <th>Trạng thái</th>
-                                                <th>Ngày tạo</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {recentPosts.length === 0 && (
-                                                <tr><td colSpan="4" style={{ textAlign: 'center', color: 'var(--color-text-soft)' }}>Chưa có bài viết</td></tr>
-                                            )}
-                                            {recentPosts.map(post => (
-                                                <tr key={post.id}>
-                                                    <td className="post-title-cell">{post.title}</td>
-                                                    <td>
-                                                        <span className="category-badge">{post.category}</span>
-                                                    </td>
-                                                    <td>
-                                                        <span className={`status-badge ${post.status === 'Đã duyệt' ? 'approved' : 'pending'}`}>
-                                                            {post.status}
-                                                        </span>
-                                                    </td>
-                                                    <td className="date-cell">{post.date}</td>
+                        {showAdminOverview && (
+                            <div className="dashboard-card">
+                                <div className="card-header">
+                                    <h2 className="card-title">Bài viết gần đây</h2>
+                                    <a href="/admin/posts" className="card-link">Xem tất cả →</a>
+                                </div>
+                                <div className="posts-table">
+                                    {loading ? (
+                                        <p style={{ textAlign: 'center', color: 'var(--color-text-soft)', padding: '20px' }}>Đang tải...</p>
+                                    ) : (
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>Tiêu đề</th>
+                                                    <th>Danh mục</th>
+                                                    <th>Trạng thái</th>
+                                                    <th>Ngày tạo</th>
                                                 </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                )}
+                                            </thead>
+                                            <tbody>
+                                                {recentPosts.length === 0 && (
+                                                    <tr><td colSpan="4" style={{ textAlign: 'center', color: 'var(--color-text-soft)' }}>Chưa có bài viết</td></tr>
+                                                )}
+                                                {recentPosts.map(post => (
+                                                    <tr key={post.id}>
+                                                        <td className="post-title-cell">{post.title}</td>
+                                                        <td>
+                                                            <span className="category-badge">{post.category}</span>
+                                                        </td>
+                                                        <td>
+                                                            <span className={`status-badge ${post.status === 'Đã duyệt' ? 'approved' : 'pending'}`}>
+                                                                {post.status}
+                                                            </span>
+                                                        </td>
+                                                        <td className="date-cell">{post.date}</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    )}
+                                </div>
                             </div>
-                        </div>
+                        )}
 
                         <div className="dashboard-card">
                             <div className="card-header">

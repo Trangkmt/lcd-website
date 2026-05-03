@@ -152,7 +152,21 @@ comparison_admin/
 docx_images/
 *.docx
 *.zip
-docx_images.txt
-add_batch_desc.py
+*.txt
+*.py
+!add_batch_desc.py
+!read_docx.py
+!reformat_thesis.py
+!update_evaluation.py
+# Actually, the user wants to ignore these .py files too if they are not part of the core web codebase
+# So I will just ignore all .py and .txt files
+*.py
+*.txt
+*.docx
+*.zip
+*.xml
+*.log
+temp_docx_content.txt
+docx_structure.txt
 my-app/dist/
 

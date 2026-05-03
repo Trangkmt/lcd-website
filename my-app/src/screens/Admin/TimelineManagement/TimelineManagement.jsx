@@ -15,6 +15,7 @@ import { ConfirmationDialog } from '../../../components';
 const DEFAULT_CALENDAR_YEAR = new Date().getFullYear();
 
 const EMPTY_FORM = {
+    category_id: '',
     month: '',
     event_name: '',
     summary: '',
@@ -74,12 +75,7 @@ export default function TimelineManagement() {
         setLoadingEventOptions(true);
         try {
             const categories = await categoriesAPI.getAll({ page_type: 'event_annual' });
-            const mappedOptions = Array.isArray(categories)
-                ? categories
-                    .map((item) => (item?.name ? String(item.name).trim() : ''))
-                    .filter(Boolean)
-                : [];
-            setAnnualEventOptions(Array.from(new Set(mappedOptions)));
+            setAnnualEventOptions(Array.isArray(categories) ? categories : []);
         } catch (err) {
             setError((prev) => prev || 'Không thể tải danh sách sự kiện thường niên: ' + err.message);
         } finally {
@@ -133,6 +129,7 @@ export default function TimelineManagement() {
     function handleEdit(item) {
         setEditingId(item.id);
         setForm({
+            category_id: item.category_id || '',
             month: toMonthInputValue(item.month, item.year || DEFAULT_CALENDAR_YEAR),
             event_name: item.event_name || '',
             summary: item.summary || '',
@@ -193,6 +190,7 @@ export default function TimelineManagement() {
         }
 
         const payload = {
+            category_id: form.category_id || null,
             month,
             year,
             event_name: form.event_name.trim(),
@@ -351,17 +349,25 @@ export default function TimelineManagement() {
                                 <label className="timeline-form__field timeline-form__field--event-name">
                                     <span>Tên sự kiện</span>
                                     <select
-                                        value={form.event_name}
-                                        onChange={(e) => setForm((prev) => ({ ...prev, event_name: e.target.value }))}
+                                        value={form.category_id}
+                                        onChange={(e) => {
+                                            const catId = e.target.value;
+                                            const cat = annualEventOptions.find(c => String(c.id) === String(catId));
+                                            setForm((prev) => ({ 
+                                                ...prev, 
+                                                category_id: catId,
+                                                event_name: cat ? cat.name : prev.event_name
+                                            }));
+                                        }}
                                         disabled={loadingEventOptions || annualEventOptions.length === 0}
                                         required
                                     >
                                         <option value="">
                                             {loadingEventOptions ? 'Đang tải danh sách sự kiện...' : 'Chọn sự kiện thường niên'}
                                         </option>
-                                        {eventNameOptions.map((eventName) => (
-                                            <option key={eventName} value={eventName}>
-                                                {eventName}
+                                        {annualEventOptions.map((cat) => (
+                                            <option key={cat.id} value={cat.id}>
+                                                {cat.name}
                                             </option>
                                         ))}
                                     </select>

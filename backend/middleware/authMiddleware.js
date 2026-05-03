@@ -87,6 +87,8 @@ async function loadActiveUserById(userId) {
     const pool = await getConnection();
     const hasAvatarColumn = await hasUserAvatarColumn(pool);
     const avatarSelect = hasAvatarColumn ? 'avatar_url' : 'NULL AS avatar_url';
+    
+    // Load basic user info
     const result = await pool.request()
         .input('id', sql.Int, userId)
         .query(`
@@ -102,9 +104,20 @@ async function loadActiveUserById(userId) {
         return null;
     }
 
+    // Load user teams/positions
+    const teamsResult = await pool.request()
+        .input('id', sql.Int, userId)
+        .query(`
+            SELECT ut.team_id, ut.position as team_position, t.name as team_name
+            FROM user_teams ut
+            JOIN teams t ON ut.team_id = t.id
+            WHERE ut.user_id = @id
+        `);
+
     return {
         ...user,
         role: normalizeRole(user.role),
+        teams: teamsResult.recordset || [],
     };
 }
 

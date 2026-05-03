@@ -155,6 +155,7 @@ const ROLE_OPTIONS = [
     { value: ROLE_GROUPS.ADMIN_FULL, label: 'Admin - Toàn quyền' },
     { value: ROLE_GROUPS.UTILITY_ONLY, label: 'Nhóm tiện ích' },
     { value: ROLE_GROUPS.POST_AUTHOR, label: 'Nhóm đăng bài' },
+    { value: ROLE_GROUPS.CONTACT_MANAGER, label: 'Nhóm quản lý liên hệ' },
 ];
 
 const ALL_DEPARTMENTS = 'all_departments';

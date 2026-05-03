@@ -101,24 +101,30 @@ function folderPositionsForUser(folder, user) {
 
 
 function canViewFolder(user, folder) {
-    // 1. CHỈ admin_full mới được xem tất cả
+    // 1. Thư mục chung thì ai cũng xem được
+    if (folder.id === 'general') {
+        return true;
+    }
+
+    // 2. CHỈ admin_full mới được xem tất cả các thư mục khác
     if (isAdminLike(user)) {
         return true;
     }
-    // 2. utility_only và các role khác đều phải check team_id
+
+    // 3. utility_only và các role khác đều phải check team_id
     const userTeams = getUserDepartments(user);
-    console.log('User departments after parsing:', userTeams);
-    // 3. Nếu user không có team_id nào -> không được xem folder nào
+    
+    // 4. Nếu user không có team_id nào -> không được xem folder nào (ngoại trừ general đã check ở trên)
     if (!userTeams.length) {
-        console.log('User has no departments');
         return false;
     }
-    // 4. Nếu folder không có teamValues -> không cho xem (folder lỗi cấu hình)
+
+    // 5. Nếu folder không có teamValues -> không cho xem (folder lỗi cấu hình)
     if (!folder.teamValues || folder.teamValues.length === 0) {
-        console.log('Folder has no team_id values (misconfigured)');
         return false;
     }
-    // 5. Kiểm tra team_id của user có match với folder không
+
+    // 6. Kiểm tra team_id của user có match với folder không
     const folderTeamValues = (folder.teamValues || []).map(normalizeText);
     const hasMatch = folderTeamValues.some(folderTeam =>
         userTeams.includes(folderTeam)
@@ -129,10 +135,17 @@ function canViewFolder(user, folder) {
 function canManageFolder(user, folder) {
     // 1. Chỉ admin_full mới manage được tất cả
     if (isAdminLike(user)) {
-        console.log('Full admin, can manage all folders');
         return true;
     }
-    // 2. utility_only và các role khác phải có position phù hợp trong ban đó
+
+    // 2. Nếu là thư mục chung, ai có position phù hợp (bí thư, trưởng ban...) trong BẤT KỲ ban nào cũng quản lý được
+    if (folder.id === 'general') {
+        const userPositions = (user?.teams || []).map(t => normalizeText(t.team_position));
+        const allowedPositions = new Set((folder.managerPositions || ['bí thư', 'phó bí thư', 'trưởng ban', 'phó ban']).map(normalizeText));
+        return userPositions.some(pos => allowedPositions.has(pos));
+    }
+
+    // 3. Các thư mục ban khác: phải có position phù hợp TRONG BAN ĐÓ
     const positions = folderPositionsForUser(folder, user);
     const allowedPositions = new Set((folder.managerPositions || ['trưởng ban', 'phó ban']).map(normalizeText));
     const canManage = positions.some((position) => allowedPositions.has(position));

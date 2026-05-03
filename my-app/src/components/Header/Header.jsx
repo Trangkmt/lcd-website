@@ -110,14 +110,14 @@ const Header = () => {
                                     key={item.id}
                                     className={`menu-item menu-item--${index + 1} menu-item--has-dropdown ${isActive ? 'menu-item--active' : ''}`}
                                 >
-                                    <div className="menu-item__state-layer">
+                                    <Link to={item.path} className="menu-item__state-layer" style={{ textDecoration: 'none' }}>
                                         <div className="menu-item__content">
                                             <b className="menu-item__label">{item.label}</b>
                                         </div>
                                         <div className="menu-item__trailing">
                                             <img className="menu-item__icon" src={IconRightArrow} alt="" />
                                         </div>
-                                    </div>
+                                    </Link>
                                     <div className="event-dropdown">
                                         {eventDropdownItems.map((dropItem, i) => (
                                             <Link
@@ -210,6 +210,9 @@ const Header = () => {
                     </button>
                     {isMobileEventOpen && (
                         <div className="header__mobile-submenu">
+                            <Link to="/event" className="header__mobile-sublink" style={{ color: 'var(--color-primary)' }}>
+                                Tất cả sự kiện
+                            </Link>
                             {eventDropdownItems.map((dropItem, i) => (
                                 <Link key={i} to={dropItem.path} className="header__mobile-sublink">
                                     {dropItem.label}

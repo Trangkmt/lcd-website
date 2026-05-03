@@ -211,7 +211,6 @@ p {
 
     /* Letter Spacings */
     --ls-tight: -0.02em;
-    --ls-normal: 0;
     --ls-wide: 0.02em;
 
     /* =======================================
@@ -358,3 +357,94 @@ p {
         --space-4: 0.875rem;
     }
 }
+
+/* ===========================================
+   BUTTON SYSTEM
+   =========================================== */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0.5rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    font-family: var(--font-primary);
+    border-radius: 0.625rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    border: 1px solid transparent;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Primary - Brand Blue Solid */
+.btn-primary {
+    background: var(--color-primary);
+    color: var(--color-white);
+    border-color: var(--color-primary);
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: var(--color-brand-indigo-dark);
+    border-color: var(--color-brand-indigo-dark);
+    transform: translateY(-1px);
+}
+
+/* Secondary - White Background, Blue Border */
+.btn-secondary {
+    background: var(--color-white);
+    color: var(--color-primary);
+    border: 2px solid var(--color-primary);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: var(--color-surface-soft-blue);
+    border-color: var(--color-brand-indigo-dark);
+    color: var(--color-brand-indigo-dark);
+    transform: translateY(-1px);
+}
+
+/* Action / Edit - Soft Blue */
+.btn-action, .btn-edit, .btn-view {
+    color: var(--color-brand-action);
+    border-color: rgba(44, 107, 204, 0.28);
+    background: var(--color-surface-accent);
+}
+
+.btn-action:hover:not(:disabled), .btn-edit:hover:not(:disabled), .btn-view:hover:not(:disabled) {
+    color: var(--color-brand-indigo-dark);
+    border-color: rgba(44, 107, 204, 0.45);
+    background: #dbe8ff;
+    transform: translateY(-1px);
+}
+
+/* Success / Publish - Green */
+.btn-success, .btn-publish {
+    color: var(--color-state-success-strong);
+    border-color: var(--color-state-success-border);
+    background: var(--color-state-success-soft);
+}
+
+.btn-success:hover:not(:disabled), .btn-publish:hover:not(:disabled) {
+    border-color: var(--color-state-success-strong);
+    background: #d2f7df;
+    transform: translateY(-1px);
+}
+
+/* Danger / Delete - Red */
+.btn-danger, .btn-delete {
+    color: var(--color-state-danger-strong);
+    border-color: var(--color-state-danger-border);
+    background: var(--color-state-danger-soft);
+}
+
+.btn-danger:hover:not(:disabled), .btn-delete:hover:not(:disabled) {
+    border-color: var(--color-state-danger-strong);
+    background: #ffd7d9;
+    transform: translateY(-1px);
+}

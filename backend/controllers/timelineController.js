@@ -91,11 +91,14 @@ exports.getPublicTimeline = withErrorHandling(async (req, res) => {
 
     let query = `
         SELECT
-            t.id, t.month, t.year, t.event_name, t.summary, t.sort_order,
+            t.id, t.category_id, t.month, t.year, t.event_name, t.summary, t.sort_order,
             t.is_published, t.created_at, t.updated_at,
-            u.full_name as created_by_name
+            u.full_name as created_by_name,
+            c.slug as category_slug,
+            c.name as category_name
         FROM timeline_events t
         LEFT JOIN users u ON t.created_by = u.id
+        LEFT JOIN categories c ON t.category_id = c.id
         WHERE t.is_published = 1
           AND t.event_type = @event_type
     `;
@@ -126,11 +129,13 @@ exports.getAdminTimeline = withErrorHandling(async (req, res) => {
 
     let query = `
         SELECT
-            t.id, t.month, t.year, t.event_name, t.summary, t.sort_order,
+            t.id, t.category_id, t.month, t.year, t.event_name, t.summary, t.sort_order,
             t.is_published, t.created_by, t.created_at, t.updated_at,
-            u.full_name as created_by_name
+            u.full_name as created_by_name,
+            c.name as category_name
         FROM timeline_events t
         LEFT JOIN users u ON t.created_by = u.id
+        LEFT JOIN categories c ON t.category_id = c.id
         WHERE t.event_type = @event_type
     `;
 
@@ -166,11 +171,14 @@ exports.getTimelineById = withErrorHandling(async (req, res) => {
         .input('event_type', sql.NVarChar, ANNUAL_EVENT_TYPE)
         .query(`
             SELECT
-                t.id, t.month, t.year, t.event_name, t.summary, t.sort_order,
+                t.id, t.category_id, t.month, t.year, t.event_name, t.summary, t.sort_order,
                 t.is_published, t.created_by, t.created_at, t.updated_at,
-                u.full_name as created_by_name
+                u.full_name as created_by_name,
+                c.name as category_name,
+                c.slug as category_slug
             FROM timeline_events t
             LEFT JOIN users u ON t.created_by = u.id
+            LEFT JOIN categories c ON t.category_id = c.id
             WHERE t.id = @id
               AND t.event_type = @event_type
         `);
@@ -185,7 +193,7 @@ exports.getTimelineById = withErrorHandling(async (req, res) => {
 
 // POST /api/timeline
 exports.createTimelineEvent = withErrorHandling(async (req, res) => {
-    const { month, year, event_name, summary, sort_order, is_published } = req.body;
+    const { category_id, month, year, event_name, summary, sort_order, is_published } = req.body;
 
     const normalizedMonth = parseMonth(month);
     if (!normalizedMonth) {
@@ -203,6 +211,7 @@ exports.createTimelineEvent = withErrorHandling(async (req, res) => {
 
     const pool = await getConnection();
     const result = await pool.request()
+        .input('category_id', sql.Int, category_id || null)
         .input('event_type', sql.NVarChar, ANNUAL_EVENT_TYPE)
         .input('month', sql.Int, normalizedMonth)
         .input('year', sql.Int, normalizedYear)
@@ -212,9 +221,9 @@ exports.createTimelineEvent = withErrorHandling(async (req, res) => {
         .input('is_published', sql.Bit, parseIsPublished(is_published, true))
         .input('created_by', sql.Int, req.authUser?.id || null)
         .query(`
-            INSERT INTO timeline_events (event_type, month, year, event_name, summary, sort_order, is_published, created_by)
+            INSERT INTO timeline_events (category_id, event_type, month, year, event_name, summary, sort_order, is_published, created_by)
             OUTPUT INSERTED.*
-            VALUES (@event_type, @month, @year, @event_name, @summary, @sort_order, @is_published, @created_by)
+            VALUES (@category_id, @event_type, @month, @year, @event_name, @summary, @sort_order, @is_published, @created_by)
         `);
 
     res.status(201).json(enrichTimelineEvent(getRecordOrNull(result)));
@@ -222,7 +231,7 @@ exports.createTimelineEvent = withErrorHandling(async (req, res) => {
 
 // PUT /api/timeline/:id
 exports.updateTimelineEvent = withErrorHandling(async (req, res) => {
-    const { month, year, event_name, summary, sort_order, is_published } = req.body;
+    const { category_id, month, year, event_name, summary, sort_order, is_published } = req.body;
 
     const normalizedMonth = parseMonth(month);
     if (!normalizedMonth) {
@@ -241,6 +250,7 @@ exports.updateTimelineEvent = withErrorHandling(async (req, res) => {
     const pool = await getConnection();
     const result = await pool.request()
         .input('id', sql.Int, req.params.id)
+        .input('category_id', sql.Int, category_id || null)
         .input('event_type', sql.NVarChar, ANNUAL_EVENT_TYPE)
         .input('month', sql.Int, normalizedMonth)
         .input('year', sql.Int, normalizedYear)
@@ -250,7 +260,8 @@ exports.updateTimelineEvent = withErrorHandling(async (req, res) => {
         .input('is_published', sql.Bit, parseIsPublished(is_published, true))
         .query(`
             UPDATE timeline_events
-            SET event_type = @event_type,
+            SET category_id = @category_id,
+                event_type = @event_type,
                 month = @month,
                 year = @year,
                 event_name = @event_name,

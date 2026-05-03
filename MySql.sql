@@ -126,14 +126,14 @@ INSERT INTO categories (id,name,slug,page_type,description,intro_image,parent_id
 (5,'Hoạt động tình nguyện','tinh-nguyen','event_non_annual','Hoạt động cộng đồng',NULL,NULL),
 (6,'Hoạt động thể thao','the-thao','event_non_annual','Hoạt động thể thao',NULL,NULL),
 (7,'Thành tích','thanh-tich','achievement','Thành tích nổi bật',NULL,NULL),
-(8,'Chương trình thường niên','thuong-nien','event_annual','Sự kiện thường niên',NULL,NULL),
-(9,'Khác','khac','news','Danh mục khác',NULL,NULL),
-(10,'Chào tân sinh viên','chao-tan-sinh-vien','event_annual','Lễ chào tân sinh viên khóa mới',NULL,8),
-(11,'Quân sự','quan-su','event_annual','Quân sự huấn luyện sinh viên',NULL,8),
-(12,'FIT Cup','fit-cup','event_annual','Giải bóng đá FIT Cup',NULL,8),
-(13,'Prom','prom','event_annual','Lễ prom sinh viên',NULL,8),
-(14,'Talkshow','talkshow','event_annual','Talkshow và giao lưu',NULL,8),
-(15,'Cuộc thi','cuoc-thi','event_annual','Các cuộc thi và hackathon',NULL,8);
+(8,'Khác','khac','news','Danh mục khác',NULL,NULL),
+(9,'Chào tân sinh viên','chao-tan-sinh-vien','event_annual','Lễ chào tân sinh viên khóa mới',NULL,8),
+(10,'Quân sự','quan-su','event_annual','Quân sự huấn luyện sinh viên',NULL,8),
+(11,'FIT Cup','fit-cup','event_annual','Giải bóng đá FIT Cup',NULL,8),
+(12,'Prom','prom','event_annual','Lễ prom sinh viên',NULL,8),
+(13,'Talkshow','talkshow','event_annual','Talkshow và giao lưu',NULL,8),
+(14,'Cuộc thi','cuoc-thi','event_annual','Các cuộc thi và hackathon',NULL,8),
+(15,'Tập huấn nội bộ','tap-huan-noi-bo','event_annual','Tập huấn kỹ năng cho thành viên liên chi đoàn',NULL,8);
 
 
 -- ================================================
@@ -195,19 +195,19 @@ INSERT INTO posts (id, title, slug, summary, content, thumbnail, category_id, au
     1, 'CHÍNH THỨC RA MẮT SỰ KIỆN CHÀO TÂN K67 - AETERNIA', 'chao-tan-k67-aeternia', 'Ra mắt chuỗi sự kiện chào tân sinh viên K67', 
     '“Ngai vàng có thể chỉ thuộc về một gia tộc, nhưng vinh quang thuộc về tất cả những ai đã dũng cảm bước vào cuộc chiến này.” Chuỗi sự kiện chào tân K67 của Khoa Công nghệ thông tin đã chính thức khởi động với chủ đề Aeternia - hành trình trở về vương quốc huy hoàng, nơi những tân sinh viên K67 sẽ đấu tranh và khẳng định bản lĩnh của mình. Từ những bước chân đầu tiên cho đến khi ánh sáng đêm gala bùng cháy, tất cả sẽ trở thành thử thách về tinh thần, ý chí và tài năng. Hãy theo dõi và đồng hành cùng LCĐ để chứng kiến hành trình chinh phục đầy cảm hứng này.', 
     'https://res.cloudinary.com/dcny8f58b/image/upload/v1777026774/lcd/activity-post-images/slfkyfyv18gp2ynyde57.jpg', 
-    11, 1, 20, 1, 1, '2026-04-24 10:28:06', '2026-04-24 10:28:06', '2026-04-25 11:52:54'
+    9, 1, 20, 1, 1, '2026-04-24 10:28:06', '2026-04-24 10:28:06', '2026-04-25 11:52:54'
 ),
 (
     2, 'RECAP TEAM BUILDING CHÀO TÂN SINH VIÊN K67', 'recap-team-building-k67', 'Tổng kết hoạt động team building chào tân K67', 
     'Vào Chủ nhật ngày 12/10, sự kiện team building chào đón tân sinh viên K67 của Khoa Công Nghệ Thông Tin đã diễn ra trong không khí sôi nổi, hào hứng và đầy cảm xúc. Với sự góp mặt đông đảo của các bạn sinh viên K67 cùng sự chuẩn bị chu đáo từ ban tổ chức AETERNIA, chương trình đã trở thành cầu nối giúp các bạn xóa tan sự bỡ ngỡ ban đầu, tạo nên những khoảnh khắc gắn kết và khơi dậy tinh thần nhiệt huyết. Những trò chơi đồng đội và thử thách sáng tạo đã giúp sinh viên thể hiện cá tính và tinh thần đoàn kết. K67 – hãy tiếp tục lan tỏa tinh thần Dám nghĩ – Dám làm – Dám bứt phá!', 
     'https://res.cloudinary.com/dcny8f58b/image/upload/v1777026790/lcd/activity-post-images/jr9zsl3eegmyocavraiw.jpg', 
-    11, 1, 14, 1, 1, '2026-04-24 10:28:06', '2026-04-24 10:28:06', '2026-04-25 15:03:35'
+    9, 1, 14, 1, 1, '2026-04-24 10:28:06', '2026-04-24 10:28:06', '2026-04-25 15:03:35'
 ),
 (
     3, 'THÔNG BÁO LỊCH THI ĐẤU TỨ KẾT – FIT CUP S2', 'fit-cup-tu-ket-s2', 'Lịch thi đấu vòng tứ kết FIT CUP', 
     'Sau những vòng đấu đầy kịch tính, FIT CUP S2 đã chính thức bước vào giai đoạn Tứ kết – nơi chỉ còn lại những đội bóng xuất sắc nhất tranh tài cho tấm vé đi tiếp. Ban tổ chức công bố lịch thi đấu với những cặp đấu hấp dẫn và khó đoán. Đây là những trận đấu mang tính quyết định, nơi bản lĩnh và chiến thuật được đẩy lên cao nhất. Hãy theo dõi và cổ vũ cho đội bóng bạn yêu thích!', 
     'https://res.cloudinary.com/dcny8f58b/image/upload/v1777027372/lcd/activity-post-images/csrobm7vzxc3uktzjfu6.jpg', 
-    13, 1, 12, 1, 1, '2026-04-24 10:28:06', '2026-04-24 10:28:06', '2026-04-24 11:46:42'
+    11, 1, 12, 1, 1, '2026-04-24 10:28:06', '2026-04-24 10:28:06', '2026-04-24 11:46:42'
 ),
 (
     4, 'FIT RACE – BỨT PHÁ GIỚI HẠN, LAN TỎA TINH THẦN THỂ THAO', 'fit-race-2026', 'Giải chạy FIT RACE 2026', 
@@ -237,7 +237,7 @@ INSERT INTO posts (id, title, slug, summary, content, thumbnail, category_id, au
     8, 'CHƯƠNG TRÌNH TẬP HUẤN NỘI BỘ VÀ THIỆN NGUYỆN 2025 - 2026: VƯỢT VŨ', 'chuong-trinh-tap-huan-noi-bo-va-thien-nguyen-2025---2026-vuot-vu', 'Chương trình Tập huấn nội bộ & Thiện nguyện 2025 “Vượt Vũ” là điểm khởi đầu để mỗi cá nhân không ngừng hoàn thiện bản thân, sẵn sàng đảm nhận vai trò dẫn dắt và cống hiến.', 
     '<p>“𝐶ℎ𝑎̆́𝑝 𝑐𝑎́𝑛ℎ 𝑔𝑖𝑢̛̃𝑎 𝑏𝑎̃𝑜 𝑔𝑖𝑜̂𝑛𝑔, 𝑣𝑢̛𝑜̛𝑛 𝑚𝑖̀𝑛ℎ đ𝑒̂́𝑛 𝑏𝑎̂̀𝑢 𝑡𝑟𝑜̛̀𝑖 𝑚𝑜̛́𝑖”<br><br>☘ Bước sang một chặng đường mới, hành trình rèn luyện của các cán bộ Đoàn chính thức bắt đầu. Với ý nghĩa sâu sắc, Chương trình Tập huấn nội bộ & Thiện nguyện 2025 “Vượt Vũ” là điểm khởi đầu để mỗi cá nhân không ngừng hoàn thiện bản thân, sẵn sàng đảm nhận vai trò dẫn dắt và cống hiến.<br><br>🌷 “Vượt Vũ” gợi lên hình ảnh những cánh chim vươn mình giữa bầu trời rộng lớn, sẵn sàng đối mặt với gió ngược và thử thách. Đó là hành trình chắp cánh cho ý chí, tôi rèn bản lĩnh, giúp các cán bộ Đoàn vượt qua giới hạn của chính mình để trưởng thành hơn trong tư duy, kỹ năng và tinh thần trách nhiệm.<br><br>🌱 Hãy cùng Khoa Công nghệ thông tin bước vào hành trình Vượt Vũ – nơi những đôi cánh được chắp lên giữa bão giông.<br>__________________________<br>CHƯƠNG TRÌNH TẬP HUẤN NỘI BỘ 2025 - 2026: " VƯỢT VŨ "<br>⏰ Thời gian: 28/02/2026 – 01/03/2026<br>🗺️ Địa điểm: Trung tâm cứu trợ trẻ em tàn tật TP. Nam Định - 153 Nguyễn Trãi<br>🚨 Hotline: Trưởng Ban Tổ chức - Nông Minh Hải - 0966473314</p>', 
     'https://res.cloudinary.com/dcny8f58b/image/upload/v1777120623/lcd/activity-post-images/qbbkjqnmtu7zoschqo3m.jpg', 
-    3, 1, 4, 1, 1, '2026-04-25 12:37:45', '2026-04-25 12:37:45', '2026-04-25 16:39:25'
+    15, 1, 4, 1, 1, '2026-04-25 12:37:45', '2026-04-25 12:37:45', '2026-04-25 16:39:25'
 ),
 (
     9, 'HEDERA VIETNAM BUILDERS MEETUP', 'Hedera-vn-builders-meetup', 'CLB Công nghệ Thông tin Đại học Kinh tế Quốc dân (NITC) phối hợp cùng Varmeta và Hashgraph hân hạnh được tổ chức workshop Hedera Vietnam Builders Meetup #3', 
@@ -294,6 +294,7 @@ CREATE TABLE documents (
 -- ================================================
 CREATE TABLE timeline_events (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    category_id INT,
     event_type ENUM('annual') NOT NULL DEFAULT 'annual',
     month TINYINT NOT NULL,
     year SMALLINT NOT NULL,
@@ -306,9 +307,16 @@ CREATE TABLE timeline_events (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT chk_timeline_month CHECK (month BETWEEN 1 AND 12),
     CONSTRAINT chk_timeline_year CHECK (year BETWEEN 2000 AND 2100),
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL,
     FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
 );
-
+INSERT INTO timeline_events (category_id,event_type,month,year,event_name,summary,sort_order,is_published,created_by,created_at,updated_at) VALUES 
+(9,'annual',10,2026,'Chào tân sinh viên','Sự kiện chào đón các bạn tân sinh viên khoá mới với nhiều hoạt động bùng nổ.',1,1,1,NOW(),NOW()),
+(11,'annual',3,2026,'FIT Cup','Giải bóng đá thường niên dành cho sinh viên khoa Công nghệ thông tin.',2,1,1,NOW(),NOW()),
+(15,'annual',3,2026,'Tập huấn nội bộ','Buổi sinh hoạt, tập huấn về kỹ năng tổ chức, nghiệp vụ và kỹ năng mềm dành cho ban chủ nhiệm và thường trực liên chi đoàn.',3,1,1,NOW(),NOW()),
+(13,'annual',11,2026,'Talkshow','Buổi chia sẻ từ các chuyên gia và cựu sinh viên về lộ trình phát triển trong ngành IT.',4,1,1,NOW(),NOW()),
+(12,'annual',12,2026,'Prom','Đêm tiệc chia tay đầy cảm xúc dành cho sinh viên năm cuối trước khi tốt nghiệp.',5,1,1,NOW(),NOW()),
+(14,'annual',7,2026,'Cuộc thi','Các cuộc thi và hackathon dành cho sinh viên.',6,1,1,NOW(),NOW());
 
 -- ================================================
 -- CONTACT INFO
@@ -321,11 +329,18 @@ CREATE TABLE contact_info (
     subject VARCHAR(255),
     message TEXT,
     is_read BOOLEAN DEFAULT FALSE,
+    read_by INT,
     is_replied BOOLEAN DEFAULT FALSE,
-    is_deleted BOOLEAN DEFAULT FALSE,
+    replied_by INT,
     replied_at DATETIME,
+    is_deleted BOOLEAN DEFAULT FALSE,
+    deleted_by INT,
+    deleted_at DATETIME,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (read_by) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (replied_by) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (deleted_by) REFERENCES users(id) ON DELETE SET NULL
 );
 
 INSERT INTO contact_info (name,email,phone,subject,message) VALUES
