@@ -144,4 +144,15 @@ backend/.env
 
 # Worktrees
 .worktrees/
+
+# Local Documents and AI files (Keep on local machine only)
+docs/
+temp_media/
+comparison_admin/
+docx_images/
+*.docx
+*.zip
+docx_images.txt
+add_batch_desc.py
+my-app/dist/
 
