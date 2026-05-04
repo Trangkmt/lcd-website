@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './Header.css';
 import Logo from '../../images/Logo.png';
 import IconRightArrow from '../../images/icon-right-arrow.svg';
@@ -7,6 +7,7 @@ import { MenuIcon, CloseIcon } from '../../SvgIcons';
 
 const Header = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const [searchValue, setSearchValue] = useState('');
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isMobileEventOpen, setIsMobileEventOpen] = useState(false);
@@ -29,8 +30,11 @@ const Header = () => {
     }, []);
 
     const handleSearch = useCallback(() => {
-        console.log(`Searching for: ${searchValue}`);
-    }, [searchValue]);
+        if (searchValue.trim()) {
+            navigate(`/search?q=${encodeURIComponent(searchValue.trim())}`);
+            setIsMobileMenuOpen(false); // Close mobile menu if open
+        }
+    }, [searchValue, navigate]);
 
     useEffect(() => {
         setIsMobileMenuOpen(false);

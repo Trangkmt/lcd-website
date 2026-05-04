@@ -8,6 +8,7 @@ import OrganizationalStructure from './screens/User/OrganizationalStructure';
 import Contact from './screens/User/Contact';
 import { News, NewsDetail } from './screens/User/News';
 import { Achievement, AchievementDetail } from './screens/User/Achievement';
+import { SearchResults } from './screens/User/Search';
 import {
   AdminLayout,
   AdminLogin,
@@ -56,6 +57,7 @@ const App = () => {
         <Route path="/achievement" element={<Layout><Achievement /></Layout>} />
         <Route path="/achievement/:id" element={<Layout><AchievementDetail /></Layout>} />
         <Route path="/contact" element={<Layout><Contact /></Layout>} />
+        <Route path="/search" element={<Layout><SearchResults /></Layout>} />
 
         {/* Admin Routes */}
         <Route path="/admin/login" element={<AdminLogin />} />

@@ -25,7 +25,7 @@ async function getPostById(pool, id) {
 
 // GET /api/posts - Lấy danh sách bài viết
 exports.getAllPosts = withErrorHandling(async (req, res) => {
-    const { category_id, category_slug, page_type, is_featured, year, include_unpublished } = req.query;
+    const { category_id, category_slug, page_type, is_featured, year, include_unpublished, search } = req.query;
     const pagination = parsePagination(req.query);
     const pool = await getConnection();
 
@@ -76,6 +76,11 @@ exports.getAllPosts = withErrorHandling(async (req, res) => {
     if (is_featured) {
         query += ' AND n.is_featured = @is_featured';
         request.input('is_featured', sql.Bit, is_featured === 'true' ? 1 : 0);
+    }
+    
+    if (search) {
+        query += ' AND (n.title LIKE @search OR n.summary LIKE @search OR n.content LIKE @search)';
+        request.input('search', sql.NVarChar, `%${search}%`);
     }
 
     if (includeUnpublished && isPostAuthor(currentUser)) {

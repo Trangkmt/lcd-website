@@ -7,6 +7,7 @@ export default function SearchBar({
     onChange,
     placeholder = 'Tìm kiếm...',
     onClear,
+    onKeyDown,
     clearAriaLabel = 'Xóa từ khóa tìm kiếm',
     variant = 'default',
     className = '',
@@ -29,6 +30,7 @@ export default function SearchBar({
                 className={inputClasses}
                 value={value}
                 onChange={onChange}
+                onKeyDown={onKeyDown}
                 placeholder={placeholder}
             />
             {value && (

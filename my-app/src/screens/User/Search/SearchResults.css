@@ -28,8 +28,10 @@
 
 .search-results-page__title {
     margin: 0;
-    font-size: clamp(2rem, 5vw, 3.25rem);
+    font-size: 2.5rem;
+    padding: 0.5rem 0;
     line-height: 1.05;
+    color: #ffffff;
 }
 
 .search-results-page__summary {
@@ -84,12 +86,6 @@
     align-items: baseline;
     gap: 1rem;
     margin-bottom: 1.125rem;
-}
-
-.search-results-section__header h2 {
-    margin: 0;
-    font-size: 1.75rem;
-    color: var(--color-text-strong);
 }
 
 .search-results-section__header span {

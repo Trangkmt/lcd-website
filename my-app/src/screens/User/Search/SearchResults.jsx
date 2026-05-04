@@ -43,10 +43,10 @@ export default function SearchResults() {
 
         setLoading(true);
         Promise.all([
-            postsAPI.getAll({ page_type: 'news', limit: 200 }),
-            postsAPI.getAll({ page_type: 'achievement', limit: 200 }),
-            postsAPI.getAll({ page_type: 'event_annual', limit: 200 }),
-            postsAPI.getAll({ page_type: 'event_non_annual', limit: 200 }),
+            postsAPI.getAll({ page_type: 'news', limit: 200, search: query }),
+            postsAPI.getAll({ page_type: 'achievement', limit: 200, search: query }),
+            postsAPI.getAll({ page_type: 'event_annual', limit: 200, search: query }),
+            postsAPI.getAll({ page_type: 'event_non_annual', limit: 200, search: query }),
         ])
             .then(([newsData, achievementData, annualData, nonAnnualData]) => {
                 if (!isMounted) {
@@ -77,7 +77,7 @@ export default function SearchResults() {
         return () => {
             isMounted = false;
         };
-    }, []);
+    }, [query]);
 
     const normalizedQuery = useMemo(() => normalizeText(query), [query]);
 
