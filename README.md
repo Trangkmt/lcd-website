@@ -1,12 +1,12 @@
 # LCD Website - Hệ thống quản trị Liên Chi Đoàn Khoa CNTT
 
-Hệ thống quản lý thông tin, sự kiện và tài liệu học thuật cho Liên Chi Đoàn khoa Công nghệ thông tin - Trường Đại học Kinh tế Quốc dân. Nền tảng tích hợp AI giúp tối ưu hóa quy trình truyền thông và quản trị nội dung.
+Hệ thống quản lý thông tin, sự kiện và tài liệu cho Liên chi đoàn khoa Công nghệ thông tin - Trường Đại học Kinh tế quốc dân. Nền tảng tích hợp AI giúp tối ưu hóa quy trình truyền thông và quản trị nội dung.
 
 ## Các tính năng chính
 
 - **Tạo bài viết bằng AI**: Tích hợp Gemini API giúp tự động tạo nội dung bài viết từ các từ khóa và chủ đề.
 - **Quản lý Tin tức và Sự kiện**: Hệ thống quản trị nội dung chuyên nghiệp cho phép đăng tải, phân loại và quản lý trạng thái bài viết (Tin tức, Sự kiện thường niên, Thành tích...).
-- **Quản lý Tài liệu**: Hỗ trợ lưu trữ, chia sẻ và thống kê lượt tải các tài liệu học thuật (docx, pdf, xlsx). Hỗ trợ xem trước tài liệu trực tuyến.
+- **Quản lý Tài liệu**: Hỗ trợ lưu trữ, chia sẻ và thống kê lượt tải các tài liệu chuyên môn (docx, pdf, xlsx).
 - **Dòng thời gian sự kiện**: Theo dõi và hiển thị các mốc hoạt động quan trọng của Liên Chi Đoàn theo từng năm.
 - **Quản lý Thành viên**: Phân quyền người dùng theo vai trò (Admin,Post Author,Contact manager,Utility manager) và tổ chức theo sơ đồ các ban chuyên môn.
 - **Hệ thống Liên hệ**: Tiếp nhận, quản lý và phản hồi các yêu cầu hỗ trợ từ sinh viên.
