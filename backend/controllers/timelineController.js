@@ -121,7 +121,7 @@ exports.getPublicTimeline = withErrorHandling(async (req, res) => {
     res.json(enrichTimelineEvents(result.recordset));
 });
 
-// GET /api/timeline/admin - Admin list with drafts
+// GET /api/timeline/admin - Danh sách cho admin bao gồm bản nháp
 exports.getAdminTimeline = withErrorHandling(async (req, res) => {
     const pagination = parsePagination(req.query, 200, 500);
     const pool = await getConnection();

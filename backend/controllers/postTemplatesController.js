@@ -9,37 +9,13 @@ const {
 const { ROLES, normalizeRole } = require('../config/roles');
 const { isAdmin } = require('../middleware/authMiddleware');
 
-let ensuredTemplateTable = false;
+
 
 function isPostAuthor(user) {
     return normalizeRole(user?.role) === ROLES.POST_AUTHOR;
 }
 
-async function ensureTemplatesTable(pool) {
-    if (ensuredTemplateTable) {
-        return;
-    }
 
-    await pool.request().query(`
-        CREATE TABLE IF NOT EXISTS post_templates (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            name VARCHAR(255) NOT NULL,
-            category_id INT NULL,
-            title_template VARCHAR(255) NULL,
-            summary_template TEXT NULL,
-            content_template LONGTEXT NULL,
-            is_default BOOLEAN DEFAULT FALSE,
-            is_active BOOLEAN DEFAULT TRUE,
-            created_by INT NULL,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL,
-            FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
-        )
-    `);
-
-    ensuredTemplateTable = true;
-}
 
 async function loadTemplateById(pool, id) {
     const result = await pool.request()
@@ -57,7 +33,7 @@ exports.getAllTemplates = withErrorHandling(async (req, res) => {
 
     const { category_id } = req.query;
     const pool = await getConnection();
-    await ensureTemplatesTable(pool);
+
 
     const request = pool.request();
     let query = `
@@ -116,7 +92,7 @@ exports.createTemplate = withErrorHandling(async (req, res) => {
     }
 
     const pool = await getConnection();
-    await ensureTemplatesTable(pool);
+
 
     const finalIsDefault = admin ? !!is_default : false;
 
@@ -155,7 +131,7 @@ exports.updateTemplate = withErrorHandling(async (req, res) => {
     }
 
     const pool = await getConnection();
-    await ensureTemplatesTable(pool);
+
 
     const existingTemplate = await loadTemplateById(pool, req.params.id);
     if (!existingTemplate) {
@@ -224,7 +200,7 @@ exports.deleteTemplate = withErrorHandling(async (req, res) => {
     }
 
     const pool = await getConnection();
-    await ensureTemplatesTable(pool);
+
 
     const existingTemplate = await loadTemplateById(pool, req.params.id);
     if (!existingTemplate) {

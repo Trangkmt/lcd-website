@@ -30,7 +30,7 @@ const resolveTabKey = (pageType, fallback = 'news') => {
         return pageType;
     }
 
-    // Legacy value from old data model.
+    // Giá trị kế thừa từ mô hình dữ liệu cũ.
     if (pageType === 'event') {
         return fallback;
     }
@@ -131,7 +131,7 @@ export default function CategoriesManagement() {
         });
         if (!confirmed) return;
         try {
-            // Delete intro_image from Cloudinary if it exists
+            // Xóa intro_image khỏi Cloudinary nếu có
             const imagePublicId = getCloudinaryPublicId(cat.intro_image);
             if (imagePublicId) {
                 try {

@@ -144,7 +144,7 @@ const Homepage = () => {
     setHeroIndex(0);
   }, [heroSlides.length]);
 
-  // Get the image to display for featured event (hovered or latest)
+  // Lấy hình ảnh để hiển thị cho sự kiện nổi bật (đang di chuột hoặc mới nhất)
   const displayedEvent = hoveredEventIndex !== null
     ? eventPosts[hoveredEventIndex]
     : eventPosts[0];

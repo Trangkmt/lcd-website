@@ -24,7 +24,7 @@ const Event = () => {
     }, [typeParam]);
 
     useEffect(() => {
-        // Fetch both annual and non-annual events
+        // Lấy cả sự kiện thường niên và không thường niên
         Promise.all([
             postsAPI.getAll({ page_type: 'event_annual', limit: 100 }),
             postsAPI.getAll({ page_type: 'event_non_annual', limit: 100 })
@@ -48,10 +48,10 @@ const Event = () => {
 
     return (
         <div className="event-page">
-            {/* Main Content */}
+            {/* Nội dung chính */}
             <div className="event-content">
                 <div className="content-wrapper">
-                    {/* Search and Filter Section */}
+                    {/* Phần Tìm kiếm và Lọc */}
                     <div className="search-section">
                         <SearchBar
                             value={searchQuery}
@@ -69,7 +69,7 @@ const Event = () => {
                                 {selectedFilter === 'Tất cả' ? 'Lọc' : selectedFilter}
                             </button>
 
-                            {/* Filter Menu */}
+                            {/* Menu Lọc */}
                             {filterOpen && (
                                 <div className="filter-menu">
                                     {filterOptions.map((option, index) => (
@@ -89,13 +89,13 @@ const Event = () => {
                         </div>
                     </div>
 
-                    {/* Events Title */}
+                    {/* Tiêu đề Sự kiện */}
                     <div className="section-header" style={{ marginBottom: '2.5rem', textAlign: 'center', justifyContent: 'center' }}>
                         <b className="section-title section-title--event" style={{ fontSize: '1.75rem' }}>CÁC SỰ KIỆN NỔI BẬT</b>
                         <div className="section-divider section-divider--event" aria-hidden="true" style={{ width: '100px', margin: '0.5rem auto 0' }} />
                     </div>
 
-                    {/* Events Grid */}
+                    {/* Lưới Sự kiện */}
                     <div className="events-grid">
                         {loading && <p style={{ gridColumn: '1/-1', textAlign: 'center', color: 'var(--color-text-soft)' }}>Đang tải...</p>}
                         {!loading && filtered.length === 0 && (
@@ -120,11 +120,11 @@ const Event = () => {
                         })}
                     </div>
 
-                    {/* Pagination */}
+                    {/* Phân trang */}
                     <div className="pagination">
                         <button className="pagination-btn pagination-prev" disabled>
                             <span className="arrow-icon" aria-hidden="true"><ChevronLeftIcon /></span>
-                            Previous
+                            Trước
                         </button>
                         <div className="pagination-list">
                             <button className="pagination-page pagination-current">1</button>
@@ -135,7 +135,7 @@ const Event = () => {
                             <button className="pagination-page">7</button>
                         </div>
                         <button className="pagination-btn pagination-next">
-                            Next
+                            Sau
                             <span className="arrow-icon" aria-hidden="true"><ChevronRightIcon /></span>
                         </button>
                     </div>

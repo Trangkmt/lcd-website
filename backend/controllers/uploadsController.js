@@ -19,7 +19,7 @@ function normalizeUploadFolder(folderInput) {
         return defaultFolder;
     }
 
-    // Keep folder names predictable and safe for Cloudinary public IDs.
+    // Giữ tên thư mục dễ đoán và an toàn cho Cloudinary public ID.
     if (!/^[a-zA-Z0-9_\-\/ ]+$/.test(normalized)) {
         return defaultFolder;
     }

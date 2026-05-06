@@ -35,8 +35,6 @@ const Timeline = ({
     const toggleTimeline = () => setIsExpanded(!isExpanded);
 
     if (layout === 'dashboard') {
-        // ... (dashboard logic remains same, but I'll skip it for brevity or just include it if needed)
-        // Actually, better to include it to keep the file valid
         return (
             <div className={`dashboard-timeline ${className}`.trim()}>
                 {loading ? (
@@ -84,7 +82,7 @@ const Timeline = ({
 
     return (
         <div className={`timeline-section ${className} ${isExpanded ? 'timeline-section--expanded' : ''}`.trim()}>
-            {/* Mobile Toggle Button - now static above event section */}
+            {/* Mobile Toggle Button*/}
             <button 
                 className="timeline-mobile-toggle" 
                 onClick={toggleTimeline}

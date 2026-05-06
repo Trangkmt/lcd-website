@@ -85,7 +85,7 @@ export function parseSharedFolderList(value) {
             return parsed.flatMap((item) => parseSharedFolderList(item));
         }
     } catch {
-        // fall through to plain text parsing
+        // Phân tích cú pháp văn bản thuần túy
     }
 
     return text
@@ -145,7 +145,7 @@ function folderPositionsForUser(folder, user) {
     if (!user || !user.teams || !Array.isArray(user.teams)) return [];
     const folderTeamValues = (folder.teamValues || []).map(normalizeSharedFolderText);
     
-    // Find all positions for teams that match the folder's teamValues
+    // Tìm tất cả các vị trí cho các ban khớp với teamValues của folder
     const positions = user.teams
         .filter(t => folderTeamValues.includes(normalizeSharedFolderText(t.team_id)))
         .map(t => normalizeSharedFolderText(t.team_position))
@@ -155,7 +155,6 @@ function folderPositionsForUser(folder, user) {
 }
 
     return parseSharedFolderList(positionMap.__all__).map(normalizeSharedFolderText).filter(Boolean);
-}
 
 export function canViewSharedFolder(user, folder) {
     if (!folder) return false;

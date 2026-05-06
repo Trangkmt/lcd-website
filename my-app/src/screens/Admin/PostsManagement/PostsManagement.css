@@ -1,4 +1,4 @@
-/* ===== Grouped Category Dropdown ===== */
+/* Dropdown Danh mục */
 @import url('../Styles/AdminTable.css');
 @import url('../Styles/AdminButtons.css');
 @import url('../Styles/AdminForm.css');
@@ -189,7 +189,7 @@
     height: 1em;
 }
 
-/* ===== Posts Management Page ===== */
+/* Posts Management Page */
 .posts-management {
     padding: var(--space-10);
     font-family: var(--font-primary);

@@ -1,15 +1,15 @@
-/* ===========================================
+/*
    GLOBAL CSS - Design System Variables
    LCD - Liên Chi Đoàn Khoa CNTT
-   =========================================== */
+*/
 
 @import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
-/* ===========================================
+/*
    CSS RESET
-   =========================================== */
+*/
 
 *,
 *::before,
@@ -90,9 +90,9 @@ p {
     line-height: var(--lh-normal);
 }
 
-/* ===========================================
+/*
    ROOT VARIABLES
-   =========================================== */
+*/
 
 :root {
     --color-primary: #2C6BCC;
@@ -188,9 +188,9 @@ p {
     --color-state-warning-soft: #FEF3C7;
     --color-state-warning-tint: var(--color-warning-light);
 
-    /* =======================================
+    /*
        TYPOGRAPHY
-       ======================================= */
+    */
 
     /* Font Family */
     --font-primary: 'Inter', 'Roboto', 'Work Sans', sans-serif;
@@ -213,9 +213,9 @@ p {
     --ls-tight: -0.02em;
     --ls-wide: 0.02em;
 
-    /* =======================================
+    /*
        SPACING
-       ======================================= */
+    */
 
     --space-0: 0;
     --space-1: 0.25rem;
@@ -247,9 +247,9 @@ p {
     --space-24: 6rem;
     /* 96px */
 
-    /* =======================================
+    /*
        SIZES
-       ======================================= */
+    */
 
     /* Width */
     --width-1440: 1440px;
@@ -270,15 +270,15 @@ p {
     --radius-2xl: 24px;
     --radius-full: 9999px;
 
-    /* =======================================
+    /*
        SHADOWS
-       ======================================= */
+    */
 
     --shadow-none: none;
 
-    /* =======================================
+    /*
        BORDERS
-       ======================================= */
+    */
 
     --border-width-1: 1px;
     --border-width-2: 2px;
@@ -286,17 +286,17 @@ p {
     --border-gray: 1px solid var(--color-gray-300);
     --border-primary: 1px solid var(--color-primary);
 
-    /* =======================================
+    /*
        TRANSITIONS
-       ======================================= */
+    */
 
     --transition-fast: 150ms ease;
     --transition-normal: 200ms ease;
     --transition-slow: 300ms ease;
 
-    /* =======================================
+    /*
        Z-INDEX
-       ======================================= */
+    */
 
     --z-dropdown: 100;
     --z-sticky: 200;
@@ -306,9 +306,9 @@ p {
     --z-popover: 600;
     --z-tooltip: 700;
 
-    /* =======================================
+    /*
          BREAKPOINTS
-         ======================================= */
+    */
 
     --bp-xs: 480px;
     --bp-sm: 640px;
@@ -358,9 +358,9 @@ p {
     }
 }
 
-/* ===========================================
+/*
    BUTTON SYSTEM
-   =========================================== */
+*/
 
 .btn {
     display: inline-flex;

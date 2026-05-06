@@ -146,7 +146,7 @@ function extractPlainBodyLinesFromHtml(html) {
         });
 
         if (nodeIndex < blockNodes.length - 1) {
-            // Preserve spacing between paragraph-like blocks.
+            // Giữ khoảng cách giữa các khối giống đoạn văn.
             lines.push('');
         }
     });
@@ -528,7 +528,7 @@ export default function PostsManagement() {
                 };
             });
 
-            // Reflect generated content immediately in the contenteditable editor.
+            // Cập nhật nội dung đã tạo ngay lập tức vào trình soạn thảo.
             if (generatedContent && editorRef.current) {
                 editorRef.current.innerText = generatedContent;
             }
@@ -647,7 +647,7 @@ export default function PostsManagement() {
         if (html) {
             contentToInsert = sanitizeHtmlForPaste(html);
         } else if (text) {
-            // Convert plain text newlines to <p> tags or <br>
+            // Chuyển đổi các ký tự xuống dòng văn bản thuần túy thành thẻ <p> hoặc <br>
             contentToInsert = text
                 .split(/\r?\n/)
                 .map(line => line.trim() ? `<p>${line}</p>` : '<p><br/></p>')

@@ -88,7 +88,7 @@ async function loadActiveUserById(userId) {
     const hasAvatarColumn = await hasUserAvatarColumn(pool);
     const avatarSelect = hasAvatarColumn ? 'avatar_url' : 'NULL AS avatar_url';
     
-    // Load basic user info
+    // Tải thông tin người dùng cơ bản
     const result = await pool.request()
         .input('id', sql.Int, userId)
         .query(`
@@ -104,7 +104,7 @@ async function loadActiveUserById(userId) {
         return null;
     }
 
-    // Load user teams/positions
+    // Tải thông tin ban/vị trí của người dùng
     const teamsResult = await pool.request()
         .input('id', sql.Int, userId)
         .query(`

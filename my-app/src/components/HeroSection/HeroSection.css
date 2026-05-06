@@ -1,6 +1,6 @@
-/* ============================================
-   HERO SECTION - Old Style with New Responsive
-   ============================================ */
+/*
+   HERO SECTION
+*/
 .hero-section {
     grid-column: 1 / -1;
     position: relative;
@@ -153,9 +153,9 @@
     background: rgba(255, 255, 255, 1);
 }
 
-/* ============================================
-   RESPONSIVE - New Responsive Logic
-   ============================================ */
+/*
+   RESPONSIVE
+*/
 @media (max-width: 1024px) {
     .hero-section {
         grid-column: 1;

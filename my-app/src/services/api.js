@@ -172,7 +172,7 @@ export const timelineAPI = {
         try {
             return await apiFetch(`/timeline/admin/list${querySuffix}`);
         } catch (error) {
-            // Backward compatibility for backends exposing /timeline/admin instead of /timeline/admin/list.
+            //sử dụng /timeline/admin thay vì /timeline/admin/list.
             if (error?.status !== 404) {
                 throw error;
             }

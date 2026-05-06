@@ -28,7 +28,7 @@ const teamsRoutes = require('./routes/teams');
 const contactRoutes = require('./routes/contact');
 const authRoutes = require('./routes/auth');
 const aiRoutes = require('./routes/ai');
-const migrationsRoutes = require('./routes/migrations');
+
 const uploadsRoutes = require('./routes/uploads');
 const sharedFoldersRoutes = require('./routes/sharedFolders');
 const postTemplatesRoutes = require('./routes/postTemplates');
@@ -63,7 +63,7 @@ app.use('/api/teams', teamsRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/ai', aiRoutes);
-app.use('/api/migrations', migrationsRoutes);
+
 app.use('/api/uploads', uploadsRoutes);
 app.use('/api/shared-folders', sharedFoldersRoutes);
 app.use('/api/post-templates', postTemplatesRoutes);
@@ -112,12 +112,10 @@ app.use((err, req, res, next) => {
 
 // Start server
 app.listen(PORT, () => {
-    console.log('='.repeat(60));
-    console.log(`🚀 Server đang chạy tại http://localhost:${PORT}`);
-    console.log(`📊 Database: ${process.env.DB_DATABASE || 'MyAppDB'}`);
-    console.log(`🔗 Server: ${DB_HOST}`);
-    console.log('='.repeat(60));
-    console.log('\n📋 API Endpoints:');
+    console.log(`Server đang chạy tại http://localhost:${PORT}`);
+    console.log(`Database: ${process.env.DB_DATABASE || 'MyAppDB'}`);
+    console.log(`Server: ${DB_HOST}`);
+    console.log('\nAPI Endpoints:');
     console.log(`  GET  http://localhost:${PORT}/api/health`);
     console.log(`  GET  http://localhost:${PORT}/api/users`);
     console.log(`  GET  http://localhost:${PORT}/api/categories`);
@@ -137,6 +135,6 @@ app.listen(PORT, () => {
 
 // Graceful shutdown
 process.on('SIGINT', async () => {
-    console.log('\n🛑 Đang tắt server...');
+    console.log('\nĐang tắt server...');
     process.exit(0);
 });

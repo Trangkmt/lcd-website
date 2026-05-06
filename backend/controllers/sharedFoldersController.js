@@ -88,7 +88,7 @@ function folderPositionsForUser(folder, user) {
     if (!user || !user.teams || !Array.isArray(user.teams)) return [];
     const folderTeamValues = (folder.teamValues || []).map(normalizeText);
     
-    // Find all positions for teams that match the folder's teamValues
+    // Tìm tất cả các vị trí cho các ban khớp với teamValues của folder
     const positions = user.teams
         .filter(t => folderTeamValues.includes(normalizeText(t.team_id)))
         .map(t => normalizeText(t.team_position))

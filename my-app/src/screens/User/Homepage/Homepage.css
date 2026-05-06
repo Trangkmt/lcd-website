@@ -29,9 +29,9 @@
     grid-column: 1 / -1;
 }
 
-/* ============================================
+/*
    SECTION HEADER (title + divider wrapper)
-   ============================================ */
+*/
 .section-header {
     display: flex;
     align-items: center;
@@ -48,9 +48,9 @@
     margin: 0;
 }
 
-/* ============================================
+/*
    SECTION TITLES
-   ============================================ */
+*/
 .section-title {
     font-family: var(--font-primary);
     position: relative;
@@ -76,9 +76,9 @@
     margin-top: 0;
 }
 
-/* ============================================
+/*
    BUTTONS
-   ============================================ */
+*/
 .btn-view-more-wrapper {
     position: relative;
     width: auto;
@@ -119,9 +119,9 @@
     font-weight: 700;
 }
 
-/* ============================================
+/*
    CATEGORY BADGES
-   ============================================ */
+*/
 .home-category-badge {
     position: relative;
     background-color: transparent;
@@ -164,9 +164,9 @@
     word-wrap: break-word;
 }
 
-/* ============================================
+/*
    NEWS SECTION
-   ============================================ */
+*/
 .news-section {
     grid-column: 1;
     grid-row: 3;
@@ -209,9 +209,9 @@
     font-weight: 600;
 }
 
-/* ============================================
+/*
    EVENT SECTION
-   ============================================ */
+*/
 .event-section {
     grid-column: 1;
     grid-row: 2;
@@ -346,9 +346,9 @@
     padding-right: 0;
 }
 
-/* ============================================
+/*
    ACHIEVEMENT SECTION
-   ============================================ */
+*/
 .achievement-section {
     grid-column: 1;
     grid-row: 4;
@@ -401,9 +401,9 @@
 
 
 
-/* ============================================
+/*
    RESPONSIVE
-   ============================================ */
+*/
 @media (max-width: 1200px) {
     .homepage {
         grid-template-columns: 1fr;

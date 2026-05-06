@@ -20,7 +20,7 @@ const PostCard = ({
     const displayTitle = title || content || '';
     const displayDescription = description || summary || '';
     
-    // Automatically determine variant from category if not provided
+    // Tự động xác định variant từ danh mục nếu không được cung cấp
     const effectiveVariant = variant || (category ? category.toLowerCase() : '');
     
     const cardClassName = [

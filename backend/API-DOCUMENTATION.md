@@ -7,7 +7,7 @@ http://localhost:5000/api
 
 ## Endpoints
 
-## 🤖 AI API
+## AI API
 
 ### POST `/api/ai/generate-post`
 Tạo nội dung bài viết tự động bằng AI theo từ khóa.
@@ -31,7 +31,7 @@ Tạo nội dung bài viết tự động bằng AI theo từ khóa.
 
 ---
 
-## 🔐 Auth API
+## Auth API
 
 ### POST `/api/auth/login`
 Đăng nhập bằng `username` hoặc `email`
@@ -60,12 +60,12 @@ Tạo nội dung bài viết tự động bằng AI theo từ khóa.
 
 ---
 
-### 🏥 Health Check
+### Health Check
 **GET** `/api/health`
 - Kiểm tra server và database connection
 - Response: `{ status, database, dbname, timestamp }`
 
-## 👥 Users API
+## Users API
 
 ### GET `/api/users`
 Lấy danh sách tất cả users
@@ -104,7 +104,7 @@ Xóa user
 
 ---
 
-## 📁 Categories API
+## Categories API
 
 ### GET `/api/categories`
 Lấy danh sách categories (bao gồm trường `subcategories_count`)
@@ -133,7 +133,7 @@ Xóa category
 
 ---
 
-## 📰 Posts API
+## Posts API
 
 ### GET `/api/posts`
 Lấy danh sách bài viết
@@ -173,7 +173,7 @@ Xóa bài viết
 
 ---
 
-## 📄 Documents API
+## Documents API
 
 ### GET `/api/documents`
 Lấy danh sách tài liệu
@@ -215,7 +215,7 @@ Xóa tài liệu
 
 
 ---
-## 🏢 Teams API (Read-only)
+## Teams API (Read-only)
 
 ### GET `/api/teams`
 Lấy danh sách tổ chức
@@ -226,7 +226,7 @@ Lấy tổ chức theo ID
 ---
 
 
-## 📧 Contact API
+## Contact API
 
 ### GET `/api/contact`
 Lấy danh sách liên hệ
@@ -279,7 +279,7 @@ Xóa liên hệ
 
 ---
 
-## ⚙️ Error Responses
+## Error Responses
 
 ### 400 Bad Request
 ```json
@@ -304,7 +304,7 @@ Xóa liên hệ
 
 ---
 
-## 🔧 Testing APIs
+## Testing APIs
 
 ### Sử dụng cURL:
 ```bash
@@ -325,7 +325,7 @@ Import collection hoặc tạo requests theo format trên.
 
 ---
 
-## 📝 Notes
+## Notes
 
 - Tất cả datetime được return ở định dạng ISO 8601
 - Pagination sử dụng `limit` và `offset`

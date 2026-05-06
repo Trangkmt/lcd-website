@@ -4,7 +4,7 @@ const usersController = require('../controllers/usersController');
 const { requireAuth, requireRoles } = require('../middleware/authMiddleware');
 const { ROLES } = require('../config/roles');
 
-// GET /api/users/public - Public members list for user-facing pages
+// GET /api/users/public - Danh sách thành viên công khai cho các trang phía người dùng
 router.get('/public', usersController.getPublicUsers);
 
 router.use(requireAuth, requireRoles(ROLES.ADMIN_FULL));

@@ -152,10 +152,10 @@ const getConnection = async () => {
     rawPool = mysql.createPool(config);
     await rawPool.query('SELECT 1');
     wrappedPool = new MySqlPoolWrapper(rawPool);
-    console.log('✅ Đã kết nối MySQL thành công!');
+    console.log('Đã kết nối MySQL thành công!');
     return wrappedPool;
   } catch (err) {
-    console.error('❌ Lỗi kết nối MySQL:', err);
+    console.error('Lỗi kết nối MySQL:', err);
     throw err;
   }
 };

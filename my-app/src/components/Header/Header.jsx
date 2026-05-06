@@ -32,7 +32,7 @@ const Header = () => {
     const handleSearch = useCallback(() => {
         if (searchValue.trim()) {
             navigate(`/search?q=${encodeURIComponent(searchValue.trim())}`);
-            setIsMobileMenuOpen(false); // Close mobile menu if open
+            setIsMobileMenuOpen(false); // Đóng menu mobile nếu đang mở
         }
     }, [searchValue, navigate]);
 
@@ -62,7 +62,7 @@ const Header = () => {
                 {/* White Background */}
                 <div className="header__background"></div>
 
-                {/* Logo - Click to go home */}
+                {/* Logo - Nhấn để về trang chủ */}
                 <Link to="/" className="header__logo-link">
                     <img className="header__logo" src={Logo} alt="LCD Logo" />
                 </Link>
@@ -156,7 +156,7 @@ const Header = () => {
                     })}
                 </nav>
 
-                {/* Search */}
+                {/* Tìm kiếm */}
                 <div className="header__search">
                     <input
                         type="text"

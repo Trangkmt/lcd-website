@@ -1,9 +1,8 @@
-/* ===========================================
-   HEADER COMPONENT - BEM Naming Convention
-   Figma Design Spec Implementation
-   =========================================== */
+/*
+   HEADER COMPONENT 
+*/
 
-/* Header Container (Figma: .menu) */
+/* Header Container */
 .header {
     width: 100%;
     height: 5.25rem;
@@ -23,7 +22,7 @@
     padding-top: 5.25rem;
 }
 
-/* Header Frame (Figma: .menu-frame) */
+/* Header Frame */
 .header__menu {
     position: absolute;
     top: 0px;
@@ -34,7 +33,7 @@
     overflow: visible;
 }
 
-/* Header Background (Figma: .menu-icon) */
+/* Header Background */
 .header__background {
     position: absolute;
     top: 0px;
@@ -54,7 +53,7 @@
     cursor: pointer;
 }
 
-/* Header Logo (Figma: .logo-icon) */
+/* Header Logo */
 .header__logo {
     width: 3.25rem;
     height: 3.25rem;
@@ -108,7 +107,7 @@
     transform: scale(1.02);
 }
 
-/* Header Bottom Bar (Figma: .menu-child) */
+/* Header Bottom Bar */
 .header__bottom-bar {
     position: absolute;
     top: 3.5rem;
@@ -119,14 +118,14 @@
     z-index: 1;
 }
 
-/* Header Title (Figma: .lin-chi-on) */
+/* Header Title */
 .header__title {
     display: none;
 }
 
-/* ===========================================
+/*
    MENU ITEMS
-   =========================================== */
+*/
 
 .header__nav {
     position: absolute;
@@ -143,7 +142,7 @@
     overflow: visible;
 }
 
-/* Menu Item Base (Figma: .building-blocksmenu-list-item) */
+/* Menu Item Base */
 .menu-item {
     position: relative;
     top: auto;
@@ -188,7 +187,7 @@
     width: auto;
 }
 
-/* State Layer (Figma: .state-layer) */
+/* State Layer */
 .menu-item__state-layer {
     align-self: stretch;
     height: 100%;
@@ -230,7 +229,7 @@
     color: var(--color-white);
 }
 
-/* Active State Layer (Figma: .state-layer3) */
+/* Active State Layer*/
 
 .menu-item:hover .menu-item__state-layer {
     background-color: rgba(255, 255, 255, 0.14);
@@ -242,7 +241,7 @@
     background-color: rgba(255, 255, 255, 0.22);
 }
 
-/* Content (Figma: .content) */
+/* Content*/
 .menu-item__content {
     flex: 1;
     display: flex;
@@ -250,7 +249,7 @@
     align-items: flex-start;
 }
 
-/* Label Text (Figma: .label-text) */
+/* Label Text*/
 .menu-item__label {
     align-self: stretch;
     position: relative;
@@ -263,14 +262,14 @@
     white-space: nowrap;
 }
 
-/* Trailing Element (Figma: .trailing-element) */
+/* Trailing Element */
 .menu-item__trailing {
     height: 0.625rem;
     width: 0.625rem;
     position: relative;
 }
 
-/* Icon (Figma: .icon) */
+/* Icon*/
 .menu-item__icon {
     position: absolute;
     height: 100%;
@@ -286,9 +285,9 @@
     opacity: 0.95;
 }
 
-/* ===========================================
+/*
    EVENT DROPDOWN
-   =========================================== */
+*/
 
 /* Dropdown wrapper needs relative positioning */
 .menu-item--has-dropdown {
@@ -345,11 +344,11 @@
     color: var(--color-primary);
 }
 
-/* ===========================================
+/*
    SEARCH
-   =========================================== */
+*/
 
-/* Search Container (Figma: .search) */
+/* Search Container */
 .header__search {
     position: absolute;
     top: 1rem;
@@ -371,7 +370,7 @@
     transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-/* Search Input (Figma: .value) */
+/* Search Input */
 .header__search-input {
     flex: 1;
     position: relative;
@@ -404,16 +403,16 @@
     color: var(--color-darkslateblue);
 }
 
-/* Search Icon (Figma: .search-icon) */
+/* Search Icon */
 .header__search-icon {
     height: 0.8125rem;
     width: 0.8125rem;
     position: relative;
 }
 
-/* ===========================================
+/*
    RESPONSIVE DESIGN
-   =========================================== */
+*/
 
 @media (max-width: 1440px) {
     .header__menu {

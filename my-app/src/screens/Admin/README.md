@@ -1,16 +1,16 @@
 # Hệ thống Admin - Quản lý Liên Chi Đoàn
 
-## 🚀 Tổng quan
+## Tổng quan
 
 Hệ thống admin hoàn chỉnh để quản lý tất cả các hoạt động và sự kiện của Liên Chi Đoàn Khoa CNTT, bao gồm:
 
-- ✅ Quản lý bài viết (tạo thủ công & tích hợp AI)
-- ✅ Quản lý danh mục
-- ✅ Quản lý thành tích nổi bật
-- ✅ Quản lý thành viên
-- ✅ Quản lý liên hệ
+- Quản lý bài viết (tạo thủ công & tích hợp AI)
+- Quản lý danh mục
+- Quản lý thành tích nổi bật
+- Quản lý thành viên
+- Quản lý liên hệ
 
-## 📁 Cấu trúc thư mục
+## Cấu trúc thư mục
 
 ```
 src/screens/Admin/
@@ -29,7 +29,7 @@ src/screens/Admin/
 └── index.js                     # Export tất cả components
 ```
 
-## 🌐 Routes
+## Routes
 
 ### Admin Routes (không có Header/Footer)
 - `/admin` - Dashboard tổng quan
@@ -45,7 +45,7 @@ src/screens/Admin/
 - `/event/:eventName` - Chi tiết sự kiện thường niên
 - `/event/:eventName/post/:postId` - Chi tiết bài viết
 
-## 📋 Chức năng chi tiết
+## Chức năng chi tiết
 
 ### 1. Dashboard (Trang tổng quan)
 - **Thống kê nhanh**: Số lượng bài viết, bài chờ duyệt, thành viên, liên hệ mới
@@ -55,11 +55,11 @@ src/screens/Admin/
 
 ### 2. Quản lý bài viết
 #### Tính năng chính:
-- ✅ Xem danh sách tất cả bài viết với phân trang
-- ✅ Tabs lọc: Tất cả / Chờ duyệt / Đã duyệt
-- ✅ Tìm kiếm theo tiêu đề
-- ✅ Lọc theo danh mục
-- ✅ Đánh dấu bài viết nổi bật
+- Xem danh sách tất cả bài viết với phân trang
+- Tabs lọc: Tất cả / Chờ duyệt / Đã duyệt
+- Tìm kiếm theo tiêu đề
+- Lọc theo danh mục
+- Đánh dấu bài viết nổi bật
 
 #### Tạo bài viết:
 - **Thủ công**: Nhập thông tin bằng tay
@@ -87,18 +87,18 @@ src/screens/Admin/
 5. Thành tích nổi bật
 
 ### 3. Quản lý danh mục
-- ✅ Xem tất cả danh mục dạng grid cards
-- ✅ Mỗi card hiển thị: Tên, slug, số bài viết, mô tả
-- ✅ Thêm danh mục mới
-- ✅ Chỉnh sửa danh mục
-- ✅ Xóa danh mục
+- Xem tất cả danh mục dạng grid cards
+- Mỗi card hiển thị: Tên, slug, số bài viết, mô tả
+- Thêm danh mục mới
+- Chỉnh sửa danh mục
+- Xóa danh mục
 
 ### 4. Quản lý thành tích nổi bật
-- ✅ Hiển thị danh sách thành tích với icon huy chương
-- ✅ Thông tin: Tiêu đề, sinh viên, loại thành tích, năm, mô tả
-- ✅ Thêm thành tích mới
-- ✅ Upload ảnh minh chứng (multiple files)
-- ✅ Chỉnh sửa và xóa thành tích
+- Hiển thị danh sách thành tích với icon huy chương
+- Thông tin: Tiêu đề, sinh viên, loại thành tích, năm, mô tả
+- Thêm thành tích mới
+- Upload ảnh minh chứng (multiple files)
+- Chỉnh sửa và xóa thành tích
 
 **Loại thành tích:**
 - Sinh viên 5 tốt
@@ -108,11 +108,11 @@ src/screens/Admin/
 - Khác
 
 ### 5. Quản lý thành viên
-- ✅ Hiển thị dạng grid cards với avatar
-- ✅ Thông tin: Họ tên, email, SĐT, chức vụ, khoa/phòng
-- ✅ Thêm thành viên mới
-- ✅ Xem chi tiết thành viên
-- ✅ Chỉnh sửa và xóa
+- Hiển thị dạng grid cards với avatar
+- Thông tin: Họ tên, email, SĐT, chức vụ, khoa/phòng
+- Thêm thành viên mới
+- Xem chi tiết thành viên
+- Chỉnh sửa và xóa
 
 **Chức vụ:**
 - Bí thư
@@ -121,12 +121,12 @@ src/screens/Admin/
 - Thành viên
 
 ### 6. Quản lý liên hệ
-- ✅ Hiển thị danh sách liên hệ
-- ✅ Phân biệt đã đọc/chưa đọc (highlight màu)
-- ✅ Status: Mới / Đã trả lời
-- ✅ Xem chi tiết liên hệ
-- ✅ Trả lời liên hệ qua email
-- ✅ Xóa liên hệ
+- Hiển thị danh sách liên hệ
+- Phân biệt đã đọc/chưa đọc (highlight màu)
+- Status: Mới / Đã trả lời
+- Xem chi tiết liên hệ
+- Trả lời liên hệ qua email
+- Xóa liên hệ
 
 **Thông tin liên hệ:**
 - Người gửi (tên, email)
@@ -135,7 +135,7 @@ src/screens/Admin/
 - Ngày gửi
 - Trạng thái
 
-## 🎨 Design System
+## Design System
 
 ### Colors
 - **Primary**: `#667eea` (gradient với `#764ba2`)
@@ -178,7 +178,7 @@ Tất cả trang admin đều responsive:
 - **Tablet**: Sidebar collapsed, grid adapts
 - **Mobile**: Sidebar icon-only, single column grids
 
-## 🚀 Cách sử dụng
+## Cách sử dụng
 
 ### Truy cập admin:
 1. Mở trình duyệt và truy cập: `http://localhost:5173/admin`
@@ -201,7 +201,7 @@ Tất cả trang admin đều responsive:
 2. Click "Trả lời" trên tin nhắn cần trả lời
 3. Nhập nội dung và gửi
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **React 19.2.4**
 - **React Router DOM 7.12.0**

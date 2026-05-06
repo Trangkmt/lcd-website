@@ -242,7 +242,7 @@ exports.updatePost = withErrorHandling(async (req, res) => {
         request.input('category_id', sql.Int, null);
         categoryUpdate = 'category_id = @category_id,';
     } else {
-        categoryUpdate = ''; // preserve existing category_id
+        categoryUpdate = ''; 
     }
 
     const result = await request.query(`

@@ -77,7 +77,7 @@ const App = () => {
   );
 };
 
-// Mount the app to the DOM
+// Gắn ứng dụng vào DOM
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <App />

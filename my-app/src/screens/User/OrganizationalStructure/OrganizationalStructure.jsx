@@ -96,7 +96,7 @@ function toArray(value) {
                 const parsed = JSON.parse(raw);
                 return toArray(parsed);
             } catch (error) {
-                // Fall back to delimiter split below.
+                // Phân tách theo dấu phân cách bên dưới.
             }
         }
     }

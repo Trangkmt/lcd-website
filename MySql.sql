@@ -1,15 +1,15 @@
--- ================================================
+
 -- TẠO DATABASE
--- ================================================
+
 CREATE DATABASE IF NOT EXISTS MyAppDB
 CHARACTER SET utf8mb4
 COLLATE utf8mb4_unicode_ci;
 
 USE MyAppDB;
 
--- ================================================
+
 -- XÓA BẢNG CŨ
--- ================================================
+
 SET FOREIGN_KEY_CHECKS = 0;
 
 DROP TABLE IF EXISTS contact_info;
@@ -25,9 +25,9 @@ DROP TABLE IF EXISTS users;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
--- ================================================
+
 -- 1. BẢNG TEAMS (Các Ban)
--- ================================================
+
 CREATE TABLE teams (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -52,9 +52,9 @@ INSERT INTO teams (id, name, name_abbr, description, display_order) VALUES
 (5, 'Ban Đối Ngoại', 'ĐN', 'Kết nối với các tổ chức bên ngoài, tìm kiếm tài trợ', 4),
 (6, 'Ban Công Tác Đoàn và Phát Triển Đảng', 'CTD & PTD', 'Quản lý đoàn viên, phát triển đảng viên, công tác đoàn', 5);
 
--- ================================================
+
 -- 2. BẢNG USERS (Người dùng cốt lõi)
--- ================================================
+
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
@@ -79,9 +79,9 @@ INSERT INTO users (id, username, password, email, full_name, avatar_url, role, m
 (5, 'nth123456', 'nth', 'nth@gmail.com', 'Nguyễn Thanh Hoa', NULL, 'post_author', 'teacher', NULL, NULL, TRUE, '2026-04-25 14:07:06', '2026-04-25 14:07:06');
 
 
--- ================================================
+
 -- 3. BẢNG TRUNG GIAN USER_TEAMS (Phân công người dùng vào ban)
--- ================================================
+
 CREATE TABLE user_teams (
     user_id INT,
     team_id INT,
@@ -100,9 +100,9 @@ INSERT INTO user_teams (user_id, team_id, position) VALUES
 
 
 
--- ================================================
+
 -- CATEGORIES
--- ================================================
+
 CREATE TABLE categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -136,9 +136,9 @@ INSERT INTO categories (id,name,slug,page_type,description,intro_image,parent_id
 (15,'Tập huấn nội bộ','tap-huan-noi-bo','event_annual','Tập huấn kỹ năng cho thành viên liên chi đoàn',NULL,8);
 
 
--- ================================================
+
 -- POST TEMPLATES
--- ================================================
+
 CREATE TABLE post_templates (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -168,9 +168,9 @@ INSERT INTO post_templates (name, category_id, title_template, summary_template,
 );
 
 
--- ================================================
+
 -- POSTS (Với đầy đủ 12 bản ghi)
--- ================================================
+
 CREATE TABLE posts (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -265,9 +265,9 @@ INSERT INTO posts (id, title, slug, summary, content, thumbnail, category_id, au
 );
 
 
--- ================================================
+
 -- DOCUMENTS
--- ================================================
+
 CREATE TABLE documents (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -289,9 +289,9 @@ CREATE TABLE documents (
 
 
 
--- ================================================
+
 -- TIMELINE EVENTS
--- ================================================
+
 CREATE TABLE timeline_events (
     id INT AUTO_INCREMENT PRIMARY KEY,
     category_id INT,
@@ -318,9 +318,9 @@ INSERT INTO timeline_events (category_id,event_type,month,year,event_name,summar
 (12,'annual',12,2026,'Prom','Đêm tiệc chia tay đầy cảm xúc dành cho sinh viên năm cuối trước khi tốt nghiệp.',5,1,1,NOW(),NOW()),
 (14,'annual',7,2026,'Cuộc thi','Các cuộc thi và hackathon dành cho sinh viên.',6,1,1,NOW(),NOW());
 
--- ================================================
+
 -- CONTACT INFO
--- ================================================
+
 CREATE TABLE contact_info (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -356,9 +356,9 @@ INSERT INTO contact_info (name,email,phone,subject,message) VALUES
 ('Hoàng Văn K','k@gmail.com','0900000010','Khác','Liên hệ khác');
 
 
--- ================================================
+
 -- INDEXES
--- ================================================
+
 CREATE INDEX idx_posts_category ON posts(category_id);
 CREATE INDEX idx_posts_author ON posts(author_id);
 CREATE INDEX idx_posts_published ON posts(is_published, published_at);

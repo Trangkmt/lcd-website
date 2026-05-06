@@ -1,13 +1,11 @@
 /**
- * Extracts the public_id from a Cloudinary URL.
- * Cloudinary URLs typically look like: 
- * https://res.cloudinary.com/cloud_name/image/upload/v12345678/folder/image_name.jpg
- * The public_id would be "folder/image_name"
+ * Trích xuất public_id từ URL Cloudinary.
+ * public_id sẽ là "folder/image_name"
  */
 export function getCloudinaryPublicId(url) {
     if (!url || typeof url !== 'string') return null;
 
-    // Check if it's a Cloudinary URL
+    // Kiểm tra xem đó có phải là URL Cloudinary không
     if (!url.includes('res.cloudinary.com')) return null;
 
     try {
@@ -15,17 +13,17 @@ export function getCloudinaryPublicId(url) {
         const uploadIndex = parts.indexOf('upload');
         if (uploadIndex === -1) return null;
 
-        // The publicId starts after version (v12345678) or right after 'upload' if no version
+        // public_id bắt đầu sau version (v12345678) hoặc ngay sau 'upload' nếu không có version
         let publicIdParts = parts.slice(uploadIndex + 1);
         
-        // If the first part starts with 'v' and is followed by digits, it's the version part
+        // Nếu phần đầu tiên bắt đầu bằng 'v' và theo sau là các chữ số, đó là version
         if (publicIdParts[0] && /^v\d+$/.test(publicIdParts[0])) {
             publicIdParts = publicIdParts.slice(1);
         }
 
         const publicIdWithExtension = publicIdParts.join('/');
         
-        // Remove extension
+        // Loại bỏ extension
         const lastDotIndex = publicIdWithExtension.lastIndexOf('.');
         if (lastDotIndex === -1) return publicIdWithExtension;
         

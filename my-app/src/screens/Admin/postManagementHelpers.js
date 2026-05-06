@@ -52,7 +52,7 @@ export function buildPostSavePayload({ form, currentUser, editingPost, defaultCa
         category_id: form.category_id || defaultCategoryId || null,
     };
 
-    // Fix author_id to current user when creating
+    // Gán author_id cho người dùng hiện tại khi tạo mới
     if (!editingPost) {
         payload.author_id = currentUser?.id || payload.author_id;
     }
@@ -97,7 +97,7 @@ export async function deletePostWithGuard({
 
     await postsAPI.delete(id);
 
-    // Delete thumbnail from Cloudinary if it exists
+    // Xóa thumbnail khỏi Cloudinary nếu có
     const thumbnailPublicId = getCloudinaryPublicId(targetPost?.thumbnail);
     if (thumbnailPublicId) {
         try {
