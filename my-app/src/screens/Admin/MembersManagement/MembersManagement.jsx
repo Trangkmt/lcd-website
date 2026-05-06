@@ -1134,8 +1134,8 @@ const team_id = matchedTeam ? matchedTeam.id : null;
                                     disabled={saving}
                                 />
                                 {form.avatar_url && (
-                                    <div className="member-image-preview-wrap" style={{ marginTop: '10px' }}>
-                                        <img src={form.avatar_url} alt="Ảnh thành viên" className="member-image-preview" style={{ width: '100px', height: '100px', borderRadius: '50%', objectFit: 'cover' }} />
+                                    <div className="member-image-preview-wrap">
+                                        <img src={form.avatar_url} alt="Ảnh thành viên" className="member-image-preview" />
                                     </div>
                                 )}
 

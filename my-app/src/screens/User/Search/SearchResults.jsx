@@ -171,6 +171,8 @@ export default function SearchResults() {
                                             to={getAnnualEventRoute(item)}
                                             image={item.thumbnail}
                                             category={item.category_name || ''}
+                                            categorySlug={item.category_slug || ''}
+                                            pageType="event_annual"
                                             date={item.published_at || item.created_at}
                                             title={item.title || ''}
                                             summary={item.summary || ''}
@@ -193,6 +195,8 @@ export default function SearchResults() {
                                             to={`/event/non-annual/${item.id}`}
                                             image={item.thumbnail}
                                             category={item.category_name || ''}
+                                            categorySlug={item.category_slug || ''}
+                                            pageType="event_non_annual"
                                             date={item.published_at || item.created_at}
                                             title={item.title || ''}
                                             summary={item.summary || ''}
@@ -215,6 +219,8 @@ export default function SearchResults() {
                                             to={`/news/${item.id}`}
                                             image={item.thumbnail}
                                             category={item.category_name || ''}
+                                            categorySlug={item.category_slug || ''}
+                                            pageType="news"
                                             date={item.published_at || item.created_at}
                                             title={item.title || ''}
                                             summary={item.summary || ''}
@@ -237,6 +243,8 @@ export default function SearchResults() {
                                             to={`/achievement/${item.id}`}
                                             image={item.thumbnail}
                                             category={item.category_name || ''}
+                                            categorySlug={item.category_slug || ''}
+                                            pageType="achievement"
                                             date={item.published_at || item.created_at}
                                             title={item.title || ''}
                                             summary={item.summary || ''}

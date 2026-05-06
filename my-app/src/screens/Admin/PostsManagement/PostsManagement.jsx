@@ -73,6 +73,18 @@ function normalizeDocText(value) {
     return String(value || '').replace(/\s+/g, ' ').trim();
 }
 
+function getPublicPostUrl(post) {
+    if (!post || !post.is_published || !post.id) return null;
+    const type = post.page_type || 'news';
+    if (type === 'news') return `/news/${post.id}`;
+    if (type === 'achievement') return `/achievement/${post.id}`;
+    if (type === 'event_annual' || type === 'event_non_annual' || type === 'event') {
+        // Sử dụng đường dẫn sự kiện với tham số ID
+        return `/event/non-annual/${post.id}`;
+    }
+    return `/news/${post.id}`;
+}
+
 function isWholeParagraphStyled(paragraphEl, allowedTags) {
     if (!paragraphEl) return false;
     const html = String(paragraphEl.innerHTML || '').trim();
@@ -248,6 +260,16 @@ export default function PostsManagement() {
             return { ...prev, page_type: initialPageType };
         });
     }, [initialPageType]);
+
+    // Tự động reset category_id khi page_type thay đổi nếu danh mục hiện tại không thuộc loại đó
+    useEffect(() => {
+        if (apiFilters.page_type && apiFilters.category_id) {
+            const selectedCat = categories.find(c => String(c.id) === String(apiFilters.category_id));
+            if (selectedCat && selectedCat.page_type !== apiFilters.page_type) {
+                setApiFilter('category_id', '');
+            }
+        }
+    }, [apiFilters.page_type, categories]);
 
     useEffect(() => {
         if (postsMode !== 'create' || postsEditorMode === 'edit') {
@@ -937,7 +959,9 @@ export default function PostsManagement() {
                         </select>
                         <select className="filter-select" value={apiFilters.category_id} onChange={e => setApiFilter('category_id', e.target.value)}>
                             <option value="">Tất cả danh mục</option>
-                            {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
+                            {categories
+                                .filter(cat => !apiFilters.page_type || cat.page_type === apiFilters.page_type)
+                                .map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
                         </select>
                         <select className="filter-select" value={apiFilters.is_featured} onChange={e => setApiFilter('is_featured', e.target.value)}>
                             <option value="">Tất cả bài viết</option>
@@ -986,7 +1010,18 @@ export default function PostsManagement() {
                                         <tr key={post.id}>
                                             <td>
                                                 <div className="post-title-cell">
-                                                    {post.title}
+                                                    {post.is_published ? (
+                                                        <a 
+                                                            href={getPublicPostUrl(post)} 
+                                                            target="_blank" 
+                                                            rel="noopener noreferrer"
+                                                            className="post-title-link"
+                                                        >
+                                                            {post.title}
+                                                        </a>
+                                                    ) : (
+                                                        <span>{post.title}</span>
+                                                    )}
                                                     {post.is_featured ? (
                                                         <span className="featured-badge">
                                                             <span className="featured-badge-icon" aria-hidden="true"><StarIcon /></span>
@@ -1074,6 +1109,15 @@ export default function PostsManagement() {
 
                     <form className="create-form" onSubmit={handleSave}>
                         <div className="editor-meta-grid">
+                            {form.thumbnail && (
+                                <div className="form-group full-row thumbnail-upload-section">
+                                    <label className="form-label">Xem trước ảnh bìa (Tỉ lệ 16:9)</label>
+                                    <div className="thumbnail-preview-canvas">
+                                        <img src={form.thumbnail} alt="Xem trước ảnh bìa" />
+                                    </div>
+                                </div>
+                            )}
+
                             <div className="form-group">
                                 <label className="form-label">Danh mục *</label>
                                 <div className="cat-dropdown-wrapper" ref={catDropdownRef}>
@@ -1145,18 +1189,14 @@ export default function PostsManagement() {
                             </div>
 
                             <ImageUploadField 
-                                label="URL ảnh bìa"
+                                label="Ảnh bìa bài viết"
                                 value={form.thumbnail}
                                 onChange={handleThumbnailChange}
                                 folder={(form.category_id && categories.find(c => String(c.id) === String(form.category_id))?.slug) || 'lcd/posts'}
-                                placeholder="https://..."
+                                placeholder="Nhập URL ảnh hoặc tải lên..."
                                 disabled={saving}
                             />
-                            {form.thumbnail && (
-                                <div className="thumbnail-preview-wrap" style={{ marginTop: '10px' }}>
-                                    <img src={form.thumbnail} alt="Xem trước ảnh bìa" style={{ maxWidth: '200px', borderRadius: '8px' }} />
-                                </div>
-                            )}
+
 
                             <div className="form-group">
                                 <label className="form-label">Tiêu đề *</label>

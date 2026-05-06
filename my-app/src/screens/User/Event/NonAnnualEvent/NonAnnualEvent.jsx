@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { postsAPI, categoriesAPI } from '../../../../services/api';
 import { SearchBar, PostCard, HeroSection } from '../../../../components';
 import { SettingsIcon } from '../../../../SvgIcons';
@@ -20,6 +20,8 @@ const NonAnnualEvent = () => {
     const [filterOpen, setFilterOpen] = useState(false);
     const [heroIndex, setHeroIndex] = useState(0);
 
+    const location = useLocation();
+    
     useEffect(() => {
         Promise.all([
             postsAPI.getAll({ page_type: 'event_non_annual', limit: 100 }),
@@ -28,15 +30,27 @@ const NonAnnualEvent = () => {
             .then(([postsData, catsData]) => {
                 setPosts(Array.isArray(postsData) ? postsData : []);
                 setCategories(Array.isArray(catsData) ? catsData : []);
+                
+                // Kiểm tra tham số category từ URL
+                const queryParams = new URLSearchParams(location.search);
+                const categoryParam = queryParams.get('category');
+                if (categoryParam) {
+                    setSelectedCategory(categoryParam);
+                }
             })
             .catch(() => { })
             .finally(() => setLoading(false));
-    }, []);
+    }, [location.search]);
 
     const categoryNames = ['Tất cả', ...categories.map(c => c.name).filter(Boolean)];
 
     const filtered = posts
-        .filter(item => selectedCategory === 'Tất cả' || item.category_name === selectedCategory)
+        .filter(item => {
+            if (selectedCategory === 'Tất cả') return true;
+            const normSelected = String(selectedCategory || '').trim().toLowerCase();
+            const normItemCat = String(item.category_name || '').trim().toLowerCase();
+            return normSelected === normItemCat;
+        })
         .filter(item => !searchQuery || (item.title || '').toLowerCase().includes(searchQuery.toLowerCase()));
 
     const heroSlides = [...posts]
@@ -131,6 +145,7 @@ const NonAnnualEvent = () => {
                             to={`/event/non-annual/${item.id}`}
                             image={item.thumbnail || ''}
                             category={item.category_name || ''}
+                            pageType="event_non_annual"
                             date={item.published_at || item.created_at}
                             title={item.title || ''}
                             summary={item.summary || ''}

@@ -26,7 +26,6 @@ const Header = () => {
     ];
 
     const handleMenuItemClick = useCallback((item) => {
-        console.log(`Navigating to: ${item.path}`);
     }, []);
 
     const handleSearch = useCallback(() => {

@@ -13,6 +13,8 @@ const PostCard = ({
     description,
     summary,
     to,
+    pageType = '',
+    categorySlug = '',
     variant = '', // 'news', 'activity', 'achievement'
     className = '',
     style,
@@ -23,6 +25,31 @@ const PostCard = ({
     // Tự động xác định variant từ danh mục nếu không được cung cấp
     const effectiveVariant = variant || (category ? category.toLowerCase() : '');
     
+    const getCategoryLink = (cat, type, slug) => {
+        if (!cat) return '/';
+        const encodedCat = encodeURIComponent(cat);
+        const t = type || '';
+        const s = slug || '';
+        let url = '/';
+        
+        // Ưu tiên tuyệt đối theo pageType
+        if (t === 'news') url = `/news?category=${encodedCat}`;
+        else if (t === 'achievement') url = `/achievement?category=${encodedCat}`;
+        else if (t === 'event_non_annual' || t === 'event') url = `/event/non-annual?category=${encodedCat}`;
+        else if (t === 'event_annual') {
+            return s ? `/event/${s}` : `/event`;
+        }
+        else {
+            // Fallback dựa trên text nếu thiếu type (Chỉ dùng khi không có pageType)
+            const c = cat.toLowerCase();
+            if (c.includes('tin tức')) url = `/news?category=${encodedCat}`;
+            else if (c.includes('sự kiện') || c.includes('hoạt động')) url = `/event/non-annual?category=${encodedCat}`;
+            else if (c.includes('thành tích')) url = `/achievement?category=${encodedCat}`;
+        }
+        
+        return url;
+    };
+
     const cardClassName = [
         'post-card',
         effectiveVariant ? `post-card--${effectiveVariant}` : '',
@@ -31,9 +58,13 @@ const PostCard = ({
         className
     ].filter(Boolean).join(' ');
 
-    const cardContent = (
-        <>
+    return (
+        <div className={cardClassName} style={style}>
+            {/* Link phủ toàn bộ Card */}
+            {to && <Link to={to} className="post-card__cover-link" aria-label={displayTitle} />}
+            
             <div className="post-card__background" />
+            
             <div className="post-card__image-container">
                 <LazyImage
                     className="post-card__image"
@@ -41,34 +72,25 @@ const PostCard = ({
                     alt={displayTitle || 'Post'}
                 />
             </div>
+
             <div className='post-card__body'>
                 <div className="post-card__meta">
-                    <div className="post-card__badge">
+                    {/* Badge Link được đặt z-index cao để click được */}
+                    <Link 
+                        to={getCategoryLink(category, pageType, categorySlug)} 
+                        className="post-card__badge"
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         <b className="post-card__badge-text">{category || ''}</b>
-                    </div>
+                    </Link>
                     <div className="post-card__date">{formatVietnameseDate(date) || date || ''}</div>
                 </div>
+
                 <b className="post-card__title">{displayTitle}</b>
                 <div className="post-card__description">{displayDescription}</div>
             </div>
-
-        </>
-    );
-
-    if (to) {
-        return (
-            <Link to={to} className={cardClassName} style={style || { textDecoration: 'none', color: 'inherit' }}>
-                {cardContent}
-            </Link>
-        );
-    }
-
-    return (
-        <div className={cardClassName} style={style}>
-            {cardContent}
         </div>
     );
 };
 
 export default PostCard;
-

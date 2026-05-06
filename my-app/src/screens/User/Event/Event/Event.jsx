@@ -112,6 +112,7 @@ const Event = () => {
                                     title={event.title}
                                     description={event.summary}
                                     image={event.thumbnail}
+                                    variant="horizontal"
                                     date={event.published_at || event.created_at}
                                     category={event.category_name}
                                     to={toPath}

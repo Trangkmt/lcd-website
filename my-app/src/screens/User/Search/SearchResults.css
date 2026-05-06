@@ -95,20 +95,9 @@
 
 .search-results-grid {
     display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.5rem;
     align-items: stretch;
-}
-
-.search-results-grid--news {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-.search-results-grid--achievement {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-.search-results-grid--event {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .search-results-grid > * {
@@ -116,19 +105,8 @@
 }
 
 @media (max-width: 1200px) {
-    .search-results-grid--news,
-    .search-results-grid--achievement,
-    .search-results-grid--event {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-}
-
-@media (max-width: 56.25rem) {
-    .search-results-grid--news,
-    .search-results-grid--achievement,
-    .search-results-grid--event {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 1.25rem;
+    .search-results-grid {
+        grid-template-columns: 1fr;
     }
 }
 
@@ -161,12 +139,6 @@
 }
 
 @media (max-width: 640px) {
-    .search-results-grid--news,
-    .search-results-grid--achievement,
-    .search-results-grid--event {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
 
     .search-results-section + .search-results-section {
         margin-top: 1.75rem;

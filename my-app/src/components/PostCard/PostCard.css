@@ -13,6 +13,15 @@
     border-radius: 0;
 }
 
+.post-card__cover-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+}
+
 .post-card--horizontal {
     flex-direction: row;
     max-width: none;
@@ -20,6 +29,11 @@
     gap: 1.5rem;
     padding: 0;
     align-items: stretch;
+}
+
+.post-card--horizontal .post-card__body {
+    padding: 0;
+    justify-content: flex-start !important;
 }
 
 .post-card:hover {
@@ -71,7 +85,6 @@
     display: flex;
     flex-direction: column;
     gap: 0.625rem;
-    padding: 0.75rem 0.875rem;
     flex: 1;
 }
 
@@ -87,6 +100,8 @@
 }
 
 .post-card__badge {
+    position: relative;
+    z-index: 2;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -94,6 +109,12 @@
     padding: 0.25rem 0;
     background-color: transparent;
     color: var(--color-primary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.post-card__badge:hover {
+    color: var(--color-secondary);
 }
 
 .post-card--news .post-card__badge {
@@ -125,10 +146,17 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
     transition: color 0.25s ease;
+    text-transform: uppercase;
 }
 
 .post-card:hover .post-card__title {
     color: var(--color-primary);
+}
+
+.post-card__title-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
 }
 
 .post-card__description {
@@ -171,7 +199,7 @@
 .post-card--sidebar .post-card__image-container {
     width: 80px !important;
     height: 60px !important;
-    border-radius: 4px;
+    border-radius: 0;
 }
 
 .post-card--sidebar .post-card__body {
@@ -196,35 +224,35 @@
 /* Responsive */
 @media (max-width: 1200px) {
     .post-card {
-        flex-direction: row;
+        flex-direction: row !important;
         max-width: none !important;
         align-items: stretch;
         min-height: unset !important;
         padding: 0 !important;
         gap: 0 !important;
         border-radius: 0;
-        border: none !important; /* Remove border as requested */
+        border: none !important;
         background: var(--color-white);
-        box-shadow: none !important; /* Remove shadow to keep it clean */
+        box-shadow: none !important;
+
+        .post-card__image-container {
+            width: 35% !important;
+            min-width: 140px !important;
+            max-width: 240px !important;
+            height: auto !important;
+            aspect-ratio: 4 / 3 !important;
+            flex-shrink: 0;
+        }
+
+        .post-card__body {
+            padding: 0 20px !important;
+            gap: 8px;
+            justify-content: flex-start !important;
+        }
     }
 
     .post-card--activity {
-        border-left: none !important; /* Remove color border as requested */
-    }
-
-    .post-card__image-container {
-        width: 35% !important;
-        min-width: 140px !important;
-        max-width: 240px !important;
-        height: auto !important;
-        aspect-ratio: 4 / 3 !important;
-        flex-shrink: 0;
-    }
-
-    .post-card__body {
-        padding: 12px 16px !important;
-        gap: 8px;
-        justify-content: center;
+        border-left: none !important;
     }
 
     .post-card__title {
@@ -242,27 +270,31 @@
     }
 
     .post-card__meta {
-        margin-top: auto;
+        margin-top: 0;
     }
 }
 
 @media (max-width: 480px) {
-    .post-card__image-container {
-        width: 120px !important; /* Slightly larger for better visibility */
-        min-width: 120px !important;
-        max-width: 120px !important;
+    .post-card {
+        flex-direction: row !important;
+
+        .post-card__image-container {
+            width: 120px !important;
+            min-width: 120px !important;
+            max-width: 120px !important;
+        }
+
+        .post-card__body {
+            padding: 0 16px !important;
+        }
+
+        .post-card__title {
+            font-size: 0.875rem !important;
+        }
     }
 
     .post-card__description {
         display: none !important;
-    }
-
-    .post-card__body {
-        padding: 8px 12px !important;
-    }
-
-    .post-card__title {
-        font-size: 0.875rem !important;
     }
 }
 

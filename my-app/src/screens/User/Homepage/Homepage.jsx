@@ -179,22 +179,40 @@ const Homepage = () => {
           <b className="btn-view-more__text">Xem thêm</b>
         </Link>
         {eventPosts.map((event, index) => (
-          <Link
+          <div
             key={event.id}
-            to={getSlideRoute(event)}
             className={`event-post event-post--${index + 1}${hoveredEventIndex === index ? ' event-post--hovered' : ''}`}
-            style={{ textDecoration: 'none', color: 'inherit' }}
+            style={{ position: 'relative' }}
             onMouseEnter={() => setHoveredEventIndex(index)}
             onMouseLeave={() => setHoveredEventIndex(null)}
           >
-            <div className="event-post__date">
+            {/* Link phủ toàn bộ khối sự kiện */}
+            <Link 
+              to={getSlideRoute(event)} 
+              className="event-post__cover-link"
+              style={{ position: 'absolute', inset: 0, zIndex: 1 }}
+            />
+
+            <div className="event-post__date" style={{ position: 'relative', zIndex: 2 }}>
               {formatVietnameseDate(event.start_date || event.published_at || event.created_at)}
             </div>
-            <div className="home-category-badge home-category-badge--event">
+            
+            {/* Badge Link dẫn đến trang lọc phù hợp */}
+            <Link 
+              to={event.page_type === 'event_annual' 
+                ? `/event/${event.category_slug}` 
+                : `/event/non-annual?category=${encodeURIComponent(event.category_name || '')}`}
+              className="home-category-badge home-category-badge--event"
+              style={{ position: 'relative', zIndex: 3, textDecoration: 'none' }}
+              onClick={(e) => e.stopPropagation()}
+            >
               <b className="home-category-badge__text">{event.category_name || ''}</b>
-            </div>
-            <b className="event-post__title">{event.title}</b>
-          </Link>
+            </Link>
+            
+            <b className="event-post__title" style={{ position: 'relative', zIndex: 2 }}>
+                {event.title}
+            </b>
+          </div>
         ))}
         <div className="event-section__subtitle">{displayedEvent?.description || featuredEvent?.description || ''}</div>
       </div>
@@ -215,6 +233,8 @@ const Homepage = () => {
             className={`post-card post-card--${index + 1}`}
             image={card.thumbnail || ''}
             category={card.category_name || ''}
+            categorySlug={card.category_slug || ''}
+            pageType="news"
             date={card.published_at || card.created_at}
             title={card.title || ''}
             summary={card.summary || ''}
@@ -239,6 +259,8 @@ const Homepage = () => {
             to={`/achievement/${card.id}`}
             image={card.thumbnail || ''}
             category={card.category_name || ''}
+            categorySlug={card.category_slug || ''}
+            pageType="achievement"
             date={card.published_at || card.created_at}
             title={card.title || ''}
             summary={card.summary || ''}

@@ -275,8 +275,8 @@ export default function CategoriesManagement() {
                                     disabled={saving}
                                 />
                                 {form.intro_image && (
-                                    <div className="category-image-preview-wrap" style={{ marginTop: '10px' }}>
-                                        <img src={form.intro_image} alt="Ảnh giới thiệu" style={{ maxWidth: '100%', maxHeight: '150px', borderRadius: '8px', objectFit: 'cover' }} />
+                                    <div className="category-image-preview-wrap">
+                                        <img src={form.intro_image} alt="Ảnh giới thiệu" />
                                     </div>
                                 )}
                                 <div className="form-actions">
