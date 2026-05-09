@@ -32,7 +32,7 @@ table.posts-table th,
 .members-table th,
 .posts-table table th {
     padding: 14px 12px;
-    text-align: left;
+    text-align: center;
     font-size: 0.8125rem;
     font-weight: 700;
     color: var(--color-brand-indigo-dark);
@@ -50,6 +50,7 @@ table.posts-table td,
     font-size: 0.875rem;
     color: var(--color-text-primary);
     vertical-align: middle;
+    text-align: center;
 }
 
 table.posts-table tbody tr:hover,

@@ -1008,7 +1008,7 @@ export default function PostsManagement() {
                                     )}
                                     {filteredPosts.map(post => (
                                         <tr key={post.id}>
-                                            <td>
+                                            <td style={{ textAlign: 'left' }}>
                                                 <div className="post-title-cell">
                                                     {post.is_published ? (
                                                         <a 
