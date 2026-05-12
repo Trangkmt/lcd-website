@@ -51,12 +51,16 @@ async function loadUserById(pool, userId) {
     return mapAuthUser(user);
 }
 
-// POST /api/auth/login
+/**
+ * XỬ LÝ ĐĂNG NHẬP (POST /api/auth/login)
+ * Luồng: Nhận thông tin -> Kiểm tra DB -> Tạo Token -> Trả về Client
+ */
 exports.login = async (req, res) => {
     try {
         const { username, email, password } = req.body;
         const identity = (username || email || '').trim();
 
+        // 1. Kiểm tra đầu vào
         if (!identity || !password) {
             return res.status(400).json({ error: 'Vui lòng nhập username/email và password' });
         }
@@ -64,6 +68,8 @@ exports.login = async (req, res) => {
         const pool = await getConnection();
         const hasAvatarColumn = await hasUserAvatarColumn(pool);
         const avatarSelect = hasAvatarColumn ? 'avatar_url' : 'NULL AS avatar_url';
+
+        // 2. Truy vấn tìm User khớp với username/email và mật khẩu
         const result = await pool.request()
             .input('identity', sql.NVarChar, identity)
             .input('password', sql.NVarChar, password)
@@ -76,11 +82,14 @@ exports.login = async (req, res) => {
                 LIMIT 1
             `);
 
+        // Nếu không tìm thấy bản ghi nào khớp
         if (result.recordset.length === 0) {
             return res.status(401).json({ error: 'Thông tin đăng nhập không đúng' });
         }
 
         const user = result.recordset[0];
+
+        // 3. Tải danh sách các Ban mà người dùng tham gia
         const teamsResult = await pool.request()
             .input('id', sql.Int, user.id)
             .query(`
@@ -90,13 +99,17 @@ exports.login = async (req, res) => {
                 WHERE ut.user_id = @id
             `);
         user.teams = teamsResult.recordset || [];
+
+        // 4. Kiểm tra tài khoản còn hoạt động không
         if (!user.is_active) {
             return res.status(403).json({ error: 'Tài khoản đã bị ẩn hoặc vô hiệu hóa' });
         }
 
+        // 5. Chuẩn hóa thông tin và tạo Token
         const normalizedUser = mapAuthUser(user);
         const token = buildAuthToken(normalizedUser.id);
 
+        // 6. Trả về kết quả cho Frontend
         res.json({
             message: 'Đăng nhập thành công',
             user: normalizedUser,
@@ -108,10 +121,14 @@ exports.login = async (req, res) => {
     }
 };
 
-// GET /api/auth/me
+/**
+ * LẤY THÔNG TIN TÀI KHOẢN ĐANG ĐĂNG NHẬP (GET /api/auth/me)
+ * Dùng để hiển thị trang cá nhân hoặc kiểm tra trạng thái login khi reload trang.
+ */
 exports.getMyProfile = async (req, res) => {
     try {
         const pool = await getConnection();
+        // req.authUser được nạp từ middleware verifyAuthToken
         const user = await loadUserById(pool, req.authUser?.id);
 
         if (!user) {
@@ -166,11 +183,15 @@ exports.updateMyProfile = async (req, res) => {
     }
 };
 
-// PUT /api/auth/change-password
+/**
+ * ĐỔI MẬT KHẨU (PUT /api/auth/change-password)
+ * Kiểm tra mật khẩu cũ -> Cập nhật mật khẩu mới
+ */
 exports.changePassword = async (req, res) => {
     try {
         const { password, newPassword } = req.body || {};
 
+        // 1. Kiểm tra đầu vào
         if (!password || !newPassword) {
             return res.status(400).json({ error: 'Vui lòng nhập mật khẩu hiện tại và mật khẩu mới' });
         }
@@ -185,6 +206,7 @@ exports.changePassword = async (req, res) => {
             .input('password', sql.NVarChar, password)
             .input('newPassword', sql.NVarChar, newPassword);
 
+        // 2. Chạy câu lệnh UPDATE (Chỉ thành công nếu đúng id và đúng password cũ)
         const result = await request.query(`
             UPDATE users
             SET password = @newPassword,
@@ -194,6 +216,7 @@ exports.changePassword = async (req, res) => {
               AND password = @password
         `);
 
+        // Nếu rowsAffected = 0 hoặc recordset rỗng tức là mật khẩu cũ sai
         if (!result.recordset?.length) {
             return res.status(400).json({ error: 'Mật khẩu hiện tại không đúng' });
         }

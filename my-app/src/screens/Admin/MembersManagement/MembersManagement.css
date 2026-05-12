@@ -215,10 +215,7 @@
     font-weight: 600;
 }
 
-.row-actions {
-    display: flex;
-    gap: 8px;
-}
+
 
 .member-department-cell {
     white-space: pre-line;

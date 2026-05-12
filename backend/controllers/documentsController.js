@@ -9,9 +9,13 @@ const {
     hasAffectedRows
 } = require('./controllerUtils');
 
-// GET /api/documents - Lấy danh sách tài liệu
+/**
+ * LẤY DANH SÁCH TÀI LIỆU (GET /api/documents)
+ * Tác dụng: Hiển thị danh sách file, tài liệu có trong hệ thống.
+ */
 exports.getAllDocuments = withErrorHandling(async (req, res) => {
     const { category_id, is_public } = req.query;
+    // Sử dụng hàm tiện ích để lấy limit và offset cho phân trang
     const pagination = parsePagination(req.query);
     const pool = await getConnection();
 
@@ -30,17 +34,21 @@ exports.getAllDocuments = withErrorHandling(async (req, res) => {
 
     const request = pool.request();
 
+    // Lọc theo danh mục tài liệu
     if (category_id) {
         query += ' AND d.category_id = @category_id';
         request.input('category_id', sql.Int, category_id);
     }
 
+    // Lọc tài liệu công khai hoặc nội bộ
     if (is_public !== undefined) {
         query += ' AND d.is_public = @is_public';
         request.input('is_public', sql.Bit, is_public === 'true' ? 1 : 0);
     }
 
     query += ' ORDER BY d.created_at DESC';
+    
+    // Áp dụng logic phân trang SQL (OFFSET ... FETCH NEXT ...)
     query = applyPagination({ request, sql, query, pagination });
 
     const result = await request.query(query);
@@ -130,7 +138,10 @@ exports.updateDocument = withErrorHandling(async (req, res) => {
     res.json(document);
 });
 
-// POST /api/documents/:id/download - Tăng download count
+/**
+ * TĂNG LƯỢT TẢI TÀI LIỆU (POST /api/documents/:id/download)
+ * Tác dụng: Mỗi lần người dùng nhấn tải file, hệ thống sẽ tự động +1 vào lượt tải.
+ */
 exports.incrementDownload = withErrorHandling(async (req, res) => {
     const pool = await getConnection();
     const result = await pool.request()

@@ -1,5 +1,7 @@
-
--- TẠO DATABASE
+-- ======================================================
+-- TẠO CƠ SỞ DỮ LIỆU (DATABASE)
+-- Hệ thống sử dụng bảng mã utf8mb4 để hỗ trợ tiếng Việt đầy đủ
+-- ======================================================
 
 CREATE DATABASE IF NOT EXISTS MyAppDB
 CHARACTER SET utf8mb4
@@ -26,19 +28,19 @@ DROP TABLE IF EXISTS users;
 SET FOREIGN_KEY_CHECKS = 1;
 
 
--- 1. BẢNG TEAMS (Các Ban)
-
+-- 1. BẢNG TEAMS (Quản lý các Ban/Tổ chức)
+-- Tác dụng: Lưu thông tin các ban chức năng như Ban Truyền thông, Ban Sự kiện...
 CREATE TABLE teams (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    name_abbr VARCHAR(50),
+    name_abbr VARCHAR(50),      -- Tên viết tắt (VD: TTKT)
     description TEXT,
     logo VARCHAR(255),
     website VARCHAR(255),
     email VARCHAR(100),
     phone VARCHAR(20),
     address TEXT,
-    parent_id INT,
+    parent_id INT,              -- Hỗ trợ phân cấp ban mẹ - ban con
     display_order INT DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -53,20 +55,20 @@ INSERT INTO teams (id, name, name_abbr, description, display_order) VALUES
 (6, 'Ban Công Tác Đoàn và Phát Triển Đảng', 'CTD & PTD', 'Quản lý đoàn viên, phát triển đảng viên, công tác đoàn', 5);
 
 
--- 2. BẢNG USERS (Người dùng cốt lõi)
-
+-- 2. BẢNG USERS (Quản lý tài khoản người dùng)
+-- Tác dụng: Lưu thông tin đăng nhập, thông tin cá nhân và quyền hạn.
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL, -- Mật khẩu (Hiện đang để Plaintext trong bản thử nghiệm)
     email VARCHAR(100) NOT NULL UNIQUE,
     full_name VARCHAR(100),
     avatar_url VARCHAR(500),
     role ENUM('admin_full', 'utility_only', 'contact_manager', 'post_author') NOT NULL DEFAULT 'post_author',
     member_type ENUM('student', 'teacher') NOT NULL DEFAULT 'student',
-    student_code VARCHAR(30),
-    class_name VARCHAR(50),
-    is_active BOOLEAN DEFAULT TRUE,
+    student_code VARCHAR(30),       -- Mã sinh viên (Dành cho MemberType = student)
+    class_name VARCHAR(50),         -- Tên lớp
+    is_active BOOLEAN DEFAULT TRUE, -- Trạng thái tài khoản (Cho phép hoạt động hay bị khóa)
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -169,20 +171,20 @@ INSERT INTO post_templates (name, category_id, title_template, summary_template,
 
 
 
--- POSTS (Với đầy đủ 12 bản ghi)
-
+-- 5. BẢNG POSTS (Quản lý bài viết/tin tức)
+-- Tác dụng: Lưu nội dung chi tiết các bài viết trên website.
 CREATE TABLE posts (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    slug VARCHAR(255) NOT NULL UNIQUE,
-    summary TEXT,
-    content LONGTEXT,
-    thumbnail VARCHAR(255),
-    category_id INT,
-    author_id INT,
-    view_count INT DEFAULT 0,
-    is_featured BOOLEAN DEFAULT FALSE,
-    is_published BOOLEAN DEFAULT FALSE,
+    title VARCHAR(255) NOT NULL,    -- Tiêu đề bài viết
+    slug VARCHAR(255) NOT NULL UNIQUE, -- Đường dẫn thân thiện (VD: chao-tan-sinh-vien)
+    summary TEXT,                   -- Tóm tắt ngắn
+    content LONGTEXT,               -- Nội dung chi tiết (HTML)
+    thumbnail VARCHAR(255),         -- Ảnh đại diện bài viết
+    category_id INT,                -- Thuộc danh mục nào (Khóa ngoại)
+    author_id INT,                  -- Ai là người viết (Khóa ngoại)
+    view_count INT DEFAULT 0,       -- Lượt xem
+    is_featured BOOLEAN DEFAULT FALSE, -- Có phải bài viết nổi bật không
+    is_published BOOLEAN DEFAULT FALSE, -- Trạng thái xuất bản
     published_at DATETIME,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

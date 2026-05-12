@@ -42,16 +42,24 @@ async function parseResponseBody(res) {
     return res.text().catch(() => null);
 }
 
+/**
+ * HÀM XỬ LÝ PHẢN HỒI TỪ SERVER (handleResponse)
+ * Tác dụng: Kiểm tra mã trạng thái (status code), nếu lỗi thì ném ra Exception, nếu thành công thì trả về dữ liệu.
+ */
 async function handleResponse(res) {
     const payload = await parseResponseBody(res);
 
     if (!res.ok) {
+        // Lấy thông báo lỗi từ server gửi về
         const rawMessage =
             (payload && typeof payload === 'object' && (payload.error || payload.message)) ||
             (typeof payload === 'string' && payload) ||
             res.statusText;
+            
+        // Chuẩn hóa lại thông báo lỗi để hiển thị cho người dùng thân thiện hơn
         const message = normalizeApiErrorMessage(rawMessage);
 
+        // Nếu lỗi 401 (Unauthorized): Xóa token cũ và bắt đăng nhập lại
         if (res.status === 401) {
             localStorage.removeItem(ADMIN_TOKEN_KEY);
             localStorage.removeItem(ADMIN_AUTH_KEY);
@@ -62,23 +70,31 @@ async function handleResponse(res) {
         throw error;
     }
 
-    return payload;
+    return payload; // Thành công: Trả về dữ liệu JSON
 }
 
+/**
+ * HÀM GỌI API CHUNG (apiFetch)
+ * Tác dụng: Tự động đính kèm Token vào Header và xử lý gửi dữ liệu dạng JSON.
+ */
 function apiFetch(url, options = {}) {
     const { body, headers: customHeaders = {}, ...rest } = options;
+    
+    // Lấy Token từ bộ nhớ máy tính (localStorage)
     const token = localStorage.getItem(ADMIN_TOKEN_KEY);
 
     const headers = {
         ...customHeaders,
     };
 
+    // NẾU CÓ TOKEN THÌ GẮN VÀO HEADER ĐỂ SERVER XÁC THỰC
     if (token && !headers.Authorization) {
         headers.Authorization = `Bearer ${token}`;
     }
 
     let requestBody;
 
+    // Tự động xử lý kiểu dữ liệu gửi lên (JSON hoặc Form Data)
     if (body instanceof FormData) {
         requestBody = body;
     } else if (body !== undefined) {
@@ -88,6 +104,7 @@ function apiFetch(url, options = {}) {
         requestBody = typeof body === 'string' ? body : JSON.stringify(body);
     }
 
+    // Gọi hàm fetch của trình duyệt
     return fetch(`${API_BASE}${url}`, {
         ...rest,
         headers,

@@ -7,12 +7,17 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const DB_HOST = process.env.DB_HOST || process.env.DB_SERVER || 'localhost';
 
-// Middleware
+// --- CẤU HÌNH MIDDLEWARE ---
+
+// Cho phép các domain khác truy cập API (CORS)
 app.use(cors());
+
+// Giới hạn kích thước dữ liệu gửi lên là 10mb
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Logging middleware
+// Middleware ghi log các yêu cầu (Request Logging)
+// Mỗi khi có ai gọi API, nó sẽ in ra: Thời gian - Phương thức (GET/POST) - Đường dẫn
 app.use((req, res, next) => {
     console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
     next();
@@ -34,7 +39,10 @@ const sharedFoldersRoutes = require('./routes/sharedFolders');
 const postTemplatesRoutes = require('./routes/postTemplates');
 const timelineRoutes = require('./routes/timeline');
 
-// Health check endpoint
+/**
+ * ENDPOINT KIỂM TRA SỨC KHỎE (Health Check)
+ * Dùng để xem Server và Database có đang kết nối tốt không.
+ */
 app.get('/api/health', async (req, res) => {
     try {
         const pool = await getConnection();
@@ -53,21 +61,22 @@ app.get('/api/health', async (req, res) => {
     }
 });
 
-// API Routes
-app.use('/api/users', usersRoutes);
-app.use('/api/categories', categoriesRoutes);
-app.use('/api/posts', postsRoutes);
-app.use('/api/documents', documentsRoutes);
+// --- ĐĂNG KÝ CÁC ĐƯỜNG DẪN API (Routes) ---
 
-app.use('/api/teams', teamsRoutes);
-app.use('/api/contact', contactRoutes);
-app.use('/api/auth', authRoutes);
-app.use('/api/ai', aiRoutes);
+app.use('/api/users', usersRoutes);       // Quản lý người dùng
+app.use('/api/categories', categoriesRoutes); // Quản lý danh mục bài viết
+app.use('/api/posts', postsRoutes);       // Quản lý bài viết/tin tức
+app.use('/api/documents', documentsRoutes); // Quản lý tài liệu/file
 
-app.use('/api/uploads', uploadsRoutes);
-app.use('/api/shared-folders', sharedFoldersRoutes);
-app.use('/api/post-templates', postTemplatesRoutes);
-app.use('/api/timeline', timelineRoutes);
+app.use('/api/teams', teamsRoutes);       // Quản lý các Ban/Tổ chức
+app.use('/api/contact', contactRoutes);   // Xử lý form liên hệ
+app.use('/api/auth', authRoutes);         // Xử lý đăng nhập/đăng xuất
+app.use('/api/ai', aiRoutes);             // Tích hợp trí tuệ nhân tạo (Gemini)
+
+app.use('/api/uploads', uploadsRoutes);   // Xử lý upload ảnh/file
+app.use('/api/shared-folders', sharedFoldersRoutes); // Thư mục chia sẻ
+app.use('/api/post-templates', postTemplatesRoutes); // Mẫu bài viết có sẵn
+app.use('/api/timeline', timelineRoutes); // Dòng thời gian sự kiện
 
 // Root endpoint
 app.get('/', (req, res) => {
@@ -93,7 +102,9 @@ app.get('/', (req, res) => {
     });
 });
 
-// 404 handler
+/**
+ * XỬ LÝ KHI KHÔNG TÌM THẤY ĐƯỜNG DẪN (404 Not Found)
+ */
 app.use((req, res) => {
     res.status(404).json({
         error: 'Endpoint không tồn tại',
@@ -101,7 +112,10 @@ app.use((req, res) => {
     });
 });
 
-// Error handler
+/**
+ * XỬ LÝ LỖI TẬP TRUNG (Global Error Handler)
+ * Bất kỳ lỗi nào phát sinh trong code mà không được bắt sẽ rơi vào đây.
+ */
 app.use((err, req, res, next) => {
     console.error('Error:', err);
     res.status(500).json({

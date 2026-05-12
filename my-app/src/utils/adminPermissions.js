@@ -71,35 +71,39 @@ export function isContactManager(user) {
     return normalizeRole(user?.role) === ROLE_GROUPS.CONTACT_MANAGER;
 }
 
+/**
+ * KIỂM TRA QUYỀN TRUY CẬP ĐƯỜNG DẪN (canAccessAdminPath)
+ * Đây là hàm quyết định người dùng có được vào một trang Admin cụ thể hay không.
+ * @param {Object} user - Thông tin người dùng hiện tại
+ * @param {string} pathname - Đường dẫn họ muốn vào (VD: /admin/members)
+ */
 export function canAccessAdminPath(user, pathname) {
     if (!user?.id) return false;
+    
+    // 1. ADMIN_FULL: Có quyền tối cao, được vào TẤT CẢ các trang.
     if (isAdminFull(user)) return true;
 
-    if (pathname === '/admin') {
+    // Các trang chung mà ai cũng vào được
+    if (pathname === '/admin' || pathname.startsWith('/admin/account') || pathname.startsWith('/admin/utilities')) {
         return true;
     }
 
-    if (pathname.startsWith('/admin/account')) {
-        return true;
-    }
-
-    if (pathname.startsWith('/admin/utilities')) {
-        return true;
-    }
-
+    // 2. UTILITY_ONLY: Chỉ được vào trang Tiện ích.
     if (isUtilityOnly(user)) {
         return pathname.startsWith('/admin/utilities');
     }
 
+    // 3. CONTACT_MANAGER: Được vào trang quản lý Liên hệ và Tiện ích.
     if (isContactManager(user)) {
         return pathname.startsWith('/admin/contacts') || pathname.startsWith('/admin/utilities');
     }
 
+    // 4. POST_AUTHOR: Chỉ được vào trang quản lý Bài viết.
     if (isPostAuthor(user)) {
         return pathname.startsWith('/admin/posts');
     }
 
-    return false;
+    return false; // Mặc định là không có quyền
 }
 
 export function getDefaultAdminPath(user) {
@@ -110,11 +114,18 @@ export function getDefaultAdminPath(user) {
     return '/admin/login';
 }
 
+/**
+ * KIỂM TRA QUYỀN CHỈNH SỬA BÀI VIẾT (canMutatePost)
+ * Tác dụng: Ngăn người này sửa bài của người kia.
+ */
 export function canMutatePost(user, post) {
+    // Admin Full: Sửa bài của bất kỳ ai cũng được.
     if (isAdminFull(user)) return true;
+    
+    // Tác giả (Post Author): Chỉ được sửa bài DO CHÍNH MÌNH tạo ra.
     if (isPostAuthor(user)) {
-        if (!post) return true;
-        return Number(post.author_id) === Number(user?.id);
+        if (!post) return true; // Đang tạo bài mới thì ok
+        return Number(post.author_id) === Number(user?.id); // So sánh ID tác giả bài viết với ID người dùng hiện tại
     }
     return false;
 }

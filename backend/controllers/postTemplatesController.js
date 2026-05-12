@@ -24,7 +24,10 @@ async function loadTemplateById(pool, id) {
     return getRecordOrNull(result);
 }
 
-// GET /api/post-templates
+/**
+ * LẤY DANH SÁCH MẪU BÀI VIẾT (GET /api/post-templates)
+ * Tác dụng: Lấy các mẫu bài viết để người dùng chọn khi tạo bài viết mới.
+ */
 exports.getAllTemplates = withErrorHandling(async (req, res) => {
     const currentUser = req.authUser;
     if (!currentUser) {
@@ -33,7 +36,6 @@ exports.getAllTemplates = withErrorHandling(async (req, res) => {
 
     const { category_id } = req.query;
     const pool = await getConnection();
-
 
     const request = pool.request();
     let query = `
@@ -49,11 +51,15 @@ exports.getAllTemplates = withErrorHandling(async (req, res) => {
         WHERE t.is_active = 1
     `;
 
+    // 1. Nếu có category_id, chỉ lấy mẫu thuộc category đó hoặc mẫu chung (NULL)
     if (category_id) {
         query += ' AND (t.category_id = @category_id OR t.category_id IS NULL)';
         request.input('category_id', sql.Int, category_id);
     }
 
+    // 2. Phân quyền xem: 
+    // - Admin: Xem hết.
+    // - Người dùng thường: Chỉ xem mẫu chung (IS NULL), mẫu mặc định, hoặc mẫu do mình tự tạo.
     if (!isAdmin(currentUser)) {
         query += ' AND (t.created_by IS NULL OR t.created_by = @request_user_id OR t.is_default = 1)';
         request.input('request_user_id', sql.Int, currentUser.id);
@@ -65,13 +71,16 @@ exports.getAllTemplates = withErrorHandling(async (req, res) => {
     res.json(result.recordset || []);
 });
 
-// POST /api/post-templates
+/**
+ * TẠO MẪU BÀI VIẾT MỚI (POST /api/post-templates)
+ */
 exports.createTemplate = withErrorHandling(async (req, res) => {
     const currentUser = req.authUser;
     if (!currentUser) {
         return res.status(401).json({ error: 'Bạn chưa đăng nhập' });
     }
 
+    // Kiểm tra quyền: Chỉ Admin hoặc Tác giả bài viết mới được tạo mẫu
     const admin = isAdmin(currentUser);
     const author = isPostAuthor(currentUser);
     if (!admin && !author) {
@@ -93,15 +102,17 @@ exports.createTemplate = withErrorHandling(async (req, res) => {
 
     const pool = await getConnection();
 
-
+    // Chỉ Admin mới được quyền đặt một mẫu làm "Mặc định" (Default) cho toàn hệ thống
     const finalIsDefault = admin ? !!is_default : false;
 
+    // Nếu mẫu này là mặc định, thì phải gỡ trạng thái mặc định của các mẫu cũ trong cùng danh mục
     if (finalIsDefault && category_id) {
         await pool.request()
             .input('category_id', sql.Int, category_id)
             .query('UPDATE post_templates SET is_default = 0 WHERE category_id = @category_id');
     }
 
+    // Thực hiện lưu vào Database
     const result = await pool.request()
         .input('name', sql.NVarChar, String(name).trim())
         .input('category_id', sql.Int, category_id || null)

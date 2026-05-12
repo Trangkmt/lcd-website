@@ -13,24 +13,32 @@ function formatEventNameFromSlug(slug) {
 }
 
 const AnnualEventDetail = () => {
+    // Lấy tên sự kiện từ đường dẫn URL (Ví dụ: /event/chao-tan-sinh-vien => eventName = 'chao-tan-sinh-vien')
     const { eventName } = useParams();
-    const [category, setCategory] = useState(null);
-    const [posts, setPosts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [searchQuery, setSearchQuery] = useState('');
+    
+    // Khai báo các trạng thái (State) của component
+    const [category, setCategory] = useState(null); // Lưu thông tin danh mục sự kiện
+    const [posts, setPosts] = useState([]);       // Lưu danh sách bài viết thuộc sự kiện này
+    const [loading, setLoading] = useState(true);   // Trạng thái đang tải dữ liệu
+    const [searchQuery, setSearchQuery] = useState(''); // Lưu từ khóa tìm kiếm của người dùng
 
+    // useEffect sẽ chạy mỗi khi `eventName` thay đổi
     useEffect(() => {
         setLoading(true);
+        
+        // 1. Gọi API lấy thông tin chi tiết của danh mục (giới thiệu sự kiện)
         categoriesAPI.getBySlug(eventName)
             .then(data => setCategory(data))
             .catch(() => { });
 
+        // 2. Gọi API lấy danh sách tất cả bài viết thuộc sự kiện này
         postsAPI.getAll({ category_slug: eventName, limit: 500 })
             .then(data => setPosts(Array.isArray(data) ? data : []))
             .catch(() => { })
-            .finally(() => setLoading(false));
+            .finally(() => setLoading(false)); // Tắt trạng thái loading sau khi tải xong
     }, [eventName]);
 
+    // Logic lọc bài viết theo từ khóa tìm kiếm (Search)
     const filtered = posts.filter(p =>
         !searchQuery || (p.title || '').toLowerCase().includes(searchQuery.toLowerCase())
     );
