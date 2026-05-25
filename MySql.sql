@@ -82,6 +82,7 @@ INSERT INTO users (id, username, password, email, full_name, avatar_url, role, m
 
 
 
+
 -- 3. BẢNG TRUNG GIAN USER_TEAMS (Phân công người dùng vào ban)
 
 CREATE TABLE user_teams (
